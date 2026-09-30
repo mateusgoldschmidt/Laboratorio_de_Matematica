@@ -100,13 +100,16 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     .btn-warning { border-color: var(--warning); color: var(--warning); }
     .btn-warning:hover { background-color: var(--warning); color: var(--bg-dark); box-shadow: 0 0 15px var(--warning); }
 
-    /* MANUAL DE REGRAS */
-    .rules-container { line-height: 1.6; font-size: 1.1rem; }
-    .rules-container h3 { color: var(--electric-cyan); background: #12121c; padding: 10px; border-radius: 4px; margin-top: 20px; font-family: 'Orbitron', sans-serif; }
-    .rules-container ul, .rules-container ol { margin-left: 20px; margin-bottom: 15px; margin-top: 10px;}
-    .rules-container li { margin-bottom: 8px; }
+    /* MANUAL DE REGRAS NA TELA */
+    .manual-box { background-color: var(--bg-card); border-radius: 8px; margin-bottom: 20px; }
+    .manual-box h2 { font-family: 'Orbitron', sans-serif; color: var(--white); margin-bottom: 15px; font-size: 1.4rem;}
+    .manual-box ul { margin-left: 20px; margin-bottom: 15px; font-size: 1.1rem; line-height: 1.6;}
+    .manual-box li { margin-bottom: 8px; }
     
     .print-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; flex-wrap: wrap; gap: 10px;}
+    
+    /* ESCONDER REGRAS NA TELA PADRÃO */
+    #print-manual-container { display: none; }
 
     /* ==========================================================================
        LABORATÓRIO E GERENCIADOR DE CARTAS (UI na Tela)
@@ -251,7 +254,7 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .controls { position: static; } }
 
     /* ==========================================================================
-       IMPRESSÃO A4 RÍGIDA: 9 CARTAS POR FOLHA (3x3), SEM CORTES, TAMANHO EXATO POKER
+       IMPRESSÃO A4 RÍGIDA E COMPACTA
        ========================================================================== */
     @page { size: A4 portrait; margin: 12mm 10mm; }
 
@@ -266,18 +269,39 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       
       .panel { box-shadow: none !important; border: none !important; background-color: transparent !important; color: #000 !important; margin: 0 !important; padding: 0 !important; }
       
-      /* Quando imprimir Manuais */
-      body.print-mode-manuals .rules-container { page-break-inside: auto; font-size: 11pt !important; color: #000 !important;}
-      body.print-mode-manuals .rules-container h3 { background: #eee !important; color: #000 !important; border: 1px solid #ccc !important; }
+      /* === MODO 1: IMPRESSÃO DE MANUAIS === */
+      body.print-mode-manuals .layout { display: none !important; }
       
-      /* Quando imprimir Cartas */
+      body.print-mode-manuals #print-manual-container {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr; 
+        gap: 5mm;
+        align-content: start;
+      }
+      .print-manual-item {
+        border: 1px dashed #666;
+        padding: 5mm;
+        border-radius: 0;
+        page-break-inside: avoid;
+        font-family: Arial, sans-serif;
+        font-size: 10pt;
+        line-height: 1.4;
+        background: #fafafa;
+        color: #000;
+      }
+      .print-manual-item h2 { font-size: 12pt; margin: 0 0 5px 0; border-bottom: 2px solid #ccc; padding-bottom: 3px; font-family: 'Orbitron', sans-serif;}
+      .print-manual-item ul { margin: 0 0 8px 18px; padding: 0; }
+      .print-manual-item li { margin-bottom: 3px; }
+      .print-manual-item p { margin: 0 0 6px 0; font-size: 9pt;}
+      
+      /* === MODO 2: IMPRESSÃO DE CARTAS === */
       body.print-mode-pieces .layout, body.print-mode-pieces .shell, body.print-mode-pieces main.right-column {
         display: block !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: none !important;
       }
       body.print-mode-pieces aside.controls, body.print-mode-pieces .status-bar { display: none !important; }
       body.print-mode-pieces .cards-grid { display: block !important; padding: 0 !important; margin: 0 !important; }
 
-      .sheet-page {
+      body.print-mode-pieces .sheet-page {
         display: grid !important;
         grid-template-columns: repeat(3, 63mm) !important;
         grid-template-rows: repeat(3, 88mm) !important;
@@ -291,54 +315,53 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
         break-inside: avoid !important;
         box-sizing: border-box !important;
       }
-      .sheet-page:last-child { page-break-after: auto !important; break-after: auto !important; }
+      body.print-mode-pieces .sheet-page:last-child { page-break-after: auto !important; break-after: auto !important; }
 
-      .card {
+      body.print-mode-pieces .card {
         width: 63mm !important; height: 88mm !important;
         border: 0.25mm solid #334155 !important; border-radius: 0 !important;
         box-shadow: none !important; page-break-inside: avoid !important; break-inside: avoid !important;
         box-sizing: border-box !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; justify-content: flex-start !important;
       }
 
-      .photo-container { height: 34mm !important; min-height: 34mm !important; max-height: 34mm !important; border-bottom: 0.35mm solid #1a3a4b !important; }
-      .photo-town-name {
+      body.print-mode-pieces .photo-container { height: 34mm !important; min-height: 34mm !important; max-height: 34mm !important; border-bottom: 0.35mm solid #1a3a4b !important; }
+      body.print-mode-pieces .photo-town-name {
         top: 1.2mm !important; left: 2mm !important; font-size: 10.5pt !important; font-weight: 900 !important; color: #ffffff !important;
         text-shadow: -0.9px -0.9px 0 #000, 0.9px -0.9px 0 #000, -0.9px 0.9px 0 #000, 0.9px 0.9px 0 #000, 0 2px 3px rgba(0,0,0,0.95) !important;
         -webkit-text-stroke: 0.4px #000000 !important;
       }
-      .overlay-id { font-size: 6.2pt !important; padding: 0.6mm 1.6mm !important; }
-      .photo-caption {
+      body.print-mode-pieces .overlay-id { font-size: 6.2pt !important; padding: 0.6mm 1.6mm !important; }
+      body.print-mode-pieces .photo-caption {
         bottom: 1.2mm !important; left: 2mm !important; right: 2mm !important; font-size: 6.8pt !important; font-weight: 850 !important;
         background: transparent !important; color: #ffffff !important;
         text-shadow: -0.85px -0.85px 0 #000, 0.85px -0.85px 0 #000, -0.85px 0.85px 0 #000, 0.85px 0.85px 0 #000, 0 1.5px 2px rgba(0,0,0,0.95) !important;
         -webkit-text-stroke: 0.35px #000000 !important;
       }
 
-      .card-desc {
+      body.print-mode-pieces .card-desc {
         margin: 1mm 2mm 0.8mm !important; font-size: 5.3pt !important; line-height: 1.23 !important;
         padding: 0.7mm 1.4mm !important; max-height: none !important; overflow: visible !important; border-left: 0.5mm solid #2c586f !important;
       }
-      .card-base-data { margin: 0 2mm 1mm !important; padding-bottom: 0.5mm !important; font-size: 6.2pt !important; border-bottom: 0.25mm solid #cbd5e1 !important; }
-      .card-base-data strong { font-size: 6.8pt !important; }
+      body.print-mode-pieces .card-base-data { margin: 0 2mm 1mm !important; padding-bottom: 0.5mm !important; font-size: 6.2pt !important; border-bottom: 0.25mm solid #cbd5e1 !important; }
+      body.print-mode-pieces .card-base-data strong { font-size: 6.8pt !important; }
 
-      .param-list { display: flex !important; flex-direction: column !important; gap: 0.8mm !important; padding: 0 2mm 1.2mm !important; margin-top: auto !important; }
-      .param-box { padding: 1mm 1.6mm !important; border: 0.25mm solid #cbd5e1 !important; border-radius: 0 !important; font-size: 5.9pt !important; min-height: 5.4mm !important; box-sizing: border-box !important; gap: 1.5mm !important; }
-      .param-title { font-size: 5.7pt !important; font-weight: 750 !important; flex-shrink: 0 !important; }
-      .param-src { font-size: 4.8pt !important; opacity: 0.85 !important; }
-      .param-val { font-size: 6.1pt !important; font-weight: 800 !important; flex-shrink: 0 !important; }
+      body.print-mode-pieces .param-list { display: flex !important; flex-direction: column !important; gap: 0.8mm !important; padding: 0 2mm 1.2mm !important; margin-top: auto !important; }
+      body.print-mode-pieces .param-box { padding: 1mm 1.6mm !important; border: 0.25mm solid #cbd5e1 !important; border-radius: 0 !important; font-size: 5.9pt !important; min-height: 5.4mm !important; box-sizing: border-box !important; gap: 1.5mm !important; }
+      body.print-mode-pieces .param-title { font-size: 5.7pt !important; font-weight: 750 !important; flex-shrink: 0 !important; }
+      body.print-mode-pieces .param-src { font-size: 4.8pt !important; opacity: 0.85 !important; }
+      body.print-mode-pieces .param-val { font-size: 6.1pt !important; font-weight: 800 !important; flex-shrink: 0 !important; }
 
-      .param-box.is-trunfo { border-color: #d97706 !important; background: #fef3c7 !important; display: flex !important; flex-direction: column !important; gap: 0.5mm !important; padding: 0.8mm 1.6mm !important; min-height: 7.2mm !important; }
-      .trunfo-top-row { display: flex !important; justify-content: space-between !important; align-items: center !important; width: 100% !important; }
-      .trunfo-top-row .param-title { font-size: 5.7pt !important; font-weight: 800 !important; color: #b45309 !important; }
-      .trunfo-top-row .param-src { font-size: 4.8pt !important; color: #92400e !important; font-weight: 600 !important; opacity: 0.9 !important; }
-      .trunfo-calc-row { display: flex !important; justify-content: space-between !important; align-items: center !important; width: 100% !important; background: rgba(255, 255, 255, 0.75) !important; border: 0.2mm dashed #d97706 !important; padding: 0.3mm 1mm !important; box-sizing: border-box !important; }
-      .trunfo-calc-badge { font-size: 5.2pt !important; font-weight: 800 !important; color: #b45309 !important; }
+      body.print-mode-pieces .param-box.is-trunfo { border-color: #d97706 !important; background: #fef3c7 !important; display: flex !important; flex-direction: column !important; gap: 0.5mm !important; padding: 0.8mm 1.6mm !important; min-height: 7.2mm !important; }
+      body.print-mode-pieces .trunfo-top-row { display: flex !important; justify-content: space-between !important; align-items: center !important; width: 100% !important; }
+      body.print-mode-pieces .trunfo-top-row .param-title { font-size: 5.7pt !important; font-weight: 800 !important; color: #b45309 !important; }
+      body.print-mode-pieces .trunfo-top-row .param-src { font-size: 4.8pt !important; color: #92400e !important; font-weight: 600 !important; opacity: 0.9 !important; }
+      body.print-mode-pieces .trunfo-calc-row { display: flex !important; justify-content: space-between !important; align-items: center !important; width: 100% !important; background: rgba(255, 255, 255, 0.75) !important; border: 0.2mm dashed #d97706 !important; padding: 0.3mm 1mm !important; box-sizing: border-box !important; }
+      body.print-mode-pieces .trunfo-calc-badge { font-size: 5.2pt !important; font-weight: 800 !important; color: #b45309 !important; }
       
-      /* IMPRESSÃO DO ALINHAMENTO DA FÓRMULA E TRACEJADO */
-      .trunfo-calc-formula { font-size: 6.7pt !important; font-weight: 800 !important; color: #000000 !important; display: flex !important; align-items: baseline !important; gap: 0.8mm !important; }
-      .blank-box { min-width: 10mm !important; width: 10mm !important; border-bottom: 0.35mm solid #0f172a !important; margin: 0 0.8mm !important; display: inline-block !important; text-align: center !important;}
-      .unit-text { font-size: 5.6pt !important; font-weight: 700 !important; color: #334155 !important; }
-      .solved-val { background: none !important; padding: 0 !important; color: #15803d !important; font-weight: 850 !important; }
+      body.print-mode-pieces .trunfo-calc-formula { font-size: 6.7pt !important; font-weight: 800 !important; color: #000000 !important; display: flex !important; align-items: baseline !important; gap: 0.8mm !important; }
+      body.print-mode-pieces .blank-box { min-width: 10mm !important; width: 10mm !important; border-bottom: 0.35mm solid #0f172a !important; margin: 0 0.8mm !important; display: inline-block !important; text-align: center !important;}
+      body.print-mode-pieces .unit-text { font-size: 5.6pt !important; font-weight: 700 !important; color: #334155 !important; }
+      body.print-mode-pieces .solved-val { background: none !important; padding: 0 !important; color: #15803d !important; font-weight: 850 !important; }
 
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     }
@@ -360,57 +383,45 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
 
   <div class="container">
     
-    <!-- ABA 1: MANUAL DE REGRAS -->
+    <!-- ABA 1: MANUAL DE REGRAS COMPACTO -->
     <div id="tab-regras" class="tab-content active">
       <div class="panel">
         <div class="print-controls print-hidden">
           <div>
-            <span style="font-family: 'Orbitron'; font-size: 1.2rem; color: var(--white);">Manual do Jogo</span><br>
-            <span style="font-size: 0.9rem; color: var(--text-light);">Imprima as regras para distribuir aos grupos.</span>
+            <span style="font-family: 'Orbitron'; font-size: 1.2rem; color: var(--white);">Manual do Jogo (Compacto)</span><br>
+            <span style="font-size: 0.9rem; color: var(--text-light);">Escolha a quantidade para imprimir na mesma folha.</span>
           </div>
-          <button class="btn btn-warning" style="width: auto;" onclick="printManual()">🖨️ Imprimir Regras</button>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <select id="manual-copies" style="padding: 10px; border-radius: 4px; font-weight: bold; font-family: 'Rajdhani';">
+                <option value="2">2 cópias (1 Folha)</option>
+                <option value="4">4 cópias (1 Folha)</option>
+                <option value="6" selected>6 cópias (1 Folha)</option>
+                <option value="8">8 cópias (2 Folhas)</option>
+            </select>
+            <button class="btn btn-warning" style="width: auto;" onclick="printManuals()">🖨️ Imprimir Regras</button>
+          </div>
         </div>
 
-        <div class="rules-container">
-          <h2 style="text-align: center; border-bottom: 2px solid var(--electric-cyan); padding-bottom: 10px; margin-bottom: 20px;">📜 Regras Oficiais: Super Trunfo Matemático</h2>
-          
-          <p>Prepare-se para viajar pelo Noroeste Gaúcho! O Super Trunfo Matemático não exige apenas sorte, exige raciocínio rápido e cálculos exatos das frações, porcentagens e potenciações que você aprendeu no 6º ano.</p>
-
-          <h3>🎯 O Objetivo</h3>
-          <p>Terminar o jogo com <strong>todas as cartas do baralho</strong> nas suas mãos.</p>
-
-          <h3>🎲 Preparação (O Baralho)</h3>
-          <ul>
-            <li>O jogo é ideal para 2 a 6 jogadores.</li>
-            <li>Embaralhe todas as cartas e distribua igualmente entre os participantes.</li>
-            <li>Cada jogador deve segurar o seu monte de cartas com a face virada para si, de modo que só possa ler a <strong>primeira carta (a carta do topo)</strong>. Ninguém pode olhar a carta do outro!</li>
-          </ul>
-
-          <h3>⚔️ Como Jogar (A Batalha dos Atributos)</h3>
-          <ol>
-            <li>O jogador que estiver à esquerda do professor (ou quem for sorteado) começa a rodada.</li>
-            <li>Ele deve analisar a sua carta do topo e escolher <strong>um dos quatro atributos</strong> que considerar ter o maior valor (Vegetação Nativa, Saneamento Básico, PIB per capita ou IDEB).</li>
-            <li>Ele lê o nome do atributo e o seu valor em voz alta.</li>
-            <li>Em seguida, os outros jogadores leem, um por um, o valor do <strong>mesmo atributo</strong> em suas cartas do topo.</li>
-            <li>Quem possuir o <strong>maior valor vence a rodada!</strong> O vencedor recolhe todas as cartas da mesa (inclusive a sua) e as coloca no fundo do seu próprio monte.</li>
-            <li>O vencedor da rodada tem o direito de escolher o atributo da próxima rodada usando sua nova carta do topo.</li>
-          </ol>
-          <p><em>Obs: Se houver empate entre dois ou mais jogadores com o maior valor, as cartas da mesa ficam retidas. O próximo jogador escolhe um novo atributo da sua próxima carta, e o vencedor dessa nova rodada leva tudo!</em></p>
-
-          <h3>🧮 A Grande Regra: O Trunfo Matemático</h3>
-          <p>Diferente do jogo tradicional, aqui as informações nem sempre são fáceis. Em cada carta, <strong>um dos atributos não mostra o valor final, mas sim um DESAFIO MATEMÁTICO</strong> (ex: "7/10 de 64.000").</p>
-          <ul>
-            <li>Se o jogador da vez <strong>quiser escolher</strong> o atributo que está com o Desafio, ele <strong>DEVE</strong> resolver o cálculo de cabeça ou no rascunho e anunciar a resposta correta em voz alta.</li>
-            <li>Se outro jogador pedir um atributo e, na sua carta, ele estiver oculto pelo Desafio, você também precisará resolvê-lo na hora para poder disputar!</li>
-            <li><strong>Atenção:</strong> Se o jogador que estiver com o Desafio errar o cálculo matemático, <strong>ele perde a rodada automaticamente e entrega sua carta ao vencedor</strong> (mesmo que o seu valor real fosse o maior).</li>
-          </ul>
-
-          <h3>👨‍🏫 Papel do Professor (A Auditoria)</h3>
-          <p>O professor possuirá o <strong>Baralho Gabarito</strong>. Sempre que um aluno resolver um desafio matemático, o professor pode (e deve) auditar o resultado para validar se a resposta anunciada pelo aluno está correta. O professor é o juiz supremo do jogo!</p>
-
+        <div class="manual-box">
+            <h2 style="text-align: center; border-bottom: 2px solid var(--electric-cyan); padding-bottom: 10px; margin-bottom: 20px;">📜 Regras Básicas: Super Trunfo Matemático</h2>
+            <ul>
+                <li><strong>Jogadores:</strong> 2 a 6 pessoas.</li>
+                <li><strong>Objetivo:</strong> Conquistar todas as cartas do baralho.</li>
+                <li><strong>A Batalha:</strong> Cada jogador segura seu monte, lendo apenas a carta do topo. O jogador da vez escolhe um atributo (ex: PIB). Todos leem o valor em suas cartas. Quem tiver o maior, vence e recolhe as cartas da mesa para o fundo do seu monte.</li>
+                <li><span style="color: var(--electric-cyan); font-weight: bold;">O Desafio Matemático:</span> Em cada carta, um atributo está oculto por um cálculo. Se você escolher (ou for desafiado) nesse atributo, deve resolvê-lo de cabeça. <strong>Se errar a conta, perde a rodada automaticamente!</strong></li>
+                <li><strong>Auditoria:</strong> O professor usará o Baralho Gabarito para julgar as respostas.</li>
+            </ul>
+            <div style="background: rgba(0, 0, 0, 0.4); padding: 15px; border-radius: 6px; border: 1px dashed var(--electric-cyan); margin-top: 15px; text-align: center;">
+                <strong style="color: var(--warning); font-size: 1.1rem;">Exemplo Prático de Jogada:</strong><br><br>
+                Você escolhe o atributo <strong>Vegetação Nativa</strong>. Sua carta mostra o Desafio: <em>(1/2 de 7.500) + 200</em>.<br>
+                Você calcula rapidamente e diz <strong>"3.950 ha!"</strong>. Se a carta do oponente tiver <em>2.800 ha</em>, você vence e leva as cartas!
+            </div>
         </div>
       </div>
     </div>
+    
+    <!-- CONTAINER INVISÍVEL PARA A IMPRESSÃO DO MANUAL -->
+    <div id="print-manual-container"></div>
 
     <!-- ABA 2: LABORATÓRIO E CARTAS -->
     <div id="tab-cartas" class="tab-content">
@@ -449,7 +460,7 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
 
           <div class="action-buttons">
             <button class="btn btn-student" id="btnPrintStudents" type="button">🖨️ Imprimir Cartas (Alunos)</button>
-            <button class="btn btn-success" id="btnPrintKey" type="button">🖨️ Imprimir Gabarito (Prof)</button>
+            <button class="btn btn-success" id="btnPrintKey" type="button">🖨️️ Imprimir Gabarito (Prof)</button>
           </div>
         </aside>
 
@@ -471,7 +482,6 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
   </div>
 
   <script>
-    // Gerador de banner SVG alternativo seguro
     function makeFallbackSvg(nome, atrativo, regiao) {
       const c1 = regiao === "Missões" ? "#7f1d1d" : "#1e3a8a";
       const c2 = regiao === "Missões" ? "#991b1b" : "#2563eb";
@@ -487,7 +497,6 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
     }
 
-    // 45 MUNICÍPIOS COM DADOS OFICIAIS EMBUTIDOS
     const MUNICIPIOS = [
   {
     "id": 4302501,
@@ -1496,7 +1505,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
         document.getElementById(`tab-${tab}`).classList.add('active');
     }
 
-    function printManual() {
+    function printManuals() {
+        const count = parseInt(document.getElementById('manual-copies').value);
+        const manualContainer = document.getElementById('print-manual-container');
+        manualContainer.innerHTML = '';
+
+        const exampleHTML = `
+            <div style="background: rgba(0,0,0,0.05); padding: 5mm; border: 1px dashed #d97706; text-align: left; font-size: 9.5pt; margin-top: 5mm; border-radius: 4px;">
+                <strong>Exemplo Prático:</strong> Você escolhe o atributo <strong>Vegetação Nativa</strong> e na sua carta há o Desafio: <em>(1/2 de 7.500) + 200</em>.<br>Você calcula e anuncia: <strong>"3.950 ha!"</strong>. Se o oponente tiver apenas <em>2.800 ha</em>, você vence e recolhe as cartas!
+            </div>
+        `;
+
+        for (let i = 0; i < count; i++) {
+            manualContainer.innerHTML += `
+                <div class="print-manual-item">
+                    <h2>📜 Super Trunfo Matemático</h2>
+                    <ul>
+                        <li><strong>Jogadores:</strong> 2 a 6 pessoas.</li>
+                        <li><strong>Objetivo:</strong> Conquistar todas as cartas do baralho.</li>
+                        <li><strong>Como Jogar:</strong> Cada jogador segura seu monte, lendo apenas a carta do topo. O jogador da vez escolhe um atributo (ex: PIB). Todos leem o valor em suas cartas. Quem tiver o maior, vence e recolhe as cartas da mesa.</li>
+                        <li><strong>O Desafio:</strong> Em cada carta, um atributo está oculto por um cálculo. Se você escolher (ou for desafiado) nesse atributo, resolva-o de cabeça. <strong>Se errar a conta, perde a rodada!</strong></li>
+                        <li><strong>Auditoria:</strong> O professor usa o Gabarito para julgar as respostas matemáticas.</li>
+                    </ul>
+                    ${exampleHTML}
+                </div>
+            `;
+        }
+
         document.body.classList.add('print-mode-manuals');
         window.print();
         document.body.classList.remove('print-mode-manuals');
