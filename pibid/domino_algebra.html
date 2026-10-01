@@ -1,0 +1,505 @@
+---
+titulo: "Dominó Algébrico"
+icone: "🁬"
+descricao: "Gerador de peças de dominó matemático para impressão. Relaciona cálculo mental de equações de 1º grau com as quantidades do dominó."
+---
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dominó Álgebra - Equações de 1º Grau</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0b0c10;
+            --bg-card: #1f2833;
+            --electric-cyan: #00f0ff;
+            --text-light: #c5c6c7;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        header {
+            background: linear-gradient(135deg, #12121c 0%, #1f2833 100%);
+            border-bottom: 2px solid var(--electric-cyan);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 240, 255, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header h1 { font-family: 'Orbitron', sans-serif; font-size: 2.8rem; margin-bottom: 10px; color: var(--white); text-shadow: 0 0 10px var(--electric-cyan); letter-spacing: 1px;}
+        header p { font-size: 1.1rem; color: var(--electric-cyan); text-transform: uppercase; margin-top: 5px;}
+        header .authors { font-size: 0.95rem; color: var(--text-light); margin-top: 10px; }
+
+        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+
+        /* ====== CONTROLES E MANUAL NA TELA ====== */
+        .manual-box {
+            background-color: var(--bg-card);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .manual-box h2 { font-family: 'Orbitron', sans-serif; color: var(--white); margin-bottom: 10px; font-size: 1.4rem;}
+        .manual-box ul { margin-left: 20px; margin-bottom: 15px; font-size: 1.1rem; }
+        .manual-box li { margin-bottom: 5px; }
+        .highlight { color: var(--electric-cyan); font-weight: bold; }
+        
+        .example-area {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px dashed var(--electric-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* Painel de Impressão */
+        .print-controls {
+            background: #12121c; border: 1px solid var(--electric-cyan); border-radius: 8px; 
+            padding: 20px; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; gap: 20px;
+        }
+        .print-actions { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; width: 100%;}
+        .print-panel { background: rgba(255,255,255,0.02); border: 1px solid #333; padding: 15px; border-radius: 6px; display: flex; flex-direction: column; align-items: center; gap: 15px; flex: 1; min-width: 300px; text-align: center;}
+        
+        .select-box { padding: 8px; font-size: 1.1rem; font-family: 'Rajdhani', sans-serif; font-weight: bold; border-radius: 4px;}
+        .btn {
+            background: transparent; border: 2px solid var(--electric-cyan); color: var(--electric-cyan);
+            font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 1.1rem;
+            padding: 12px 20px; cursor: pointer; border-radius: 4px; transition: 0.2s; width: 100%;
+        }
+        .btn:hover { background: var(--electric-cyan); color: var(--bg-dark); box-shadow: 0 0 15px var(--electric-cyan); }
+        .btn-pieces { background: var(--electric-cyan); color: var(--bg-dark); }
+
+        /* ====== FORMATAÇÃO DAS FRAÇÕES MATEMÁTICAS ====== */
+        .frac {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 0.2em;
+            line-height: 1.1;
+        }
+        .frac .num {
+            border-bottom: 0.12em solid #000;
+            padding: 0 0.2em;
+            width: 100%;
+            text-align: center;
+        }
+        .frac .den {
+            padding: 0 0.2em;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* ====== PEÇAS DE DOMINÓ (TELA E JOGO) ====== */
+        .domino-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .domino-piece {
+            width: 88mm;
+            height: 38mm;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            color: #000000;
+            position: relative;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .domino-half {
+            width: 50%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .domino-divider {
+            width: 0;
+            height: 100%;
+            border-left: 2px dashed #444;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* ====== MINI-PEÇAS (MANUAL IMPRESSO E TELA) ====== */
+        .mini-domino {
+            width: 48mm;
+            height: 20mm;
+            background-color: #ffffff;
+            border: 1.5px solid #000000;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            color: #000000;
+            position: relative;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        .mini-half {
+            width: 50%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .mini-divider {
+            width: 0;
+            height: 100%;
+            border-left: 1.5px dashed #444;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .print-example {
+            display: flex; align-items: center; justify-content: center; gap: 3mm; margin-top: 3mm;
+        }
+
+        /* Oculto na tela normal */
+        #print-manual-container { display: none; }
+
+        /* Botão voltar padronizado */
+        #btn-voltar {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 9999;
+            background: linear-gradient(135deg, #1a237e, #1565c0);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 0.88rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        #btn-voltar:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.45); }
+
+        /* =========================================================
+           CONFIGURAÇÕES DE IMPRESSÃO INDIVIDUAIS
+           ========================================================= */
+        @media print {
+            @page { margin: 8mm; } 
+            
+            body { background: #fff !important; margin: 0 !important; padding: 0 !important; color: #000 !important; }
+            header, .manual-box, .print-controls, #btn-voltar { display: none !important; }
+            .container { max-width: none !important; margin: 0 !important; padding: 0 !important; border: none !important; }
+            
+            #print-manual-container, #domino-container { display: none !important; }
+
+            /* === MODO 1: IMPRESSÃO DE MANUAIS (COM BORDAS COLADAS) === */
+            body.print-mode-manuals #print-manual-container {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr; 
+                gap: 0 !important;
+                align-content: start;
+            }
+            .print-manual-item {
+                border: 1px dashed #666 !important;
+                margin: 0 -1px -1px 0 !important; /* Bordas coladas */
+                padding: 4mm;
+                border-radius: 0 !important;
+                page-break-inside: avoid;
+                font-family: Arial, sans-serif;
+                font-size: 10.5pt;
+                line-height: 1.3;
+                background: #fafafa;
+                box-sizing: border-box;
+            }
+            .print-manual-item h2 { font-size: 12pt; margin: 0 0 5px 0; border-bottom: 2px solid #ccc; padding-bottom: 3px; font-family: 'Orbitron', sans-serif;}
+            .print-manual-item ul { margin: 0 0 6px 18px; padding: 0; }
+            .print-manual-item p { margin: 0 0 6px 0; font-size: 9.5pt;}
+
+            /* === MODO 2: IMPRESSÃO DE PEÇAS (COM BORDAS COLADAS) === */
+            body.print-mode-pieces #domino-container {
+                display: grid !important;
+                grid-template-columns: 88mm 88mm !important;
+                justify-content: center !important;
+                gap: 0 !important; 
+                padding: 0 !important;
+            }
+            .domino-piece {
+                width: 88mm !important;
+                height: 38mm !important;
+                margin: 0 -1px -1px 0 !important; /* Bordas coladas perfeitamente */
+                box-shadow: none !important;
+                border: 1px solid #000 !important;
+                border-radius: 0 !important; /* Remove arredondamento para o corte */
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                box-sizing: border-box;
+            }
+            .domino-piece:nth-child(14n) {
+                page-break-after: always !important;
+            }
+
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🁬 DOMINÓ ALGÉBRICO</h1>
+        <p>Equações de 1º Grau e Cálculo Mental</p>
+        <div class="authors">Material Didático Dinâmico - 7º Ano</div>
+    </header>
+
+    <div class="container">
+        
+        <!-- MANUAL DE REGRAS NA TELA -->
+        <div class="manual-box">
+            <h2>📜 Regras do Jogo</h2>
+            <ul>
+                <li><strong>Jogadores:</strong> 2 a 5 pessoas.</li>
+                <li><strong>A Peça:</strong> Os dois lados de uma peça são independentes! Eles servem para se conectar a OUTRAS peças.</li>
+                <li><span class="highlight">A Regra de Ouro:</span> Você deve calcular mentalmente a <strong>raiz da equação</strong> (o valor de $x$) e conectá-la a uma peça que tenha a <strong>quantidade exata de bolinhas</strong> correspondente ao resultado (de 0 a 6).</li>
+                <li><strong>O Encaixe:</strong> Equação sempre conecta com Bolinhas. Bolinhas sempre conectam com Equação.</li>
+                <li><strong>Comprar:</strong> Se não tiver a peça, compre do cemitério até encontrar. Ganha quem zerar a mão primeiro.</li>
+            </ul>
+            <p style="margin-top: 15px;"><strong>Exemplo de Jogada:</strong> A Peça A está na mesa exibindo <strong>4 bolinhas</strong>. Você joga a sua Peça B conectando a equação <strong>2x = 8</strong> a ela (pois o $x$ que resolve a equação vale 4).</p>
+            <div class="example-area" id="example-screen">
+                <!-- Injetado via JS -->
+            </div>
+        </div>
+
+        <!-- PAINEL DE IMPRESSÃO ISOLADO -->
+        <div class="print-controls">
+            <h3 style="color: var(--white); font-family: 'Orbitron';">Controles de Impressão Isolada</h3>
+            <div class="print-actions">
+                
+                <div class="print-panel">
+                    <label style="color: var(--text-light);">Quantidade de Manuais a Imprimir:</label>
+                    <select id="manual-copies" class="select-box">
+                        <option value="2">2 cópias (1 Folha)</option>
+                        <option value="4">4 cópias (1 Folha)</option>
+                        <option value="6" selected>6 cópias (1 Folha)</option>
+                        <option value="8">8 cópias (2 Folhas)</option>
+                    </select>
+                    <button class="btn" onclick="printManuals()">🖨️ 1. IMPRIMIR MANUAIS</button>
+                </div>
+
+                <div class="print-panel">
+                    <label style="color: var(--text-light);">As peças serão impressas com marcações de corte.</label>
+                    <div style="flex-grow: 1; display:flex; align-items:flex-end; width: 100%;">
+                        <button class="btn btn-pieces" onclick="printPieces()">🖨️ 2. IMPRIMIR PEÇAS DO JOGO</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- CONTAINER PARA IMPRESSÃO DO MANUAL -->
+        <div id="print-manual-container"></div>
+
+        <!-- CONTAINER DAS PEÇAS -->
+        <div class="domino-grid" id="domino-container"></div>
+    </div>
+
+    <a id="btn-voltar" href="index.html">&#8592; Voltar ao Portal</a>
+
+    <script>
+        const CHAVES = [0, 1, 2, 3, 4, 5, 6];
+
+        const REPOSITORIO = {
+            0: [ 
+                { val: '3x = 0' }, 
+                { val: '<span class="frac"><span class="num">x</span><span class="den">5</span></span> = 0' }, 
+                { val: '2x + 7 = 7' }, 
+                { val: 'x + 3² = 9' } 
+            ],
+            1: [ 
+                { val: '7x = 7' }, 
+                { val: '2x - 1 = 1' }, 
+                { val: '<span class="frac"><span class="num">x</span><span class="den">2</span></span> + 0,5 = 1' }, 
+                { val: '5x - 2² = 1' } 
+            ],
+            2: [ 
+                { val: '4x = 8' }, 
+                { val: '<span class="frac"><span class="num">x</span><span class="den">2</span></span> = 1' }, 
+                { val: '3x - 1 = 5' }, 
+                { val: '1,5x = 3' } 
+            ],
+            3: [ 
+                { val: '2x = 6' }, 
+                { val: '<span class="frac"><span class="num">x</span><span class="den">3</span></span> + 1 = 2' }, 
+                { val: '4x - 2 = 10' }, 
+                { val: 'x + 2³ = 11' } 
+            ],
+            4: [ 
+                { val: '3x = 12' }, 
+                { val: '<span class="frac"><span class="num">x</span><span class="den">4</span></span> = 1' }, 
+                { val: '2x + 1,5 = 9,5' }, 
+                { val: '5x - 3² = 11' } 
+            ],
+            5: [ 
+                { val: '2x = 10' }, 
+                { val: '<span class="frac"><span class="num">x</span><span class="den">5</span></span> + 1 = 2' }, 
+                { val: '4x - 5 = 15' }, 
+                { val: 'x + 2,5 = 7,5' } 
+            ],
+            6: [ 
+                { val: '4x = 24' }, 
+                { val: '<span class="frac"><span class="num">x</span><span class="den">2</span></span> = 3' }, 
+                { val: '2x - 2 = 10' }, 
+                { val: '<span class="frac"><span class="num">x</span><span class="den">3</span></span> + 2² = 6' } 
+            ]
+        };
+
+        function buildDotsSVG(num, isMini = false) {
+            let svg = `<svg viewBox="0 0 100 100" width="100%" height="100%">`;
+            let r = 9; 
+            let dots = [];
+            
+            if (num === 1) dots = [[50,50]];
+            if (num === 2) dots = [[25,25], [75,75]];
+            if (num === 3) dots = [[25,25], [50,50], [75,75]];
+            if (num === 4) dots = [[25,25], [75,25], [25,75], [75,75]];
+            if (num === 5) dots = [[25,25], [75,25], [50,50], [25,75], [75,75]];
+            if (num === 6) dots = [[25,25], [25,50], [25,75], [75,25], [75,50], [75,75]];
+            
+            for(let d of dots) {
+                svg += `<circle cx="${d[0]}" cy="${d[1]}" r="${r}" fill="#000" />`;
+            }
+            svg += `</svg>`;
+            return svg;
+        }
+
+        function buildEqHTML(eq, isMini = false) {
+            let fs = isMini ? '12px' : '20px'; 
+            return `<div style="font-size: ${fs}; font-weight: 700; font-family: 'Arial', sans-serif; text-align: center; width: 100%; padding: 0 5px;">${eq.val}</div>`;
+        }
+
+        function makePieceHTML(sideADots, sideBEquation, isMini = false) {
+            let cl = isMini ? "mini-domino" : "domino-piece";
+            let half = isMini ? "mini-half" : "domino-half";
+            let divi = isMini ? "mini-divider" : "domino-divider";
+
+            return `
+                <div class="${cl}">
+                    <div class="${half}">${buildDotsSVG(sideADots, isMini)}</div>
+                    <div class="${divi}"></div>
+                    <div class="${half}">${buildEqHTML(sideBEquation, isMini)}</div>
+                </div>
+            `;
+        }
+
+        const exampleDots = 4;
+        const exampleEqMesa = { val: '<span class="frac"><span class="num">x</span><span class="den">5</span></span> = 0' }; 
+        const exampleDotsMao = 0;
+        const exampleEqMao = { val: '2x = 8' }; 
+
+        function printManuals() {
+            const count = parseInt(document.getElementById('manual-copies').value);
+            const manualContainer = document.getElementById('print-manual-container');
+            manualContainer.innerHTML = '';
+
+            const examplePiecesHTMLPrint = `
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <span style="font-size:9pt; font-weight:bold; margin-bottom:2px;">PEÇA A (Mesa)</span>
+                    ${makePieceHTML(exampleDots, exampleEqMesa, true)}
+                </div>
+                <span style="font-size: 20pt; font-weight: bold;">🤝</span>
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <span style="font-size:9pt; font-weight:bold; margin-bottom:2px; color:var(--electric-cyan);">PEÇA B (Sua mão)</span>
+                    ${makePieceHTML(exampleDotsMao, exampleEqMao, true)}
+                </div>
+            `;
+
+            for (let i = 0; i < count; i++) {
+                manualContainer.innerHTML += `
+                    <div class="print-manual-item">
+                        <h2>📜 Dominó: Equações de 1º Grau</h2>
+                        <ul>
+                            <li><strong>Jogadores:</strong> 2 a 5 pessoas.</li>
+                            <li><strong>A Peça:</strong> Os dois lados de uma peça são independentes! Eles servem para se conectar a OUTRAS peças.</li>
+                            <li><strong>A Conexão:</strong> O jogo intercala <strong>Bolinhas</strong> e <strong>Equações</strong>. Resolva o "x".</li>
+                            <li><strong>A Matemática:</strong> A equação (ex: "2x = 8") se conecta APENAS ao lado de outra peça que tenha exatamente 4 bolinhas (pois x = 4).</li>
+                            <li><strong>Comprar:</strong> Se não tiver a peça correta, compre do cemitério.</li>
+                        </ul>
+                        <p><strong>Exemplo:</strong> A Peça A tem o lado com <strong>4 bolinhas</strong> livre. Você joga a sua Peça B encostando o lado da equação <strong>2x = 8</strong> a ela.</p>
+                        <div class="print-example">${examplePiecesHTMLPrint}</div>
+                    </div>
+                `;
+            }
+
+            document.body.classList.add('print-mode-manuals');
+            window.print();
+            document.body.classList.remove('print-mode-manuals');
+        }
+
+        function printPieces() {
+            document.body.classList.add('print-mode-pieces');
+            window.print();
+            document.body.classList.remove('print-mode-pieces');
+        }
+
+        window.onload = () => {
+            const container = document.getElementById('domino-container');
+            const piecesData = [];
+
+            for (let i = 0; i < 7; i++) {
+                piecesData.push({ dotsVal: i, eqVal: i }); 
+            }
+            for (let i = 0; i < 7; i++) {
+                for (let d = 1; d <= 3; d++) {
+                    let j = (i + d) % 7;
+                    piecesData.push({ dotsVal: i, eqVal: j });
+                }
+            }
+
+            piecesData.forEach(piece => {
+                let eqObj = REPOSITORIO[piece.eqVal].shift(); 
+                container.innerHTML += makePieceHTML(piece.dotsVal, eqObj, false);
+            });
+
+            document.getElementById('example-screen').innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <span style="font-size:12pt; font-weight:bold; margin-bottom:5px; color:var(--text-light);">PEÇA A (Mesa)</span>
+                    ${makePieceHTML(exampleDots, exampleEqMesa, false)}
+                </div>
+                <span style="font-size: 30pt; font-weight: bold; margin: 0 10px;">🤝</span>
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <span style="font-size:12pt; font-weight:bold; margin-bottom:5px; color:var(--electric-cyan);">PEÇA B (Mão do Jogador)</span>
+                    ${makePieceHTML(exampleDotsMao, exampleEqMao, false)}
+                </div>
+            `;
+        };
+    </script>
+</body>
+</html>
