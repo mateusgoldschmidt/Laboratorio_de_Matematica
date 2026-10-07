@@ -212,7 +212,7 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       display: flex; justify-content: space-between; align-items: center; width: 100%;
       background: rgba(255, 255, 255, 0.8); padding: 4px 8px; border: 1px dashed #d97706; border-radius: 3px;
     }
-    .trunfo-calc-badge { font-size: 0.7rem; font-weight: 900; color: #b45309; letter-spacing: 0.5px; }
+    .trunfo-calc-badge { font-size: 0.62rem; font-weight: 900; color: #b45309; letter-spacing: 0.2px; }
     
     /* ALINHAMENTO DA FÓRMULA PELA LINHA DE BASE */
     
@@ -235,20 +235,20 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     }
 
     .trunfo-calc-formula {
-      font-size: 0.85rem; font-weight: 800; color: #0f172a; 
-      display: flex; align-items: center; gap: 4px; white-space: nowrap;
+      font-size: 0.78rem; font-weight: 800; color: #0f172a; 
+      display: flex; align-items: center; gap: 3px; white-space: nowrap;
     }
     
     /* CORREÇÃO DO ESPAÇO TRACEJADO (Com &nbsp; via JS) */
     .blank-box {
       display: inline-block;
-      min-width: 45px;
+      min-width: 32px;
       border-bottom: 2px solid #000;
       vertical-align: baseline;
-      margin: 0 4px;
+      margin: 0 3px;
       text-align: center;
     }
-    .unit-text { font-size: 0.8rem; font-weight: 800; color: #475569; }
+    .unit-text { font-size: 0.74rem; font-weight: 800; color: #475569; }
     .solved-val { color: #15803d; font-weight: 900; background: rgba(46, 125, 50, 0.15); padding: 1px 6px; border-radius: 3px; }
 
     @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .controls { position: static; } }
@@ -364,33 +364,13 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       body.print-mode-pieces .trunfo-top-row .param-title { font-size: 5.7pt !important; font-weight: 800 !important; color: #b45309 !important; }
       body.print-mode-pieces .trunfo-top-row .param-src { font-size: 4.8pt !important; color: #92400e !important; font-weight: 600 !important; opacity: 0.9 !important; }
       body.print-mode-pieces .trunfo-calc-row { display: flex !important; justify-content: space-between !important; align-items: center !important; width: 100% !important; background: rgba(255, 255, 255, 0.75) !important; border: 0.2mm dashed #d97706 !important; padding: 0.3mm 1mm !important; box-sizing: border-box !important; }
-      body.print-mode-pieces .trunfo-calc-badge { font-size: 5.2pt !important; font-weight: 800 !important; color: #b45309 !important; }
-      
-      body.print-mode-pieces 
-    /* FRAÇÕES PADRÃO COM NUMERADOR E DENOMINADOR */
-    .frac {
-      display: inline-flex;
-      flex-direction: column;
-      vertical-align: middle;
-      text-align: center;
-      font-size: 0.82em;
-      line-height: 1;
-      padding: 0 1px;
-    }
-    .frac .top {
-      border-bottom: 1.5px solid currentColor;
-      padding-bottom: 1px;
-    }
-    .frac .bottom {
-      padding-top: 1px;
-    }
-
-    .trunfo-calc-formula {
-      font-size: 0.85rem; font-weight: 800; color: #0f172a; 
-      display: flex; align-items: center; gap: 4px; white-space: nowrap;
-    }
-      body.print-mode-pieces .blank-box { min-width: 10mm !important; width: 10mm !important; border-bottom: 0.35mm solid #0f172a !important; margin: 0 0.8mm !important; display: inline-block !important; text-align: center !important; }
-      body.print-mode-pieces .unit-text { font-size: 5.6pt !important; font-weight: 700 !important; color: #334155 !important; }
+      body.print-mode-pieces .trunfo-calc-badge { font-size: 4.6pt !important; font-weight: 800 !important; color: #b45309 !important; letter-spacing: 0.2px !important; }
+      body.print-mode-pieces .trunfo-calc-formula { font-size: 6.0pt !important; font-weight: 800 !important; color: #000000 !important; display: flex !important; align-items: center !important; gap: 0.6mm !important; white-space: nowrap !important; }
+      body.print-mode-pieces .frac { font-size: 5.2pt !important; line-height: 0.95 !important; }
+      body.print-mode-pieces .frac .top { border-bottom: 0.25mm solid currentColor !important; padding-bottom: 0.2mm !important; }
+      body.print-mode-pieces .frac .bottom { padding-top: 0.2mm !important; }
+      body.print-mode-pieces .blank-box { min-width: 8mm !important; width: 8mm !important; border-bottom: 0.35mm solid #0f172a !important; margin: 0 0.5mm !important; display: inline-block !important; text-align: center !important; }
+      body.print-mode-pieces .unit-text { font-size: 5.0pt !important; font-weight: 700 !important; color: #334155 !important; }
       body.print-mode-pieces .solved-val { background: none !important; padding: 0 !important; color: #15803d !important; font-weight: 850 !important; }
 
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
