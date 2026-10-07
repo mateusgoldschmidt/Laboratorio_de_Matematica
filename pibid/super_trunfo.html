@@ -6,6 +6,13 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<!-- Metadados originais do portal:
+---
+titulo: "Super Trunfo Matemático"
+icone: "🃏"
+descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, com desafios de frações, porcentagens e potenciação."
+---
+--> 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
   <title>Super Trunfo Matemático: Missões & Fronteira Noroeste</title>
@@ -501,6 +508,37 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     }
   </style>
+
+<style id="auditoria-css">
+  .param-box { padding:0.35mm 1.6mm; }
+  .param-box.is-trunfo { padding:0.35mm 1.6mm; }
+  .param-list { gap:0.35mm; }
+
+  .param-title small.param-src { display:block; margin-left:0; line-height:1.05; }
+  .manual-box { font-family:Arial,sans-serif; font-size:1rem; line-height:1.5; }
+  .manual-box h2 { margin-bottom:12px; }
+  .manual-box h3 { color:var(--electric-cyan); margin:15px 0 6px; }
+  .manual-box p { margin:8px 0; }
+  .manual-box ol, .manual-box ul { margin:8px 0 10px 22px; font-size:1rem; line-height:1.5; }
+  .manual-box li { margin-bottom:7px; }
+  #manual-copies { padding:10px; font-weight:bold; }
+  .fontes-completas { margin-top:18px; border:1px solid #5a6472; padding:12px; line-height:1.5; }
+  .fontes-completas summary { cursor:pointer; font-weight:bold; color:var(--electric-cyan); }
+  .fontes-completas ul { margin:10px 0 10px 22px; }
+  .fontes-completas p { margin-top:10px; }
+  .fontes-completas a { color:var(--electric-cyan); }
+  @media print {
+    body.print-mode-manuals #print-manual-container { display:block!important; }
+    .print-manual-item { border:none!important; padding:0!important; margin:0!important; color:black!important; background:white!important; font:9pt/1.22 Arial,sans-serif!important; break-after:page; }
+    .print-manual-item:last-child { break-after:auto; }
+    .print-manual-item h2 { font:bold 14pt/1.2 Arial,sans-serif!important; margin:0 0 7px!important; padding-bottom:4px!important; }
+    .print-manual-item h3 { font:bold 10.5pt/1.2 Arial,sans-serif!important; margin:8px 0 4px!important; color:black!important; }
+    .print-manual-item p { font:9pt/1.22 Arial,sans-serif!important; margin:5px 0!important; }
+    .print-manual-item ol,.print-manual-item ul { font:9pt/1.22 Arial,sans-serif!important; margin:4px 0 6px 18px!important; padding:0!important; }
+    .print-manual-item li { margin-bottom:4px!important; }
+    .print-manual-item .manual-source-line { font-size:8pt!important; }
+  }
+</style>
 </head>
 <body>
   
@@ -512,49 +550,43 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
   </header>
 
   <div class="tabs print-hidden">
-    <button class="tab-btn" onclick="switchTab('regras')">📜 Manual de Regras</button>
+    <button class="tab-btn" onclick="switchTab('regras')">Manual e fontes</button>
     <button class="tab-btn active" onclick="switchTab('cartas')">🃏 Laboratório e Cartas</button>
   </div>
 
   <div class="container">
     
-    <!-- ABA 1: MANUAL DE REGRAS COMPACTO -->
-    <div id="tab-regras" class="tab-content">
-      <div class="panel">
-        <div class="print-controls print-hidden">
-          <div>
-            <span style="font-family: 'Orbitron'; font-size: 1.2rem; color: var(--white);">Manual do Jogo (Compacto)</span><br>
-            <span style="font-size: 0.9rem; color: var(--text-light);">Escolha a quantidade para imprimir na mesma folha.</span>
-          </div>
-          <div style="display: flex; gap: 10px; align-items: center;">
-            <select id="manual-copies" style="padding: 10px; border-radius: 4px; font-weight: bold; font-family: 'Rajdhani';">
-                <option value="2">2 cópias (1 Folha)</option>
-                <option value="4">4 cópias (1 Folha)</option>
-                <option value="6" selected>6 cópias (1 Folha)</option>
-                <option value="8">8 cópias (2 Folhas)</option>
-            </select>
-            <button class="btn btn-warning" style="width: auto;" onclick="printManuals()">🖨️ Imprimir Regras</button>
-          </div>
-        </div>
+    <!-- ABA 1: MANUAL E FONTES DA BASE VERIFICADA -->
+    <div id="tab-regras" class="tab-content"><div class="panel">
+      <div class="print-controls print-hidden"><div><strong>Manual de regras e indicadores</strong><br><span>Uma página legível por cópia; fontes completas disponíveis abaixo.</span></div>
+      <div style="display:flex;gap:10px;align-items:center"><select id="manual-copies"><option value="1" selected>1 cópia — 1 folha</option><option value="2">2 cópias — 2 folhas</option><option value="4">4 cópias — 4 folhas</option></select><button type="button" class="btn btn-warning" style="width:auto" onclick="printManuals()">Imprimir manual</button></div></div>
+      <div class="manual-box" id="manual-content">
+<h2>Super Trunfo Matemático — manual rápido</h2>
+<p><strong>2 a 6 jogadores · 45 cartas · indicado para o 6º ano.</strong></p>
+<h3>Como jogar</h3>
+<ol>
+<li>Embaralhem e distribuam o mesmo número de cartas a cada participante. As excedentes ficam fora da partida, sem serem escolhidas. Mantenham os montes virados para baixo e olhem apenas a carta do topo.</li>
+<li>Sorteiem quem começa. O jogador da vez escolhe um dos <strong>quatro atributos numerados</strong>. População e área são informações de contexto, não atributos de disputa nesta versão.</li>
+<li>Todos anunciam o valor desse atributo. Se ele estiver oculto, resolvam mentalmente a conta (primeiro a potência, depois a fração e o decimal); o professor confere no gabarito. Quem errar não pode vencer essa rodada. O <strong>maior valor correto</strong> ganha todas as cartas jogadas, coloca-as no fundo do seu monte e escolhe o próximo atributo.</li>
+<li>Se houver empate no maior valor, ou ninguém acertar, cada carta volta ao fundo de seu monte; a vez passa à esquerda. Quem ficar sem cartas sai. Vence quem reunir o baralho; com tempo limitado, vence quem tiver mais cartas ao final (empate permite vitória compartilhada).</li>
+</ol>
+<p><strong>Campo amarelo:</strong> esconde o atributo que supera mais das outras 44 cartas, considerando os números arredondados impressos. Não é vitória automática. Se dois atributos tiverem o mesmo potencial, a prioridade é vegetação, esgotamento, PIB e alfabetização.</p>
+<p><strong>Exemplo real — Bossoroca:</strong> <span class="frac"><span class="top">3²</span><span class="bottom">2</span></span> × 200 + 51,9 = <strong>951,9 km²</strong>. O cálculo apenas revela um dado; não é a fórmula estatística que o produziu.</p>
+<p><strong>Contas para o 6º ano — nível intermediário:</strong> cada desafio combina uma potência pequena, uma fração e uma soma decimal. São três ou quatro etapas curtas: calcular a potência, usar a fração, multiplicar e ajustar o decimal. Não exige conta longa, mas exige atenção à ordem das operações. Expliquem a estratégia aos colegas.</p>
+<h3>O que os números representam?</h3>
+<ul>
+<li><strong>População e área — IBGE, 2022:</strong> habitantes residentes e extensão municipal. A área foi arredondada ao km² inteiro.</li>
+<li><strong>1. Vegetação nativa — MapBiomas, Coleção 11, 2025:</strong> km² de florestas, campos e áreas úmidas naturais, estimados por satélite. É área absoluta, não porcentagem preservada.</li>
+<li><strong>2. Esgotamento — IBGE, Censo 2022:</strong> percentual de domicílios com rede geral/pluvial ou fossa ligada à rede, somado aos com fossa séptica/filtro não ligada. Não inclui fossa rudimentar e <strong>não comprova tratamento de esgoto</strong>; não resume todo o saneamento básico.</li>
+<li><strong>3. PIB per capita — IBGE, 2023:</strong> produção econômica anual por habitante, em mil reais. R$ 1 mil = R$ 1.000. Não significa salário ou dinheiro recebido por cada pessoa.</li>
+<li><strong>4. Alfabetização 15+ — IBGE, Censo 2022:</strong> percentual das pessoas de 15 anos ou mais que sabem ler e escrever um bilhete simples. Não é nota das escolas. Substituiu o IDEB porque a edição mais recente (2025) não apresenta resultado dos anos finais da rede pública para três municípios do baralho.</li>
+</ul>
+<p><strong>Atenção:</strong> maior valor vence por uma regra do jogo; isso não torna um município ou sua população “melhor”. Os quatro atributos usam uma fonte, definição e ano uniformes para os 45 municípios. Valores nas cartas: uma casa decimal.</p>
+<p class="manual-source-line"><strong>Fontes:</strong> IBGE/SIDRA 4714, 6805 e 9543; IBGE — PIB dos Municípios; MapBiomas — Coleção 11. Base conferida em 07/10/2026. Os anos diferem porque cada levantamento tem sua própria periodicidade.</p>
+</div>
+      <details class="fontes-completas print-hidden"><summary>Fontes completas, definições e seleção do campo amarelo</summary><ul><li><strong>População (2022):</strong> <a href="https://sidra.ibge.gov.br/tabela/4714" target="_blank" rel="noopener">IBGE — SIDRA 4714</a>. População residente no município, Censo 2022. Contagem censitária; não é estimativa de 2026.</li><li><strong>Área territorial (2022):</strong> <a href="https://sidra.ibge.gov.br/tabela/4714" target="_blank" rel="noopener">IBGE — SIDRA 4714</a>. Área do município associada à base territorial 2022. Arredondada ao km² inteiro nas cartas; área precisa preservada na planilha.</li><li><strong>Vegetação nativa (2025):</strong> <a href="https://brasil.mapbiomas.org/downloads/estatisticas/" target="_blank" rel="noopener">MapBiomas — Coleção 11, COVERAGE_11, y2025</a>. Soma das classes vegetadas nativas em todos os biomas de cada município; hectares divididos por 100. Nos 45 municípios: classes 3 (formação florestal), 11 (área úmida) e 12 (formação campestre). Estimativa de cobertura por satélite; área absoluta, não percentual de conservação. Exclui água, silvicultura e agropecuária.</li><li><strong>Esgotamento: rede/fossa séptica (2022):</strong> <a href="https://sidra.ibge.gov.br/tabela/6805" target="_blank" rel="noopener">IBGE — Censo 2022, SIDRA 6805, variável 381</a>. 100 × (domicílios na categoria 46290 + categoria 72112) / total 46292. Rede geral, pluvial ou fossa ligada à rede + fossa séptica/filtro não ligada. Não comprova tratamento de esgoto nem reúne água, lixo e drenagem.</li><li><strong>PIB per capita (2023):</strong> <a href="https://www.ibge.gov.br/estatisticas/economicas/contas-nacionais/9088-produto-interno-bruto-dos-municipios.html" target="_blank" rel="noopener">IBGE — PIB dos Municípios / Cidades, pesquisa 38, indicador 47001</a>. Valor publicado do PIB per capita a preços correntes, dividido por 1.000 para apresentação em mil R$. Edição 2022–2023 publicada em dezembro/2025. IBGE usa população do Censo 2022 nessa edição. Não é salário, renda pessoal ou distribuição de riqueza.</li><li><strong>Alfabetização 15+ (2022):</strong> <a href="https://sidra.ibge.gov.br/tabela/9543" target="_blank" rel="noopener">IBGE — Censo 2022, SIDRA 9543, variável 2513</a>. Taxa de pessoas que sabem ler e escrever pelo menos um bilhete simples; sexo, cor/raça e idade no total. Substitui o IDEB; não é nota escolar, taxa de matrícula nem avaliação das escolas atuais.</li></ul><p>Arquivo municipal MapBiomas: <a href="https://drive.google.com/uc?id=1otOqymHuixvkRGVl65zTTNyfaHo46Gqk&amp;export=download" target="_blank" rel="noopener">estatísticas de biomas, estados e municípios — Coleção 11</a>. Dados MapBiomas: CC BY 4.0.</p><p>O <a href="https://www.gov.br/inep/pt-br/areas-de-atuacao/pesquisas-estatisticas-e-indicadores/ideb/resultados" target="_blank" rel="noopener">IDEB 2025</a> foi consultado: faltam resultados dos anos finais/rede pública para Dezesseis de Novembro, Pirapó e Roque Gonzales. Não foram preenchidos com zero nem com outra edição. A alternativa educacional completa é alfabetização 15+.</p><p>O potencial do campo amarelo é V/44 × 100 em um duelo contra carta sorteada uniformemente; V é o número de valores menores nas outras cartas. Empates não contam como vitória. Esse potencial não prevê uma partida real, na qual as cartas circulam e as escolhas dos jogadores importam.</p><p>Imagens, autoria e textos turísticos foram preservados do HTML fornecido; não fazem parte da auditoria dos seis indicadores estatísticos.</p></details>
+    </div></div>
 
-        <div class="manual-box">
-            <h2 style="text-align: center; border-bottom: 2px solid var(--electric-cyan); padding-bottom: 10px; margin-bottom: 20px;">📜 Regras Básicas: Super Trunfo Matemático</h2>
-            <ul>
-                <li><strong>Jogadores:</strong> 2 a 6 pessoas.</li>
-                <li><strong>Objetivo:</strong> Conquistar todas as cartas do baralho.</li>
-                <li><strong>A Batalha:</strong> Cada jogador segura seu monte, lendo apenas a carta do topo. O jogador da vez escolhe um atributo (ex: PIB). Todos leem o valor em suas cartas. Quem tiver o maior, vence e recolhe as cartas da mesa para o fundo do seu monte.</li>
-                <li><span style="color: var(--electric-cyan); font-weight: bold;">O Desafio Matemático:</span> Em cada carta, um atributo está oculto por um cálculo. Se você escolher (ou for desafiado) nesse atributo, deve resolvê-lo de cabeça. <strong>Se errar a conta, perde a rodada automaticamente!</strong></li>
-                <li><strong>Auditoria:</strong> O professor usará o Baralho Gabarito para julgar as respostas.</li>
-            </ul>
-            <div style="background: rgba(0, 0, 0, 0.4); padding: 15px; border-radius: 6px; border: 1px dashed var(--electric-cyan); margin-top: 15px; text-align: center;">
-                <strong style="color: var(--warning); font-size: 1.1rem;">Exemplo Prático de Jogada:</strong><br><br>
-                Você escolhe o atributo <strong>Vegetação Nativa</strong>. Sua carta mostra o Desafio: <em>6² + 3,5</em>.<br>
-                Você calcula rapidamente e diz <strong>"39,5 km²!"</strong>. Se a carta do oponente tiver <em>28 km²</em>, você vence e leva as cartas!
-            </div>
-        </div>
-      </div>
-    </div>
-    
     <!-- CONTAINER INVISÍVEL PARA A IMPRESSÃO DO MANUAL -->
     <div id="print-manual-container"></div>
 
@@ -620,17 +652,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://www.caminhodasorigens.com.br/wp-content/uploads/2020/11/S55_3749-scaled.jpg",
     "legenda": "Elevando-se sobre a vastidão dos campos de Bossoroca, o Cerro da Bela Vista proporciona um horizonte panorâmico singular. O local foi rota histórica de tropeiros e carreteiros que rumavam à fronteira missioneira, guardando lendas e a autêntica memória do gaúcho campeiro.",
     "attrs": {
-      "veg_km2": "448 km²",
-      "san_pct": "74,5%",
-      "pib_mil": "R$ 48,6 mil",
-      "ideb": "6,5"
+      "veg_km2": "951,9 km²",
+      "san_pct": "19,8%",
+      "pib_mil": "R$ 42,5 mil",
+      "alf_pct": "92,8%"
     },
     "hidden_attr": "veg_km2",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span> × 600 − 2",
+      "formula": "<span class=\"frac\"><span class=\"top\">3²</span><span class=\"bottom\">2</span></span> × 200 + 51,9",
       "unit": "km²",
-      "result_str": "448 km²"
-    }
+      "result_str": "951,9 km²",
+      "expression": "(3**2/2)*200+51.9",
+      "mental_steps": 4
+    },
+    "card_no": 1,
+    "valores_numericos": {
+      "veg_km2": 951.9,
+      "san_pct": 19.8,
+      "pib_mil": 42.5,
+      "alf_pct": 92.8
+    },
+    "potencial_vitorias": {
+      "veg_km2": 44,
+      "san_pct": 8,
+      "pib_mil": 21,
+      "alf_pct": 5
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4303301,
@@ -641,17 +689,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://upload.wikimedia.org/wikipedia/commons/5/50/Santu%C3%A1rio_de_Caar%C3%B3_01.jpg",
     "legenda": "Localizado junto ao acesso da BR-285, o Santuário do Caaró é o principal centro de peregrinação das Missões, marcando o local histórico do martírio dos santos padres jesuítas em 1628. O bosque sagrado abriga capela, fontes de água e trilhas de oração e recolhimento.",
     "attrs": {
-      "veg_km2": "62 km²",
-      "san_pct": "81,2%",
-      "pib_mil": "R$ 51,4 mil",
-      "ideb": "6,8"
+      "veg_km2": "67,9 km²",
+      "san_pct": "39,9%",
+      "pib_mil": "R$ 38,4 mil",
+      "alf_pct": "95,9%"
     },
-    "hidden_attr": "veg_km2",
+    "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">5</span></span> × 100 + 2",
-      "unit": "km²",
-      "result_str": "62 km²"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">2³</span><span class=\"bottom\">4</span></span> × 44 + 7,9",
+      "unit": "%",
+      "result_str": "95,9%",
+      "expression": "(2**3/4)*44+7.9",
+      "mental_steps": 4
+    },
+    "card_no": 2,
+    "valores_numericos": {
+      "veg_km2": 67.9,
+      "san_pct": 39.9,
+      "pib_mil": 38.4,
+      "alf_pct": 95.9
+    },
+    "potencial_vitorias": {
+      "veg_km2": 21,
+      "san_pct": 19,
+      "pib_mil": 15,
+      "alf_pct": 26
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4305207,
@@ -662,17 +726,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://sp1-object.adentro.com.br/sites/740/PontosTuristicos/42/u0hw3t3g9cq4eea8rjch_WhatsAppImage2023-03-22at15.40.21.jpeg",
     "legenda": "Com imponentes torres neogóticas que dominam a paisagem urbana, a Igreja Matriz teve sua construção iniciada em 1913 e concluída em 1921. É o maior símbolo da profunda fé religiosa, do patrimônio arquitetônico e da herança comunitária da colonização teuto-brasileira na região.",
     "attrs": {
-      "veg_km2": "28,3 km²",
-      "san_pct": "87,6%",
-      "pib_mil": "R$ 55,9 mil",
-      "ideb": "6,9"
+      "veg_km2": "45,4 km²",
+      "san_pct": "55,6%",
+      "pib_mil": "R$ 58,9 mil",
+      "alf_pct": "97,1%"
     },
-    "hidden_attr": "san_pct",
+    "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "9² + 6,6",
-      "unit": "%",
-      "result_str": "87,6%"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">4²</span><span class=\"bottom\">8</span></span> × 24 + 10,9",
+      "unit": "mil R$",
+      "result_str": "R$ 58,9 mil",
+      "expression": "(4**2/8)*24+10.9",
+      "mental_steps": 4
+    },
+    "card_no": 3,
+    "valores_numericos": {
+      "veg_km2": 45.4,
+      "san_pct": 55.6,
+      "pib_mil": 58.9,
+      "alf_pct": 97.1
+    },
+    "potencial_vitorias": {
+      "veg_km2": 15,
+      "san_pct": 26,
+      "pib_mil": 33,
+      "alf_pct": 32
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4306353,
@@ -683,17 +763,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Max1224269152salto_pirapo1.jpg",
     "legenda": "Espetacular conjunto de corredeiras e quedas d'água encachoeiradas sobre o leito rochoso de basalto do Rio Ijuí. O Salto do Pirapó é o grande cartão-postal de ecoturismo do município, combinando pesca esportiva, áreas de banho e refúgio ecológico de mata nativa preservada.",
     "attrs": {
-      "veg_km2": "71,5 km²",
-      "san_pct": "68,4%",
-      "pib_mil": "R$ 44,2 mil",
-      "ideb": "6,6"
+      "veg_km2": "174,7 km²",
+      "san_pct": "39,2%",
+      "pib_mil": "R$ 20,5 mil",
+      "alf_pct": "90,8%"
     },
     "hidden_attr": "veg_km2",
     "challenge": {
-      "formula": "8² + 7,5",
+      "formula": "<span class=\"frac\"><span class=\"top\">5²</span><span class=\"bottom\">5</span></span> × 30 + 24,7",
       "unit": "km²",
-      "result_str": "71,5 km²"
-    }
+      "result_str": "174,7 km²",
+      "expression": "(5**2/5)*30+24.7",
+      "mental_steps": 4
+    },
+    "card_no": 4,
+    "valores_numericos": {
+      "veg_km2": 174.7,
+      "san_pct": 39.2,
+      "pib_mil": 20.5,
+      "alf_pct": 90.8
+    },
+    "potencial_vitorias": {
+      "veg_km2": 36,
+      "san_pct": 18,
+      "pib_mil": 0,
+      "alf_pct": 2
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4306932,
@@ -704,17 +800,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://upload.wikimedia.org/wikipedia/commons/3/3f/S%C3%ADtio_Arqueol%C3%B3gico_de_S%C3%A3o_Jo%C3%A3o_Batista_04.jpg",
     "legenda": "Fundado em 1697 pelo polímata padre Antônio Sepp, o povoado missioneiro de São João Batista abrigou a pioneira fundição de ferro do Sul do Brasil. O sítio arqueológico integra o Parque Histórico Nacional das Missões, revelando alicerces em pedra, cemitério e antigas oficinas guaranis.",
     "attrs": {
-      "veg_km2": "118 km²",
-      "san_pct": "79,5%",
-      "pib_mil": "R$ 52,8 mil",
-      "ideb": "6,5"
+      "veg_km2": "128,6 km²",
+      "san_pct": "42,0%",
+      "pib_mil": "R$ 52,3 mil",
+      "alf_pct": "95,7%"
     },
     "hidden_attr": "veg_km2",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">5</span></span> × 200 − 2",
+      "formula": "<span class=\"frac\"><span class=\"top\">3²</span><span class=\"bottom\">2</span></span> × 28 + 2,6",
       "unit": "km²",
-      "result_str": "118 km²"
-    }
+      "result_str": "128,6 km²",
+      "expression": "(3**2/2)*28+2.6",
+      "mental_steps": 4
+    },
+    "card_no": 5,
+    "valores_numericos": {
+      "veg_km2": 128.6,
+      "san_pct": 42.0,
+      "pib_mil": 52.3,
+      "alf_pct": 95.7
+    },
+    "potencial_vitorias": {
+      "veg_km2": 32,
+      "san_pct": 20,
+      "pib_mil": 31,
+      "alf_pct": 23
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4307831,
@@ -725,17 +837,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://www.eugeniodecastro.rs.gov.br/admin/globalarq/album/651_366/15cee69205458155dbc014dfd504e749.webp",
     "legenda": "Localizada no distrito de Carajazinho e cercada pela mata e banhados, a Lagoa da Mortandade é um memorial natural da Revolução de 1923. Além de sua forte carga histórica ligada aos combates maragatos e chimangos, o local é um importante santuário de fauna e flora aquática.",
     "attrs": {
-      "veg_km2": "94 km²",
-      "san_pct": "75,8%",
-      "pib_mil": "R$ 88,0 mil",
-      "ideb": "7,1"
+      "veg_km2": "84,3 km²",
+      "san_pct": "36,8%",
+      "pib_mil": "R$ 85,4 mil",
+      "alf_pct": "95,6%"
     },
     "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "9² + 7",
+      "formula": "<span class=\"frac\"><span class=\"top\">2³</span><span class=\"bottom\">4</span></span> × 40 + 5,4",
       "unit": "mil R$",
-      "result_str": "R$ 88,0 mil"
-    }
+      "result_str": "R$ 85,4 mil",
+      "expression": "(2**3/4)*40+5.4",
+      "mental_steps": 4
+    },
+    "card_no": 6,
+    "valores_numericos": {
+      "veg_km2": 84.3,
+      "san_pct": 36.8,
+      "pib_mil": 85.4,
+      "alf_pct": 95.6
+    },
+    "potencial_vitorias": {
+      "veg_km2": 26,
+      "san_pct": 14,
+      "pib_mil": 42,
+      "alf_pct": 20
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4308656,
@@ -746,17 +874,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Qzw7Prsy-PGD_9pMTJk5hw8tfeITLBIkLU9qT57b-uAdXh4xVWPXvlP4mvwyzxZC0ePW6wndkQbn4NWC-ZlRmAt8wytkh1QD1OjRjegBPCeR2ZGBGJ6rcZw1dJMOkjbEamiGcP=s1360-w1360-h1020-rw",
     "legenda": "O Rio Uruguai em Garruchos desenha uma fronteira fluvial grandiosa com a Argentina, caracterizada por margens preservadas e rica biodiversidade aquática. O porto municipal é o centro da pesca artesanal de grandes peixes de água doce e palco de pores do sol inesquecíveis.",
     "attrs": {
-      "veg_km2": "285 km²",
-      "san_pct": "66,2%",
-      "pib_mil": "R$ 46,5 mil",
-      "ideb": "7,7"
+      "veg_km2": "448,7 km²",
+      "san_pct": "60,8%",
+      "pib_mil": "R$ 50,1 mil",
+      "alf_pct": "91,0%"
     },
-    "hidden_attr": "ideb",
+    "hidden_attr": "veg_km2",
     "challenge": {
-      "formula": "(2,5 × 3) + 0,2",
-      "unit": "pts",
-      "result_str": "7,7"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">4²</span><span class=\"bottom\">8</span></span> × 200 + 48,7",
+      "unit": "km²",
+      "result_str": "448,7 km²",
+      "expression": "(4**2/8)*200+48.7",
+      "mental_steps": 4
+    },
+    "card_no": 7,
+    "valores_numericos": {
+      "veg_km2": 448.7,
+      "san_pct": 60.8,
+      "pib_mil": 50.1,
+      "alf_pct": 91.0
+    },
+    "potencial_vitorias": {
+      "veg_km2": 42,
+      "san_pct": 30,
+      "pib_mil": 28,
+      "alf_pct": 3
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4309001,
@@ -767,17 +911,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://www.portaldasmissoes.com.br/uploads/empreendimentos/1475/0041496_regular_cascata-do-passo-da-pedra-girua-rs-cachoeira-do-passo-da-pedra--fone-prefeitura-girua-(10).jpg",
     "legenda": "Formada pelas águas do Rio Comandaí que despencam em paredões rochosos esculpidos na mata nativa, a Cascata do Passo da Pedra alia beleza cênica à história regional. Suas trilhas de acesso resgatam antigas passagens de tropas de gado durante o período de ocupação do interior.",
     "attrs": {
-      "veg_km2": "142 km²",
-      "san_pct": "84,8%",
-      "pib_mil": "R$ 54,2 mil",
-      "ideb": "6,8"
+      "veg_km2": "140,0 km²",
+      "san_pct": "68,6%",
+      "pib_mil": "R$ 63,5 mil",
+      "alf_pct": "95,5%"
     },
-    "hidden_attr": "veg_km2",
+    "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "12² − 2",
-      "unit": "km²",
-      "result_str": "142 km²"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">5²</span><span class=\"bottom\">5</span></span> × 10 + 13,5",
+      "unit": "mil R$",
+      "result_str": "R$ 63,5 mil",
+      "expression": "(5**2/5)*10+13.5",
+      "mental_steps": 4
+    },
+    "card_no": 8,
+    "valores_numericos": {
+      "veg_km2": 140.0,
+      "san_pct": 68.6,
+      "pib_mil": 63.5,
+      "alf_pct": 95.5
+    },
+    "potencial_vitorias": {
+      "veg_km2": 33,
+      "san_pct": 34,
+      "pib_mil": 38,
+      "alf_pct": 19
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4309506,
@@ -788,17 +948,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://www.portaldasmissoes.com.br/uploads/imagens/0000078_regular_portal-das-missoes-igreja-santa-teresa-davila-(65).jpg",
     "legenda": "Erguida a partir de 1925 no coração da Capital Polonesa dos Gaúchos, a Igreja Matriz impressiona por seus vitrais artísticos de origem europeia e altares entalhados. É o monumento máximo da fé, da união comunitária e das tradições trazidas pelos colonizadores eslavos.",
     "attrs": {
-      "veg_km2": "58 km²",
-      "san_pct": "82,4%",
-      "pib_mil": "R$ 49,8 mil",
-      "ideb": "6,6"
+      "veg_km2": "55,9 km²",
+      "san_pct": "16,7%",
+      "pib_mil": "R$ 39,9 mil",
+      "alf_pct": "95,6%"
     },
-    "hidden_attr": "san_pct",
+    "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "9² + 1,4",
+      "formula": "<span class=\"frac\"><span class=\"top\">3²</span><span class=\"bottom\">2</span></span> × 20 + 5,6",
       "unit": "%",
-      "result_str": "82,4%"
-    }
+      "result_str": "95,6%",
+      "expression": "(3**2/2)*20+5.6",
+      "mental_steps": 4
+    },
+    "card_no": 9,
+    "valores_numericos": {
+      "veg_km2": 55.9,
+      "san_pct": 16.7,
+      "pib_mil": 39.9,
+      "alf_pct": 95.6
+    },
+    "potencial_vitorias": {
+      "veg_km2": 18,
+      "san_pct": 5,
+      "pib_mil": 16,
+      "alf_pct": 20
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4312179,
@@ -809,17 +985,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://upload.wikimedia.org/wikipedia/commons/d/d1/Prefeitura_Municipal_Mato_Queimado.jpg",
     "legenda": "Sede dos poderes cívicos do município, o Centro Administrativo reflete a organização, o esmero paisagístico e a hospitalidade típica de Mato Queimado. O espaço central é emoldurado por jardins floridos e praças que reúnem as principais manifestações culturais e comunitárias.",
     "attrs": {
-      "veg_km2": "21 km²",
-      "san_pct": "78,2%",
-      "pib_mil": "R$ 56,4 mil",
-      "ideb": "6,9"
+      "veg_km2": "16,7 km²",
+      "san_pct": "73,5%",
+      "pib_mil": "R$ 34,3 mil",
+      "alf_pct": "96,9%"
     },
-    "hidden_attr": "pib_mil",
+    "hidden_attr": "san_pct",
     "challenge": {
-      "formula": "7² + 7,4",
-      "unit": "mil R$",
-      "result_str": "R$ 56,4 mil"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">2³</span><span class=\"bottom\">4</span></span> × 36 + 1,5",
+      "unit": "%",
+      "result_str": "73,5%",
+      "expression": "(2**3/4)*36+1.5",
+      "mental_steps": 4
+    },
+    "card_no": 10,
+    "valores_numericos": {
+      "veg_km2": 16.7,
+      "san_pct": 73.5,
+      "pib_mil": 34.3,
+      "alf_pct": 96.9
+    },
+    "potencial_vitorias": {
+      "veg_km2": 1,
+      "san_pct": 38,
+      "pib_mil": 7,
+      "alf_pct": 30
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4314555,
@@ -830,17 +1022,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://www.portaldasmissoes.com.br/uploads/empreendimentos/0000715_regular_igreja-matriz-de-pirapo-01.jpg",
     "legenda": "Inaugurada solenemente em 1957, a Igreja Matriz de São José destaca-se na praça central de Pirapó pela harmonia de sua torre e fachada com detalhes em cantaria. O interior abriga belos vitrais coloridos e imagens sacras que representam a religiosidade e as origens da comunidade ribeirinha.",
     "attrs": {
-      "veg_km2": "89 km²",
-      "san_pct": "69,5%",
-      "pib_mil": "R$ 41,8 mil",
-      "ideb": "7,1"
+      "veg_km2": "181,5 km²",
+      "san_pct": "85,7%",
+      "pib_mil": "R$ 31,9 mil",
+      "alf_pct": "90,1%"
     },
-    "hidden_attr": "ideb",
+    "hidden_attr": "san_pct",
     "challenge": {
-      "formula": "(4 × 1,5) + 1,1",
-      "unit": "pts",
-      "result_str": "7,1"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">4²</span><span class=\"bottom\">8</span></span> × 40 + 5,7",
+      "unit": "%",
+      "result_str": "85,7%",
+      "expression": "(4**2/8)*40+5.7",
+      "mental_steps": 4
+    },
+    "card_no": 11,
+    "valores_numericos": {
+      "veg_km2": 181.5,
+      "san_pct": 85.7,
+      "pib_mil": 31.9,
+      "alf_pct": 90.1
+    },
+    "potencial_vitorias": {
+      "veg_km2": 37,
+      "san_pct": 41,
+      "pib_mil": 6,
+      "alf_pct": 1
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4315107,
@@ -851,17 +1059,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://res.cloudinary.com/dmvxu7ioq/image/upload/v1791330752/fo7pmvssohhifkbwmsie.jpg",
     "legenda": "Erguido sobre as barrancas do Rio Uruguai, o mirante descortina uma ampla visão da imensidão das águas e do movimento internacional das balsas para a Argentina. O local é o ponto de encontro preferido para contemplar a orla fluvial, registrar fotografias e apreciar o entardecer.",
     "attrs": {
-      "veg_km2": "76 km²",
-      "san_pct": "79,0%",
-      "pib_mil": "R$ 45,3 mil",
-      "ideb": "7,0"
+      "veg_km2": "187,7 km²",
+      "san_pct": "60,2%",
+      "pib_mil": "R$ 23,2 mil",
+      "alf_pct": "93,4%"
     },
-    "hidden_attr": "ideb",
+    "hidden_attr": "veg_km2",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span> × 8 + 1,0",
-      "unit": "pts",
-      "result_str": "7,0"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">5²</span><span class=\"bottom\">5</span></span> × 35 + 12,7",
+      "unit": "km²",
+      "result_str": "187,7 km²",
+      "expression": "(5**2/5)*35+12.7",
+      "mental_steps": 4
+    },
+    "card_no": 12,
+    "valores_numericos": {
+      "veg_km2": 187.7,
+      "san_pct": 60.2,
+      "pib_mil": 23.2,
+      "alf_pct": 93.4
+    },
+    "potencial_vitorias": {
+      "veg_km2": 38,
+      "san_pct": 27,
+      "pib_mil": 1,
+      "alf_pct": 9
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4315958,
@@ -872,17 +1096,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://portaldasmissoes.com/uploads/empreendimentos/2076/0116412_regular_casa-de-pedra~3.jpg",
     "legenda": "Edificada artesanalmente em 1955 na localidade de Passo Novo pelo pioneiro Brasil da Silva Rios, a Casa de Pedra é uma joia da arquitetura rústica missioneira. Suas paredes grossas em pedras naturais empilhadas resistem ao tempo como testemunho da obstinação e inventividade dos primeiros moradores.",
     "attrs": {
-      "veg_km2": "65 km²",
-      "san_pct": "71,2%",
-      "pib_mil": "R$ 47,9 mil",
-      "ideb": "6,7"
+      "veg_km2": "109,4 km²",
+      "san_pct": "73,8%",
+      "pib_mil": "R$ 39,9 mil",
+      "alf_pct": "93,7%"
     },
-    "hidden_attr": "veg_km2",
+    "hidden_attr": "san_pct",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span> × 80 + 5",
-      "unit": "km²",
-      "result_str": "65 km²"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">3²</span><span class=\"bottom\">2</span></span> × 16 + 1,8",
+      "unit": "%",
+      "result_str": "73,8%",
+      "expression": "(3**2/2)*16+1.8",
+      "mental_steps": 4
+    },
+    "card_no": 13,
+    "valores_numericos": {
+      "veg_km2": 109.4,
+      "san_pct": 73.8,
+      "pib_mil": 39.9,
+      "alf_pct": 93.7
+    },
+    "potencial_vitorias": {
+      "veg_km2": 30,
+      "san_pct": 39,
+      "pib_mil": 16,
+      "alf_pct": 10
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4316303,
@@ -893,17 +1133,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://www.radiomissioneira.com/wp-content/uploads/2022/12/WhatsApp-Image-2022-12-03-at-10.56.41.jpeg",
     "legenda": "Banhada pelas águas calmas do lago formado pela Usina Hidrelétrica Passo São João, a Prainha de Roque Gonzales é um dos principais polos de lazer náutico e veraneio da região. O complexo oferece infraestrutura de quiosques, camping e um dos pores do sol mais consagrados das Missões.",
     "attrs": {
-      "veg_km2": "98 km²",
-      "san_pct": "77,4%",
-      "pib_mil": "R$ 115,3 mil",
-      "ideb": "8,2"
+      "veg_km2": "173,2 km²",
+      "san_pct": "26,6%",
+      "pib_mil": "R$ 60,3 mil",
+      "alf_pct": "94,6%"
     },
     "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "11² − 5,7",
+      "formula": "<span class=\"frac\"><span class=\"top\">2³</span><span class=\"bottom\">4</span></span> × 28 + 4,3",
       "unit": "mil R$",
-      "result_str": "R$ 115,3 mil"
-    }
+      "result_str": "R$ 60,3 mil",
+      "expression": "(2**3/4)*28+4.3",
+      "mental_steps": 4
+    },
+    "card_no": 14,
+    "valores_numericos": {
+      "veg_km2": 173.2,
+      "san_pct": 26.6,
+      "pib_mil": 60.3,
+      "alf_pct": 94.6
+    },
+    "potencial_vitorias": {
+      "veg_km2": 35,
+      "san_pct": 11,
+      "pib_mil": 36,
+      "alf_pct": 13
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4316477,
@@ -914,17 +1170,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://portaldasmissoes.com.br/uploads/empreendimentos/1162/0019926_regular_igreja-matriz--cristo-rei-em-salvador-das-missoes-01.jpg",
     "legenda": "Imponente monumento religioso localizado na Avenida Independência, a Igreja Matriz Cristo Rei destaca-se pela fachada simétrica e esmerada decoração sacra interior. O templo é o coração espiritual de Salvador das Missões, mantendo vivas as profundas raízes germânicas da comunidade.",
     "attrs": {
-      "veg_km2": "17,5 km²",
-      "san_pct": "88,5%",
-      "pib_mil": "R$ 58,2 mil",
-      "ideb": "7,0"
+      "veg_km2": "14,6 km²",
+      "san_pct": "88,6%",
+      "pib_mil": "R$ 56,4 mil",
+      "alf_pct": "98,7%"
     },
-    "hidden_attr": "san_pct",
+    "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "(12 × 7) + 4,5",
+      "formula": "<span class=\"frac\"><span class=\"top\">4²</span><span class=\"bottom\">8</span></span> × 48 + 2,7",
       "unit": "%",
-      "result_str": "88,5%"
-    }
+      "result_str": "98,7%",
+      "expression": "(4**2/8)*48+2.7",
+      "mental_steps": 4
+    },
+    "card_no": 15,
+    "valores_numericos": {
+      "veg_km2": 14.6,
+      "san_pct": 88.6,
+      "pib_mil": 56.4,
+      "alf_pct": 98.7
+    },
+    "potencial_vitorias": {
+      "veg_km2": 0,
+      "san_pct": 43,
+      "pib_mil": 32,
+      "alf_pct": 44
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4317707,
@@ -935,17 +1207,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://portaldasmissoes.com.br/uploads/empreendimentos/0001095_regular_regiao-das-missoes-santo-antonio-das-missoes-praca-central-(1).jpg",
     "legenda": "Oficializada pela Lei Municipal nº 211 de 1983, a praça central homenageia o pioneiro líder comunitário em um espaço amplo, arborizado e acolhedor. O local é o principal palco de festividades campeiras, desfiles cívicos e celebração das ricas tradições gaúchas do maior município em extensão territorial das Missões.",
     "attrs": {
-      "veg_km2": "415 km²",
-      "san_pct": "73,8%",
-      "pib_mil": "R$ 47,2 mil",
-      "ideb": "6,1"
+      "veg_km2": "850,4 km²",
+      "san_pct": "60,3%",
+      "pib_mil": "R$ 42,1 mil",
+      "alf_pct": "92,9%"
     },
     "hidden_attr": "veg_km2",
     "challenge": {
-      "formula": "20² + 15",
+      "formula": "<span class=\"frac\"><span class=\"top\">5²</span><span class=\"bottom\">5</span></span> × 160 + 50,4",
       "unit": "km²",
-      "result_str": "415 km²"
-    }
+      "result_str": "850,4 km²",
+      "expression": "(5**2/5)*160+50.4",
+      "mental_steps": 4
+    },
+    "card_no": 16,
+    "valores_numericos": {
+      "veg_km2": 850.4,
+      "san_pct": 60.3,
+      "pib_mil": 42.1,
+      "alf_pct": 92.9
+    },
+    "potencial_vitorias": {
+      "veg_km2": 43,
+      "san_pct": 29,
+      "pib_mil": 19,
+      "alf_pct": 6
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4317509,
@@ -956,17 +1244,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Catedral_angelopolitana_santo_angelo.jpg",
     "legenda": "Construída sobre os alicerces da histórica redução jesuítica de Santo Ângelo Custódio na Praça Pinheiro Machado, a Catedral Angelopolitana reproduz com imponência a fachada barroca missioneira. É o monumento-símbolo da Capital das Missões e marco patrimonial tombado pelo IPHAN.",
     "attrs": {
-      "veg_km2": "124 km²",
-      "san_pct": "91,8%",
-      "pib_mil": "R$ 42,8 mil",
-      "ideb": "6,2"
+      "veg_km2": "146,1 km²",
+      "san_pct": "60,9%",
+      "pib_mil": "R$ 43,9 mil",
+      "alf_pct": "97,1%"
     },
-    "hidden_attr": "san_pct",
+    "hidden_attr": "veg_km2",
     "challenge": {
-      "formula": "(15 × 6) + 1,8",
-      "unit": "%",
-      "result_str": "91,8%"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">3²</span><span class=\"bottom\">2</span></span> × 32 + 2,1",
+      "unit": "km²",
+      "result_str": "146,1 km²",
+      "expression": "(3**2/2)*32+2.1",
+      "mental_steps": 4
+    },
+    "card_no": 17,
+    "valores_numericos": {
+      "veg_km2": 146.1,
+      "san_pct": 60.9,
+      "pib_mil": 43.9,
+      "alf_pct": 97.1
+    },
+    "potencial_vitorias": {
+      "veg_km2": 34,
+      "san_pct": 31,
+      "pib_mil": 22,
+      "alf_pct": 32
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4320578,
@@ -977,17 +1281,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://www.portaldasmissoes.com.br/uploads/imagens/0000103_regular_portal-das-missoes-sete-de-setembro-igreja-sao-roque-0).jpg",
     "legenda": "A Cascata do Rio Comandaí é um refúgio natural que combina corredeiras borbulhantes, piscinas naturais e paredões de basalto cercados por mata ciliar densa. O atrativo é a referência hidrográfica e ambiental do município, proporcionando lazer e tranquilidade para moradores e visitantes.",
     "attrs": {
-      "veg_km2": "26,5 km²",
-      "san_pct": "76,0%",
-      "pib_mil": "R$ 49,1 mil",
-      "ideb": "6,7"
+      "veg_km2": "19,5 km²",
+      "san_pct": "8,0%",
+      "pib_mil": "R$ 42,2 mil",
+      "alf_pct": "95,7%"
     },
-    "hidden_attr": "ideb",
+    "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "(2,5 × 2) + 1,7",
-      "unit": "pts",
-      "result_str": "6,7"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">2³</span><span class=\"bottom\">4</span></span> × 44 + 7,7",
+      "unit": "%",
+      "result_str": "95,7%",
+      "expression": "(2**3/4)*44+7.7",
+      "mental_steps": 4
+    },
+    "card_no": 18,
+    "valores_numericos": {
+      "veg_km2": 19.5,
+      "san_pct": 8.0,
+      "pib_mil": 42.2,
+      "alf_pct": 95.7
+    },
+    "potencial_vitorias": {
+      "veg_km2": 3,
+      "san_pct": 3,
+      "pib_mil": 20,
+      "alf_pct": 23
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4318903,
@@ -998,17 +1318,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://sp1-object.adentro.com.br/sites/470/Conteudos/820/fpw8668qxc9rh9h3gyyh_Imagem_7_234O..JPG",
     "legenda": "Com sua magnífica torre sineira de 48 metros de altura em linhas neogóticas, a Igreja Matriz domina o panorama da Capital da Música Missioneira. Seu interior preserva tesouros inestimáveis da arte sacra barroco-guarani esculpidos em madeira no período das reduções jesuíticas.",
     "attrs": {
-      "veg_km2": "252 km²",
-      "san_pct": "86,4%",
-      "pib_mil": "R$ 43,0 mil",
-      "ideb": "6,3"
+      "veg_km2": "441,7 km²",
+      "san_pct": "73,4%",
+      "pib_mil": "R$ 49,3 mil",
+      "alf_pct": "95,7%"
     },
     "hidden_attr": "veg_km2",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">5</span></span> × 400 + 12",
+      "formula": "<span class=\"frac\"><span class=\"top\">4²</span><span class=\"bottom\">8</span></span> × 200 + 41,7",
       "unit": "km²",
-      "result_str": "252 km²"
-    }
+      "result_str": "441,7 km²",
+      "expression": "(4**2/8)*200+41.7",
+      "mental_steps": 4
+    },
+    "card_no": 19,
+    "valores_numericos": {
+      "veg_km2": 441.7,
+      "san_pct": 73.4,
+      "pib_mil": 49.3,
+      "alf_pct": 95.7
+    },
+    "potencial_vitorias": {
+      "veg_km2": 41,
+      "san_pct": 37,
+      "pib_mil": 26,
+      "alf_pct": 23
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4319158,
@@ -1019,17 +1355,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://upload.wikimedia.org/wikipedia/commons/b/b3/S%C3%ADtio_Arqueol%C3%B3gico_de_S%C3%A3o_Miguel_Arcanjo_%28Ru%C3%ADnas_de_S%C3%A3o_Miguel_das_Miss%C3%B5es%29.jpg",
     "legenda": "Declaradas Patrimônio Mundial da Humanidade pela UNESCO, as ruínas da igreja projetada pelo arquiteto jesuíta Gian Battista Primoli constituem o mais monumental testemunho da civilização missioneira guarani. O espetáculo diário de Som e Luz revive a saga histórica e as batalhas dos Sete Povos.",
     "attrs": {
-      "veg_km2": "298 km²",
-      "san_pct": "72,0%",
-      "pib_mil": "R$ 67,9 mil",
-      "ideb": "6,6"
+      "veg_km2": "410,0 km²",
+      "san_pct": "87,2%",
+      "pib_mil": "R$ 73,3 mil",
+      "alf_pct": "94,8%"
     },
-    "hidden_attr": "veg_km2",
+    "hidden_attr": "san_pct",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span> × 400 − 2",
-      "unit": "km²",
-      "result_str": "298 km²"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">5²</span><span class=\"bottom\">5</span></span> × 15 + 12,2",
+      "unit": "%",
+      "result_str": "87,2%",
+      "expression": "(5**2/5)*15+12.2",
+      "mental_steps": 4
+    },
+    "card_no": 20,
+    "valores_numericos": {
+      "veg_km2": 410.0,
+      "san_pct": 87.2,
+      "pib_mil": 73.3,
+      "alf_pct": 94.8
+    },
+    "potencial_vitorias": {
+      "veg_km2": 40,
+      "san_pct": 42,
+      "pib_mil": 40,
+      "alf_pct": 14
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4319208,
@@ -1040,17 +1392,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Ruinas_sao_nicolau1.jpg",
     "legenda": "Fundada em 1626 pelo padre jesuíta Roque González, São Nicolau é consagrada como a Primeira Querência do Rio Grande do Sul. O sítio histórico conserva impressionantes vestígios em cantaria de pedra, piso original, alfaias sacras e a imensa cruz missioneira de fundação.",
     "attrs": {
-      "veg_km2": "129 km²",
-      "san_pct": "75,2%",
-      "pib_mil": "R$ 44,8 mil",
-      "ideb": "6,3"
+      "veg_km2": "235,5 km²",
+      "san_pct": "45,4%",
+      "pib_mil": "R$ 34,9 mil",
+      "alf_pct": "89,7%"
     },
     "hidden_attr": "veg_km2",
     "challenge": {
-      "formula": "11² + 8",
+      "formula": "<span class=\"frac\"><span class=\"top\">3²</span><span class=\"bottom\">2</span></span> × 40 + 55,5",
       "unit": "km²",
-      "result_str": "129 km²"
-    }
+      "result_str": "235,5 km²",
+      "expression": "(3**2/2)*40+55.5",
+      "mental_steps": 4
+    },
+    "card_no": 21,
+    "valores_numericos": {
+      "veg_km2": 235.5,
+      "san_pct": 45.4,
+      "pib_mil": 34.9,
+      "alf_pct": 89.7
+    },
+    "potencial_vitorias": {
+      "veg_km2": 39,
+      "san_pct": 23,
+      "pib_mil": 9,
+      "alf_pct": 0
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4319307,
@@ -1061,17 +1429,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://portaldasmissoes.com.br/uploads/empreendimentos/0001215_regular_regiao-das-missoes-sao-paulo-das-missoes-portico-fone-prefeitura-br0318-regiao-missioneira.jpg",
     "legenda": "Localizado na rodovia RS-307, o pórtico de entrada saúda os visitantes exaltando a força da agricultura familiar e a cooperação camponesa. O monumento retrata uma família de produtores no campo, simbolizando a base econômica, o apego à terra e os valores culturais do município.",
     "attrs": {
-      "veg_km2": "49 km²",
-      "san_pct": "77,8%",
-      "pib_mil": "R$ 48,5 mil",
-      "ideb": "7,2"
+      "veg_km2": "107,8 km²",
+      "san_pct": "65,2%",
+      "pib_mil": "R$ 36,7 mil",
+      "alf_pct": "95,0%"
     },
-    "hidden_attr": "ideb",
+    "hidden_attr": "san_pct",
     "challenge": {
-      "formula": "(3,5 × 2) + 0,2",
-      "unit": "pts",
-      "result_str": "7,2"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">2³</span><span class=\"bottom\">4</span></span> × 32 + 1,2",
+      "unit": "%",
+      "result_str": "65,2%",
+      "expression": "(2**3/4)*32+1.2",
+      "mental_steps": 4
+    },
+    "card_no": 22,
+    "valores_numericos": {
+      "veg_km2": 107.8,
+      "san_pct": 65.2,
+      "pib_mil": 36.7,
+      "alf_pct": 95.0
+    },
+    "potencial_vitorias": {
+      "veg_km2": 29,
+      "san_pct": 32,
+      "pib_mil": 11,
+      "alf_pct": 16
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4319372,
@@ -1082,17 +1466,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://sp1-object.adentro.com.br/sites/1720/PontosTuristicos/2017680/1c3espr8gztjwzdmko6f_23cba90547b1c344caa2192f043d3364.jpeg",
     "legenda": "Elevando-se a 30 metros de altura no complexo do Centro Germânico Missioneiro, a estátua de São Pedro é o maior símbolo do patrimônio de fé e pioneirismo teuto-gaúcho. O local reúne o museu da colonização, moinho colonial, trilhas religiosas e preservação das tradições do dialeto Hunsrückisch.",
     "attrs": {
-      "veg_km2": "19,5 km²",
-      "san_pct": "84,2%",
-      "pib_mil": "R$ 59,4 mil",
-      "ideb": "7,1"
+      "veg_km2": "19,0 km²",
+      "san_pct": "97,0%",
+      "pib_mil": "R$ 45,4 mil",
+      "alf_pct": "98,1%"
     },
-    "hidden_attr": "pib_mil",
+    "hidden_attr": "san_pct",
     "challenge": {
-      "formula": "(12 × 5) − 0,6",
-      "unit": "mil R$",
-      "result_str": "R$ 59,4 mil"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">4²</span><span class=\"bottom\">8</span></span> × 48 + 1,0",
+      "unit": "%",
+      "result_str": "97,0%",
+      "expression": "(4**2/8)*48+1.0",
+      "mental_steps": 4
+    },
+    "card_no": 23,
+    "valores_numericos": {
+      "veg_km2": 19.0,
+      "san_pct": 97.0,
+      "pib_mil": 45.4,
+      "alf_pct": 98.1
+    },
+    "potencial_vitorias": {
+      "veg_km2": 2,
+      "san_pct": 44,
+      "pib_mil": 25,
+      "alf_pct": 42
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4322343,
@@ -1103,17 +1503,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://portaldasmissoes.com.br/uploads/empreendimentos/0001112_regular_img_2945.jpg",
     "legenda": "Encravada na aprazível localidade de Laranjeira, a Cachoeira das Laranjeiras é o tesouro natural de Ubiretama, com quedas de águas límpidas entre paredões rochosos e mata de encosta. O recanto oferece ambiente sereno para caminhadas ecológicas, piqueniques e banhos refrescantes.",
     "attrs": {
-      "veg_km2": "28 km²",
-      "san_pct": "74,0%",
-      "pib_mil": "R$ 50,2 mil",
-      "ideb": "7,1"
+      "veg_km2": "25,3 km²",
+      "san_pct": "37,2%",
+      "pib_mil": "R$ 36,9 mil",
+      "alf_pct": "96,7%"
     },
-    "hidden_attr": "ideb",
+    "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">5</span></span> × 10 + 1,1",
-      "unit": "pts",
-      "result_str": "7,1"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">5²</span><span class=\"bottom\">5</span></span> × 15 + 21,7",
+      "unit": "%",
+      "result_str": "96,7%",
+      "expression": "(5**2/5)*15+21.7",
+      "mental_steps": 4
+    },
+    "card_no": 24,
+    "valores_numericos": {
+      "veg_km2": 25.3,
+      "san_pct": 37.2,
+      "pib_mil": 36.9,
+      "alf_pct": 96.7
+    },
+    "potencial_vitorias": {
+      "veg_km2": 8,
+      "san_pct": 17,
+      "pib_mil": 12,
+      "alf_pct": 29
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4323754,
@@ -1124,17 +1540,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://www.portaldasmissoes.com.br/uploads/empreendimentos/516/0117377_regular_altar-da-patria-centro-de-cultura-praca-municipal-20-de-marco-de-vitoria-das-missoes-rs--(5).jpg",
     "legenda": "Situada no centro de Vitória das Missões, a Praça 20 de Março abriga o Altar da Pátria e o Centro Municipal de Cultura em meio a jardins arborizados. É o coração comunitário da cidade, palco de celebrações cívicas, encontros e eventos culturais.",
     "attrs": {
-      "veg_km2": "56 km²",
-      "san_pct": "73,1%",
-      "pib_mil": "R$ 47,6 mil",
-      "ideb": "6,9"
+      "veg_km2": "80,0 km²",
+      "san_pct": "66,4%",
+      "pib_mil": "R$ 27,4 mil",
+      "alf_pct": "93,3%"
     },
-    "hidden_attr": "ideb",
+    "hidden_attr": "san_pct",
     "challenge": {
-      "formula": "(2,5 × 2) + 1,9",
-      "unit": "pts",
-      "result_str": "6,9"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">3²</span><span class=\"bottom\">2</span></span> × 14 + 3,4",
+      "unit": "%",
+      "result_str": "66,4%",
+      "expression": "(3**2/2)*14+3.4",
+      "mental_steps": 4
+    },
+    "card_no": 25,
+    "valores_numericos": {
+      "veg_km2": 80.0,
+      "san_pct": 66.4,
+      "pib_mil": 27.4,
+      "alf_pct": 93.3
+    },
+    "potencial_vitorias": {
+      "veg_km2": 25,
+      "san_pct": 33,
+      "pib_mil": 3,
+      "alf_pct": 8
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4317202,
@@ -1145,20 +1577,36 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Museu_Casa_da_Xuxa_-_Santa_Rosa_-_RS_-_Brazil.JPG",
     "legenda": "Construído em madeira rústica e restaurado em 2002 na Avenida Rio Branco, o Memorial preserva o imóvel onde nasceu a apresentadora Xuxa Meneghel em 1963. O espaço reúne acervo histórico com fotos raras, figurinos originais e documentos que atraem admiradores de todo o país.",
     "attrs": {
-      "veg_km2": "68 km²",
-      "san_pct": "92,5%",
-      "pib_mil": "R$ 50,5 mil",
-      "ideb": "6,9"
+      "veg_km2": "78,8 km²",
+      "san_pct": "71,9%",
+      "pib_mil": "R$ 58,9 mil",
+      "alf_pct": "97,6%"
     },
-    "hidden_attr": "san_pct",
+    "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "10² − 7,5",
+      "formula": "<span class=\"frac\"><span class=\"top\">2³</span><span class=\"bottom\">4</span></span> × 48 + 1,6",
       "unit": "%",
-      "result_str": "92,5%"
-    }
+      "result_str": "97,6%",
+      "expression": "(2**3/4)*48+1.6",
+      "mental_steps": 4
+    },
+    "card_no": 26,
+    "valores_numericos": {
+      "veg_km2": 78.8,
+      "san_pct": 71.9,
+      "pib_mil": 58.9,
+      "alf_pct": 97.6
+    },
+    "potencial_vitorias": {
+      "veg_km2": 24,
+      "san_pct": 36,
+      "pib_mil": 33,
+      "alf_pct": 38
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
-    "id": 4321832,
+    "id": 4321808,
     "nome": "Três de Maio",
     "pop": 24916,
     "area": 421,
@@ -1166,17 +1614,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://portaldasmissoes.com/uploads/empreendimentos/0002250_regular_paroquia-nossa-senhora-da-conceicao-tres-de-maio-igreja-matriz-igreja-catolica-tre-de-maio-rs-(16).jpg",
     "legenda": "Com sua imponente torre e nave ampla projetada nos anos 1930 e inaugurada em 1942, a Igreja Matriz é o marco histórico e religioso de Três de Maio. Localizada na praça central da Cidade Canção, ela sintetiza a profunda devoção e a mobilização comunitária das famílias pioneiras.",
     "attrs": {
-      "veg_km2": "54 km²",
-      "san_pct": "89,2%",
+      "veg_km2": "78,7 km²",
+      "san_pct": "42,2%",
       "pib_mil": "R$ 61,2 mil",
-      "ideb": "6,7"
+      "alf_pct": "97,1%"
     },
     "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "(15 × 4) + 1,2",
+      "formula": "<span class=\"frac\"><span class=\"top\">4²</span><span class=\"bottom\">8</span></span> × 24 + 13,2",
       "unit": "mil R$",
-      "result_str": "R$ 61,2 mil"
-    }
+      "result_str": "R$ 61,2 mil",
+      "expression": "(4**2/8)*24+13.2",
+      "mental_steps": 4
+    },
+    "card_no": 27,
+    "valores_numericos": {
+      "veg_km2": 78.7,
+      "san_pct": 42.2,
+      "pib_mil": 61.2,
+      "alf_pct": 97.1
+    },
+    "potencial_vitorias": {
+      "veg_km2": 23,
+      "san_pct": 21,
+      "pib_mil": 37,
+      "alf_pct": 32
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4309605,
@@ -1187,17 +1651,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://cdn.prod.website-files.com/6565f5488290853d5c932b76/67ee7dc486556ce735cf12ce_banner-blog.webp",
     "legenda": "O Memorial da Evolução Agrícola (MEA) é um complexo cultural e educativo moderno que narra a transformação do trabalho no campo e a industrialização regional. O espaço celebra a identidade de Horizontina como o Berço Nacional das Colheitadeiras Automotrizes.",
     "attrs": {
-      "veg_km2": "48,5 km²",
-      "san_pct": "90,4%",
-      "pib_mil": "R$ 90,1 mil",
-      "ideb": "7,2"
+      "veg_km2": "36,0 km²",
+      "san_pct": "60,2%",
+      "pib_mil": "R$ 97,0 mil",
+      "alf_pct": "97,7%"
     },
     "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "9² + 9,1",
+      "formula": "<span class=\"frac\"><span class=\"top\">5²</span><span class=\"bottom\">5</span></span> × 15 + 22,0",
       "unit": "mil R$",
-      "result_str": "R$ 90,1 mil"
-    }
+      "result_str": "R$ 97,0 mil",
+      "expression": "(5**2/5)*15+22.0",
+      "mental_steps": 4
+    },
+    "card_no": 28,
+    "valores_numericos": {
+      "veg_km2": 36.0,
+      "san_pct": 60.2,
+      "pib_mil": 97.0,
+      "alf_pct": 97.7
+    },
+    "potencial_vitorias": {
+      "veg_km2": 13,
+      "san_pct": 27,
+      "pib_mil": 44,
+      "alf_pct": 39
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4317905,
@@ -1208,20 +1688,36 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Santo_Cristo_RS.jpg",
     "legenda": "Em formato monumental na entrada urbana, o pórtico saúda os visitantes celebrando as raízes culturais germânicas e a pujança da bacia leiteira municipal. O monumento representa o trabalho cooperativo, a religiosidade e o espírito hospitaleiro da comunidade de Santo Cristo.",
     "attrs": {
-      "veg_km2": "62 km²",
-      "san_pct": "85,0%",
-      "pib_mil": "R$ 55,3 mil",
-      "ideb": "6,7"
+      "veg_km2": "100,4 km²",
+      "san_pct": "48,0%",
+      "pib_mil": "R$ 50,0 mil",
+      "alf_pct": "97,5%"
     },
-    "hidden_attr": "san_pct",
+    "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "9² + 4",
+      "formula": "<span class=\"frac\"><span class=\"top\">3²</span><span class=\"bottom\">2</span></span> × 20 + 7,5",
       "unit": "%",
-      "result_str": "85,0%"
-    }
+      "result_str": "97,5%",
+      "expression": "(3**2/2)*20+7.5",
+      "mental_steps": 4
+    },
+    "card_no": 29,
+    "valores_numericos": {
+      "veg_km2": 100.4,
+      "san_pct": 48.0,
+      "pib_mil": 50.0,
+      "alf_pct": 97.5
+    },
+    "potencial_vitorias": {
+      "veg_km2": 28,
+      "san_pct": 24,
+      "pib_mil": 27,
+      "alf_pct": 37
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
-    "id": 4322202,
+    "id": 4322301,
     "nome": "Tuparendi",
     "pop": 8363,
     "area": 308,
@@ -1229,17 +1725,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://www.portaldasmissoes.com.br/uploads/noticias/0000964_regular_gruta-de-lurdes-sao-luiz-gonzaga-gruta-de-nossa-senhora-de-lurdes-lourdes-igreja-de-lourdes-fone-restaurante.jpg",
     "legenda": "Situada junto à Igreja Nossa Senhora da Saúde na histórica localidade de Cinquentenário, a Gruta de Lourdes é um santuário de oração ao ar livre. Envolvida por árvores frondosas e fontes de água, a gruta recebe romarias anuais de devotos em busca de paz espiritual e bênçãos.",
     "attrs": {
-      "veg_km2": "47 km²",
-      "san_pct": "83,5%",
-      "pib_mil": "R$ 53,7 mil",
-      "ideb": "6,4"
+      "veg_km2": "57,4 km²",
+      "san_pct": "25,8%",
+      "pib_mil": "R$ 44,8 mil",
+      "alf_pct": "96,9%"
     },
-    "hidden_attr": "san_pct",
+    "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "9² + 2,5",
+      "formula": "<span class=\"frac\"><span class=\"top\">2³</span><span class=\"bottom\">4</span></span> × 48 + 0,9",
       "unit": "%",
-      "result_str": "83,5%"
-    }
+      "result_str": "96,9%",
+      "expression": "(2**3/4)*48+0.9",
+      "mental_steps": 4
+    },
+    "card_no": 30,
+    "valores_numericos": {
+      "veg_km2": 57.4,
+      "san_pct": 25.8,
+      "pib_mil": 44.8,
+      "alf_pct": 96.9
+    },
+    "potencial_vitorias": {
+      "veg_km2": 19,
+      "san_pct": 10,
+      "pib_mil": 24,
+      "alf_pct": 30
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4302204,
@@ -1250,20 +1762,36 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://www.portaldasmissoes.com.br/uploads/empreendimentos/2176/0122775_regular_paroquia-sao-jose--boa-vista-do-burica_-51.jpg",
     "legenda": "Erguida na Avenida São José, a Igreja Matriz é o marco fundador e espiritual de Boa Vista do Buricá, surgida da frente de colonização da década de 1920. Sua arquitetura harmoniosa e o campanário representam a união comunitária e o dinamismo do vale do Rio Buricá.",
     "attrs": {
-      "veg_km2": "21 km²",
-      "san_pct": "86,0%",
-      "pib_mil": "R$ 57,8 mil",
-      "ideb": "6,8"
+      "veg_km2": "29,0 km²",
+      "san_pct": "17,7%",
+      "pib_mil": "R$ 50,9 mil",
+      "alf_pct": "98,2%"
     },
-    "hidden_attr": "san_pct",
+    "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">5</span></span> × 100 + 6",
+      "formula": "<span class=\"frac\"><span class=\"top\">4²</span><span class=\"bottom\">8</span></span> × 48 + 2,2",
       "unit": "%",
-      "result_str": "86,0%"
-    }
+      "result_str": "98,2%",
+      "expression": "(4**2/8)*48+2.2",
+      "mental_steps": 4
+    },
+    "card_no": 31,
+    "valores_numericos": {
+      "veg_km2": 29.0,
+      "san_pct": 17.7,
+      "pib_mil": 50.9,
+      "alf_pct": 98.2
+    },
+    "potencial_vitorias": {
+      "veg_km2": 10,
+      "san_pct": 7,
+      "pib_mil": 29,
+      "alf_pct": 43
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
-    "id": 4310207,
+    "id": 4310405,
     "nome": "Independência",
     "pop": 6427,
     "area": 358,
@@ -1271,20 +1799,36 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://portalfronteiranoroeste.com.br/wp-content/uploads/2024/01/Praca-Joao-Saffi-em-independencia-3-scaled.jpg",
     "legenda": "Com exuberante vegetação, pérgolas floridas e alamedas sombreadas, a Praça João Saffi é o coração cívico e social de Independência. O espaço público reúne famílias para o mate diário e sedia as principais comemorações cívicas, feiras gastronômicas e eventos da cidade.",
     "attrs": {
-      "veg_km2": "53 km²",
-      "san_pct": "81,0%",
-      "pib_mil": "R$ 49,5 mil",
-      "ideb": "6,1"
+      "veg_km2": "71,3 km²",
+      "san_pct": "7,0%",
+      "pib_mil": "R$ 69,0 mil",
+      "alf_pct": "95,6%"
     },
-    "hidden_attr": "san_pct",
+    "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">5</span></span> × 100 + 1",
-      "unit": "%",
-      "result_str": "81,0%"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">5²</span><span class=\"bottom\">5</span></span> × 10 + 19,0",
+      "unit": "mil R$",
+      "result_str": "R$ 69,0 mil",
+      "expression": "(5**2/5)*10+19.0",
+      "mental_steps": 4
+    },
+    "card_no": 32,
+    "valores_numericos": {
+      "veg_km2": 71.3,
+      "san_pct": 7.0,
+      "pib_mil": 69.0,
+      "alf_pct": 95.6
+    },
+    "potencial_vitorias": {
+      "veg_km2": 22,
+      "san_pct": 2,
+      "pib_mil": 39,
+      "alf_pct": 20
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
-    "id": 4304200,
+    "id": 4304309,
     "nome": "Cândido Godói",
     "pop": 6294,
     "area": 247,
@@ -1292,17 +1836,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzSOkU3jmgppIa5udzQoBLuNiD3DuZydJcscKHp8RxZRu3QkzUvbl6I6M&s=10",
     "legenda": "A Fonte da Fertilidade conecta o imaginário popular às pesquisas científicas que tornaram Cândido Godói mundialmente conhecida como a Terra dos Gêmeos. O ponto atrai curiosos e turistas interessados nos mistérios e na elevada taxa de nascimentos gemelares locais.",
     "attrs": {
-      "veg_km2": "41 km²",
-      "san_pct": "82,5%",
-      "pib_mil": "R$ 54,0 mil",
-      "ideb": "7,4"
+      "veg_km2": "54,0 km²",
+      "san_pct": "36,6%",
+      "pib_mil": "R$ 59,6 mil",
+      "alf_pct": "97,1%"
     },
-    "hidden_attr": "ideb",
+    "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "10 − (1,3 × 2)",
-      "unit": "pts",
-      "result_str": "7,4"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">3²</span><span class=\"bottom\">2</span></span> × 12 + 5,6",
+      "unit": "mil R$",
+      "result_str": "R$ 59,6 mil",
+      "expression": "(3**2/2)*12+5.6",
+      "mental_steps": 4
+    },
+    "card_no": 33,
+    "valores_numericos": {
+      "veg_km2": 54.0,
+      "san_pct": 36.6,
+      "pib_mil": 59.6,
+      "alf_pct": 97.1
+    },
+    "potencial_vitorias": {
+      "veg_km2": 17,
+      "san_pct": 13,
+      "pib_mil": 35,
+      "alf_pct": 32
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4300307,
@@ -1313,20 +1873,36 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://portaldasmissoes.com.br/uploads/empreendimentos/2185/0122913_regular_monumento-ao-dourado-alecrim-rs-sao-miguel-(4).jpg",
     "legenda": "Erguido em Linha São Miguel às margens do Rio Uruguai, o monumento celebra a identidade de Alecrim com a tradicional pesca esportiva do peixe dourado. A escultura une a homenagem ao padroeiro São Miguel à preservação das belezas naturais e fluviais da fronteira.",
     "attrs": {
-      "veg_km2": "82 km²",
-      "san_pct": "76,5%",
-      "pib_mil": "R$ 46,8 mil",
-      "ideb": "7,0"
+      "veg_km2": "121,3 km²",
+      "san_pct": "37,0%",
+      "pib_mil": "R$ 25,1 mil",
+      "alf_pct": "94,3%"
     },
     "hidden_attr": "veg_km2",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">5</span></span> × 200 + 2",
+      "formula": "<span class=\"frac\"><span class=\"top\">2³</span><span class=\"bottom\">4</span></span> × 60 + 1,3",
       "unit": "km²",
-      "result_str": "82 km²"
-    }
+      "result_str": "121,3 km²",
+      "expression": "(2**3/4)*60+1.3",
+      "mental_steps": 4
+    },
+    "card_no": 34,
+    "valores_numericos": {
+      "veg_km2": 121.3,
+      "san_pct": 37.0,
+      "pib_mil": 25.1,
+      "alf_pct": 94.3
+    },
+    "potencial_vitorias": {
+      "veg_km2": 31,
+      "san_pct": 15,
+      "pib_mil": 2,
+      "alf_pct": 12
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
-    "id": 4303806,
+    "id": 4303707,
     "nome": "Campina das Missões",
     "pop": 5882,
     "area": 225,
@@ -1334,17 +1910,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9T-u99JariFKcPZZGXLil1YmaeFLfMkAKsKuk2byQ3tUpes_ufUhyccZJwGmZbhAChnvBqVJhsah3vFqVLnH0KGXxBze5DJ-Oked69HeHpMU7cyBPjeyYP3uMaCaSQFqWeRzwE=s1360-w1360-h1020-rw",
     "legenda": "A Praça São Vladimir homenageia os pioneiros eslavos e abriga a primeira capela ortodoxa russa erguida em praça pública no Brasil. O local é o principal símbolo da cultura russa na cidade e sedia tradicionais festividades religiosas e folclóricas.",
     "attrs": {
-      "veg_km2": "39 km²",
-      "san_pct": "80,5%",
-      "pib_mil": "R$ 52,0 mil",
-      "ideb": "7,1"
+      "veg_km2": "58,9 km²",
+      "san_pct": "70,5%",
+      "pib_mil": "R$ 34,6 mil",
+      "alf_pct": "97,9%"
     },
-    "hidden_attr": "ideb",
+    "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "(3 × 2,2) + 0,5",
-      "unit": "pts",
-      "result_str": "7,1"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">4²</span><span class=\"bottom\">8</span></span> × 48 + 1,9",
+      "unit": "%",
+      "result_str": "97,9%",
+      "expression": "(4**2/8)*48+1.9",
+      "mental_steps": 4
+    },
+    "card_no": 35,
+    "valores_numericos": {
+      "veg_km2": 58.9,
+      "san_pct": 70.5,
+      "pib_mil": 34.6,
+      "alf_pct": 97.9
+    },
+    "potencial_vitorias": {
+      "veg_km2": 20,
+      "san_pct": 35,
+      "pib_mil": 8,
+      "alf_pct": 40
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4322103,
@@ -1355,20 +1947,36 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://portalfronteiranoroeste.com.br/wp-content/uploads/2024/02/Praca-Alcides-Chitolina-33.webp",
     "legenda": "Ponto de convergência central em Tucunduva, a Praça Alcides Chitolina celebra o convívio comunitário na terra natal do célebre gaiteiro Tio Bilia. O amplo espaço arborizado conta com parque infantil, concha acústica e memoriais dedicado à música tradicionalista missioneira.",
     "attrs": {
-      "veg_km2": "29,5 km²",
-      "san_pct": "85,8%",
-      "pib_mil": "R$ 54,6 mil",
-      "ideb": "6,9"
+      "veg_km2": "25,7 km²",
+      "san_pct": "24,3%",
+      "pib_mil": "R$ 41,7 mil",
+      "alf_pct": "96,2%"
     },
-    "hidden_attr": "san_pct",
+    "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "9² + 4,8",
+      "formula": "<span class=\"frac\"><span class=\"top\">5²</span><span class=\"bottom\">5</span></span> × 15 + 21,2",
       "unit": "%",
-      "result_str": "85,8%"
-    }
+      "result_str": "96,2%",
+      "expression": "(5**2/5)*15+21.2",
+      "mental_steps": 4
+    },
+    "card_no": 36,
+    "valores_numericos": {
+      "veg_km2": 25.7,
+      "san_pct": 24.3,
+      "pib_mil": 41.7,
+      "alf_pct": 96.2
+    },
+    "potencial_vitorias": {
+      "veg_km2": 9,
+      "san_pct": 9,
+      "pib_mil": 18,
+      "alf_pct": 27
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
-    "id": 4306759,
+    "id": 4306734,
     "nome": "Doutor Maurício Cardoso",
     "pop": 4470,
     "area": 256,
@@ -1376,20 +1984,36 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://files.manuscdn.com/search-media/310519663169820208/kfb6MeNtvCWCnreXnPU52u/YDjai9hVtNjPryYDPDN4ah.JPG",
     "legenda": "Com praias de água doce formadas pelas vazantes do Rio Uruguai, como o Balneário Londero e as Ilhas do Chafariz, o município é um dos destinos de veraneio mais procurados do Noroeste. A orla oferece campings sombreados, passeios de barco e pescaria em cenário paradisíaco.",
     "attrs": {
-      "veg_km2": "64 km²",
-      "san_pct": "78,0%",
-      "pib_mil": "R$ 51,0 mil",
-      "ideb": "6,8"
+      "veg_km2": "34,1 km²",
+      "san_pct": "10,3%",
+      "pib_mil": "R$ 51,1 mil",
+      "alf_pct": "96,3%"
     },
-    "hidden_attr": "veg_km2",
+    "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">5</span></span> × 100 + 4",
-      "unit": "km²",
-      "result_str": "64 km²"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">3²</span><span class=\"bottom\">2</span></span> × 10 + 6,1",
+      "unit": "mil R$",
+      "result_str": "R$ 51,1 mil",
+      "expression": "(3**2/2)*10+6.1",
+      "mental_steps": 4
+    },
+    "card_no": 37,
+    "valores_numericos": {
+      "veg_km2": 34.1,
+      "san_pct": 10.3,
+      "pib_mil": 51.1,
+      "alf_pct": 96.3
+    },
+    "potencial_vitorias": {
+      "veg_km2": 12,
+      "san_pct": 4,
+      "pib_mil": 30,
+      "alf_pct": 28
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
-    "id": 4314902,
+    "id": 4315008,
     "nome": "Porto Lucena",
     "pop": 4360,
     "area": 251,
@@ -1397,17 +2021,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://files.manuscdn.com/search-media/310519663169820208/kfb6MeNtvCWCnreXnPU52u/U7DfZEKrNarL7AUD6fj9SY.jpg",
     "legenda": "Em Porto Lucena, o majestoso Rio Uruguai desenha meandros dramáticos e acolhe a célebre Ilha Grande, cuja extensão linear ultrapassa 6 quilômetros de floresta preservada. O visual panorâmico dos mirantes revela a imponência da calha fluvial que divide o Brasil da Argentina.",
     "attrs": {
-      "veg_km2": "80,5 km²",
-      "san_pct": "77,2%",
-      "pib_mil": "R$ 45,8 mil",
-      "ideb": "6,5"
+      "veg_km2": "85,0 km²",
+      "san_pct": "2,8%",
+      "pib_mil": "R$ 29,6 mil",
+      "alf_pct": "93,0%"
     },
     "hidden_attr": "veg_km2",
     "challenge": {
-      "formula": "9² − 0,5",
+      "formula": "<span class=\"frac\"><span class=\"top\">2³</span><span class=\"bottom\">4</span></span> × 40 + 5,0",
       "unit": "km²",
-      "result_str": "80,5 km²"
-    }
+      "result_str": "85,0 km²",
+      "expression": "(2**3/4)*40+5.0",
+      "mental_steps": 4
+    },
+    "card_no": 38,
+    "valores_numericos": {
+      "veg_km2": 85.0,
+      "san_pct": 2.8,
+      "pib_mil": 29.6,
+      "alf_pct": 93.0
+    },
+    "potencial_vitorias": {
+      "veg_km2": 27,
+      "san_pct": 1,
+      "pib_mil": 4,
+      "alf_pct": 7
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4300455,
@@ -1418,17 +2058,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://portaldasmissoes.com.br/uploads/empreendimentos/0002167_regular_cascata-do-engenho-alegria-rs-(22).jpg",
     "legenda": "Localizada a poucos minutos do centro urbano, a Cascata do Lajeado Engenho despenca em degraus rochosos de pedra basáltica cercada por verdejante vegetação nativa. O parque natural é refúgio de descanso, trilhas interpretativas e lazer comunitário aos finais de semana.",
     "attrs": {
-      "veg_km2": "34 km²",
-      "san_pct": "79,8%",
-      "pib_mil": "R$ 48,0 mil",
-      "ideb": "6,9"
+      "veg_km2": "41,5 km²",
+      "san_pct": "2,5%",
+      "pib_mil": "R$ 37,3 mil",
+      "alf_pct": "93,8%"
     },
-    "hidden_attr": "ideb",
+    "hidden_attr": "veg_km2",
     "challenge": {
-      "formula": "(1,5 × 4) + 0,9",
-      "unit": "pts",
-      "result_str": "6,9"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">4²</span><span class=\"bottom\">8</span></span> × 16 + 9,5",
+      "unit": "km²",
+      "result_str": "41,5 km²",
+      "expression": "(4**2/8)*16+9.5",
+      "mental_steps": 4
+    },
+    "card_no": 39,
+    "valores_numericos": {
+      "veg_km2": 41.5,
+      "san_pct": 2.5,
+      "pib_mil": 37.3,
+      "alf_pct": 93.8
+    },
+    "potencial_vitorias": {
+      "veg_km2": 14,
+      "san_pct": 0,
+      "pib_mil": 14,
+      "alf_pct": 11
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
     "id": 4313425,
@@ -1439,20 +2095,36 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3Z78bUy6WvumAvlywI3JCKRyEwG3jo3xUjbY87fQ3ZqF9IidddGZea4OU&s=10",
     "legenda": "O Balneário Corredeira é um dos recantos naturais mais frequentados de Novo Machado, marcado pelo leito pedregoso e corredeiras de águas limpas. O espaço oferece lazer sossegado junto à vegetação nativa, valorizando o ecoturismo na bacia do Uruguai.",
     "attrs": {
-      "veg_km2": "51 km²",
-      "san_pct": "78,4%",
-      "pib_mil": "R$ 50,8 mil",
-      "ideb": "6,9"
+      "veg_km2": "32,5 km²",
+      "san_pct": "43,0%",
+      "pib_mil": "R$ 44,1 mil",
+      "alf_pct": "95,1%"
     },
-    "hidden_attr": "ideb",
+    "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "3² − 2,1",
-      "unit": "pts",
-      "result_str": "6,9"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">5²</span><span class=\"bottom\">5</span></span> × 5 + 19,1",
+      "unit": "mil R$",
+      "result_str": "R$ 44,1 mil",
+      "expression": "(5**2/5)*5+19.1",
+      "mental_steps": 4
+    },
+    "card_no": 40,
+    "valores_numericos": {
+      "veg_km2": 32.5,
+      "san_pct": 43.0,
+      "pib_mil": 44.1,
+      "alf_pct": 95.1
+    },
+    "potencial_vitorias": {
+      "veg_km2": 11,
+      "san_pct": 22,
+      "pib_mil": 23,
+      "alf_pct": 17
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
-    "id": 4313037,
+    "id": 4313011,
     "nome": "Nova Candelária",
     "pop": 3061,
     "area": 98,
@@ -1460,20 +2132,36 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://upload.wikimedia.org/wikipedia/commons/a/ac/Centro-nova-candelaria-rs-bra.jpg",
     "legenda": "Destaque pelo modelo de cidade-jardim limpa, organizada e florida, o centro de Nova Candelária tem como ponto focal a Igreja Matriz Nossa Senhora da Purificação, fundada em 1963. O conjunto urbano traduz a dedicação, a cooperação social e a alta qualidade de vida de sua população.",
     "attrs": {
-      "veg_km2": "15,5 km²",
-      "san_pct": "87,2%",
-      "pib_mil": "R$ 61,4 mil",
-      "ideb": "7,1"
+      "veg_km2": "20,7 km²",
+      "san_pct": "51,3%",
+      "pib_mil": "R$ 73,8 mil",
+      "alf_pct": "97,9%"
     },
     "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "(15 × 4) + 1,4",
+      "formula": "<span class=\"frac\"><span class=\"top\">3²</span><span class=\"bottom\">2</span></span> × 16 + 1,8",
       "unit": "mil R$",
-      "result_str": "R$ 61,4 mil"
-    }
+      "result_str": "R$ 73,8 mil",
+      "expression": "(3**2/2)*16+1.8",
+      "mental_steps": 4
+    },
+    "card_no": 41,
+    "valores_numericos": {
+      "veg_km2": 20.7,
+      "san_pct": 51.3,
+      "pib_mil": 73.8,
+      "alf_pct": 97.9
+    },
+    "potencial_vitorias": {
+      "veg_km2": 4,
+      "san_pct": 25,
+      "pib_mil": 41,
+      "alf_pct": 40
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
-    "id": 4320453,
+    "id": 4320321,
     "nome": "Senador Salgado Filho",
     "pop": 2673,
     "area": 147,
@@ -1481,20 +2169,36 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://portalfronteiranoroeste.com.br/wp-content/uploads/2024/01/Praca-dos-Imigrantes-de-Senador-Salgado-Filho4.webp",
     "legenda": "A Praça dos Imigrantes é um memorial a céu aberto que honra as famílias pioneiras que desbravaram a região a partir de 1906. O espaço conta com jardins cuidados, monumentos à colonização e ambiente tranquilo que preserva a história viva da comunidade salgadense.",
     "attrs": {
-      "veg_km2": "24 km²",
-      "san_pct": "81,5%",
-      "pib_mil": "R$ 53,2 mil",
-      "ideb": "7,5"
+      "veg_km2": "23,8 km²",
+      "san_pct": "75,2%",
+      "pib_mil": "R$ 34,9 mil",
+      "alf_pct": "95,3%"
     },
-    "hidden_attr": "ideb",
+    "hidden_attr": "san_pct",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span> × 8 + 1,5",
-      "unit": "pts",
-      "result_str": "7,5"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">2³</span><span class=\"bottom\">4</span></span> × 36 + 3,2",
+      "unit": "%",
+      "result_str": "75,2%",
+      "expression": "(2**3/4)*36+3.2",
+      "mental_steps": 4
+    },
+    "card_no": 42,
+    "valores_numericos": {
+      "veg_km2": 23.8,
+      "san_pct": 75.2,
+      "pib_mil": 34.9,
+      "alf_pct": 95.3
+    },
+    "potencial_vitorias": {
+      "veg_km2": 6,
+      "san_pct": 40,
+      "pib_mil": 9,
+      "alf_pct": 18
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
-    "id": 4318622,
+    "id": 4318499,
     "nome": "São José do Inhacorá",
     "pop": 2406,
     "area": 78,
@@ -1502,20 +2206,36 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://portaldasmissoes.com.br/uploads/empreendimentos/2212/0123434_regular_santuario-parque-sao-francisco-de-assis-(83).jpg",
     "legenda": "Popularmente conhecido como Calvário, o Santuário Parque São Francisco de Assis foi concebido em 1978 e constitui um dos mais belos parques religiosos do Rio Grande do Sul. Suas colinas abrigam capitéis da Via-Sacra, grutas de pedra e trilhas sombreadas em plena comunhão com a natureza.",
     "attrs": {
-      "veg_km2": "16 km²",
-      "san_pct": "86,8%",
-      "pib_mil": "R$ 58,6 mil",
-      "ideb": "7,1"
+      "veg_km2": "24,1 km²",
+      "san_pct": "37,1%",
+      "pib_mil": "R$ 89,0 mil",
+      "alf_pct": "97,2%"
     },
-    "hidden_attr": "ideb",
+    "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "(2,5 × 2) + 2,1",
-      "unit": "pts",
-      "result_str": "7,1"
-    }
+      "formula": "<span class=\"frac\"><span class=\"top\">4²</span><span class=\"bottom\">8</span></span> × 40 + 9,0",
+      "unit": "mil R$",
+      "result_str": "R$ 89,0 mil",
+      "expression": "(4**2/8)*40+9.0",
+      "mental_steps": 4
+    },
+    "card_no": 43,
+    "valores_numericos": {
+      "veg_km2": 24.1,
+      "san_pct": 37.1,
+      "pib_mil": 89.0,
+      "alf_pct": 97.2
+    },
+    "potencial_vitorias": {
+      "veg_km2": 7,
+      "san_pct": 16,
+      "pib_mil": 43,
+      "alf_pct": 36
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
-    "id": 4315073,
+    "id": 4315057,
     "nome": "Porto Mauá",
     "pop": 2142,
     "area": 106,
@@ -1523,20 +2243,36 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://portalfronteiranoroeste.com.br/wp-content/uploads/2024/02/orla-de-porto-maua-rio-uruguai-74-1024x683.jpg",
     "legenda": "A Orla de Porto Mauá combina lazer e turismo com uma bela vista do Rio Uruguai. O local abriga o Porto Internacional, ponto estratégico de travessia por balsas que liga o Brasil à Argentina.",
     "attrs": {
-      "veg_km2": "27,5 km²",
-      "san_pct": "82,0%",
-      "pib_mil": "R$ 51,8 mil",
-      "ideb": "6,1"
+      "veg_km2": "23,0 km²",
+      "san_pct": "17,2%",
+      "pib_mil": "R$ 37,1 mil",
+      "alf_pct": "94,9%"
     },
-    "hidden_attr": "san_pct",
+    "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "9² + 1",
+      "formula": "<span class=\"frac\"><span class=\"top\">5²</span><span class=\"bottom\">5</span></span> × 15 + 19,9",
       "unit": "%",
-      "result_str": "82,0%"
-    }
+      "result_str": "94,9%",
+      "expression": "(5**2/5)*15+19.9",
+      "mental_steps": 4
+    },
+    "card_no": 44,
+    "valores_numericos": {
+      "veg_km2": 23.0,
+      "san_pct": 17.2,
+      "pib_mil": 37.1,
+      "alf_pct": 94.9
+    },
+    "potencial_vitorias": {
+      "veg_km2": 5,
+      "san_pct": 6,
+      "pib_mil": 13,
+      "alf_pct": 15
+    },
+    "fonte_verificada_em": "2026-10-07"
   },
   {
-    "id": 4315131,
+    "id": 4315073,
     "nome": "Porto Vera Cruz",
     "pop": 1560,
     "area": 114,
@@ -1544,17 +2280,33 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     "img": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Final_de_tarde_em_Porto_Vera_Cruz_%287054300759%29.jpg",
     "legenda": "Emoldurado por paredões de pedras e matas ciliares intactas, o Rio Uruguai em Porto Vera Cruz proporciona um entardecer dourado de rara beleza. A orla ribeirinha integra a travessia diária de barcos para Panambí, na Argentina, sendo ponto de encontro de pescadores e amantes da natureza.",
     "attrs": {
-      "veg_km2": "39,5 km²",
-      "san_pct": "75,0%",
-      "pib_mil": "R$ 35,9 mil",
-      "ideb": "6,6"
+      "veg_km2": "47,2 km²",
+      "san_pct": "32,5%",
+      "pib_mil": "R$ 31,0 mil",
+      "alf_pct": "92,5%"
     },
     "hidden_attr": "veg_km2",
     "challenge": {
-      "formula": "6² + 3,5",
+      "formula": "<span class=\"frac\"><span class=\"top\">3²</span><span class=\"bottom\">2</span></span> × 10 + 2,2",
       "unit": "km²",
-      "result_str": "39,5 km²"
-    }
+      "result_str": "47,2 km²",
+      "expression": "(3**2/2)*10+2.2",
+      "mental_steps": 4
+    },
+    "card_no": 45,
+    "valores_numericos": {
+      "veg_km2": 47.2,
+      "san_pct": 32.5,
+      "pib_mil": 31.0,
+      "alf_pct": 92.5
+    },
+    "potencial_vitorias": {
+      "veg_km2": 16,
+      "san_pct": 12,
+      "pib_mil": 5,
+      "alf_pct": 4
+    },
+    "fonte_verificada_em": "2026-10-07"
   }
 ];
 
@@ -1571,54 +2323,46 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       document.getElementById(`tab-${tab}`).classList.add('active');
     }
 
+    function prepareManuals() {
+      const count = parseInt(document.getElementById('manual-copies').value, 10) || 1;
+      const content = document.getElementById('manual-content').innerHTML;
+      document.getElementById('print-manual-container').innerHTML = Array.from({length: count}, () => `<section class="print-manual-item">${content}</section>`).join('');
+    }
     function printManuals() {
-      const count = parseInt(document.getElementById('manual-copies').value);
-      const manualContainer = document.getElementById('print-manual-container');
-      manualContainer.innerHTML = '';
-
-      const exampleHTML = `
-        <div style="background: rgba(0,0,0,0.05); padding: 5mm; border: 1px dashed #d97706; text-align: left; font-size: 9.5pt; margin-top: 5mm; border-radius: 4px;">
-          <strong>Exemplo Prático:</strong> Você escolhe o atributo <strong>Vegetação Nativa</strong> e na sua carta há o Desafio: <em>6² + 3,5</em>.<br>Você calcula e anuncia: <strong>"39,5 km²!"</strong>. Se o oponente tiver apenas <em>28 km²</em>, você vence e recolhe as cartas!
-        </div>
-      `;
-
-      for (let i = 0; i < count; i++) {
-        manualContainer.innerHTML += `
-          <div class="print-manual-item">
-            <h2>📜 Super Trunfo Matemático</h2>
-            <ul>
-              <li><strong>Jogadores:</strong> 2 a 6 pessoas.</li>
-              <li><strong>Objetivo:</strong> Conquistar todas as cartas do baralho.</li>
-              <li><strong>Como Jogar:</strong> Cada jogador segura seu monte, lendo apenas a carta do topo. O jogador da vez escolhe um atributo (ex: PIB). Todos leem o valor em suas cartas. Quem tiver o maior, vence e recolhe as cartas da mesa.</li>
-              <li><strong>O Desafio:</strong> Em cada carta, um atributo está oculto por um cálculo. Se você escolher (ou for desafiado) nesse atributo, resolva-o de cabeça. <strong>Se errar a conta, perde a rodada!</strong></li>
-              <li><strong>Auditoria:</strong> O professor usa o Gabarito para julgar as respostas matemáticas.</li>
-            </ul>
-            ${exampleHTML}
-          </div>
-        `;
-      }
-
+      prepareManuals();
       document.body.classList.add('print-mode-manuals');
       window.print();
       document.body.classList.remove('print-mode-manuals');
     }
 
     function getFilteredTowns() {
-      const searchInput = document.getElementById('searchInput');
-      const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
-      if (!q) return MUNICIPIOS;
-      return MUNICIPIOS.filter(d => 
-        (d.nome && d.nome.toLowerCase().includes(q)) || 
-        (d.atrativo && d.atrativo.toLowerCase().includes(q))
-      );
+      const norm = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+      const q = norm(document.getElementById('searchInput')?.value).trim();
+      return q ? MUNICIPIOS.filter(d => norm(d.nome).includes(q) || norm(d.atrativo).includes(q)) : MUNICIPIOS;
     }
 
     const ATTR_CONFIG = [
-      { key: 'veg_km2', label: '1. VEGETAÇÃO NATIVA', source: '(MapBiomas, 2023)' },
-      { key: 'san_pct', label: '2. SANEAMENTO BÁSICO', source: '(IBGE, 2022)' },
-      { key: 'pib_mil', label: '3. PIB PER CAPITA', source: '(IBGE, 2021)' },
-      { key: 'ideb', label: '4. EDUCAÇÃO - IDEB', source: '(INEP, 2023)' }
-    ];
+      {
+            "key": "veg_km2",
+            "label": "1. VEGETAÇÃO NATIVA",
+            "source": "(MapBiomas C11, 2025)"
+      },
+      {
+            "key": "san_pct",
+            "label": "2. ESGOTAMENTO",
+            "source": "(IBGE, 2022)"
+      },
+      {
+            "key": "pib_mil",
+            "label": "3. PIB PER CAPITA",
+            "source": "(IBGE, 2023)"
+      },
+      {
+            "key": "alf_pct",
+            "label": "4. ALFABETIZAÇÃO 15+",
+            "source": "(IBGE, 2022)"
+      }
+];
 
     function makeCard(d, index) {
       if (!d) return '';
@@ -1667,7 +2411,7 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
             onerror="this.onerror=null; this.src='${fallbackUrl}';"
           >
           <div class="photo-town-name">${d.nome || ''}</div>
-          <div class="overlay-id">#${String(index + 1).padStart(2, '0')}</div>
+          <div class="overlay-id">#${String(d.card_no || index + 1).padStart(2, '0')}</div>
           <div class="photo-caption">📍 ${d.atrativo || ''}</div>
         </div>
 
