@@ -256,7 +256,7 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     /* ==========================================================================
        IMPRESSÃO A4 RÍGIDA E COMPACTA
        ========================================================================== */
-    @page { size: A4 portrait; margin: 12mm 10mm; }
+    @page { size: A4 portrait; margin: 10mm 10.5mm; }
 
     @media print {
       html, body { background: white !important; color: black !important; margin: 0 !important; padding: 0 !important; }
@@ -311,10 +311,10 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       body.print-mode-pieces .sheet-page {
         display: grid !important;
         grid-template-columns: repeat(3, 63mm) !important;
-        grid-template-rows: repeat(3, 88mm) !important;
+        grid-template-rows: repeat(3, 91mm) !important;
         gap: 0 !important;
         width: 189mm !important;
-        height: 264mm !important;
+        height: 273mm !important;
         margin: 0 auto !important;
         page-break-after: always !important;
         break-after: page !important;
@@ -325,7 +325,7 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       body.print-mode-pieces .sheet-page:last-child { page-break-after: auto !important; break-after: auto !important; }
 
       body.print-mode-pieces .card {
-        width: 63mm !important; height: 88mm !important;
+        width: 63mm !important; height: 91mm !important;
         border: 0.25mm solid #334155 !important; border-radius: 0 !important;
         box-shadow: none !important; page-break-inside: avoid !important; break-inside: avoid !important;
         box-sizing: border-box !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; justify-content: flex-start !important;
@@ -353,7 +353,7 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       body.print-mode-pieces .card-base-data strong { font-size: 6.8pt !important; }
       body.print-mode-pieces .card-base-data .param-src { font-size: 5pt !important; opacity: 0.85 !important; }
 
-      body.print-mode-pieces .param-list { display: flex !important; flex-direction: column !important; gap: 0.8mm !important; padding: 0 2mm 1.2mm !important; margin-top: auto !important; }
+      body.print-mode-pieces .param-list { display: flex !important; flex-direction: column !important; gap: 0.8mm !important; padding: 0 2mm 1.5mm !important; margin-top: auto !important; }
       body.print-mode-pieces .param-box { padding: 1mm 1.6mm !important; border: 0.25mm solid #cbd5e1 !important; border-radius: 0 !important; font-size: 5.9pt !important; min-height: 5.4mm !important; box-sizing: border-box !important; gap: 1.5mm !important; }
       body.print-mode-pieces .param-title { font-size: 5.7pt !important; font-weight: 750 !important; flex-shrink: 0 !important; }
       body.print-mode-pieces .param-src { font-size: 4.8pt !important; opacity: 0.85 !important; }
