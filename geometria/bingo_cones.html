@@ -1,16 +1,16 @@
 ---
 titulo: "Bingo Geométrico"
-imagem: "https://placehold.co/600x400/1f2833/00f0ff?text=Bingo+dos+Cones"
-descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo dos Cones."
+imagem: "https://placehold.co/600x400/1f2833/00f0ff?text=Bingo+Geometria+Espacial"
+descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo de Geometria Espacial."
 ---
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bingo Geométrico: Domínio dos Cones (5x5)</title>
+    <title>Bingo Geométrico: Geometria Espacial (5x5)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         /* CONFIGURAÇÕES GERAIS DE DESIGN (TELA) */
@@ -208,11 +208,11 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
         }
 
         .draw-question {
-            font-size: 1.6rem;
+            font-size: 1.55rem;
             color: var(--white);
             font-weight: 700;
             margin-bottom: 25px;
-            line-height: 1.3;
+            line-height: 1.35;
         }
 
         /* CAIXA DE REVELAÇÃO DA RESPOSTA */
@@ -354,7 +354,7 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
             }
         }
 
-        /* MODELO DE CARTELA EXCLUSIVO PARA IMPRESSÃO EM PAPEL */
+        /* MODELO DE CARTELA PARA IMPRESSÃO EM PAPEL */
         .bingo-card {
             background-color: #ffffff;
             color: #000000;
@@ -379,7 +379,7 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
 
         .card-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.3rem;
+            font-size: 1.22rem;
             font-weight: bold;
             text-transform: uppercase;
         }
@@ -404,7 +404,7 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
         .card-cell {
             border-right: 2px solid #000000;
             border-bottom: 2px solid #000000;
-            padding: 8px 2px;
+            padding: 8px 3px;
             text-align: center;
             font-weight: bold;
             font-size: 0.85rem;
@@ -414,7 +414,7 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
             align-items: center;
             background: #ffffff;
             word-wrap: break-word;
-            line-height: 1.1;
+            line-height: 1.15;
         }
 
         .card-footer-info {
@@ -428,6 +428,10 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
 
         /* REGRAS DE IMPRESSÃO CSS */
         @media print {
+            @page {
+                size: A4 portrait;
+                margin: 10mm;
+            }
             body {
                 background-color: #ffffff !important;
                 color: #000000 !important;
@@ -437,6 +441,9 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
             }
             .tab-content {
                 display: block !important;
+            }
+            #panel-sorteio {
+                display: none !important;
             }
             #panel-cartelas {
                 display: block !important;
@@ -452,6 +459,8 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
                 margin: 1% !important;
                 page-break-inside: avoid !important;
                 border: 3px solid #000000 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
             .bingo-card:nth-child(4n) {
                 page-break-after: always !important;
@@ -462,8 +471,8 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
 <body>
 
     <header>
-        <h1>BINGO DOS CONES</h1>
-        <p>Geometria Espacial</p>
+        <h1>BINGO GEOMÉTRICO</h1>
+        <p>Geometria Espacial • Ensino Médio</p>
     </header>
 
     <div class="tabs">
@@ -496,7 +505,7 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
                         <button class="btn" id="btn-draw" onclick="drawItem()" style="font-size: 1.3rem; padding: 15px 40px;">Sortear Próximo Item</button>
                     </div>
 
-                    <h3>Itens Restantes no Globo: <span id="remaining-count" style="color: var(--electric-cyan);">60</span></h3>
+                    <h3>Itens Restantes no Globo: <span id="remaining-count" style="color: var(--electric-cyan);">0</span></h3>
                 </div>
 
                 <div class="panel" style="display: flex; flex-direction: column; justify-content: space-between; gap: 20px;">
@@ -536,6 +545,7 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
 
     </div>
 
+    <!-- Botão Voltar ao Portfólio (Regra do Skill) -->
     <style>
       #btn-voltar {
         position: fixed;
@@ -557,86 +567,408 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
         box-shadow: 0 4px 12px rgba(0,0,0,0.35);
         transition: transform 0.15s, box-shadow 0.15s;
       }
-  #btn-voltar:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.45); }
-</style>
-<a id="btn-voltar" href="index.html">
-  &#8592; Menu principal
-</a>
+      #btn-voltar:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.45); }
+      @media print { #btn-voltar { display: none !important; } }
+    </style>
+    <a id="btn-voltar" href="index.html">
+      &#8592; Voltar ao Portfólio
+    </a>
 
-<script>
+    <script>
         // =========================================================================
-        // BANCO DE DADOS REVISADO (60 ITENS ÚNICOS E CLAROS)
-        // Nenhuma resposta (campo 'a') se repete, permitindo a checagem exata.
+        // BANCO DE DADOS: GEOMETRIA ESPACIAL COMPLETA DO ENSINO MÉDIO (76 ITENS)
+        // Nenhuma resposta (campo 'a') se repete, garantindo validação perfeita.
+        // Itens diretos, conceituais e sem cálculos exaustivos para dinamismo em sala.
         // =========================================================================
         const BINGO_DATABASE = [
-            { id: 0, q: "Qual é a fórmula do Teorema de Pitágoras aplicada ao cone (relação entre g, r, h)?", a: "g² = r² + h²" },
-            { id: 1, q: "Qual é a fórmula matemática do Volume de qualquer cone?", a: "V = (π·r²·h)/3" },
-            { id: 2, q: "Qual é a fórmula da Área Lateral de um cone circular reto?", a: "Al = π·r·g" },
-            { id: 3, q: "Qual é a fórmula da Área Total de um cone?", a: "At = π·r·(g + r)" },
-            { id: 4, q: "Qual é a relação matemática que define que um cone é EQUILÁTERO?", a: "g = 2r" },
-            { id: 5, q: "O corte vertical bem no meio de um cone reto comum (secção meridiana) forma um...", a: "Triângulo Isósceles" },
-            { id: 6, q: "O corte vertical bem no meio de um cone EQUILÁTERO (secção meridiana) forma um...", a: "Triângulo Equilátero" },
-            { id: 7, q: "A planificação (desdobramento) da superfície lateral de um cone gera a forma de um...", a: "Setor Circular" },
-            { id: 8, q: "A base de apoio de um cone circular reto tem o formato de um...", a: "Círculo" },
-            { id: 9, q: "O segmento reto que liga o Vértice (topo) até o centro exato da base chama-se...", a: "Altura (h)" },
-            { id: 10, q: "Qualquer segmento que liga o Vértice até a borda externa (circunferência) da base chama-se...", a: "Geratriz (g)" },
-            { id: 11, q: "Como se chama o ponto extremo superior do cone (a sua ponta)?", a: "Vértice" },
-            { id: 12, q: "Se cortarmos a ponta de um cone com um plano paralelo à base, a parte de baixo que sobra é o...", a: "Tronco de Cone" },
-            { id: 13, q: "Como chamamos um cone cujo eixo central é inclinado e NÃO faz 90° com a base?", a: "Cone Oblíquo" },
-            { id: 14, q: "Cone gerado girando-se um triângulo retângulo em torno de um dos seus catetos:", a: "Cone de Revolução" },
-            { id: 15, q: "Qual é a fração que representa a razão entre o volume de um cone e de um cilindro de mesma base e altura?", a: "1/3" },
-            { id: 16, q: "Se o raio da base mede 3 e a altura mede 4, quanto mede a geratriz (g)?", a: "5" },
-            { id: 17, q: "Se o raio da base mede 6 e a geratriz mede 10, quanto mede a altura (h)?", a: "8" },
-            { id: 18, q: "Se a altura mede 24 e a geratriz mede 25, quanto mede o raio (r)?", a: "7" },
-            { id: 19, q: "Se duplicarmos APENAS a altura de um cone, seu volume é multiplicado por...", a: "2" },
-            { id: 20, q: "Se duplicarmos APENAS o raio de um cone, seu volume é multiplicado por...", a: "4" },
-            { id: 21, q: "Se triplicarmos TODAS as medidas (raio e altura), o volume original é multiplicado por...", a: "27" },
-            { id: 22, q: "Calcule a Área da Base (π·r²) se o raio for 3.", a: "9π" },
-            { id: 23, q: "Calcule a Área Lateral (π·r·g) de um cone com raio r=2 e geratriz g=5.", a: "10π" },
-            { id: 24, q: "Qual o Volume se a Área da Base (Ab) é 15π e a altura (h) é 4?", a: "20π" },
-            { id: 25, q: "A secção meridiana de um cone equilátero tem lado medindo 6. Portanto, a geratriz vale...", a: "6" },
-            { id: 26, q: "Se a geratriz de um cone EQUILÁTERO vale 18, qual é a medida do seu raio?", a: "9" },
-            { id: 27, q: "Qual é o ângulo do setor circular gerado ao planificar um cone EQUILÁTERO?", a: "180°" },
-            { id: 28, q: "Se r=5 e h=3, qual é o valor numérico puro da conta: (r² vezes h)?", a: "75" },
-            { id: 29, q: "Calcule o perímetro (comprimento 2πr) da circunferência da base de um cone com raio r=3.", a: "6π" },
-            { id: 30, q: "Qual o perímetro (comprimento 2πr) da base de um cone cujo raio é r=7?", a: "14π" },
-            { id: 31, q: "Calcule a Área Lateral de um cone com raio r=3 e geratriz g=4.", a: "12π" },
-            { id: 32, q: "Determine o Volume de um cone com raio r=4 e altura h=3.", a: "16π" },
-            { id: 33, q: "Aplicando Pitágoras: se a altura é 6 e o raio é 8, quanto vale a geratriz?", a: "10" },
-            { id: 34, q: "Aplicando Pitágoras: se a geratriz é 26 e o raio é 10, a altura mede...", a: "24" },
-            { id: 35, q: "Aplicando Pitágoras: se a altura é 21 e o raio é 20, a geratriz mede...", a: "29" },
-            { id: 36, q: "O corte horizontal paralelo à base que ocorre ao longo da altura do cone gera uma...", a: "Secção Transversal" },
-            { id: 37, q: "Qual a Área da Base (π·r²) de um cone de raio r=10?", a: "100π" },
-            { id: 38, q: "Qual o Volume de um cone com raio r=3 e altura h=10?", a: "30π" },
-            { id: 39, q: "Qual o Volume de um cone com raio r=6 e altura h=2?", a: "24π" },
-            { id: 40, q: "Calcule a Área Lateral de um cone se o raio for 5 e a geratriz for 5.", a: "25π" },
-            { id: 41, q: "Se o raio for 2 e a geratriz for 11, qual a Área Lateral do cone?", a: "22π" },
-            { id: 42, q: "Qual deve ser a altura de um cone para que, com raio r=3, seu Volume seja 33π?", a: "11" },
-            { id: 43, q: "Qual deve ser o raio de um cone para que, com altura h=4, seu Volume seja 12π?", a: "3" },
-            { id: 44, q: "Se a altura de um cone triplicar (e o raio ficar igual), o que acontece com o Volume total?", a: "Triplica" },
-            { id: 45, q: "Se r=5 e h=12, quanto mede a geratriz calculada por Pitágoras?", a: "13" },
-            { id: 46, q: "Qual o Volume de um cone com raio r=2 e altura h=21?", a: "28π" },
-            { id: 47, q: "Qual a Área da Base de um cone cujo raio é r=8?", a: "64π" },
-            { id: 48, q: "Qual a Área da Base de um cone com raio medindo r=1?", a: "1π" },
-            { id: 49, q: "Calcule o Volume de um cone sabendo que seu raio é r=4 e sua altura é h=6.", a: "32π" },
-            { id: 50, q: "Qual a Área Total de um cone que tem raio r=3 e geratriz g=8?", a: "33π" },
-            { id: 51, q: "Se um cone equilátero tem raio r=6, sua geratriz vale o dobro, que é...", a: "12" },
-            { id: 52, q: "Qual a altura exata de um cone equilátero de raio r=2? (Dica: Pitágoras)", a: "2√3" },
-            { id: 53, q: "Qual o Volume de um cone com raio r=3 e altura medindo h = 3√3?", a: "9π√3" },
-            { id: 54, q: "Se girarmos um SEMICÍRCULO em torno do seu diâmetro, formamos o sólido espacial chamado:", a: "Esfera" },
-            { id: 55, q: "Se girarmos um RETÂNGULO em torno de um dos seus lados, formamos o sólido chamado:", a: "Cilindro" },
-            { id: 56, q: "Qual o ângulo do setor circular gerado ao planificar um cone com r=3 e g=12?", a: "90°" },
-            { id: 57, q: "Se a secção meridiana de um cone é um triângulo isósceles retângulo, qual é a relação geométrica verdadeira?", a: "h = r" },
-            { id: 58, q: "Num cone onde a altura é igual ao raio (h = r), a geratriz vale...", a: "r√2" },
-            { id: 59, q: "Para que o Volume de um cone seja igual a cinco vezes a sua área da base (V = 5·Ab), a altura deve ser...", a: "15" }
-        ];
+        {
+                "q": "Três pontos não colineares determinam no espaço um único...",
+                "a": "Plano",
+                "id": 0
+        },
+        {
+                "q": "Duas retas que não pertencem ao mesmo plano e nunca se cruzam são chamadas de...",
+                "a": "Retas Reversas",
+                "id": 1
+        },
+        {
+                "q": "Duas retas contidas no mesmo plano que nunca se cruzam são...",
+                "a": "Retas Paralelas",
+                "id": 2
+        },
+        {
+                "q": "A projeção perpendicular de um ponto ou figura sobre um plano é a...",
+                "a": "Projeção Ortogonal",
+                "id": 3
+        },
+        {
+                "q": "A interseção de dois planos secantes distintos forma sempre uma...",
+                "a": "Reta",
+                "id": 4
+        },
+        {
+                "q": "O ângulo diedro é o ângulo formado pela abertura entre dois...",
+                "a": "Planos",
+                "id": 5
+        },
+        {
+                "q": "Qual é a Relação de Euler válida para todo poliedro convexo?",
+                "a": "V - A + F = 2",
+                "id": 6
+        },
+        {
+                "q": "Fórmula da soma dos ângulos de todas as faces de um poliedro com V vértices:",
+                "a": "(V - 2)·360°",
+                "id": 7
+        },
+        {
+                "q": "Poliedro regular de Platão com 4 faces triangulares equiláteras:",
+                "a": "Tetraedro",
+                "id": 8
+        },
+        {
+                "q": "Poliedro regular de Platão formado por 6 faces quadradas:",
+                "a": "Hexaedro (Cubo)",
+                "id": 9
+        },
+        {
+                "q": "Poliedro regular de Platão que possui 8 faces triangulares equiláteras:",
+                "a": "Octaedro",
+                "id": 10
+        },
+        {
+                "q": "Poliedro regular de Platão formado por 12 faces pentagonais regulares:",
+                "a": "Dodecaedro",
+                "id": 11
+        },
+        {
+                "q": "Poliedro regular de Platão que possui 20 faces triangulares equiláteras:",
+                "a": "Icosaedro",
+                "id": 12
+        },
+        {
+                "q": "O segmento de reta formado pelo encontro de duas faces de um poliedro:",
+                "a": "Aresta",
+                "id": 13
+        },
+        {
+                "q": "O ponto onde três ou mais arestas de um poliedro se encontram:",
+                "a": "Vértice",
+                "id": 14
+        },
+        {
+                "q": "Poliedro convexo que tem 6 vértices e 8 faces possui quantas arestas?",
+                "a": "12 Arestas",
+                "id": 15
+        },
+        {
+                "q": "Fórmula matemática do Volume de qualquer prisma (reto ou oblíquo):",
+                "a": "V = Ab·h",
+                "id": 16
+        },
+        {
+                "q": "A diagonal espacial de um cubo de aresta \"a\" mede exatamente...",
+                "a": "a√3",
+                "id": 17
+        },
+        {
+                "q": "A diagonal de uma face quadrada de um cubo de aresta \"a\" mede...",
+                "a": "a√2",
+                "id": 18
+        },
+        {
+                "q": "A fórmula da Área Total de um cubo de aresta \"a\" é:",
+                "a": "6a²",
+                "id": 19
+        },
+        {
+                "q": "Volume de um cubo que possui aresta medindo 3 cm:",
+                "a": "27 cm³",
+                "id": 20
+        },
+        {
+                "q": "Volume de uma caixa (paralelepípedo) com dimensões 2 cm, 3 cm e 4 cm:",
+                "a": "24 cm³",
+                "id": 21
+        },
+        {
+                "q": "Fórmula da diagonal de um paralelepípedo reto-retângulo com dimensões a, b e c:",
+                "a": "D = √(a²+b²+c²)",
+                "id": 22
+        },
+        {
+                "q": "As faces laterais de qualquer prisma reto são sempre...",
+                "a": "Retângulos",
+                "id": 23
+        },
+        {
+                "q": "Prisma reto regular cujas bases são triângulos equiláteros:",
+                "a": "Prisma Triangular",
+                "id": 24
+        },
+        {
+                "q": "Prisma reto regular cujas bases são hexágonos regulares:",
+                "a": "Prisma Hexagonal",
+                "id": 25
+        },
+        {
+                "q": "Capacidade em litros de uma caixa de água com volume de 1 m³:",
+                "a": "1.000 Litros",
+                "id": 26
+        },
+        {
+                "q": "Fórmula matemática do Volume de qualquer pirâmide:",
+                "a": "V = (Ab·h)/3",
+                "id": 27
+        },
+        {
+                "q": "Relação de Pitágoras no apótema da pirâmide (g), altura (h) e apótema da base (m):",
+                "a": "g² = h² + m²",
+                "id": 28
+        },
+        {
+                "q": "A altura de uma das faces triangulares de uma pirâmide regular chama-se...",
+                "a": "Apótema da Pirâmide",
+                "id": 29
+        },
+        {
+                "q": "O segmento que vai do centro da base regular até o ponto médio de uma aresta da base:",
+                "a": "Apótema da Base",
+                "id": 30
+        },
+        {
+                "q": "As faces laterais de qualquer pirâmide regular reta têm o formato de...",
+                "a": "Triângulos Isósceles",
+                "id": 31
+        },
+        {
+                "q": "Volume de uma pirâmide cuja área da base é Ab = 30 e a altura é h = 5:",
+                "a": "50",
+                "id": 32
+        },
+        {
+                "q": "Razão entre o volume de uma pirâmide e o de um prisma de mesma base e mesma altura:",
+                "a": "1/3",
+                "id": 33
+        },
+        {
+                "q": "Fórmula da altura de um tetraedro regular de aresta \"a\":",
+                "a": "a√6 / 3",
+                "id": 34
+        },
+        {
+                "q": "Fórmula da área total de um tetraedro regular de aresta \"a\":",
+                "a": "a²√3",
+                "id": 35
+        },
+        {
+                "q": "Pirâmide cuja base é um quadrado:",
+                "a": "Pirâmide Quadrangular",
+                "id": 36
+        },
+        {
+                "q": "Sólido geométrico formado pela rotação completa de um retângulo em torno de um lado:",
+                "a": "Cilindro",
+                "id": 37
+        },
+        {
+                "q": "Fórmula matemática do Volume de qualquer cilindro circular reto:",
+                "a": "V = π·r²·h",
+                "id": 38
+        },
+        {
+                "q": "Fórmula da Área Lateral de um cilindro circular reto desdobrado:",
+                "a": "Al = 2π·r·h",
+                "id": 39
+        },
+        {
+                "q": "Relação matemática que define que um cilindro é EQUILÁTERO:",
+                "a": "h = 2r",
+                "id": 40
+        },
+        {
+                "q": "O corte vertical que passa pelo eixo de um cilindro equilátero forma um...",
+                "a": "Quadrado",
+                "id": 41
+        },
+        {
+                "q": "A planificação completa da superfície lateral de um cilindro reto resulta em um...",
+                "a": "Retângulo",
+                "id": 42
+        },
+        {
+                "q": "Volume de um cilindro com raio da base r=2 e altura h=5:",
+                "a": "20π",
+                "id": 43
+        },
+        {
+                "q": "Área da base circular de um cilindro de raio r=4:",
+                "a": "16π",
+                "id": 44
+        },
+        {
+                "q": "Como chamamos um cilindro cujo eixo é inclinado em relação à base?",
+                "a": "Cilindro Oblíquo",
+                "id": 45
+        },
+        {
+                "q": "Sólido gerado pela rotação de um triângulo retângulo em torno de um dos catetos:",
+                "a": "Cone",
+                "id": 46
+        },
+        {
+                "q": "Relação de Pitágoras no cone reto entre geratriz (g), raio (r) e altura (h):",
+                "a": "g² = r² + h²",
+                "id": 47
+        },
+        {
+                "q": "Fórmula matemática do Volume de um cone circular reto:",
+                "a": "V = (π·r²·h)/3",
+                "id": 48
+        },
+        {
+                "q": "Fórmula da Área Lateral de um cone circular reto:",
+                "a": "Al = π·r·g",
+                "id": 49
+        },
+        {
+                "q": "Relação matemática que define que um cone é EQUILÁTERO:",
+                "a": "g = 2r",
+                "id": 50
+        },
+        {
+                "q": "A secção meridiana de um cone equilátero tem o formato de um...",
+                "a": "Triângulo Equilátero",
+                "id": 51
+        },
+        {
+                "q": "A planificação da superfície lateral de um cone reto forma um...",
+                "a": "Setor Circular",
+                "id": 52
+        },
+        {
+                "q": "Segmento reto que liga o topo (vértice) até qualquer ponto da borda da base do cone:",
+                "a": "Geratriz (g)",
+                "id": 53
+        },
+        {
+                "q": "Se o raio de um cone mede 3 e a altura mede 4, a geratriz (g) vale...",
+                "a": "5",
+                "id": 54
+        },
+        {
+                "q": "Área lateral de um cone com raio r=2 e geratriz g=5:",
+                "a": "10π",
+                "id": 55
+        },
+        {
+                "q": "A parte inferior que sobra ao cortar um cone paralelamente à base e retirar o topo:",
+                "a": "Tronco de Cone",
+                "id": 56
+        },
+        {
+                "q": "A parte inferior que sobra ao cortar uma pirâmide paralelamente à base:",
+                "a": "Tronco de Pirâmide",
+                "id": 57
+        },
+        {
+                "q": "As faces laterais de um tronco de pirâmide regular têm a forma de...",
+                "a": "Trapézios Isósceles",
+                "id": 58
+        },
+        {
+                "q": "Sólido gerado girando-se um trapézio retângulo em torno de sua altura:",
+                "a": "Tronco de Cone Reto",
+                "id": 59
+        },
+        {
+                "q": "Sólido de revolução gerado pela rotação de um semicírculo em torno do seu diâmetro:",
+                "a": "Esfera",
+                "id": 60
+        },
+        {
+                "q": "Fórmula matemática da Área da Superfície Esférica de raio R:",
+                "a": "A = 4π·R²",
+                "id": 61
+        },
+        {
+                "q": "Fórmula matemática do Volume da Esfera de raio R:",
+                "a": "V = (4/3)π·R³",
+                "id": 62
+        },
+        {
+                "q": "Qualquer corte plano feito em uma esfera resulta sempre em um...",
+                "a": "Círculo",
+                "id": 63
+        },
+        {
+                "q": "Relação de Pitágoras na secção esférica (raio da esfera R, distância d, raio do corte r):",
+                "a": "R² = d² + r²",
+                "id": 64
+        },
+        {
+                "q": "O maior círculo que se pode obter seccionando a esfera (passando pelo centro):",
+                "a": "Círculo Máximo",
+                "id": 65
+        },
+        {
+                "q": "A superfície da casca entre dois meridianos da esfera (semelhante ao gomo) chama-se...",
+                "a": "Fuso Esférico",
+                "id": 66
+        },
+        {
+                "q": "O sólido interno equivalente a um gomo da esfera (com volume) chama-se...",
+                "a": "Cunha Esférica",
+                "id": 67
+        },
+        {
+                "q": "Volume de uma esfera que possui raio R = 3 cm:",
+                "a": "36π cm³",
+                "id": 68
+        },
+        {
+                "q": "Área da superfície de uma esfera com raio R = 5 cm:",
+                "a": "100π cm²",
+                "id": 69
+        },
+        {
+                "q": "Se a razão de semelhança linear entre dois sólidos é k, a razão entre seus volumes é...",
+                "a": "k³",
+                "id": 70
+        },
+        {
+                "q": "Se a razão de semelhança linear entre figuras semelhantes é k, a razão de suas áreas é...",
+                "a": "k²",
+                "id": 71
+        },
+        {
+                "q": "Em uma esfera inscrita perfeitamente em um cubo de aresta \"a\", o raio da esfera é...",
+                "a": "a/2",
+                "id": 72
+        },
+        {
+                "q": "Se dobrarmos o raio de uma esfera, seu volume fica multiplicado por...",
+                "a": "8",
+                "id": 73
+        },
+        {
+                "q": "Se duplicarmos a aresta de um cubo, sua área total fica multiplicada por...",
+                "a": "4",
+                "id": 74
+        },
+        {
+                "q": "Princípio geométrico que garante que sólidos com áreas de corte iguais têm mesmo volume:",
+                "a": "Princípio de Cavalieri",
+                "id": 75
+        }
+];
 
         let drawnIndices = [];
         const TOTAL_POOL_SIZE = BINGO_DATABASE.length;
         const ITEMS_PER_CARD = 24; // 24 itens matemáticos + 1 espaço curinga central (total 25)
 
         // =========================================================================
-        // ALGORITMO DETERMINÍSTICO (Garante o conferidor infalível)
+        // ALGORITMO DETERMINÍSTICO (Garante conferência exata por código de cartela)
         // =========================================================================
         function generateIndicesForCard(cardId, poolSize, sampleSize) {
             let indices = Array.from({ length: poolSize }, (_, i) => i);
@@ -690,11 +1022,9 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
 
             const item = BINGO_DATABASE[randomIndex];
             
-            // Atualiza os textos na tela
             document.getElementById('draw-count').innerText = `Sorteio Nº ${drawnIndices.length} de ${TOTAL_POOL_SIZE}`;
             document.getElementById('draw-question').innerText = item.q;
             
-            // Reseta a área de revelação da resposta para o estado oculto
             document.getElementById('answer-container').style.display = 'flex';
             document.getElementById('draw-answer').innerText = `Gabarito: ${item.a}`;
             document.getElementById('draw-answer').style.display = 'none';
@@ -704,7 +1034,6 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
             btnReveal.style.backgroundColor = 'transparent';
             btnReveal.style.color = '#fff';
 
-            // Atualiza painéis auxiliares
             document.getElementById('remaining-count').innerText = TOTAL_POOL_SIZE - drawnIndices.length;
             renderGeneralHistoryBoard();
             
@@ -787,7 +1116,7 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
                 // Espaço central do Curinga
                 if(i === 12) {
                     cell.className = 'checker-cell matched';
-                    cell.innerText = '⭐ BÓNUS';
+                    cell.innerText = '⭐ BÔNUS';
                     grid.appendChild(cell);
                     continue;
                 }
@@ -834,7 +1163,7 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
                 const headerDiv = document.createElement('div');
                 headerDiv.className = 'card-header';
                 headerDiv.innerHTML = `
-                    <div class="card-title">BINGO: CONES</div>
+                    <div class="card-title">BINGO: GEOMETRIA ESPACIAL</div>
                     <div class="card-id">CÓD: ${String(cardId).padStart(3, '0')}</div>
                 `;
                 cardElement.appendChild(headerDiv);
@@ -849,7 +1178,7 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
                     
                     if(i === 12) {
                         cellDiv.innerText = '⭐ CURINGA';
-                        cellDiv.style.backgroundColor = '#f0f0f0'; // Destaque visual cinza leve no papel
+                        cellDiv.style.backgroundColor = '#f0f0f0';
                     } else {
                         const item = BINGO_DATABASE[cardIndices[itemIndex]];
                         cellDiv.innerText = item.a;
@@ -863,7 +1192,7 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
 
                 const footerDiv = document.createElement('div');
                 footerDiv.className = 'card-footer-info';
-                footerDiv.innerText = "Ouça o desafio lógico/geométrico e marque o termo correspondente.";
+                footerDiv.innerText = "Ouça o desafio geométrico e marque o termo correspondente.";
                 cardElement.appendChild(footerDiv);
 
                 container.appendChild(cardElement);
@@ -871,6 +1200,7 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
         }
 
         window.onload = function() {
+            document.getElementById('remaining-count').innerText = TOTAL_POOL_SIZE;
             renderGeneralHistoryBoard();
             document.getElementById('print-quantity').addEventListener('change', renderAllCards);
         };
