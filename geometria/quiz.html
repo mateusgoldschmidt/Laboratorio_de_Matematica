@@ -75,11 +75,15 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       background: linear-gradient(90deg, #818cf8, #f472b6, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
     }
     
-    .topbar-info { display: flex; align-items: center; gap: 12px; }
+    .topbar-info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
     .status-pill { 
       display: flex; align-items: center; gap: 9px; padding: 7px 15px; border-radius: 100px; 
       background: rgba(255,255,255,0.04); font-weight: 600; color: var(--text-muted); font-size: 0.82rem; 
       border: 1px solid var(--border-light); transition: all 0.3s ease;
+    }
+    .round-pill {
+      background: rgba(99, 102, 241, 0.12); border-color: rgba(99, 102, 241, 0.3);
+      color: #a5b4fc; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif;
     }
     .dot { width: 8px; height: 8px; border-radius: 50%; background: #64748b; transition: all 0.3s; }
     .dot.live { background: var(--success); box-shadow: 0 0 10px var(--success); }
@@ -111,8 +115,10 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
     }
     .btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 18px 28px -8px rgba(99, 102, 241, 0.55); }
     .btn:active { transform: translateY(-1px); }
+    .btn-secondary { background: linear-gradient(135deg, var(--secondary), #db2777); box-shadow: 0 10px 20px -8px rgba(236, 72, 153, 0.4); }
     .btn-success { background: linear-gradient(135deg, var(--success), #059669); box-shadow: 0 10px 20px -8px rgba(16, 185, 129, 0.4); }
     .btn-accent { background: linear-gradient(135deg, var(--accent), #0891b2); box-shadow: 0 10px 20px -8px rgba(6, 182, 212, 0.4); }
+    .btn-warning { background: linear-gradient(135deg, var(--warning), #d97706); box-shadow: 0 10px 20px -8px rgba(245, 158, 11, 0.4); }
     .btn-danger { background: linear-gradient(135deg, var(--danger), #dc2626); box-shadow: 0 10px 20px -8px rgba(239, 68, 68, 0.4); }
     .btn-ghost { background: transparent; border: 1px solid var(--border-light); color: var(--text-muted); box-shadow: none; }
     .btn-ghost:hover { background: rgba(255,255,255,0.06); color: #fff; transform: translateY(-2px); }
@@ -125,6 +131,7 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
 
     .status-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
     .chip { padding: 8px 16px; border-radius: 12px; background: rgba(255,255,255,0.04); font-weight: 700; font-size: 0.9rem; color: #e2e8f0; border: 1px solid var(--border-light); display: inline-flex; align-items: center; gap: 8px; }
+    .chip-round { color: #f472b6; background: rgba(236, 72, 153, 0.08); border-color: rgba(236, 72, 153, 0.25); }
     .chip-topic { color: var(--accent); background: rgba(6, 182, 212, 0.08); border-color: rgba(6, 182, 212, 0.2); }
     .timer { color: #facc15; font-family: 'Plus Jakarta Sans', monospace; font-size: 1.15rem; background: rgba(250, 204, 21, 0.08); border-color: rgba(250, 204, 21, 0.25); }
     
@@ -217,6 +224,30 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
     }
     .offline-banner.active { display: block; }
 
+    /* Barra de controle de rodadas */
+    .round-control-card {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;
+      padding: 20px 24px; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: 20px; margin-bottom: 25px;
+    }
+
+    .round-tag {
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; font-weight: 800; color: #fff;
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .round-history-tabs {
+      display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 6px;
+    }
+    .round-tab-pill {
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border-light); color: var(--text-muted);
+      padding: 6px 14px; border-radius: 100px; font-size: 0.85rem; font-weight: 700; cursor: pointer;
+      white-space: nowrap; transition: all 0.2s;
+    }
+    .round-tab-pill.active {
+      background: var(--primary); color: #fff; border-color: var(--primary);
+    }
+
     @media (max-width: 768px) {
       .teacher-layout { grid-template-columns: 1fr; }
       .screen { padding: 30px 18px; }
@@ -290,6 +321,9 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
         <div class="title">Lab Espacial • Quiz</div>
       </div>
       <div class="topbar-info">
+        <div class="status-pill round-pill" id="topbar-round-pill" style="display: none;">
+          <span id="topbar-round-text">Rodada 1</span>
+        </div>
         <div class="status-pill" id="room-pill" style="display: none;">
           <span>Sala:</span>
           <strong id="active-room-display" style="color: var(--accent);">--</strong>
@@ -308,7 +342,7 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
           ENSINO MÉDIO • GEOMETRIA ESPACIAL
         </div>
         <h1>Desafio Tridimensional</h1>
-        <h2>Quiz em tempo real com ranking ao vivo na sala do professor.</h2>
+        <h2>Quiz gamificado por rodadas com ranking ao vivo na sala do professor.</h2>
         
         <div class="login-box">
           <input type="text" id="player-name" class="input-field" placeholder="Digite seu nome completo" autocomplete="off" style="width: 100%; max-width: 100%; margin-bottom: 15px;">
@@ -330,7 +364,7 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
         <h2>Você está conectado à sala <span id="lobby-room-code" style="color: var(--accent); font-weight: 700;"></span> do professor.</h2>
         
         <div style="margin: 30px auto; padding: 25px 35px; border-radius: 20px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-light); display: inline-block; font-weight: 600; color: var(--accent); font-size: 1.15rem;" id="sync-text">
-          <span style="display: inline-block; animation: pulseDot 1.2s infinite alternate;">⏳</span> Conectado! Aguardando o professor liberar a partida...
+          <span style="display: inline-block; animation: pulseDot 1.2s infinite alternate;">⏳</span> Conectado! Aguardando o professor liberar a rodada...
         </div>
 
         <div style="margin-top: 40px;">
@@ -341,13 +375,14 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
 
     <!-- TELA 3: O QUIZ (ALUNO) -->
     <section id="screen-quiz" class="screen">
-      <!-- Banner de alerta se a internet oscilar -->
+      <!-- Banner de alerta de oscilação -->
       <div class="offline-banner" id="student-offline-banner">
         ⚠️ Conexão oscilando. Continue respondendo normalmente! Suas respostas estão salvas e serão enviadas assim que a rede voltar.
       </div>
 
       <div class="progress-container"><div class="progress-bar" id="quiz-progress"></div></div>
       <div class="status-bar">
+        <span class="chip chip-round" id="q-round-counter">Rodada 1</span>
         <span class="chip" id="q-counter">Questão 1 de 10</span>
         <span class="chip chip-topic" id="q-topic-badge">Geometria</span>
         <span class="chip timer" id="time-display">0.0s</span>
@@ -358,28 +393,35 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
 
     <!-- TELA 4: RESULTADO DO ALUNO -->
     <section id="screen-result" class="screen">
-      <div style="text-align: center; margin-bottom: 35px;">
-        <div style="font-size: 3.8rem; margin-bottom: 8px;">🎉</div>
-        <h1>Quiz Concluído!</h1>
-        <h2>Seu tempo final registrado: <span id="final-time" style="color: #fff; font-weight: 800; font-size: 2.2rem;"></span></h2>
-        <div id="result-stats" style="color: var(--text-muted); font-size: 1rem; margin-top: 8px;"></div>
+      <div style="text-align: center; margin-bottom: 30px;">
+        <div style="font-size: 3.5rem; margin-bottom: 6px;">🎉</div>
+        <h1 id="result-round-title">Rodada Concluída!</h1>
+        <h2>Tempo registrado: <span id="final-time" style="color: #fff; font-weight: 800; font-size: 2.2rem;"></span></h2>
+        <div id="result-stats" style="color: var(--text-muted); font-size: 1rem; margin-top: 6px;"></div>
+      </div>
+
+      <!-- Banner de espera da próxima rodada -->
+      <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 18px; padding: 18px; text-align: center; margin-bottom: 25px;">
+        <span style="color: #a5b4fc; font-weight: 700; font-size: 1.05rem;">
+          ⏳ Aguardando o professor liberar a próxima rodada... Você entrará automaticamente!
+        </span>
       </div>
       
-      <div style="background: rgba(255,255,255,0.02); padding: 30px; border-radius: 24px; border: 1px solid var(--border-light);">
-        <h3 style="text-align: center; margin-bottom: 20px;">Classificação da Sala 🏆</h3>
+      <div style="background: rgba(255,255,255,0.02); padding: 25px; border-radius: 24px; border: 1px solid var(--border-light);">
+        <h3 style="text-align: center; margin-bottom: 18px;" id="result-leaderboard-title">Classificação da Rodada 🏆</h3>
         <div id="student-leaderboard" class="leaderboard"></div>
-        <div style="text-align: center; margin-top: 35px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-           <button class="btn btn-ghost" onclick="location.reload()">Menu Principal</button>
+        <div style="text-align: center; margin-top: 30px;">
+           <button class="btn btn-ghost" onclick="leaveLobby()">Sair da Sala</button>
         </div>
       </div>
     </section>
 
     <!-- TELA 5: PAINEL DO PROFESSOR -->
     <section id="screen-teacher" class="screen">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
         <div>
           <h1 style="margin-bottom: 4px;">Painel da Sala de Aula</h1>
-          <p style="color: var(--text-muted); margin: 0;">Selecione os conteúdos, compartilhe o código com a turma e acompanhe em tempo real.</p>
+          <p style="color: var(--text-muted); margin: 0;">Controle rodadas dinâmicas, selecione conteúdos e acompanhe os alunos ao vivo.</p>
         </div>
         <button class="btn btn-ghost btn-sm" onclick="location.reload()">🚪 Sair da Sala</button>
       </div>
@@ -390,25 +432,52 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       </div>
 
       <!-- Informações da Sala e Conexão -->
-      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; padding: 22px 28px; background: rgba(255,255,255,0.03); border-radius: 22px; border: 1px solid var(--border-light); margin-bottom: 25px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; padding: 18px 24px; background: rgba(255,255,255,0.03); border-radius: 20px; border: 1px solid var(--border-light); margin-bottom: 20px;">
         <div>
-          <div style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Código da Sala</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Código da Sala</div>
           <div class="room-badge" id="teacher-room-code">--</div>
         </div>
-        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
           <button class="btn btn-ghost btn-sm" onclick="copyRoomLink()">📋 Copiar Link da Sala</button>
           <div class="chip" style="font-size: 0.95rem; color: var(--accent);">
             👥 Alunos conectados: <strong id="teacher-student-count" style="color: #fff; margin-left: 5px;">0</strong>
           </div>
         </div>
       </div>
+
+      <!-- Card de Controle da Rodada Atual -->
+      <div class="round-control-card">
+        <div>
+          <div class="round-tag">
+            <span>🎯</span>
+            <span id="teacher-round-display">Rodada 1</span>
+            <span class="chip" id="round-status-badge" style="font-size: 0.85rem; padding: 4px 12px; background: rgba(245, 158, 11, 0.15); color: #fbbf24; border-color: rgba(245, 158, 11, 0.3);">
+              Pronta para Iniciar
+            </span>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;" id="round-students-status-desc">
+            Selecione os tópicos abaixo e clique em iniciar.
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn btn-success" id="btn-start-round" onclick="teacherStartRound()">
+            🚀 Iniciar Rodada 1
+          </button>
+          <button class="btn btn-warning" id="btn-end-round" onclick="teacherEndRound()" style="display: none;">
+            ⏹️ Encerrar Rodada e Salvar
+          </button>
+          <button class="btn btn-accent" id="btn-next-round" onclick="teacherPrepareNextRound()" style="display: none;">
+            ⏩ Próxima Rodada
+          </button>
+        </div>
+      </div>
       
       <!-- Seletor de Conteúdos da Geometria Espacial -->
-      <div style="background: rgba(255,255,255,0.02); padding: 24px; border-radius: 22px; border: 1px solid var(--border-light); margin-bottom: 25px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 10px;">
+      <div style="background: rgba(255,255,255,0.02); padding: 22px; border-radius: 20px; border: 1px solid var(--border-light); margin-bottom: 25px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 8px;">
           <div>
-            <h3 style="margin-bottom: 4px;">Conteúdos Inclusos no Quiz</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Selecione os eixos temáticos que entrarão no sorteio da rodada:</p>
+            <h3 style="margin-bottom: 3px;">Conteúdos para a Rodada</h3>
+            <p style="color: var(--text-muted); font-size: 0.88rem;">Você pode trocar os tópicos a cada nova rodada:</p>
           </div>
           <div style="display: flex; gap: 10px;">
             <button class="btn btn-ghost btn-sm" onclick="toggleAllTopics(true)">Marcar Todos</button>
@@ -418,7 +487,7 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
 
         <div class="topics-selector" id="topics-checklist-container"></div>
 
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-light); flex-wrap: wrap; gap: 15px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-light); flex-wrap: wrap; gap: 15px;">
           <div style="display: flex; align-items: center; gap: 12px;">
             <label for="num-questions-select" style="font-weight: 600; color: var(--text-main); font-size: 0.95rem;">Quantidade de questões:</label>
             <select id="num-questions-select" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-light); color: #fff; padding: 8px 14px; border-radius: 12px; font-weight: 700; font-family: inherit;">
@@ -428,34 +497,61 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
               <option value="20">20 questões</option>
             </select>
           </div>
-          <div style="color: var(--text-muted); font-size: 0.9rem;" id="available-questions-count">
+          <div style="color: var(--text-muted); font-size: 0.88rem;" id="available-questions-count">
             Questões disponíveis: <strong>90</strong>
           </div>
         </div>
       </div>
       
-      <!-- Ações do Professor -->
-      <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 30px;">
-        <button class="btn btn-success" style="flex: 2; min-width: 240px; font-size: 1.15rem;" onclick="teacherStartGame()">🚀 Liberar Início (Todos os Alunos)</button>
-        <button class="btn btn-danger" style="flex: 1; min-width: 160px;" onclick="teacherResetGame()">Resetar Rodada</button>
-        <button class="btn btn-accent btn-sm" onclick="exportResultsCSV()">📥 Baixar Relatório (CSV)</button>
-      </div>
-      
-      <!-- Telas de Acompanhamento ao Vivo -->
-      <div class="teacher-layout">
-        <div style="background: rgba(255,255,255,0.02); padding: 22px; border-radius: 22px; border: 1px solid var(--border-light);">
-          <h3 style="display: flex; align-items: center; gap: 10px;"><span style="color: var(--accent);">●</span> Progresso ao Vivo</h3>
+      <!-- Telas de Acompanhamento ao Vivo da Rodada Atual -->
+      <div class="teacher-layout" style="margin-bottom: 30px;">
+        <div style="background: rgba(255,255,255,0.02); padding: 22px; border-radius: 20px; border: 1px solid var(--border-light);">
+          <h3 style="display: flex; align-items: center; gap: 10px;"><span style="color: var(--accent);">●</span> Progresso ao Vivo na Rodada</h3>
           <div id="teacher-live-status" class="leaderboard">
-            <div style="color: var(--text-muted); text-align: center; padding: 30px 10px;">Aguardando entrada dos alunos...</div>
+            <div style="color: var(--text-muted); text-align: center; padding: 30px 10px;">Aguardando início da rodada...</div>
           </div>
         </div>
-        <div style="background: rgba(255,255,255,0.02); padding: 22px; border-radius: 22px; border: 1px solid var(--border-light);">
-          <h3 style="display: flex; align-items: center; gap: 10px;"><span style="color: var(--warning);">★</span> Ranking de Velocidade</h3>
+        <div style="background: rgba(255,255,255,0.02); padding: 22px; border-radius: 20px; border: 1px solid var(--border-light);">
+          <h3 style="display: flex; align-items: center; gap: 10px;"><span style="color: var(--warning);">★</span> Ranking da Rodada Atual</h3>
           <div id="teacher-leaderboard" class="leaderboard">
             <div style="color: var(--text-muted); text-align: center; padding: 30px 10px;">Nenhum aluno concluiu a rodada ainda.</div>
           </div>
         </div>
       </div>
+
+      <!-- Histórico e Resultados Salvos por Rodada -->
+      <div style="background: rgba(255,255,255,0.02); padding: 24px; border-radius: 20px; border: 1px solid var(--border-light);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
+          <div>
+            <h3 style="margin-bottom: 3px;">📊 Resultados Salvos por Rodada</h3>
+            <p style="color: var(--text-muted); font-size: 0.88rem;">Consulte e exporte o desempenho dos alunos rodada a rodada:</p>
+          </div>
+          <button class="btn btn-accent btn-sm" onclick="exportResultsCSV()">📥 Baixar Relatório Completo (CSV)</button>
+        </div>
+
+        <div class="round-history-tabs" id="round-history-tabs"></div>
+
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.92rem; text-align: left;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--border-light); color: var(--text-muted);">
+                <th style="padding: 10px 14px;">Rodada</th>
+                <th style="padding: 10px 14px;">#</th>
+                <th style="padding: 10px 14px;">Nome do Aluno</th>
+                <th style="padding: 10px 14px;">Tempo</th>
+                <th style="padding: 10px 14px;">Questões</th>
+                <th style="padding: 10px 14px;">Status</th>
+              </tr>
+            </thead>
+            <tbody id="round-history-table-body">
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 25px;">Nenhuma rodada foi concluída ainda.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </section>
 
   </div>
@@ -463,7 +559,7 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
   <!-- Carrega banco de questões externo (banco_questoes.js) caso exista na pasta -->
   <script src="banco_questoes.js"></script>
 
-  <!-- Lógica da Aplicação com Proteção contra Quedas de Rede e Senha do Professor -->
+  <!-- Lógica da Aplicação com Sistema de Rodadas, Quedas de Rede e Senha do Professor -->
   <script>
     const TOPICOS = (typeof TOPICOS_INFO !== 'undefined') ? TOPICOS_INFO : {
       "fundamentos": "Fundamentos & Posições Relativas",
@@ -487,11 +583,17 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
     let studentConnections = new Map();
     let studentsLiveState = new Map();
     
-    // Fila de Envio Offline (Outbox)
+    // Fila Offline
     let offlineOutboxQueue = [];
     let isReconnecting = false;
     let reconnectTimer = null;
     
+    // Controle de Rodadas
+    let currentRoundNumber = 1;
+    let isRoundActive = false;
+    let savedRoundsHistory = [];
+    let selectedHistoryRoundFilter = 'all';
+
     // Quiz Local
     let currentQ = 0;
     let startTime = 0;
@@ -501,7 +603,6 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
     let quizData = [];
     let currentQuizLength = 10;
 
-    // Hashing Seguro SHA-256 no Navegador
     async function sha256(str) {
       const buffer = new TextEncoder().encode(str);
       const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
@@ -543,7 +644,6 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       }
     }
 
-    // Monitoramento Nativo de Conexão do Navegador
     window.addEventListener('online', () => {
       document.getElementById('student-offline-banner').classList.remove('active');
       document.getElementById('teacher-offline-banner').classList.remove('active');
@@ -574,19 +674,16 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       updateAvailableQuestionsCount();
       renderMathSafe('screen-login');
 
-      // Restaura sessão se a página tiver sido recarregada acidentalmente
       restoreActiveSessionIfAny();
     });
 
-    // =========================================================================
-    // MECANISMO DE PROTEÇÃO: SALVAMENTO E RECUPERAÇÃO DE SESSÃO LOCAL
-    // =========================================================================
     function saveSessionProgress() {
       if (!gameActive) return;
       const session = {
         type: 'student_session',
         roomCode: currentRoomCode,
         playerName: playerName,
+        currentRoundNumber: currentRoundNumber,
         currentQ: currentQ,
         startTime: startTime,
         timePenalty: timePenalty,
@@ -606,9 +703,10 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
         if (!raw) return;
         const session = JSON.parse(raw);
         if (session && session.type === 'student_session' && session.quizData && session.quizData.length > 0) {
-          if (confirm(`Detectamos que você estava na rodada da sala ${session.roomCode}. Deseja restaurar seu quiz em andamento?`)) {
+          if (confirm(`Detectamos que você estava na Rodada ${session.currentRoundNumber} da sala ${session.roomCode}. Deseja restaurar seu quiz?`)) {
             currentRoomCode = session.roomCode;
             playerName = session.playerName;
+            currentRoundNumber = session.currentRoundNumber || 1;
             currentQ = session.currentQ;
             startTime = session.startTime;
             timePenalty = session.timePenalty;
@@ -617,6 +715,8 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
 
             document.getElementById('active-room-display').innerText = currentRoomCode;
             document.getElementById('room-pill').style.display = 'inline-flex';
+            document.getElementById('topbar-round-text').innerText = `Rodada ${currentRoundNumber}`;
+            document.getElementById('topbar-round-pill').style.display = 'inline-flex';
 
             gameActive = true;
             showScreen('screen-quiz');
@@ -632,9 +732,7 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       } catch(e){}
     }
 
-    // =========================================================================
-    // MODAL DE AUTENTICAÇÃO DO PROFESSOR (SENHA CRIADA POR ELE)
-    // =========================================================================
+    // MODAL DO PROFESSOR (SENHA CRIADA POR ELE)
     function openTeacherModal() {
       document.getElementById('modal-teacher-auth').classList.add('active');
       switchTeacherTab('create');
@@ -671,13 +769,15 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       if (pass !== passConf) return alert("As senhas digitadas não conferem.");
 
       const passHash = await sha256(pass);
-      
       const rooms = JSON.parse(localStorage.getItem('geo_teacher_vault') || '{}');
       rooms[code] = { code, passHash, createdAt: Date.now() };
       localStorage.setItem('geo_teacher_vault', JSON.stringify(rooms));
 
       currentRoomCode = code;
       isTeacher = true;
+      currentRoundNumber = 1;
+      isRoundActive = false;
+      savedRoundsHistory = [];
 
       closeTeacherModal();
       openTeacherDashboard();
@@ -717,6 +817,10 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       document.getElementById('teacher-room-code').innerText = currentRoomCode;
       document.getElementById('active-room-display').innerText = currentRoomCode;
       document.getElementById('room-pill').style.display = 'inline-flex';
+      
+      updateTeacherRoundUI();
+      renderRoundHistoryTabs();
+      renderRoundHistoryTable();
 
       startTeacherPeer();
     }
@@ -780,8 +884,12 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
         updateTeacherStudentCount();
         renderTeacherLiveStatus();
 
-        if (data.type === 'student_reconnect' && gameActive) {
-          conn.send({ type: 'start_game', quiz: quizData });
+        if (isRoundActive && (data.type === 'student_join' || data.type === 'student_reconnect')) {
+          conn.send({
+            type: 'start_game',
+            round: currentRoundNumber,
+            quiz: quizData
+          });
         }
       } else if (data.type === 'student_progress') {
         const st = studentsLiveState.get(data.nome);
@@ -800,12 +908,266 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
         }
         renderTeacherLiveStatus();
         broadcastRoundLeaderboard();
+
+        checkIfAllStudentsFinished();
       }
     }
 
     function updateTeacherStudentCount() {
       const countEl = document.getElementById('teacher-student-count');
       if (countEl) countEl.innerText = studentConnections.size;
+    }
+
+    // SISTEMA DE CONTROLE DE RODADAS
+    function updateTeacherRoundUI() {
+      document.getElementById('teacher-round-display').innerText = `Rodada ${currentRoundNumber}`;
+      const statusBadge = document.getElementById('round-status-badge');
+      const statusDesc = document.getElementById('round-students-status-desc');
+      const btnStart = document.getElementById('btn-start-round');
+      const btnEnd = document.getElementById('btn-end-round');
+      const btnNext = document.getElementById('btn-next-round');
+
+      if (!isRoundActive) {
+        statusBadge.innerText = 'Pronta para Iniciar';
+        statusBadge.style.background = 'rgba(245, 158, 11, 0.15)';
+        statusBadge.style.color = '#fbbf24';
+        statusBadge.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+        statusDesc.innerText = 'Selecione os tópicos desejados e clique no botão verde para liberar aos alunos.';
+        
+        btnStart.style.display = 'inline-flex';
+        btnStart.innerText = `🚀 Iniciar Rodada ${currentRoundNumber}`;
+        btnEnd.style.display = 'none';
+        btnNext.style.display = 'none';
+      } else {
+        const finishedCount = Array.from(studentsLiveState.values()).filter(s => s.final).length;
+        const totalCount = studentsLiveState.size;
+
+        statusBadge.innerText = `🟢 Em Andamento (${finishedCount}/${totalCount} finalizados)`;
+        statusBadge.style.background = 'rgba(16, 185, 129, 0.15)';
+        statusBadge.style.color = '#10b981';
+        statusBadge.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+        statusDesc.innerText = 'Os alunos estão respondendo em tempo real. Você pode encerrar a qualquer momento.';
+
+        btnStart.style.display = 'none';
+        btnEnd.style.display = 'inline-flex';
+        btnEnd.innerText = `⏹️ Encerrar Rodada ${currentRoundNumber}`;
+        btnNext.style.display = 'inline-flex';
+        btnNext.innerText = `⏩ Próxima Rodada (${currentRoundNumber + 1})`;
+      }
+    }
+
+    function teacherStartRound() {
+      const selected = getSelectedTopics();
+      if (selected.length === 0) return alert("Selecione pelo menos um tópico de Geometria Espacial para a rodada.");
+      
+      const filtered = BANCO_QUESTOES.filter(q => selected.includes(q.topico));
+      if (filtered.length === 0) return alert("Não há questões disponíveis para os tópicos selecionados.");
+
+      const numQuestions = parseInt(document.getElementById('num-questions-select').value) || 10;
+      quizData = pickRandomQuestions(filtered, numQuestions);
+      currentQuizLength = quizData.length;
+      isRoundActive = true;
+
+      studentsLiveState.forEach(s => {
+        s.questao = 0;
+        s.tempo = '0.0';
+        s.final = false;
+        s.finalTime = 0;
+      });
+
+      updateTeacherRoundUI();
+      renderTeacherLiveStatus();
+      renderLeaderboard('teacher-leaderboard', []);
+
+      studentConnections.forEach(conn => {
+        if (conn.open) {
+          conn.send({
+            type: 'start_game',
+            round: currentRoundNumber,
+            quiz: quizData
+          });
+        }
+      });
+    }
+
+    function teacherEndRound() {
+      if (!isRoundActive) return;
+
+      if (!confirm(`Deseja realmente ENCERRAR a Rodada ${currentRoundNumber} agora e salvar os resultados de todos os alunos?`)) return;
+
+      saveCurrentRoundResults();
+      isRoundActive = false;
+
+      studentConnections.forEach(conn => {
+        if (conn.open) {
+          conn.send({
+            type: 'round_ended',
+            round: currentRoundNumber
+          });
+        }
+      });
+
+      updateTeacherRoundUI();
+      alert(`Rodada ${currentRoundNumber} encerrada e salva com sucesso no histórico!`);
+    }
+
+    function teacherPrepareNextRound() {
+      if (isRoundActive) {
+        saveCurrentRoundResults();
+        isRoundActive = false;
+      }
+      currentRoundNumber++;
+      updateTeacherRoundUI();
+      teacherStartRound();
+    }
+
+    function checkIfAllStudentsFinished() {
+      if (!isRoundActive || studentsLiveState.size === 0) return;
+
+      const allFinished = Array.from(studentsLiveState.values()).every(s => s.final);
+      if (allFinished) {
+        saveCurrentRoundResults();
+        isRoundActive = false;
+        updateTeacherRoundUI();
+        
+        const statusDesc = document.getElementById('round-students-status-desc');
+        statusDesc.innerHTML = `<strong style="color: var(--success);">🎉 Todos os alunos finalizaram a Rodada ${currentRoundNumber}!</strong> Resultados salvos. Clique abaixo para iniciar a Rodada ${currentRoundNumber + 1}.`;
+        
+        const btnStart = document.getElementById('btn-start-round');
+        btnStart.style.display = 'inline-flex';
+        btnStart.innerText = `🚀 Iniciar Rodada ${currentRoundNumber + 1}`;
+        currentRoundNumber++;
+      }
+    }
+
+    function saveCurrentRoundResults() {
+      const ranking = [];
+      studentsLiveState.forEach(s => {
+        ranking.push({
+          nome: s.nome,
+          tempo: s.tempo,
+          questao: s.questao,
+          final: s.final,
+          finalTime: s.final ? s.finalTime : 99999
+        });
+      });
+
+      ranking.sort((a, b) => {
+        if (a.final && !b.final) return -1;
+        if (!a.final && b.final) return 1;
+        return a.finalTime - b.finalTime;
+      });
+
+      savedRoundsHistory.push({
+        round: currentRoundNumber,
+        totalQuestoes: currentQuizLength,
+        timestamp: new Date().toLocaleTimeString(),
+        ranking: ranking
+      });
+
+      renderRoundHistoryTabs();
+      renderRoundHistoryTable();
+    }
+
+    function renderRoundHistoryTabs() {
+      const container = document.getElementById('round-history-tabs');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (savedRoundsHistory.length === 0) return;
+
+      const allBtn = document.createElement('button');
+      allBtn.className = `round-tab-pill ${selectedHistoryRoundFilter === 'all' ? 'active' : ''}`;
+      allBtn.innerText = 'Todas as Rodadas';
+      allBtn.onclick = () => { selectedHistoryRoundFilter = 'all'; renderRoundHistoryTabs(); renderRoundHistoryTable(); };
+      container.appendChild(allBtn);
+
+      savedRoundsHistory.forEach(r => {
+        const btn = document.createElement('button');
+        btn.className = `round-tab-pill ${selectedHistoryRoundFilter === r.round ? 'active' : ''}`;
+        btn.innerText = `Rodada ${r.round}`;
+        btn.onclick = () => { selectedHistoryRoundFilter = r.round; renderRoundHistoryTabs(); renderRoundHistoryTable(); };
+        container.appendChild(btn);
+      });
+    }
+
+    function renderRoundHistoryTable() {
+      const tbody = document.getElementById('round-history-table-body');
+      if (!tbody) return;
+
+      if (savedRoundsHistory.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 25px;">Nenhuma rodada foi concluída ainda.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+
+      const roundsToShow = selectedHistoryRoundFilter === 'all' 
+        ? savedRoundsHistory 
+        : savedRoundsHistory.filter(r => r.round === selectedHistoryRoundFilter);
+
+      roundsToShow.forEach(r => {
+        r.ranking.forEach((aluno, idx) => {
+          const tr = document.createElement('tr');
+          tr.style.borderBottom = '1px solid rgba(255,255,255,0.03)';
+          tr.innerHTML = `
+            <td style="padding: 10px 14px;"><span class="chip chip-round" style="padding: 2px 8px; font-size: 0.8rem;">R${r.round}</span></td>
+            <td style="padding: 10px 14px; font-weight: 700;">${idx + 1}º</td>
+            <td style="padding: 10px 14px; color: #fff;">${aluno.nome}</td>
+            <td style="padding: 10px 14px; color: var(--primary); font-weight: 700;">${aluno.final ? Number(aluno.tempo).toFixed(1) + 's' : aluno.tempo + 's'}</td>
+            <td style="padding: 10px 14px;">${aluno.questao} / ${r.totalQuestoes}</td>
+            <td style="padding: 10px 14px;">${aluno.final ? '<span style="color: var(--success);">Concluído</span>' : '<span style="color: var(--warning);">Incompleto</span>'}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      });
+    }
+
+    function exportResultsCSV() {
+      if (savedRoundsHistory.length === 0) {
+        return alert("Nenhuma rodada foi finalizada para exportação.");
+      }
+
+      let csv = "Rodada;Posicao;Nome;Tempo_Segundos;Questoes_Feitas;Total_Questoes;Concluido\n";
+      savedRoundsHistory.forEach(r => {
+        r.ranking.forEach((aluno, idx) => {
+          csv += `${r.round};${idx + 1};"${aluno.nome}";${aluno.tempo};${aluno.questao};${r.totalQuestoes};${aluno.final ? 'SIM' : 'NAO'}\n`;
+        });
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `relatorio_rodadas_quiz_${currentRoomCode}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function teacherResetGame() {
+      if (!confirm("Tem certeza que deseja resetar a rodada atual?")) return;
+
+      isRoundActive = false;
+      studentsLiveState.forEach(s => {
+        s.questao = 0; s.tempo = '0.0'; s.final = false; s.finalTime = 0;
+      });
+      updateTeacherRoundUI();
+      renderTeacherLiveStatus();
+      renderLeaderboard('teacher-leaderboard', []);
+
+      studentConnections.forEach(conn => {
+        if (conn.open) conn.send({ type: 'reset_game' });
+      });
+    }
+
+    function copyRoomLink() {
+      const url = window.location.origin + window.location.pathname + '?sala=' + currentRoomCode;
+      navigator.clipboard.writeText(url).then(() => {
+        alert("Link direto para a sala copiado:\n" + url);
+      }).catch(() => {
+        prompt("Copie o link abaixo:", url);
+      });
     }
 
     function renderTeacherLiveStatus() {
@@ -844,7 +1206,11 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
 
       studentConnections.forEach(conn => {
         if (conn.open) {
-          conn.send({ type: 'leaderboard_update', ranking: ranking });
+          conn.send({
+            type: 'leaderboard_update',
+            round: currentRoundNumber,
+            ranking: ranking
+          });
         }
       });
     }
@@ -888,84 +1254,7 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       }
     }
 
-    function teacherStartGame() {
-      const selected = getSelectedTopics();
-      if (selected.length === 0) return alert("Selecione pelo menos um tópico de Geometria Espacial.");
-      
-      const filtered = BANCO_QUESTOES.filter(q => selected.includes(q.topico));
-      if (filtered.length === 0) return alert("Não há questões disponíveis para os tópicos selecionados.");
-
-      const numQuestions = parseInt(document.getElementById('num-questions-select').value) || 10;
-      quizData = pickRandomQuestions(filtered, numQuestions);
-      currentQuizLength = quizData.length;
-      gameActive = true;
-
-      if (!confirm(`Iniciar rodada com ${currentQuizLength} questões para os ${studentConnections.size} alunos conectados?`)) return;
-
-      studentsLiveState.forEach(s => {
-        s.questao = 0; s.tempo = '0.0'; s.final = false; s.finalTime = 0;
-      });
-      renderTeacherLiveStatus();
-      renderLeaderboard('teacher-leaderboard', []);
-
-      studentConnections.forEach(conn => {
-        if (conn.open) {
-          conn.send({ type: 'start_game', quiz: quizData });
-        }
-      });
-
-      alert(`Rodada liberada com sucesso para ${studentConnections.size} alunos!`);
-    }
-
-    function teacherResetGame() {
-      if (!confirm("Tem certeza que deseja resetar a rodada? Todos os alunos retornarão ao lobby.")) return;
-
-      gameActive = false;
-      studentsLiveState.forEach(s => {
-        s.questao = 0; s.tempo = '0.0'; s.final = false; s.finalTime = 0;
-      });
-      renderTeacherLiveStatus();
-      renderLeaderboard('teacher-leaderboard', []);
-
-      studentConnections.forEach(conn => {
-        if (conn.open) conn.send({ type: 'reset_game' });
-      });
-    }
-
-    function exportResultsCSV() {
-      if (studentsLiveState.size === 0) return alert("Nenhum registro para exportar.");
-
-      let csv = "Posicao;Nome;Tempo_Segundos;Concluido\n";
-      const ranking = [];
-      studentsLiveState.forEach(s => ranking.push(s));
-      ranking.sort((a, b) => a.finalTime - b.finalTime);
-
-      ranking.forEach((r, idx) => {
-        csv += `${idx + 1};"${r.nome}";${r.tempo};${r.final ? 'SIM' : 'NAO'}\n`;
-      });
-
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `resultado_quiz_${currentRoomCode}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
-
-    function copyRoomLink() {
-      const url = window.location.origin + window.location.pathname + '?sala=' + currentRoomCode;
-      navigator.clipboard.writeText(url).then(() => {
-        alert("Link direto para a sala copiado:\n" + url);
-      }).catch(() => {
-        prompt("Copie o link abaixo:", url);
-      });
-    }
-
-    // =========================================================================
-    // EXECUÇÃO DO QUIZ PELO ALUNO COM RESILIÊNCIA A QUEDAS DE CONEXÃO
-    // =========================================================================
+    // EXECUÇÃO DO QUIZ PELO ALUNO
     function joinRoomLobby() {
       const nameInput = document.getElementById('player-name');
       const roomInput = document.getElementById('room-code-input');
@@ -1046,7 +1335,7 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
     function handleNetworkDisconnection() {
       if (!gameActive && currentQ === 0) return;
 
-      setServerStatus("Reconectando...", "warning");
+      setServerStatus("Reconectando à Sala...", "warning");
       document.getElementById('student-offline-banner').classList.add('active');
 
       if (isReconnecting) return;
@@ -1067,10 +1356,7 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
         return;
       }
 
-      if (peer.disconnected) {
-        peer.reconnect();
-      }
-
+      if (peer.disconnected) peer.reconnect();
       attemptConnectToTeacher(teacherPeerId, true);
     }
 
@@ -1095,9 +1381,28 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
 
     function handleTeacherMessage(data) {
       if (data.type === 'start_game') {
+        currentRoundNumber = data.round || 1;
         quizData = data.quiz;
         currentQuizLength = quizData.length;
+        
+        document.getElementById('topbar-round-text').innerText = `Rodada ${currentRoundNumber}`;
+        document.getElementById('topbar-round-pill').style.display = 'inline-flex';
+        document.getElementById('q-round-counter').innerText = `Rodada ${currentRoundNumber}`;
+
         startQuizRound();
+      } else if (data.type === 'round_ended') {
+        if (gameActive) {
+          gameActive = false;
+          clearInterval(timerInterval);
+          clearSessionProgress();
+          
+          const finalSeconds = (Date.now() - startTime) / 1000 + timePenalty;
+          document.getElementById('final-time').innerText = finalSeconds.toFixed(1) + 's';
+          document.getElementById('result-round-title').innerText = `Rodada ${data.round} Finalizada!`;
+          document.getElementById('result-stats').innerText = `O professor encerrou a rodada. Você respondeu ${currentQ} de ${currentQuizLength} questões.`;
+          
+          showScreen('screen-result');
+        }
       } else if (data.type === 'reset_game') {
         if (gameActive) {
           clearInterval(timerInterval);
@@ -1219,7 +1524,8 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       const finalSeconds = (Date.now() - startTime) / 1000 + timePenalty;
       document.getElementById('final-time').innerText = finalSeconds.toFixed(1) + 's';
       document.getElementById('quiz-progress').style.width = '100%';
-      document.getElementById('result-stats').innerText = `Total de ${quizData.length} questões respondidas!`;
+      document.getElementById('result-round-title').innerText = `Rodada ${currentRoundNumber} Concluída!`;
+      document.getElementById('result-stats').innerText = `Você completou todas as ${quizData.length} questões da rodada!`;
 
       showScreen('screen-result');
       
@@ -1270,7 +1576,7 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
     }
   </script>
 
-  <!-- Botão Fixo Voltar ao Portfólio -->
+  <!-- Botão Fixo Voltar ao Portfólio (Regra do Skill) -->
   <style>
     #btn-voltar { 
       position: fixed; bottom: 20px; left: 20px; z-index: 9999; 
