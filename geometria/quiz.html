@@ -1,0 +1,1005 @@
+---
+titulo: "Quiz Gamificado: Geometria Espacial"
+icone: "🏆"
+descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial do Ensino Médio."
+---
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geometria Espacial: Quiz Gamificado</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Orbitron:wght@700;800&display=swap" rel="stylesheet">
+  
+  <!-- Renderização Matemática KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  
+  <!-- PeerJS para Multiplayer P2P sem backend (Zero-Config no GitHub Pages) -->
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+
+  <style>
+    :root {
+      --bg-color: #0a0a0c;
+      --panel-bg: rgba(23, 23, 26, 0.92);
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --primary: #6366f1; /* Indigo */
+      --primary-hover: #4f46e5;
+      --secondary: #ec4899; /* Pink */
+      --accent: #06b6d4; /* Cyan */
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --success: #10b981;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-light: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(99, 102, 241, 0.5);
+      --glow-primary: 0 0 25px rgba(99, 102, 241, 0.25);
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      min-height: 100vh; padding: 20px 15px 90px 15px; color: var(--text-main); font-family: 'Outfit', sans-serif;
+      background-color: var(--bg-color);
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.12), transparent 30%),
+        radial-gradient(circle at 90% 90%, rgba(236, 72, 153, 0.12), transparent 30%),
+        radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.05), transparent 40%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+      background-attachment: fixed;
+      display: flex; align-items: center; justify-content: center;
+    }
+    
+    .app {
+      width: 100%; max-width: 980px; background: var(--panel-bg); border: 1px solid var(--border-light); 
+      border-radius: 28px; box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.85); 
+      backdrop-filter: blur(24px); overflow: hidden; position: relative;
+    }
+    
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center; gap: 15px; padding: 18px 30px; 
+      border-bottom: 1px solid var(--border-light); background: rgba(0,0,0,0.25); flex-wrap: wrap;
+    }
+    
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-icon { font-size: 1.5rem; }
+    .title { 
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em; 
+      background: linear-gradient(90deg, #818cf8, #f472b6, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+    }
+    
+    .topbar-info { display: flex; align-items: center; gap: 12px; }
+    .status-pill { 
+      display: flex; align-items: center; gap: 9px; padding: 7px 15px; border-radius: 100px; 
+      background: rgba(255,255,255,0.04); font-weight: 600; color: var(--text-muted); font-size: 0.82rem; 
+      border: 1px solid var(--border-light); 
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #64748b; transition: all 0.3s; }
+    .dot.live { background: var(--success); box-shadow: 0 0 10px var(--success); }
+    .dot.connecting { background: var(--warning); box-shadow: 0 0 10px var(--warning); }
+    
+    .screen { display: none; padding: 40px 32px; animation: slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
+    .screen.active { display: block; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    
+    h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(2.1rem, 4.5vw, 3rem); font-weight: 800; line-height: 1.15; margin-bottom: 12px; color: #fff; letter-spacing: -0.03em; }
+    h2 { font-size: 1.12rem; color: var(--text-muted); margin: 0 auto 30px auto; font-weight: 400; line-height: 1.6; max-width: 640px; }
+    h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; margin-bottom: 18px; color: #fff; font-weight: 700; }
+    
+    .input-field {
+      width: 100%; max-width: 380px; padding: 16px 20px; border-radius: 16px; border: 2px solid var(--border-light); 
+      background: rgba(255,255,255,0.03); color: #fff; font-size: 1.15rem; font-weight: 600; text-align: center; 
+      transition: all 0.3s ease; font-family: inherit; margin-bottom: 15px; display: inline-block;
+    }
+    .input-field:focus { border-color: var(--primary); outline: none; box-shadow: var(--glow-primary); background: rgba(255,255,255,0.06); }
+    
+    .btn {
+      border: none; padding: 16px 28px; border-radius: 16px; color: white; font-weight: 700; font-size: 1.05rem; 
+      cursor: pointer; background: linear-gradient(135deg, var(--primary), var(--primary-hover)); 
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); font-family: inherit; 
+      display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+      box-shadow: 0 10px 20px -8px rgba(99, 102, 241, 0.45);
+    }
+    .btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 18px 28px -8px rgba(99, 102, 241, 0.55); }
+    .btn:active { transform: translateY(-1px); }
+    .btn-secondary { background: linear-gradient(135deg, var(--secondary), #db2777); box-shadow: 0 10px 20px -8px rgba(236, 72, 153, 0.4); }
+    .btn-success { background: linear-gradient(135deg, var(--success), #059669); box-shadow: 0 10px 20px -8px rgba(16, 185, 129, 0.4); }
+    .btn-accent { background: linear-gradient(135deg, var(--accent), #0891b2); box-shadow: 0 10px 20px -8px rgba(6, 182, 212, 0.4); }
+    .btn-danger { background: linear-gradient(135deg, var(--danger), #dc2626); box-shadow: 0 10px 20px -8px rgba(239, 68, 68, 0.4); }
+    .btn-ghost { background: transparent; border: 1px solid var(--border-light); color: var(--text-muted); box-shadow: none; }
+    .btn-ghost:hover { background: rgba(255,255,255,0.06); color: #fff; transform: translateY(-2px); }
+    .btn-sm { padding: 10px 18px; font-size: 0.9rem; border-radius: 12px; }
+
+    .mode-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 780px; margin: 30px auto; text-align: left; }
+    .mode-card {
+      background: var(--card-bg); border: 1px solid var(--border-light); border-radius: 20px; padding: 25px;
+      transition: all 0.3s; position: relative; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .mode-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: var(--glow-primary); }
+    .mode-card h4 { font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .mode-card p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+
+    .progress-container { width: 100%; height: 8px; background: rgba(0,0,0,0.4); border-radius: 10px; margin-bottom: 25px; overflow: hidden; border: 1px solid var(--border-light); }
+    .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+    .status-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+    .chip { padding: 8px 16px; border-radius: 12px; background: rgba(255,255,255,0.04); font-weight: 700; font-size: 0.9rem; color: #e2e8f0; border: 1px solid var(--border-light); display: inline-flex; align-items: center; gap: 8px; }
+    .chip-topic { color: var(--accent); background: rgba(6, 182, 212, 0.08); border-color: rgba(6, 182, 212, 0.2); }
+    .timer { color: #facc15; font-family: 'Plus Jakarta Sans', monospace; font-size: 1.15rem; background: rgba(250, 204, 21, 0.08); border-color: rgba(250, 204, 21, 0.25); }
+    
+    .question-box {
+      background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 22px; padding: 35px 25px; 
+      font-size: 1.3rem; font-weight: 600; line-height: 1.55; margin-bottom: 28px; text-align: center; color: #fff;
+      box-shadow: inset 0 0 25px rgba(0,0,0,0.25);
+    }
+    
+    .options-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    
+    .option-btn {
+      width: 100%; border: 1px solid var(--border-light); border-radius: 18px; padding: 20px; min-height: 120px; 
+      background: rgba(255,255,255,0.03); color: #fff; cursor: pointer; display: flex; flex-direction: column; 
+      align-items: center; justify-content: center; gap: 12px; transition: all 0.22s ease; font-family: inherit; 
+      font-size: 1.1rem; font-weight: 600; position: relative; overflow: hidden;
+    }
+    .option-btn:hover:not(:disabled) { border-color: var(--primary); transform: translateY(-3px); background: rgba(99, 102, 241, 0.08); box-shadow: 0 12px 24px -8px rgba(0,0,0,0.4); }
+    
+    .option-btn.correct { background: rgba(16,185,129,0.18) !important; border-color: var(--success) !important; color: #fff; box-shadow: 0 0 25px rgba(16, 185, 129, 0.3); }
+    .option-btn.wrong { background: rgba(239,68,68,0.18) !important; border-color: var(--danger) !important; color: #fff; opacity: 0.7; }
+    .option-btn:disabled { cursor: not-allowed; }
+    
+    .option-image-wrap { width: 100%; height: 110px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.35); border-radius: 12px; padding: 10px; position: relative; }
+    .option-image-wrap svg { max-width: 100%; height: 100%; object-fit: contain; display: block; filter: drop-shadow(0 0 8px rgba(255,255,255,0.12)); }
+    
+    .overlay { 
+      position: absolute; inset: 0; background: rgba(10, 10, 12, 0.95); backdrop-filter: blur(16px); 
+      display: flex; flex-direction: column; align-items: center; justify-content: center; 
+      opacity: 0; pointer-events: none; transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 100; text-align: center; 
+    }
+    .overlay.active { opacity: 1; pointer-events: all; }
+    .overlay-card { padding: 40px; border-radius: 28px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); max-width: 500px; width: 90%; }
+    .overlay h1 { font-size: 2.8rem; color: var(--danger); margin-bottom: 0; letter-spacing: -0.04em; }
+    .overlay p { font-size: 1.25rem; color: var(--text-muted); font-weight: 500; margin-top: 15px; }
+
+    .topics-selector {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 12px;
+      margin: 20px 0; max-height: 280px; overflow-y: auto; padding-right: 8px;
+    }
+    .topic-checkbox-label {
+      display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 14px;
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); cursor: pointer;
+      font-size: 0.95rem; font-weight: 600; color: #e2e8f0; transition: all 0.2s;
+    }
+    .topic-checkbox-label:hover { background: rgba(99, 102, 241, 0.08); border-color: var(--primary); }
+    .topic-checkbox-label input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
+    
+    .teacher-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-top: 25px; }
+    .leaderboard { display: grid; gap: 10px; max-height: 380px; overflow-y: auto; padding-right: 8px; }
+    .leaderboard::-webkit-scrollbar, .topics-selector::-webkit-scrollbar { width: 6px; }
+    .leaderboard::-webkit-scrollbar-thumb, .topics-selector::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+
+    .rank-item { display: flex; flex-direction: column; gap: 8px; padding: 16px 20px; border-radius: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); transition: transform 0.2s; }
+    .rank-item.top-1 { background: rgba(250, 204, 21, 0.05); border-color: rgba(250, 204, 21, 0.35); }
+    .rank-item.top-2 { background: rgba(226, 232, 240, 0.05); border-color: rgba(226, 232, 240, 0.3); }
+    .rank-item.top-3 { background: rgba(249, 115, 22, 0.05); border-color: rgba(249, 115, 22, 0.3); }
+    .rank-header { display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 1.05rem; font-weight: 600; }
+    .rank-bar-bg { width: 100%; height: 7px; background: rgba(0,0,0,0.3); border-radius: 10px; overflow: hidden; }
+    .rank-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 10px; transition: width 0.5s ease; }
+
+    .room-badge {
+      display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px; border-radius: 16px;
+      background: rgba(99, 102, 241, 0.12); border: 2px dashed rgba(99, 102, 241, 0.4);
+      font-family: 'Plus Jakarta Sans', monospace; font-size: 1.4rem; font-weight: 800; color: #818cf8; letter-spacing: 2px;
+    }
+
+    .katex-display { overflow-x: auto; overflow-y: hidden; padding: 6px 0; }
+
+    @media (max-width: 768px) {
+      .teacher-layout { grid-template-columns: 1fr; }
+      .screen { padding: 30px 18px; }
+      h1 { font-size: 2.1rem; }
+      .options-grid { gap: 14px; }
+      .topbar { padding: 15px 20px; }
+    }
+    @media (max-width: 600px) {
+      .options-grid { grid-template-columns: 1fr; }
+      .option-btn { min-height: 95px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    
+    <!-- Penalização -->
+    <div class="overlay" id="penalty-overlay">
+      <div class="overlay-card">
+        <h1>RESPOSTA INCORRETA</h1>
+        <p>Penalidade: <span style="color: #fff; font-weight: 800;">+5.0s</span> no cronômetro.</p>
+        <p style="font-size: 1rem; color: #e2e8f0; margin-top: 10px;">Revise com calma e tente outra alternativa!</p>
+      </div>
+    </div>
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="brand">
+        <span class="brand-icon">📐</span>
+        <div class="title">Lab Espacial • Quiz</div>
+      </div>
+      <div class="topbar-info">
+        <div class="status-pill" id="room-pill" style="display: none;">
+          <span>Sala:</span>
+          <strong id="active-room-display" style="color: var(--accent);">--</strong>
+        </div>
+        <div class="status-pill">
+          <span class="dot" id="server-dot"></span>
+          <span id="server-status">Pronto</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TELA 1: LOGIN E ESCOLHA DE MODO -->
+    <section id="screen-login" class="screen active" style="text-align: center;">
+      <div style="margin: 25px 0;">
+        <div style="display: inline-block; padding: 8px 20px; border-radius: 100px; background: rgba(99, 102, 241, 0.1); color: var(--primary); font-weight: 700; font-size: 0.85rem; margin-bottom: 16px; border: 1px solid rgba(99, 102, 241, 0.25);">
+          ENSINO MÉDIO • GEOMETRIA ESPACIAL
+        </div>
+        <h1>Desafio Tridimensional</h1>
+        <h2>Resolva desafios de poliedros, corpos redondos, relações métricas e seções espaciais em tempo real.</h2>
+        
+        <input type="text" id="player-name" class="input-field" placeholder="Digite seu nome completo" autocomplete="off" style="font-size: 1.15rem; max-width: 420px;">
+
+        <div class="mode-cards">
+          <!-- Modo Sala de Aula P2P -->
+          <div class="mode-card">
+            <div>
+              <h4>👥 Sala de Aula (Ao Vivo)</h4>
+              <p>Conecte-se com o código gerado pelo seu professor para participar da rodada coletiva com ranking da turma.</p>
+              <input type="text" id="room-code-input" class="input-field" placeholder="Código da Sala (ex: GEO-101)" style="text-transform: uppercase; margin-bottom: 15px; max-width: 100%;">
+            </div>
+            <button class="btn btn-accent" style="width: 100%;" onclick="joinRoomLobby()">Entrar na Sala do Professor</button>
+          </div>
+
+          <!-- Modo Prática Individual -->
+          <div class="mode-card">
+            <div>
+              <h4>⚡ Treino Individual</h4>
+              <p>Jogue agora mesmo sozinho! O sistema sorteia questões aleatórias do banco completo para você treinar sua velocidade.</p>
+              <div style="margin-bottom: 20px; color: var(--text-muted); font-size: 0.88rem;">
+                📚 Banco com <strong>90 questões</strong> de todos os 9 tópicos.
+              </div>
+            </div>
+            <button class="btn" style="width: 100%;" onclick="startSoloPractice()">Iniciar Treino Solo</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="margin-top: 35px; border-top: 1px solid var(--border-light); padding-top: 25px;">
+        <button class="btn btn-ghost" onclick="enterTeacherMode()">🔑 Acesso do Professor (Criar Sala)</button>
+      </div>
+    </section>
+
+    <!-- TELA 2: LOBBY DE ESPERA (ALUNO) -->
+    <section id="screen-lobby" class="screen" style="text-align: center;">
+      <div style="margin: 35px 0;">
+        <h1>Olá, <span id="display-name" style="color: var(--primary);"></span>!</h1>
+        <h2>Você está conectado à sala <span id="lobby-room-code" style="color: var(--accent); font-weight: 700;"></span>.</h2>
+        
+        <div style="margin: 30px auto; padding: 25px 35px; border-radius: 20px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-light); display: inline-block; font-weight: 600; color: var(--accent); font-size: 1.15rem;" id="sync-text">
+          <span style="display: inline-block; animation: pulse 1.5s infinite;">⏳</span> Aguardando o professor liberar a partida...
+        </div>
+
+        <div style="margin-top: 40px;">
+          <button class="btn btn-ghost" onclick="leaveLobby()">Sair da Sala</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TELA 3: O QUIZ (ALUNO) -->
+    <section id="screen-quiz" class="screen">
+      <div class="progress-container"><div class="progress-bar" id="quiz-progress"></div></div>
+      <div class="status-bar">
+        <span class="chip" id="q-counter">Questão 1 de 10</span>
+        <span class="chip chip-topic" id="q-topic-badge">Geometria</span>
+        <span class="chip timer" id="time-display">0.0s</span>
+      </div>
+      <div class="question-box" id="question-text"></div>
+      <div class="options-grid" id="options-container"></div>
+    </section>
+
+    <!-- TELA 4: RESULTADO DO ALUNO -->
+    <section id="screen-result" class="screen">
+      <div style="text-align: center; margin-bottom: 35px;">
+        <div style="font-size: 3.8rem; margin-bottom: 8px;">🎉</div>
+        <h1>Quiz Concluído!</h1>
+        <h2>Tempo total registrado: <span id="final-time" style="color: #fff; font-weight: 800; font-size: 2.2rem;"></span></h2>
+        <div id="result-stats" style="color: var(--text-muted); font-size: 1rem; margin-top: 8px;"></div>
+      </div>
+      
+      <div style="background: rgba(255,255,255,0.02); padding: 30px; border-radius: 24px; border: 1px solid var(--border-light);">
+        <h3 style="text-align: center; margin-bottom: 20px;">Classificação da Rodada 🏆</h3>
+        <div id="student-leaderboard" class="leaderboard"></div>
+        <div style="text-align: center; margin-top: 35px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+           <button class="btn" onclick="restartSameMode()">Jogar Novamente</button>
+           <button class="btn btn-ghost" onclick="location.reload()">Menu Principal</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TELA 5: PAINEL DO PROFESSOR -->
+    <section id="screen-teacher" class="screen">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; flex-wrap: wrap; gap: 15px;">
+        <div>
+          <h1 style="margin-bottom: 5px;">Painel do Professor</h1>
+          <p style="color: var(--text-muted); margin: 0;">Configure os conteúdos, compartilhe o código com a turma e acompanhe em tempo real.</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="location.reload()">Sair do Painel</button>
+      </div>
+
+      <!-- Informações da Sala e Conexão -->
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; padding: 22px 28px; background: rgba(255,255,255,0.03); border-radius: 22px; border: 1px solid var(--border-light); margin-bottom: 25px;">
+        <div>
+          <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Código da Sala</div>
+          <div class="room-badge" id="teacher-room-code">GERANDO...</div>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <button class="btn btn-ghost btn-sm" onclick="copyRoomLink()">📋 Copiar Link da Sala</button>
+          <div class="chip" style="font-size: 1rem; color: var(--accent);">
+            👥 Alunos conectados: <strong id="teacher-student-count" style="color: #fff; margin-left: 5px;">0</strong>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Seletor de Conteúdos da Geometria Espacial -->
+      <div style="background: rgba(255,255,255,0.02); padding: 25px; border-radius: 22px; border: 1px solid var(--border-light); margin-bottom: 25px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 10px;">
+          <div>
+            <h3 style="margin-bottom: 4px;">Conteúdos Inclusos no Quiz</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Selecione os eixos temáticos que entrarão no sorteio da rodada:</p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-ghost btn-sm" onclick="toggleAllTopics(true)">Marcar Todos</button>
+            <button class="btn btn-ghost btn-sm" onclick="toggleAllTopics(false)">Desmarcar Todos</button>
+          </div>
+        </div>
+
+        <div class="topics-selector" id="topics-checklist-container"></div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 18px; padding-top: 15px; border-top: 1px solid var(--border-light); flex-wrap: wrap; gap: 15px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <label for="num-questions-select" style="font-weight: 600; color: var(--text-main); font-size: 0.95rem;">Quantidade de questões:</label>
+            <select id="num-questions-select" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-light); color: #fff; padding: 8px 14px; border-radius: 12px; font-weight: 700; font-family: inherit;">
+              <option value="5">5 questões</option>
+              <option value="10" selected>10 questões</option>
+              <option value="15">15 questões</option>
+              <option value="20">20 questões</option>
+            </select>
+          </div>
+          <div style="color: var(--text-muted); font-size: 0.9rem;" id="available-questions-count">
+            Questões disponíveis: <strong>90</strong>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Ações do Professor -->
+      <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 30px;">
+        <button class="btn btn-success" style="flex: 2; min-width: 240px; font-size: 1.15rem;" onclick="teacherStartGame()">🚀 Liberar Início (Todos os Alunos)</button>
+        <button class="btn btn-danger" style="flex: 1; min-width: 160px;" onclick="teacherResetGame()">Resetar Sessão</button>
+      </div>
+      
+      <!-- Telas de Acompanhamento ao Vivo -->
+      <div class="teacher-layout">
+        <div style="background: rgba(255,255,255,0.02); padding: 25px; border-radius: 22px; border: 1px solid var(--border-light);">
+          <h3 style="display: flex; align-items: center; gap: 10px;"><span style="color: var(--accent);">●</span> Progresso ao Vivo dos Alunos</h3>
+          <div id="teacher-live-status" class="leaderboard">
+            <div style="color: var(--text-muted); text-align: center; padding: 30px 10px;">Aguardando entrada dos alunos...</div>
+          </div>
+        </div>
+        <div style="background: rgba(255,255,255,0.02); padding: 25px; border-radius: 22px; border: 1px solid var(--border-light);">
+          <h3 style="display: flex; align-items: center; gap: 10px;"><span style="color: var(--warning);">★</span> Ranking de Conclusão</h3>
+          <div id="teacher-leaderboard" class="leaderboard">
+            <div style="color: var(--text-muted); text-align: center; padding: 30px 10px;">Nenhum aluno concluiu o teste ainda.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Carrega banco de questões externo (banco_questoes.js) caso exista na pasta -->
+  <script src="banco_questoes.js"></script>
+
+  <!-- Lógica da Aplicação -->
+  <script>
+    // Fallback: se o banco_questoes.js não for carregado, o sistema usa as variáveis locais
+    const TOPICOS = (typeof TOPICOS_INFO !== 'undefined') ? TOPICOS_INFO : {
+      "fundamentos": "Fundamentos & Posições Relativas",
+      "poliedros": "Poliedros & Teorema de Euler",
+      "prismas": "Prismas, Paralelepípedos e Cubos",
+      "piramides": "Pirâmides & Tetraedro Regular",
+      "cilindros": "Cilindros",
+      "cones": "Cones",
+      "troncos": "Troncos (Pirâmide e Cone)",
+      "esferas": "Esferas e Partes",
+      "inscricao_semelhanca": "Inscrição, Circunscrição & Semelhança"
+    };
+
+    let playerName = '';
+    let currentMode = 'solo'; // 'solo' ou 'multiplayer'
+    let currentRoomCode = '';
+    
+    // PeerJS
+    let peer = null;
+    let peerConn = null;
+    let studentConnections = new Map();
+    let studentsState = new Map();
+    
+    // Quiz Local
+    let currentQ = 0;
+    let startTime = 0;
+    let timePenalty = 0;
+    let timerInterval = null;
+    let gameActive = false;
+    let quizData = [];
+    let currentQuizLength = 10;
+
+    function renderMathSafe(elementId) {
+      setTimeout(() => {
+        const el = document.getElementById(elementId);
+        if (el && window.renderMathInElement) {
+          window.renderMathInElement(el, {
+            delimiters: [
+              { left: '$$', right: '$$', display: true },
+              { left: '\\(', right: '\\)', display: false },
+              { left: '\\[', right: '\\]', display: true }
+            ],
+            throwOnError: false
+          });
+        }
+      }, 40);
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(id);
+      if (target) target.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function setServerStatus(status, state = 'normal') {
+      const dot = document.getElementById('server-dot');
+      const text = document.getElementById('server-status');
+      if (text) text.innerText = status;
+      if (dot) {
+        dot.className = 'dot';
+        if (state === 'live') dot.classList.add('live');
+        if (state === 'connecting') dot.classList.add('connecting');
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const roomParam = urlParams.get('sala');
+      if (roomParam) {
+        const roomInput = document.getElementById('room-code-input');
+        if (roomInput) roomInput.value = roomParam.trim().toUpperCase();
+      }
+
+      renderTopicsChecklist();
+      updateAvailableQuestionsCount();
+      renderMathSafe('screen-login');
+    });
+
+    // MODO PRÁTICA INDIVIDUAL
+    function startSoloPractice() {
+      const nameInput = document.getElementById('player-name');
+      playerName = nameInput.value.trim() || 'Estudante';
+      currentMode = 'solo';
+      
+      quizData = pickRandomQuestions(BANCO_QUESTOES, 10);
+      currentQuizLength = quizData.length;
+
+      document.getElementById('room-pill').style.display = 'none';
+      setServerStatus("Modo Treino Solo", "live");
+      
+      startQuizRound();
+    }
+
+    // MODO MULTIPLAYER P2P (ALUNO)
+    function joinRoomLobby() {
+      const nameInput = document.getElementById('player-name');
+      const roomInput = document.getElementById('room-code-input');
+      
+      if (!nameInput.value.trim()) return alert("Por favor, digite seu nome completo.");
+      if (!roomInput.value.trim()) return alert("Por favor, digite o código da sala fornecido pelo professor.");
+      
+      playerName = nameInput.value.trim();
+      currentRoomCode = roomInput.value.trim().toUpperCase();
+      currentMode = 'multiplayer';
+
+      document.getElementById('display-name').innerText = playerName;
+      document.getElementById('lobby-room-code').innerText = currentRoomCode;
+      document.getElementById('active-room-display').innerText = currentRoomCode;
+      document.getElementById('room-pill').style.display = 'inline-flex';
+      
+      showScreen('screen-lobby');
+      setServerStatus("Conectando ao professor...", "connecting");
+
+      const teacherPeerId = 'mat-geo-room-' + currentRoomCode.toLowerCase();
+      
+      if (peer) { try { peer.destroy(); } catch(e){} }
+      peer = new Peer();
+
+      peer.on('open', () => {
+        peerConn = peer.connect(teacherPeerId);
+        
+        peerConn.on('open', () => {
+          setServerStatus("Conectado à sala", "live");
+          document.getElementById('sync-text').innerHTML = '✅ Conectado ao professor! Aguardando liberação...';
+          peerConn.send({ type: 'student_join', nome: playerName });
+        });
+
+        peerConn.on('data', (data) => {
+          handleTeacherMessage(data);
+        });
+
+        peerConn.on('close', () => {
+          setServerStatus("Desconectado", "normal");
+          alert("A conexão com a sala do professor foi encerrada.");
+          location.reload();
+        });
+
+        peerConn.on('error', () => {
+          alert("Não foi possível conectar à sala. Verifique o código e tente novamente.");
+          showScreen('screen-login');
+        });
+      });
+
+      peer.on('error', (err) => {
+        alert("Erro de conexão P2P: " + err.type);
+        showScreen('screen-login');
+      });
+    }
+
+    function handleTeacherMessage(data) {
+      if (data.type === 'start_game') {
+        quizData = data.quiz;
+        currentQuizLength = quizData.length;
+        startQuizRound();
+      } else if (data.type === 'reset_game') {
+        if (gameActive) {
+          clearInterval(timerInterval);
+          gameActive = false;
+        }
+        alert("O professor reiniciou a sessão.");
+        showScreen('screen-lobby');
+        document.getElementById('sync-text').innerHTML = 'Aguardando início...';
+      } else if (data.type === 'leaderboard_update') {
+        renderLeaderboard('student-leaderboard', data.ranking);
+      }
+    }
+
+    function leaveLobby() {
+      if (peerConn) { try { peerConn.close(); } catch(e){} }
+      if (peer) { try { peer.destroy(); } catch(e){} }
+      location.reload();
+    }
+
+    // CONTROLE DA RODADA
+    function startQuizRound() {
+      gameActive = true;
+      currentQ = 0;
+      timePenalty = 0;
+      startTime = Date.now();
+      
+      showScreen('screen-quiz');
+      
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(updateTimer, 100);
+      
+      loadQuestion();
+    }
+
+    function updateTimer() {
+      if (!gameActive) return;
+      const elapsed = (Date.now() - startTime) / 1000 + timePenalty;
+      document.getElementById('time-display').innerText = elapsed.toFixed(1) + 's';
+    }
+
+    function loadQuestion() {
+      if (currentQ >= quizData.length) return finishQuiz();
+      
+      const q = quizData[currentQ];
+      const container = document.getElementById('options-container');
+      const qText = document.getElementById('question-text');
+      const topicBadge = document.getElementById('q-topic-badge');
+      
+      const progress = ((currentQ) / quizData.length) * 100;
+      document.getElementById('quiz-progress').style.width = progress + '%';
+      document.getElementById('q-counter').innerText = `Questão ${currentQ + 1} de ${quizData.length}`;
+      
+      topicBadge.innerText = TOPICOS[q.topico] || 'Geometria Espacial';
+      qText.innerHTML = q.q;
+      renderMathSafe('question-text');
+      
+      container.innerHTML = '';
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.onclick = () => {
+          checkAnswer(idx);
+          btn.blur();
+        };
+        
+        if (opt.type === 'image') {
+          btn.innerHTML = `<div class="option-image-wrap">${opt.content}</div><span>${opt.label}</span>`;
+        } else if (opt.type === 'latex') {
+          btn.innerHTML = `<span id="opt-math-${idx}">${opt.content}</span>`;
+          renderMathSafe(`opt-math-${idx}`);
+        } else {
+          btn.innerHTML = `<span>${opt.content}</span>`;
+        }
+        container.appendChild(btn);
+      });
+
+      if (currentMode === 'multiplayer' && peerConn && peerConn.open) {
+        const elapsed = (Date.now() - startTime) / 1000 + timePenalty;
+        peerConn.send({
+          type: 'student_progress',
+          nome: playerName,
+          questao: currentQ + 1,
+          tempo: elapsed.toFixed(1)
+        });
+      }
+    }
+
+    function checkAnswer(idx) {
+      const btns = document.querySelectorAll('.option-btn');
+      const correctIdx = quizData[currentQ].ans;
+      
+      if (idx === correctIdx) {
+        btns.forEach(b => b.disabled = true);
+        btns[idx].classList.add('correct');
+        setTimeout(() => {
+          currentQ++;
+          loadQuestion();
+        }, 500);
+      } else {
+        btns[idx].disabled = true;
+        btns[idx].classList.add('wrong');
+        
+        timePenalty += 5.0;
+        document.getElementById('penalty-overlay').classList.add('active');
+        
+        setTimeout(() => {
+          document.getElementById('penalty-overlay').classList.remove('active');
+        }, 1800);
+      }
+    }
+
+    function finishQuiz() {
+      gameActive = false;
+      clearInterval(timerInterval);
+      
+      const finalSeconds = (Date.now() - startTime) / 1000 + timePenalty;
+      document.getElementById('final-time').innerText = finalSeconds.toFixed(1) + 's';
+      document.getElementById('quiz-progress').style.width = '100%';
+      document.getElementById('result-stats').innerText = `Total de ${quizData.length} questões respondidas!`;
+      
+      showScreen('screen-result');
+      
+      if (currentMode === 'multiplayer' && peerConn && peerConn.open) {
+        peerConn.send({
+          type: 'student_finish',
+          nome: playerName,
+          tempo_segundos: finalSeconds.toFixed(2)
+        });
+      } else {
+        saveLocalLeaderboard(playerName, finalSeconds);
+        loadLocalLeaderboard('student-leaderboard');
+      }
+    }
+
+    function restartSameMode() {
+      if (currentMode === 'solo') {
+        startSoloPractice();
+      } else {
+        showScreen('screen-lobby');
+      }
+    }
+
+    function saveLocalLeaderboard(name, time) {
+      try {
+        let list = JSON.parse(localStorage.getItem('geo_quiz_solo_ranking') || '[]');
+        list.push({ nome: name, tempo: Number(time) });
+        list.sort((a, b) => a.tempo - b.tempo);
+        list = list.slice(0, 10);
+        localStorage.setItem('geo_quiz_solo_ranking', JSON.stringify(list));
+      } catch(e){}
+    }
+
+    function loadLocalLeaderboard(containerId) {
+      try {
+        let list = JSON.parse(localStorage.getItem('geo_quiz_solo_ranking') || '[]');
+        renderLeaderboard(containerId, list.map(item => [item.nome, item.tempo]));
+      } catch(e){}
+    }
+
+    function renderLeaderboard(containerId, ranking) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+      
+      if (!ranking || ranking.length === 0) {
+        container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Nenhum registro ainda.</div>';
+        return;
+      }
+      
+      ranking.forEach((r, i) => {
+        const div = document.createElement('div');
+        let topClass = '';
+        if (i === 0) topClass = 'top-1';
+        else if (i === 1) topClass = 'top-2';
+        else if (i === 2) topClass = 'top-3';
+
+        div.className = `rank-item ${topClass}`;
+        div.innerHTML = `
+          <div class="rank-header">
+            <span>${i + 1}º • ${r[0]}</span>
+            <span style="color: var(--primary); font-weight: 700;">${Number(r[1]).toFixed(1)}s</span>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // PAINEL DO PROFESSOR
+    function enterTeacherMode() {
+      const pass = prompt("Digite a senha de acesso do Professor:");
+      if (pass === "123") {
+        initTeacherSession();
+      } else if (pass !== null) {
+        alert("Senha incorreta.");
+      }
+    }
+
+    function initTeacherSession() {
+      showScreen('screen-teacher');
+      setServerStatus("Painel do Professor", "live");
+      
+      currentRoomCode = 'GEO-' + Math.floor(100 + Math.random() * 900);
+      document.getElementById('teacher-room-code').innerText = currentRoomCode;
+      document.getElementById('active-room-display').innerText = currentRoomCode;
+      document.getElementById('room-pill').style.display = 'inline-flex';
+
+      const teacherPeerId = 'mat-geo-room-' + currentRoomCode.toLowerCase();
+      
+      if (peer) { try { peer.destroy(); } catch(e){} }
+      peer = new Peer(teacherPeerId);
+
+      peer.on('open', () => {
+        setServerStatus("Sala Ativa: " + currentRoomCode, "live");
+      });
+
+      peer.on('connection', (conn) => {
+        conn.on('data', (data) => {
+          handleStudentData(conn, data);
+        });
+
+        conn.on('close', () => {
+          studentConnections.delete(conn.peer);
+          updateTeacherStudentCount();
+        });
+      });
+
+      peer.on('error', (err) => {
+        if (err.type === 'unavailable-id') {
+          initTeacherSession();
+        }
+      });
+    }
+
+    function handleStudentData(conn, data) {
+      if (data.type === 'student_join') {
+        studentConnections.set(conn.peer, conn);
+        studentsState.set(conn.peer, {
+          nome: data.nome,
+          questao: 0,
+          tempo: '0.0',
+          final: false,
+          finalTime: 0
+        });
+        updateTeacherStudentCount();
+        renderTeacherLiveStatus();
+      } else if (data.type === 'student_progress') {
+        const st = studentsState.get(conn.peer);
+        if (st) {
+          st.questao = data.questao;
+          st.tempo = data.tempo;
+        }
+        renderTeacherLiveStatus();
+      } else if (data.type === 'student_finish') {
+        const st = studentsState.get(conn.peer);
+        if (st) {
+          st.questao = currentQuizLength;
+          st.tempo = data.tempo_segundos;
+          st.final = true;
+          st.finalTime = Number(data.tempo_segundos);
+        }
+        renderTeacherLiveStatus();
+        broadcastLeaderboard();
+      }
+    }
+
+    function updateTeacherStudentCount() {
+      const countEl = document.getElementById('teacher-student-count');
+      if (countEl) countEl.innerText = studentConnections.size;
+    }
+
+    function renderTeacherLiveStatus() {
+      const container = document.getElementById('teacher-live-status');
+      if (!container) return;
+      
+      if (studentsState.size === 0) {
+        container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 25px;">Aguardando entrada dos alunos...</div>';
+        return;
+      }
+
+      container.innerHTML = '';
+      studentsState.forEach(s => {
+        const pct = Math.min(100, (s.questao / currentQuizLength) * 100);
+        const div = document.createElement('div');
+        div.className = 'rank-item';
+        div.innerHTML = `
+          <div class="rank-header">
+            <span>${s.nome}</span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Q${s.questao}/${currentQuizLength} • ${s.tempo}s ${s.final ? '✅' : ''}</span>
+          </div>
+          <div class="rank-bar-bg"><div class="rank-bar-fill" style="width: ${pct}%;"></div></div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function broadcastLeaderboard() {
+      const ranking = [];
+      studentsState.forEach(s => {
+        if (s.final) ranking.push([s.nome, s.finalTime]);
+      });
+      ranking.sort((a, b) => a[1] - b[1]);
+
+      renderLeaderboard('teacher-leaderboard', ranking);
+
+      studentConnections.forEach(conn => {
+        if (conn.open) {
+          conn.send({ type: 'leaderboard_update', ranking: ranking });
+        }
+      });
+    }
+
+    function renderTopicsChecklist() {
+      const container = document.getElementById('topics-checklist-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const counts = {};
+      BANCO_QUESTOES.forEach(q => { counts[q.topico] = (counts[q.topico] || 0) + 1; });
+
+      Object.keys(TOPICOS).forEach(key => {
+        const label = document.createElement('label');
+        label.className = 'topic-checkbox-label';
+        label.innerHTML = `
+          <input type="checkbox" name="topic-choice" value="${key}" checked onchange="updateAvailableQuestionsCount()">
+          <span>${TOPICOS[key]} <span style="color: var(--text-muted); font-size: 0.82rem;">(${counts[key] || 0} q)</span></span>
+        `;
+        container.appendChild(label);
+      });
+    }
+
+    function toggleAllTopics(val) {
+      document.querySelectorAll('input[name="topic-choice"]').forEach(cb => cb.checked = val);
+      updateAvailableQuestionsCount();
+    }
+
+    function getSelectedTopics() {
+      const selected = [];
+      document.querySelectorAll('input[name="topic-choice"]:checked').forEach(cb => selected.push(cb.value));
+      return selected;
+    }
+
+    function updateAvailableQuestionsCount() {
+      const selected = getSelectedTopics();
+      const filtered = BANCO_QUESTOES.filter(q => selected.includes(q.topico));
+      const countEl = document.getElementById('available-questions-count');
+      if (countEl) {
+        countEl.innerHTML = `Questões disponíveis nos tópicos selecionados: <strong>${filtered.length}</strong>`;
+      }
+    }
+
+    function teacherStartGame() {
+      const selected = getSelectedTopics();
+      if (selected.length === 0) return alert("Selecione pelo menos um tópico de Geometria Espacial.");
+      
+      const filtered = BANCO_QUESTOES.filter(q => selected.includes(q.topico));
+      if (filtered.length === 0) return alert("Não há questões disponíveis para os tópicos selecionados.");
+
+      const numQuestions = parseInt(document.getElementById('num-questions-select').value) || 10;
+      const roundQuestions = pickRandomQuestions(filtered, numQuestions);
+      currentQuizLength = roundQuestions.length;
+
+      if (!confirm(`Iniciar desafio com ${currentQuizLength} questões para os ${studentConnections.size} alunos conectados?`)) return;
+
+      studentsState.forEach(s => {
+        s.questao = 0; s.tempo = '0.0'; s.final = false; s.finalTime = 0;
+      });
+      renderTeacherLiveStatus();
+      renderLeaderboard('teacher-leaderboard', []);
+
+      studentConnections.forEach(conn => {
+        if (conn.open) {
+          conn.send({ type: 'start_game', quiz: roundQuestions });
+        }
+      });
+
+      alert(`Desafio liberado com sucesso para ${studentConnections.size} alunos!`);
+    }
+
+    function teacherResetGame() {
+      if (!confirm("Tem certeza que deseja resetar a sessão? Todos os alunos retornarão ao lobby.")) return;
+
+      studentsState.forEach(s => {
+        s.questao = 0; s.tempo = '0.0'; s.final = false; s.finalTime = 0;
+      });
+      renderTeacherLiveStatus();
+      renderLeaderboard('teacher-leaderboard', []);
+
+      studentConnections.forEach(conn => {
+        if (conn.open) conn.send({ type: 'reset_game' });
+      });
+    }
+
+    function copyRoomLink() {
+      const url = window.location.origin + window.location.pathname + '?sala=' + currentRoomCode;
+      navigator.clipboard.writeText(url).then(() => {
+        alert("Link direto para a sala copiado:\n" + url);
+      }).catch(() => {
+        prompt("Copie o link abaixo:", url);
+      });
+    }
+
+    // ALGORITMO FISHER-YATES DE EMBARALHAMENTO
+    function pickRandomQuestions(banco, count) {
+      const pool = [...banco];
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = pool[i];
+        pool[i] = pool[j];
+        pool[j] = temp;
+      }
+      return pool.slice(0, Math.min(count, pool.length));
+    }
+  </script>
+
+  <!-- Botão Fixo Voltar ao Portfólio -->
+  <style>
+    #btn-voltar { 
+      position: fixed; bottom: 20px; left: 20px; z-index: 9999; 
+      background: linear-gradient(135deg, #1a237e, #1565c0); color: #fff; 
+      border: none; border-radius: 8px; padding: 10px 16px; font-size: 0.88rem; 
+      font-weight: bold; cursor: pointer; text-decoration: none; display: flex; 
+      align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.35); 
+      transition: transform 0.15s, box-shadow 0.15s; 
+    }
+    #btn-voltar:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.45); }
+    @media print { #btn-voltar { display: none !important; } }
+  </style>
+  <a id="btn-voltar" href="index.html">&#8592; Voltar ao Portfólio</a>
+
+</body>
+</html>
