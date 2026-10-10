@@ -330,42 +330,86 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
             color: rgba(255,255,255,0.4);
         }
 
-        /* ÁREA DE IMPRESSÃO (CARTELAS) */
+        /* CONTROLES DE IMPRESSÃO */
         .print-controls {
             background-color: var(--bg-card);
-            padding: 20px;
-            border-radius: 8px;
+            padding: 22px 25px;
+            border-radius: 12px;
             margin-bottom: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border: 1px solid #333;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
+        .controls-group {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .select-field {
+            background-color: rgba(0,0,0,0.5);
+            border: 1px solid #555;
+            color: var(--white);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            padding: 10px 14px;
+            border-radius: 6px;
+        }
+
+        /* PREVIEW DAS PÁGINAS DE IMPRESSÃO NA TELA */
         .cards-print-container {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            align-items: center;
+        }
+
+        /* UMA FOLHA A4 INTEIRA (Na tela e na impressão) */
+        .print-page {
+            background-color: #ffffff;
+            color: #000000;
+            width: 100%;
+            max-width: 820px;
+            min-height: 1100px;
+            padding: 30px;
+            border-radius: 4px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
             display: grid;
+            box-sizing: border-box;
+            position: relative;
+        }}
+
+        /* Grid 2x2: 4 Cartelas por Folha A4 */
+        .print-page.layout-4 {
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            grid-template-rows: 1fr 1fr;
+            gap: 16px;
         }
 
-        @media (max-width: 850px) {
-            .cards-print-container {
-                grid-template-columns: 1fr;
-            }
+        /* Grid 1x2: 2 Cartelas por Folha A4 */
+        .print-page.layout-2 {
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 24px;
         }
 
-        /* MODELO DE CARTELA PARA IMPRESSÃO EM PAPEL */
+        /* CARTELA INDIVIDUAL */
         .bingo-card {
             background-color: #ffffff;
             color: #000000;
-            border: 3px solid #000000;
-            border-radius: 0px;
-            padding: 15px;
+            border: 2.5px solid #000000;
+            padding: 10px 12px;
             width: 100%;
-            max-width: 520px;
-            margin: 0 auto 20px auto;
-            box-shadow: none;
-            page-break-inside: avoid;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .card-header {
@@ -373,24 +417,26 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #000000;
-            padding-bottom: 8px;
-            margin-bottom: 10px;
+            padding-bottom: 5px;
+            margin-bottom: 6px;
         }
 
         .card-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.22rem;
-            font-weight: bold;
+            font-size: 0.95rem;
+            font-weight: 800;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .card-id {
             font-family: 'Share Tech Mono', monospace;
-            font-size: 1rem;
+            font-size: 0.85rem;
             background-color: #000000;
             color: #ffffff;
-            padding: 2px 8px;
+            padding: 2px 7px;
             font-weight: bold;
+            border-radius: 2px;
         }
 
         .card-grid {
@@ -399,71 +445,151 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
             grid-template-rows: repeat(5, 1fr);
             border-top: 2px solid #000000;
             border-left: 2px solid #000000;
+            flex-grow: 1;
         }
 
         .card-cell {
             border-right: 2px solid #000000;
             border-bottom: 2px solid #000000;
-            padding: 8px 3px;
+            padding: 4px 2px;
             text-align: center;
-            font-weight: bold;
-            font-size: 0.85rem;
-            min-height: 70px;
+            font-weight: 700;
+            font-size: 0.78rem;
             display: flex;
             justify-content: center;
             align-items: center;
             background: #ffffff;
             word-wrap: break-word;
             line-height: 1.15;
+            min-height: 44px;
+        }
+
+        .layout-2 .card-cell {
+            min-height: 60px;
+            font-size: 0.95rem;
+            padding: 6px 4px;
+        }
+        .layout-2 .card-title {
+            font-size: 1.2rem;
+        }
+
+        .card-cell.curinga {
+            background: #f0f0f0 !important;
+            font-size: 0.72rem;
+            color: #111;
         }
 
         .card-footer-info {
-            margin-top: 10px;
+            margin-top: 5px;
             text-align: center;
-            font-size: 0.75rem;
-            color: #333;
+            font-size: 0.65rem;
+            color: #444;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
         }
 
-        /* REGRAS DE IMPRESSÃO CSS */
+        /* REGRAS DE IMPRESSÃO A4 (CSS PAGED MEDIA) */
         @media print {
             @page {
                 size: A4 portrait;
-                margin: 10mm;
+                margin: 8mm;
             }
-            body {
-                background-color: #ffffff !important;
-                color: #000000 !important;
-            }
-            header, .tabs, .print-controls, .panel, #btn-voltar {
-                display: none !important;
-            }
-            .tab-content {
-                display: block !important;
-            }
-            #panel-sorteio {
-                display: none !important;
-            }
-            #panel-cartelas {
-                display: block !important;
-            }
-            .cards-print-container {
-                display: block !important;
-                width: 100% !important;
-            }
-            .bingo-card {
-                width: 48% !important;
-                display: inline-block !important;
-                vertical-align: top !important;
-                margin: 1% !important;
-                page-break-inside: avoid !important;
-                border: 3px solid #000000 !important;
+            
+            *, *::before, *::after {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
-            .bingo-card:nth-child(4n) {
+
+            html, body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+                width: 100% !important;
+                height: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            header, .tabs, .print-controls, .panel, #btn-voltar {
+                display: none !important;
+            }
+
+            .tab-content {
+                display: block !important;
+            }
+            
+            #panel-sorteio {
+                display: none !important;
+            }
+            
+            #panel-cartelas {
+                display: block !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .cards-print-container {
+                display: block !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .print-page {
+                width: 100% !important;
+                height: 279mm !important;
+                max-height: 279mm !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
                 page-break-after: always !important;
+                break-after: page !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                box-sizing: border-box !important;
+            }
+
+            .print-page:last-child {
+                page-break-after: auto !important;
+                break-after: auto !important;
+            }
+
+            .print-page.layout-4 {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                grid-template-rows: 1fr 1fr !important;
+                gap: 5mm !important;
+            }
+
+            .print-page.layout-2 {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                grid-template-rows: 1fr 1fr !important;
+                gap: 7mm !important;
+            }
+
+            .bingo-card {
+                width: 100% !important;
+                height: 100% !important;
+                border: 2px solid #000000 !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                padding: 6px 8px !important;
+            }
+
+            .card-cell {
+                min-height: 0 !important;
+            }
+
+            .layout-4 .card-cell {
+                font-size: 0.72rem !important;
+                padding: 2px 1px !important;
+            }
+
+            .layout-2 .card-cell {
+                font-size: 0.95rem !important;
+                padding: 4px 2px !important;
             }
         }
     </style>
@@ -533,13 +659,23 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
 
         <div id="panel-cartelas" class="tab-content">
             <div class="print-controls">
-                <div>
-                    <label style="font-family:'Orbitron'; margin-right: 10px;">Quantidade de Cartelas:</label>
-                    <input type="number" id="print-quantity" class="input-field" value="25" min="1" max="100" style="width: 100px; text-align:center;">
+                <div class="controls-group">
+                    <div>
+                        <label style="font-family:'Orbitron'; margin-right: 8px; font-size: 0.95rem;">Qtd. de Cartelas:</label>
+                        <input type="number" id="print-quantity" class="input-field" value="28" min="1" max="100" style="width: 85px; text-align:center; padding: 8px;" onchange="renderAllCards()">
+                    </div>
+                    <div>
+                        <label style="font-family:'Orbitron'; margin-right: 8px; font-size: 0.95rem;">Layout por Folha A4:</label>
+                        <select id="print-layout-select" class="select-field" onchange="renderAllCards()">
+                            <option value="4" selected>4 Cartelas por Folha (2x2 - Econômico)</option>
+                            <option value="2">2 Cartelas por Folha (1x2 - Grandes)</option>
+                        </select>
+                    </div>
                 </div>
-                <button class="btn" onclick="window.print()"><span style="margin-right: 8px;">🖨️</span> Imprimir Cartelas</button>
+                <button class="btn btn-success" onclick="triggerPrint()"><span style="margin-right: 8px;">🖨️</span> Imprimir / Salvar PDF</button>
             </div>
 
+            <!-- As páginas organizadas A4 -->
             <div class="cards-print-container" id="cards-container"></div>
         </div>
 
@@ -1067,6 +1203,8 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
                 document.getElementById('answer-container').style.display = 'none';
                 document.getElementById('remaining-count').innerText = TOTAL_POOL_SIZE;
                 document.getElementById('checker-result').style.display = 'none';
+ TOTAL_POOL_SIZE;
+                document.getElementById('checker-result').style.display = 'none';
                 document.getElementById('check-card-id').value = "";
                 renderGeneralHistoryBoard();
             }
@@ -1113,7 +1251,6 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
             for(let i = 0; i < 25; i++) {
                 const cell = document.createElement('div');
                 
-                // Espaço central do Curinga
                 if(i === 12) {
                     cell.className = 'checker-cell matched';
                     cell.innerText = '⭐ BÔNUS';
@@ -1146,63 +1283,79 @@ descricao: "Sorteador eletrônico e gerador de cartelas exclusivas para o Bingo 
         }
 
         // =========================================================================
-        // GERAÇÃO DAS CARTELAS PARA IMPRESSÃO (MATRIZ 5x5)
+        // GERAÇÃO DAS CARTELAS POR PÁGINA A4 (LAYOUT 4x OU 2x)
         // =========================================================================
         function renderAllCards() {
             const container = document.getElementById('cards-container');
             container.innerHTML = "";
             
-            const quantity = parseInt(document.getElementById('print-quantity').value) || 25;
+            const quantity = parseInt(document.getElementById('print-quantity').value) || 28;
+            const cardsPerPage = parseInt(document.getElementById('print-layout-select').value) || 4;
 
-            for(let cardId = 1; cardId <= quantity; cardId++) {
-                const cardIndices = generateIndicesForCard(cardId, TOTAL_POOL_SIZE, ITEMS_PER_CARD);
-                
-                const cardElement = document.createElement('div');
-                cardElement.className = 'bingo-card';
-                
-                const headerDiv = document.createElement('div');
-                headerDiv.className = 'card-header';
-                headerDiv.innerHTML = `
-                    <div class="card-title">BINGO: GEOMETRIA ESPACIAL</div>
-                    <div class="card-id">CÓD: ${String(cardId).padStart(3, '0')}</div>
-                `;
-                cardElement.appendChild(headerDiv);
+            const totalPages = Math.ceil(quantity / cardsPerPage);
 
-                const gridDiv = document.createElement('div');
-                gridDiv.className = 'card-grid';
-                
-                let itemIndex = 0;
-                for(let i = 0; i < 25; i++) {
-                    const cellDiv = document.createElement('div');
-                    cellDiv.className = 'card-cell';
+            let currentCardId = 1;
+
+            for (let page = 1; page <= totalPages; page++) {
+                const pageElement = document.createElement('div');
+                pageElement.className = `print-page layout-${cardsPerPage}`;
+
+                for (let pos = 0; pos < cardsPerPage && currentCardId <= quantity; pos++, currentCardId++) {
+                    const cardIndices = generateIndicesForCard(currentCardId, TOTAL_POOL_SIZE, ITEMS_PER_CARD);
                     
-                    if(i === 12) {
-                        cellDiv.innerText = '⭐ CURINGA';
-                        cellDiv.style.backgroundColor = '#f0f0f0';
-                    } else {
-                        const item = BINGO_DATABASE[cardIndices[itemIndex]];
-                        cellDiv.innerText = item.a;
-                        itemIndex++;
+                    const cardElement = document.createElement('div');
+                    cardElement.className = 'bingo-card';
+                    
+                    const headerDiv = document.createElement('div');
+                    headerDiv.className = 'card-header';
+                    headerDiv.innerHTML = `
+                        <div class="card-title">BINGO: GEOMETRIA ESPACIAL</div>
+                        <div class="card-id">CÓD: ${String(currentCardId).padStart(3, '0')}</div>
+                    `;
+                    cardElement.appendChild(headerDiv);
+
+                    const gridDiv = document.createElement('div');
+                    gridDiv.className = 'card-grid';
+                    
+                    let itemIndex = 0;
+                    for(let i = 0; i < 25; i++) {
+                        const cellDiv = document.createElement('div');
+                        
+                        if(i === 12) {
+                            cellDiv.className = 'card-cell curinga';
+                            cellDiv.innerText = '⭐ CURINGA';
+                        } else {
+                            cellDiv.className = 'card-cell';
+                            const item = BINGO_DATABASE[cardIndices[itemIndex]];
+                            cellDiv.innerText = item.a;
+                            itemIndex++;
+                        }
+                        
+                        gridDiv.appendChild(cellDiv);
                     }
                     
-                    gridDiv.appendChild(cellDiv);
+                    cardElement.appendChild(gridDiv);
+
+                    const footerDiv = document.createElement('div');
+                    footerDiv.className = 'card-footer-info';
+                    footerDiv.innerText = "Ouça o desafio geométrico e marque o termo correspondente.";
+                    cardElement.appendChild(footerDiv);
+
+                    pageElement.appendChild(cardElement);
                 }
-                
-                cardElement.appendChild(gridDiv);
 
-                const footerDiv = document.createElement('div');
-                footerDiv.className = 'card-footer-info';
-                footerDiv.innerText = "Ouça o desafio geométrico e marque o termo correspondente.";
-                cardElement.appendChild(footerDiv);
-
-                container.appendChild(cardElement);
+                container.appendChild(pageElement);
             }
+        }
+
+        function triggerPrint() {
+            window.print();
         }
 
         window.onload = function() {
             document.getElementById('remaining-count').innerText = TOTAL_POOL_SIZE;
             renderGeneralHistoryBoard();
-            document.getElementById('print-quantity').addEventListener('change', renderAllCards);
+            renderAllCards();
         };
     </script>
 </body>
