@@ -1,0 +1,3041 @@
+---
+titulo: "Laboratório Visual de Geometria Espacial"
+descricao: "Explore sólidos, projeções, planificações, seções e relações espaciais em um laboratório 3D interativo."
+icone: "🧊"
+---
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laboratório Visual de Geometria Espacial</title>
+<meta name="description" content="Visualização interativa de sólidos, projeções, planificações e seções. Revisão 3.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+:root{
+  --bg:#0a0a0c;
+  --panel:rgba(20,20,24,0.9);
+  --panel-2:rgba(28,28,34,0.75);
+  --primary:#6366f1;
+  --cyan:#06b6d4;
+  --green:#10b981;
+  --pink:#ec4899;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --text:#f8fafc;
+  --muted:#94a3b8;
+  --border:rgba(255,255,255,0.09);
+  --border-strong:rgba(255,255,255,0.18);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:'Outfit',sans-serif;color:var(--text);background:var(--bg);
+  overflow:hidden;
+}
+#app{
+  display:grid;grid-template-rows:auto 1fr;height:100vh;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(99,102,241,0.14), transparent 32%),
+    radial-gradient(circle at 92% 100%, rgba(6,182,212,0.12), transparent 32%),
+    #0a0a0c;
+}
+/* ================= TOPO ================= */
+header{
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  padding:14px 22px;border-bottom:1px solid var(--border);
+  background:rgba(12,12,16,0.75);backdrop-filter:blur(14px);z-index:20;
+}
+.brand{display:flex;align-items:center;gap:13px;min-width:0}
+.brand .mark{
+  width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:1.35rem;
+  background:linear-gradient(135deg,rgba(99,102,241,.35),rgba(6,182,212,.28));
+  border:1px solid var(--border-strong);box-shadow:0 0 22px rgba(99,102,241,.25);
+}
+.brand h1{
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:1.16rem;font-weight:800;line-height:1.15;
+  background:linear-gradient(90deg,#a5b4fc,#22d3ee,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.brand p{font-size:.75rem;color:var(--muted);letter-spacing:.02em}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pill{
+  display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:11px;font-size:.76rem;font-weight:600;
+  background:var(--panel-2);border:1px solid var(--border);color:var(--muted);
+}
+.pill b{color:var(--text);font-weight:700}
+.pill .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+/* ================= CORPO ================= */
+#corpo{display:grid;grid-template-columns:290px 1fr 320px;gap:0;min-height:0}
+aside{min-height:0;display:flex;flex-direction:column;background:var(--panel);backdrop-filter:blur(12px)}
+#catalogo{border-right:1px solid var(--border)}
+#painel{border-left:1px solid var(--border);overflow:hidden}
+.sec-title{
+  display:flex;align-items:center;gap:8px;padding:13px 16px 10px;font-size:.72rem;font-weight:800;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--muted)
+}
+.scroll{min-height:0;overflow-y:auto;flex:1;padding:0 12px 18px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.14) transparent}
+.scroll::-webkit-scrollbar{width:8px}
+.scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:8px}
+#busca{
+  margin:0 14px 10px;padding:11px 13px;border-radius:12px;font-family:inherit;font-size:.85rem;
+  background:rgba(0,0,0,.35);border:1px solid var(--border);color:var(--text);outline:none;
+}
+#busca:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.16)}
+.grupo{margin-bottom:6px;border-radius:14px;overflow:hidden;border:1px solid transparent}
+.grupo.aberto{border-color:var(--border);background:rgba(255,255,255,.015)}
+.grupo > .gtitulo{
+  width:100%;display:flex;align-items:center;gap:9px;padding:11px 12px;cursor:pointer;
+  background:none;border:none;color:var(--text);font-family:inherit;font-size:.83rem;font-weight:700;text-align:left;
+}
+.grupo > .gtitulo:hover{background:rgba(255,255,255,.04)}
+.grupo .gnum{
+  font-size:.68rem;font-weight:800;color:#a5b4fc;background:rgba(99,102,241,.16);
+  border:1px solid rgba(99,102,241,.3);border-radius:7px;padding:2px 6px;margin-left:auto;
+}
+.grupo .gseta{transition:transform .2s;color:var(--muted);font-size:.7rem}
+.grupo.aberto .gseta{transform:rotate(90deg)}
+.glista{display:none;padding:0 8px 9px}
+.grupo.aberto .glista{display:block}
+.item{
+  display:block;width:100%;text-align:left;padding:8px 11px;border-radius:9px;font-family:inherit;font-size:.8rem;
+  color:var(--muted);background:none;border:1px solid transparent;cursor:pointer;transition:.14s;
+}
+.item:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.item.ativo{
+  background:linear-gradient(90deg,rgba(99,102,241,.22),rgba(6,182,212,.12));
+  border-color:rgba(99,102,241,.42);color:#fff;font-weight:600;
+}
+/* ================= PALCO ================= */
+#palco{position:relative;min-height:0;background:#08080a;display:flex;flex-direction:column}
+#lienzo{position:relative;flex:1;min-height:0}
+#lienzo canvas{display:block;width:100%;height:100%}
+.vp-label{
+  position:absolute;padding:5px 10px;border-radius:8px;font-size:.68rem;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:#a5b4fc;background:rgba(10,10,14,.72);border:1px solid var(--border);
+  pointer-events:none
+}
+.vp-hint{position:absolute;right:12px;bottom:10px;font-size:.68rem;color:var(--muted);pointer-events:none}
+.barra{
+  position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;flex-wrap:wrap;z-index:6;pointer-events:none
+}
+.barra > *{pointer-events:auto}
+.tgrupo{
+  display:flex;align-items:center;gap:2px;padding:4px;border-radius:13px;
+  background:rgba(10,10,14,.82);border:1px solid var(--border);backdrop-filter:blur(10px)
+}
+.tgrupo .rot{font-size:.62rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:0 7px 0 5px}
+.tbtn{
+  border:none;background:none;color:var(--muted);font-family:inherit;font-size:.74rem;font-weight:600;
+  padding:7px 10px;border-radius:9px;cursor:pointer;transition:.14s;white-space:nowrap
+}
+.tbtn:disabled{opacity:.32;cursor:not-allowed}
+.tbtn:hover{background:rgba(255,255,255,.07);color:var(--text)}
+.tbtn.on{background:linear-gradient(135deg,rgba(99,102,241,.85),rgba(79,70,229,.85));color:#fff;box-shadow:0 3px 14px rgba(99,102,241,.35)}
+.tbtn.danger.on{background:linear-gradient(135deg,#ef4444,#b91c1c);box-shadow:0 3px 14px rgba(239,68,68,.35)}
+/* ================= PAINEL ================= */
+.bloco{border-bottom:1px solid var(--border);padding:0 14px 15px}
+.bloco:last-child{border-bottom:none}
+.campo{margin-top:11px}
+.campo > label{
+  display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:.74rem;font-weight:600;
+  color:var(--muted);margin-bottom:5px
+}
+.campo > label .val{color:var(--cyan);font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;font-size:.78rem}
+input[type=range]{
+  width:100%;height:5px;border-radius:5px;appearance:none;cursor:pointer;
+  background:linear-gradient(90deg,rgba(99,102,241,.75),rgba(6,182,212,.6));
+}
+input[type=range]::-webkit-slider-thumb{
+  appearance:none;width:15px;height:15px;border-radius:50%;background:#e0e7ff;border:2px solid var(--primary);
+  box-shadow:0 0 9px rgba(99,102,241,.6);cursor:pointer
+}
+select,input[type=text],input[type=number]{
+  width:100%;padding:9px 11px;border-radius:10px;font-family:inherit;font-size:.8rem;
+  background:rgba(0,0,0,.4);border:1px solid var(--border);color:var(--text);outline:none
+}
+select:focus,input:focus{border-color:var(--primary)}
+.toggle{display:flex;align-items:center;gap:9px;margin-top:9px;cursor:pointer;font-size:.79rem;color:var(--muted)}
+.toggle input{width:15px;height:15px;accent-color:var(--primary);cursor:pointer}
+.botoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.b{
+  flex:1;min-width:96px;padding:10px 12px;border-radius:11px;font-family:inherit;font-size:.78rem;font-weight:700;
+  border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;transition:.15s
+}
+.b:hover{background:rgba(255,255,255,.09)}
+.b.prim{background:linear-gradient(135deg,var(--primary),#4f46e5);border-color:transparent;box-shadow:0 5px 16px -6px rgba(99,102,241,.7)}
+.b.ambar{background:linear-gradient(135deg,#f59e0b,#d97706);border-color:transparent;color:#1a1206}
+.b.cian{background:linear-gradient(135deg,var(--cyan),#0891b2);border-color:transparent;color:#04191d}
+.b.rosa{background:linear-gradient(135deg,var(--pink),#be185d);border-color:transparent}
+/* informação */
+#nome-solido{font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;font-weight:800;line-height:1.25}
+#grupo-solido{font-size:.7rem;color:#a5b4fc;text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-top:4px}
+#desc-solido{margin-top:9px;font-size:.79rem;line-height:1.6;color:var(--muted)}
+.formulas{margin-top:11px;display:flex;flex-direction:column;gap:7px}
+.formulas .f{
+  padding:9px 11px;border-radius:10px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);
+  overflow-x:auto
+}
+.formulas .f .katex{font-size:.84rem;color:#e0e7ff}
+.formulas .f .ftag{font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700;display:block;margin-bottom:4px}
+.leitura{margin-top:11px;display:grid;gap:6px}
+.leitura .l{display:flex;justify-content:space-between;gap:10px;font-size:.77rem;padding:7px 10px;border-radius:9px;background:rgba(255,255,255,.03)}
+.leitura .l span:first-child{color:var(--muted)}
+.leitura .l span:last-child{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--cyan)}
+.aviso{
+  margin-top:11px;padding:10px 12px;border-radius:10px;font-size:.73rem;line-height:1.5;
+  background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:#fcd34d
+}
+.nota{margin-top:10px;font-size:.71rem;line-height:1.55;color:#64748b;font-style:italic}
+#btn-voltar{
+  background:rgba(255,255,255,.05);color:#cbd5e1;border:1px solid rgba(255,255,255,.13);border-radius:10px;
+  padding:8px 13px;font-family:inherit;font-size:.76rem;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;
+  box-shadow:0 5px 16px rgba(0,0,0,.45);display:flex;align-items:center;gap:6px
+}
+#btn-voltar:hover{transform:translateY(-2px)}
+#carregando{
+  position:absolute;inset:0;display:grid;place-items:center;background:rgba(8,8,10,.9);z-index:30;
+  text-align:center;color:var(--muted);font-size:.85rem
+}
+#carregando .an{
+  width:44px;height:44px;border-radius:50%;border:3px solid rgba(99,102,241,.2);border-top-color:var(--cyan);
+  margin:0 auto 14px;animation:girar 1s linear infinite
+}
+@keyframes girar{to{transform:rotate(360deg)}}
+@media(max-width:1180px){
+  #corpo{grid-template-columns:250px 1fr 290px}
+}
+/* ===== controles exclusivos do celular ===== */
+#abas-mob,#btn-cat-mob,#fundo-cat{display:none}
+#btn-cat-mob{
+  display:none;align-items:center;gap:7px;padding:9px 13px;border-radius:12px;cursor:pointer;
+  background:rgba(99,102,241,.18);border:1px solid rgba(99,102,241,.42);color:#e0e7ff;
+  font-family:inherit;font-size:.8rem;font-weight:700
+}
+#abas-mob{gap:6px;padding:9px 12px;border-bottom:1px solid var(--border);background:rgba(12,12,16,.7)}
+#abas-mob button{
+  flex:1;padding:10px 6px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.03);
+  color:var(--muted);font-family:inherit;font-size:.76rem;font-weight:700;cursor:pointer
+}
+#abas-mob button.on{background:linear-gradient(135deg,rgba(99,102,241,.85),rgba(79,70,229,.85));color:#fff;border-color:transparent}
+#caixa-erros{
+  position:fixed;left:14px;top:74px;z-index:60;display:none;max-width:min(92vw,460px);
+  padding:11px 14px;border-radius:12px;font-size:.74rem;line-height:1.5;
+  background:rgba(127,29,29,.95);border:1px solid rgba(248,113,113,.5);color:#fecaca;
+  font-family:ui-monospace,monospace;box-shadow:0 10px 30px rgba(0,0,0,.5)
+}
+#fundo-cat{position:fixed;inset:0;background:rgba(0,0,0,.62);backdrop-filter:blur(3px);z-index:44}
+
+/* ===== CELULAR / TABLET ===== */
+@media(max-width:980px){
+  body{overflow:hidden}
+  #app{height:100dvh;grid-template-rows:auto 1fr}
+  header{padding:10px 13px;gap:10px}
+  .brand .mark{width:36px;height:36px;font-size:1.15rem;border-radius:11px}
+  .brand h1{font-size:.95rem}
+  .brand p{display:none}
+  #pill-fps,#pill-arestas{display:none}
+  .topbar-right{gap:7px}
+  .pill{padding:6px 10px;font-size:.7rem}
+  #btn-cat-mob{display:inline-flex}
+  #corpo{display:flex;flex-direction:column;grid-template-columns:none;min-height:0}
+  #painel{border-left:none;border-top:1px solid var(--border);flex:1;min-height:0}
+  #catalogo{
+    position:fixed;top:0;left:0;bottom:0;width:min(86vw,330px);z-index:45;
+    transform:translateX(-104%);transition:transform .28s cubic-bezier(.3,1,.4,1);
+    border-right:1px solid var(--border-strong);box-shadow:26px 0 60px rgba(0,0,0,.6)
+  }
+  body.cat-aberto #catalogo{transform:translateX(0)}
+  body.cat-aberto #fundo-cat{display:block}
+  #palco{height:46dvh;flex:none}
+  #abas-mob{display:flex}
+  aside{max-height:none}
+  aside .scroll{min-height:0;overflow-y:auto;overflow-x:hidden}
+  .barra{top:8px;left:8px;right:8px;gap:6px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px;scrollbar-width:none}
+  .barra::-webkit-scrollbar{display:none}
+  .tgrupo{flex:0 0 auto}
+  .tbtn{padding:8px 10px;font-size:.72rem}
+  .tgrupo .rot{display:none}
+  .vp-hint{font-size:.62rem;right:8px;bottom:6px;max-width:60%}
+  #painel .bloco{display:none;border-bottom:none}
+  body.aba-p #painel .bloco[data-aba="p"],body.aba-l #painel .bloco[data-aba="l"],body.aba-s #painel .bloco[data-aba="s"]{display:block}
+  #btn-voltar{padding:7px 10px;font-size:.72rem}
+}
+@media(max-width:560px){
+  .topbar-right .pill{display:none}
+  .brand h1{font-size:.82rem;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  header{gap:8px}
+}
+@media(max-width:520px){
+  .brand h1{font-size:.86rem}
+  #palco{height:42dvh}
+  input[type=range]::-webkit-slider-thumb{width:19px;height:19px}
+  .b{min-width:84px;font-size:.74rem}
+}
+@media(hover:none){
+  input[type=range]{height:7px}
+  .item{padding:11px}
+  .tbtn{padding:9px 12px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="brand">
+      <div class="mark">🧊</div>
+      <div>
+        <h1>Laboratório Visual de Geometria Espacial</h1>
+        <p>Sólidos · Projeções · Planificações · Seções · Relações espaciais · Transformações</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <a id="btn-voltar" href="index.html">← Menu</a>
+      <button id="btn-cat-mob" type="button">📚 Catálogo</button>
+      <span class="pill"><span class="dot"></span> <b id="pill-endereco">Perspectiva</b></span>
+      <span class="pill" id="pill-arestas">—</span>
+      <span class="pill" id="pill-fps">—</span>
+      <span class="pill">Mateus Goldschmidt · UFFS</span>
+    </div>
+  </header>
+
+  <div id="corpo">
+    <aside id="catalogo">
+      <div class="sec-title">📚 Catálogo de formas e recursos</div>
+      <input type="text" id="busca" placeholder="Buscar sólido ou recurso...">
+      <div class="scroll" id="arvore"></div>
+    </aside>
+
+    <main id="palco">
+      <div id="lienzo">
+        <div class="barra" id="barra-topo"></div>
+        <div class="vp-hint" id="dica-camera">Arraste para orbitar · roda do mouse para aproximar</div>
+        <div id="carregando"><div><div class="an"></div>Preparando o laboratório 3D...</div></div>
+      </div>
+    </main>
+
+    <div id="abas-mob">
+      <button type="button" data-aba="p" class="on">🎛️ Parâmetros</button>
+      <button type="button" data-aba="l">🔍 Leitura</button>
+      <button type="button" data-aba="s">📖 Sobre</button>
+    </div>
+
+    <aside id="painel">
+      <div class="scroll">
+        <div class="bloco" data-aba="p">
+          <div class="sec-title" style="padding-left:2px">🎛️ Parâmetros</div>
+          <div id="controles"></div>
+        </div>
+        <div class="bloco" data-aba="l">
+          <div class="sec-title" style="padding-left:2px">🔍 Leitura numérica</div>
+          <div class="leitura" id="leitura"></div>
+        </div>
+        <div class="bloco" data-aba="s">
+          <div class="sec-title" style="padding-left:2px">📖 Sobre este sólido</div>
+          <div id="nome-solido">—</div>
+          <div id="grupo-solido"></div>
+          <div id="desc-solido"></div>
+          <div class="formulas" id="formulas"></div>
+          <div id="avisos"></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+<div id="caixa-erros"></div>
+<div id="fundo-cat"></div>
+
+<!--SCRIPTS-->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.166.1/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { ConvexHull } from 'three/addons/math/ConvexHull.js';
+
+/* Coletor de erros: mostra problemas na tela em vez de falhar em silencio */
+const Erros = [];
+function mostrarErros() {
+  const cx = document.getElementById('caixa-erros');
+  if (!cx) return;
+  cx.style.display = Erros.length ? 'block' : 'none';
+  cx.innerHTML = '<b>Aviso tecnico:</b><br>' + Erros.slice(-3).map(String).join('<br>');
+}
+addEventListener('error', (e) => { Erros.push('[erro] ' + (e.message || '') + ' linha ' + (e.lineno || '?')); mostrarErros(); });
+addEventListener('unhandledrejection', (e) => { Erros.push('[promessa] ' + ((e.reason && e.reason.message) || e.reason)); mostrarErros(); });
+
+/* =====================================================================
+   0. UTILIDADES
+   ===================================================================== */
+const TAU = Math.PI * 2, DEG = Math.PI / 180;
+const lerp = (a, b, t) => a + (b - a) * t;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const $ = (id) => document.getElementById(id);
+const fx = (v, d = 2) => (Number.isFinite(v) ? v.toFixed(d).replace('.', ',') : '—');
+const V3 = (x, y, z) => new THREE.Vector3(x || 0, y || 0, z || 0);
+
+/* Constrói uma BufferGeometry indexada a partir de vértices e faces.
+   Guarda também as posições "chatas" (planificadas) para o morph. */
+function buildGeo(verts, faces, flat) {
+  const pos = new Float32Array(verts.length * 3);
+  verts.forEach((v, i) => { pos[i * 3] = v[0]; pos[i * 3 + 1] = v[1]; pos[i * 3 + 2] = v[2]; });
+  const idx = [];
+  faces.forEach(f => {
+    if (f.length === 3) idx.push(f[0], f[1], f[2]);
+    else for (let i = 1; i < f.length - 1; i++) idx.push(f[0], f[i], f[i + 1]);
+  });
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  g.setIndex(idx);
+  g.computeVertexNormals();
+  g.userData.pos3d = Float32Array.from(pos);
+  if (flat) {
+    const fp = new Float32Array(flat.length * 3);
+    flat.forEach((v, i) => { fp[i * 3] = v[0]; fp[i * 3 + 1] = v[1]; fp[i * 3 + 2] = v[2]; });
+    g.userData.flat = fp;
+  }
+  return g;
+}
+
+/* Anel de N vértices (polígono regular) no plano XZ ou XY */
+function poligono(n, L, y, off = 0) {
+  const r = L / (2 * Math.sin(Math.PI / n));
+  const out = [];
+  for (let i = 0; i < n; i++) {
+    const a = off + TAU * i / n - Math.PI / 2;
+    out.push([r * Math.cos(a), y, r * Math.sin(a)]);
+  }
+  return out;
+}
+const apotema = (n, L) => L / (2 * Math.tan(Math.PI / n));
+
+/* Fronteira de uma malha (faces trianguladas) → segmentos para as arestas do contorno */
+function contornoDe(faces) {
+  const m = new Map();
+  const key = (a, b) => a < b ? a + '_' + b : b + '_' + a;
+  faces.forEach(f => {
+    for (let i = 0; i < f.length; i++) {
+      const k = key(f[i], f[(i + 1) % f.length]);
+      m.set(k, (m.get(k) || 0) + 1);
+    }
+  });
+  const seg = [];
+  m.forEach((c, k) => { if (c === 1) seg.push(k.split('_').map(Number)); });
+  return seg;
+}
+
+/* =====================================================================
+   1. CENA, LUZES E CÂMERAS
+   ===================================================================== */
+const lienzo = $('lienzo');
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.localClippingEnabled = true;
+renderer.setClearAlpha(0);
+lienzo.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(45, 1, 0.5, 6000);
+camera.position.set(150, 120, 190);
+
+const camOrtho = new THREE.OrthographicCamera(-160, 160, 160, -160, -3000, 6000);
+camOrtho.position.copy(camera.position);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.09;
+controls.rotateSpeed = 0.85;
+
+scene.add(new THREE.HemisphereLight(0xdbeafe, 0x0b1020, 1.05));
+const key = new THREE.DirectionalLight(0xffffff, 1.5); key.position.set(180, 260, 190); scene.add(key);
+const fill = new THREE.DirectionalLight(0x93c5fd, 0.65); fill.position.set(-200, 90, -160); scene.add(fill);
+const rim = new THREE.DirectionalLight(0xf472b6, 0.42); rim.position.set(0, -180, 120); scene.add(rim);
+
+/* Eixos opcionais, sem grade de fundo. */
+const grupoEixos=new THREE.Group();scene.add(grupoEixos);grupoEixos.visible=false;
+[[V3(1,0,0),0xef4444],[V3(0,1,0),0x22c55e],[V3(0,0,1),0x3b82f6]].forEach(([v,c])=>{
+  grupoEixos.add(new THREE.ArrowHelper(v,V3(0,0,0),100,c,5,2.5));
+});
+const labelsEixos=['X','Y','Z'].map((txt,i)=>{
+  const e=document.createElement('div');e.className='vp-label';e.textContent=txt;e.style.color=['#f87171','#4ade80','#60a5fa'][i];e.style.display='none';lienzo.appendChild(e);return e;
+});
+
+/* =====================================================================
+   2. MODOS DE REPRESENTAÇÃO
+   ===================================================================== */
+const Estado = {
+  solido: null,            // registro do sólido atual
+  params: {},              // valores atuais dos parâmetros
+  modoPintura: 'faces',    // aramado | faces | vidro | ocultas
+  projecao: 'perspectiva', // perspectiva | isometrica | dimetrica | cavaleira | monge
+  fov: 45,
+  cavaleiraK: 0.5,
+  mostrarGrade: false,
+  mostrarEixos: false,
+  mostrarRotulos: true,
+  cor: 0x60a5fa,
+  ferramenta: 'nenhuma',   // nenhuma | planificar | explodir | seccao | fatiar
+  planT: 0,                // abertura da planificação (0..1)
+  expT: 0,                 // separação da vista explodida (0..1)
+  medidas: true,           // mostrar alturas, apótemas, geratrizes e diagonais
+  girar: false,            // rotação automática da cena
+  anim: { ativa: false, chave: null, dir: 1, vel: 1 },
+  animRede: false, direcaoRede: 1,
+  seccao: { ativo: false, eixo: 'y', pos: 0, inclinacao: 0, mostrarPlano: true, mostrarCurva: true },
+  fatiar: { ativo: false, n: 8, afastar: 0.25, animando: false },
+  csg: { ativo: false, op: 'diferenca', a: 'cubo', b: 'cilindro', param: 0.55, resolucao: 56 },
+  planificar: { ativo: false, t: 0, animando: false }
+};
+
+function corDoTema() { return new THREE.Color(Estado.cor); }
+
+function matFaces() {
+  const c = corDoTema();
+  return new THREE.MeshStandardMaterial({
+    color: c, metalness: 0.18, roughness: 0.42, side: THREE.DoubleSide,
+    flatShading: false, clippingPlanes: clipAtivos(), clipShadows: false
+  });
+}
+function matVidro() {
+  const c = corDoTema();
+  return new THREE.MeshPhysicalMaterial({
+    color: c, metalness: 0.0, roughness: 0.18, transparent: true, opacity: 0.24,
+    side: THREE.DoubleSide, depthWrite: false, transmission: 0.0, clearcoat: 0.6,
+    clippingPlanes: clipAtivos()
+  });
+}
+const matArestaSolida = () => new THREE.LineBasicMaterial({ color: 0xe2e8f0, transparent: true, opacity: 0.9 });
+const matArestaOculta = () => new THREE.LineDashedMaterial({
+  color: 0x94a3b8, dashSize: 4, gapSize: 3, transparent: true, opacity: 0.55,
+  depthFunc: THREE.GreaterDepth, // só aparece onde está atrás → linhas ocultas tracejadas
+  clippingPlanes: clipAtivos()
+});
+const matAjuda = (cor) => new THREE.LineBasicMaterial({ color: cor, transparent: true, opacity: 0.95, depthTest: false });
+
+function clipAtivos() {
+  if (!Estado.seccao.ativo) return [];
+  return [planoCorte];
+}
+
+/* Plano de corte (mundo) reutilizável */
+const planoCorte = new THREE.Plane(V3(0, -1, 0), 0);
+
+/* =====================================================================
+   3. GRUPO DO SÓLIDO ATUAL (com arestas, cotas e transformações)
+   ===================================================================== */
+const raiz = new THREE.Group(); scene.add(raiz);
+const capaFaces = new THREE.Group();   // faces (mesh)
+const capaArestas = new THREE.Group(); // arestas visíveis
+const capaOcultas = new THREE.Group(); // arestas ocultas tracejadas
+const capaAjuda = new THREE.Group();   // elementos de apoio (alturas, apótemas, eixos)
+raiz.add(capaFaces, capaArestas, capaOcultas, capaAjuda);
+
+/* Rótulos em HTML projetados na tela */
+const capaRotulos = document.createElement('div');
+capaRotulos.style.cssText = 'position:absolute;inset:0;pointer-events:none;overflow:hidden';
+lienzo.appendChild(capaRotulos);
+let rotulos = []; // {el, p:Vector3, cor}
+
+function novoRotulo(txt, p, cor = '#e0e7ff') {
+  const el = document.createElement('div');
+  el.textContent = txt;
+  el.style.cssText = `position:absolute;transform:translate(-50%,-50%);white-space:nowrap;font:700 12px 'Plus Jakarta Sans',sans-serif;
+    color:${cor};text-shadow:0 1px 4px #000,0 0 8px rgba(0,0,0,.9);pointer-events:none`;
+  capaRotulos.appendChild(el);
+  rotulos.push({ el, p: p.clone() });
+  return el;
+}
+function limpar(folder) {
+  const geos=new Set(),mats=new Set();
+  [...folder.children].forEach(c=>{folder.remove(c);c.traverse(o=>{if(o.geometry)geos.add(o.geometry);if(o.userData.materialDidatico)mats.add(o.userData.materialDidatico);if(o.material)(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>mats.add(m));});});
+  geos.forEach(g=>g.dispose());mats.forEach(m=>m.dispose());
+}
+
+function limparRotulos() { rotulos.forEach(r => r.el.remove()); rotulos = []; }
+
+/* =====================================================================
+   4. PROJEÇÕES: PERSPECTIVA, AXONOMÉTRICAS, CAVALEIRA E MONG E
+   ===================================================================== */
+const DIRECOES = {
+  perspectiva: [1.0, 0.72, 1.15],
+  isometrica: [1, 1, 1],
+  dimetrica: [1, 0.45, 1],
+  cavaleira: [0, 0, 1]
+};
+
+function aplicarProjecao() {
+  const d = DIRECOES[Estado.projecao] || DIRECOES.perspectiva;
+  if (Estado.projecao === 'perspectiva' || Estado.projecao === 'monge') {
+    camera.fov = Estado.fov; camera.updateProjectionMatrix();
+    controls.object = camera;
+    controls.enableRotate = true;
+  } else {
+    controls.object = camOrtho;
+    controls.enableRotate = false;controls.autoRotate=false;
+    if (Estado.projecao === 'cavaleira') {
+      // projeção oblíqua (cavaleira/cabinet): cisalhamento do eixo de profundidade
+      const k = Estado.cavaleiraK, a = 45 * DEG;
+      camOrtho.position.set(0, 0, 900);
+      camOrtho.up.set(0, 1, 0);
+      camOrtho.lookAt(0, 0, 0);
+      camOrtho.updateMatrixWorld();
+      const base = new THREE.Matrix4().makeOrthographic(-Zona*mLarg/mAlt, Zona*mLarg/mAlt, Zona, -Zona, -4000, 6000);
+      const ob = new THREE.Matrix4().set(1, 0, -k * Math.cos(a), 0, 0, 1, -k * Math.sin(a), 0, 0, 0, 1, 0, 0, 0, 0, 1);
+      camOrtho.projectionMatrix.copy(base).multiply(ob);
+      camOrtho.projectionMatrixInverse.copy(camOrtho.projectionMatrix).invert();
+    } else {
+      camOrtho.position.set(d[0] * 700, d[1] * 700, d[2] * 700);
+      camOrtho.up.set(0, 1, 0);
+      camOrtho.lookAt(0, 0, 0);
+      camOrtho.updateMatrixWorld();
+      camOrtho.updateProjectionMatrix();
+    }
+  }
+  $('dica-camera').textContent = (matchMedia('(hover:none)').matches || 'ontouchstart' in window)
+    ? 'Arraste com um dedo para girar · use dois dedos para aproximar'
+    : 'Arraste para orbitar · roda do mouse para aproximar';
+  $('pill-endereco').textContent = {
+    perspectiva: 'Perspectiva cônica', isometrica: 'Isométrica', dimetrica: 'Dimétrica',
+    cavaleira: 'Cavaleira (oblíqua)', monge: 'Vistas ortogonais (Monge)'
+  }[Estado.projecao] || '—';
+  $('dica-camera').textContent = Estado.projecao === 'monge'
+    ? 'Vistas fixas: planta, elevação e perfil — o canto superior esquerdo gira livremente'
+    : (matchMedia('(hover:none)').matches?'Arraste com um dedo · pinça com dois dedos para aproximar':'Arraste para orbitar · roda do mouse para aproximar');
+}
+let Zona = 160; // semi-abertura do frustum ortográfico
+
+function ativarProjecao(id) {
+  Estado.projecao = id;
+  document.querySelectorAll('#barra-topo .tbtn[data-proj]').forEach(b => b.classList.toggle('on', b.dataset.proj === id));
+  montarRotulosMonge();
+  aplicarProjecao();
+}
+function enquadrar(raio) {
+  Zona = Math.max(60, raio * 1.5);
+  camOrtho.left = -Zona * mLarg/mAlt; camOrtho.right = Zona * mLarg/mAlt; camOrtho.top = Zona; camOrtho.bottom = -Zona;
+  if (Estado.projecao !== 'cavaleira') camOrtho.updateProjectionMatrix();
+  const dist = Math.max(180, raio * 3.4);
+  const d = DIRECOES[Estado.projecao] || DIRECOES.perspectiva;
+  const l = Math.hypot(...d) || 1;
+  camera.position.set(d[0] / l * dist, d[1] / l * dist, d[2] / l * dist);
+  controls.target.set(0, 0, 0);
+  controls.update();
+  aplicarProjecao();
+}
+
+/* Vistas de Monge (4 viewports com scissor) */
+let rotulosMonge = [];
+function montarRotulosMonge() {
+  rotulosMonge.forEach(r => r.remove()); rotulosMonge = [];
+  if (Estado.projecao !== 'monge') return;
+  [['Perspectiva', '4%', '6%'], ['Planta (vista superior)', '56%', '6%'],
+   ['Elevação (vista frontal)', '4%', '56%'], ['Perfil (vista lateral)', '56%', '56%']]
+    .forEach(([t, l, tp]) => {
+      const el = document.createElement('div');
+      el.className = 'vp-label'; el.textContent = t;
+      el.style.left = l; el.style.top = tp;
+      lienzo.appendChild(el); rotulosMonge.push(el);
+    });
+}
+
+const camPlanta = new THREE.OrthographicCamera(-160, 160, 160, -160, -4000, 6000);
+const camElev = new THREE.OrthographicCamera(-160, 160, 160, -160, -4000, 6000);
+const camPerfil = new THREE.OrthographicCamera(-160, 160, 160, -160, -4000, 6000);
+function atualizarCamerasMonge() {
+  const objs = [[camPlanta, [0, 900, 0], [0, 0, -1]], [camElev, [0, 0, 900], [0, 1, 0]], [camPerfil, [900, 0, 0], [0, 1, 0]]];
+  objs.forEach(([c, p, up]) => {
+    c.left = -Zona * mLarg/mAlt; c.right = Zona * mLarg/mAlt; c.top = Zona; c.bottom = -Zona;
+    c.position.set(p[0], p[1], p[2]); c.up.set(up[0], up[1], up[2]);
+    c.lookAt(0, 0, 0); c.updateMatrixWorld(); c.updateProjectionMatrix();
+  });
+}
+/* =====================================================================
+   5. GEOMETRIA: MEDIDAS, ORIENTAÇÃO, TRUNCAMENTO E DESDOBRAMENTO
+   ===================================================================== */
+function medir(verts, faces) {
+  let area = 0, vol = 0;
+  const arestas = new Set(), ekey = (a, b) => a < b ? a + '_' + b : b + '_' + a;
+  faces.forEach(f => {
+    for (let i = 0; i < f.length; i++) arestas.add(ekey(f[i], f[(i + 1) % f.length]));
+    for (let i = 1; i < f.length - 1; i++) {
+      const A = verts[f[0]], B = verts[f[i]], C = verts[f[i + 1]];
+      const ab = [B[0] - A[0], B[1] - A[1], B[2] - A[2]], ac = [C[0] - A[0], C[1] - A[1], C[2] - A[2]];
+      const cx = ab[1] * ac[2] - ab[2] * ac[1], cy = ab[2] * ac[0] - ab[0] * ac[2], cz = ab[0] * ac[1] - ab[1] * ac[0];
+      area += 0.5 * Math.hypot(cx, cy, cz);
+      vol += (A[0] * (B[1] * C[2] - B[2] * C[1]) - A[1] * (B[0] * C[2] - B[2] * C[0]) + A[2] * (B[0] * C[1] - B[1] * C[0])) / 6;
+    }
+  });
+  return { area, volume: Math.abs(vol), V: verts.length, A: arestas.size, F: faces.length };
+}
+
+function normalFace(verts, f) {
+  const n = new THREE.Vector3();
+  for (let i = 0; i < f.length; i++) {
+    const a = verts[f[i]], b = verts[f[(i + 1) % f.length]];
+    n.x += (a[1] - b[1]) * (a[2] + b[2]);
+    n.y += (a[2] - b[2]) * (a[0] + b[0]);
+    n.z += (a[0] - b[0]) * (a[1] + b[1]);
+  }
+  return n;
+}
+/* Garante que todas as faces tenham enrolamento anti-horário visto de fora */
+function corrigirWinding(verts, faces) {
+  const centro = new THREE.Vector3();
+  verts.forEach(v => centro.add(V3(v[0], v[1], v[2])));
+  centro.multiplyScalar(1 / verts.length);
+  faces.forEach(f => {
+    const n = normalFace(verts, f);
+    const p = new THREE.Vector3();
+    f.forEach(i => p.add(V3(verts[i][0], verts[i][1], verts[i][2])));
+    p.multiplyScalar(1 / f.length).sub(centro);
+    if (n.dot(p) < 0) f.reverse();
+  });
+  return faces;
+}
+
+/* Convex hull a partir de pontos → {verts, faces} com enrolamento corrigido */
+function malhaConvexa(pontos) {
+  const pts = pontos.map(p => V3(p[0], p[1], p[2]));
+  const hull = new ConvexHull().setFromPoints(pts);
+  const verts = [], idx = new Map();
+  const id = (p) => {
+    const k = p.x.toFixed(4) + '_' + p.y.toFixed(4) + '_' + p.z.toFixed(4);
+    if (!idx.has(k)) { idx.set(k, verts.length); verts.push([p.x, p.y, p.z]); }
+    return idx.get(k);
+  };
+  const faces = [];
+  hull.faces.forEach(fa => {
+    const loop = []; let e = fa.edge;
+    do { loop.push(id(e.head().point)); e = e.next; } while (e !== fa.edge);
+    if (loop.length >= 3) faces.push(loop);
+  });
+  // remove faces degeneradas (colineares)
+  const limpas = faces.filter(f => normalFace(verts, f).length() > 1e-6);
+  return consolidarFaces(verts, corrigirWinding(verts, limpas));
+}
+
+/* Truncamento genérico: corta cada vértice a uma fração t de cada aresta.
+   t = 1/2 produz a retificação (cuboctaedro, icosidodecaedro). */
+function truncar(verts,faces,t) {
+  t=clamp(t,0.01,.5);
+  const nv=[],direct=new Map(),weld=new Map();
+  const point=(a,b)=>{const key=a+'|'+b;if(direct.has(key))return direct.get(key);
+    const v=verts[a].map((x,k)=>lerp(x,verts[b][k],t)),wk=v.map(x=>Math.round(x*1e6)).join('|');
+    if(!weld.has(wk)){weld.set(wk,nv.length);nv.push(v);}const i=weld.get(wk);direct.set(key,i);return i;};
+  const neighbours=verts.map(()=>new Set()),nf=[];
+  faces.forEach(f=>{const loop=[];f.forEach((a,i)=>{const b=f[(i+1)%f.length];neighbours[a].add(b);neighbours[b].add(a);loop.push(point(a,b),point(b,a));});nf.push([...new Set(loop)]);});
+  neighbours.forEach((set,v)=>{
+    const ids=[...set].map(u=>point(v,u)),c=ids.reduce((sum,i)=>sum.add(V3(...nv[i])),new THREE.Vector3()).multiplyScalar(1/ids.length);
+    const n=V3(...verts[v]).normalize(),e1=V3(1,0,0).cross(n);if(e1.lengthSq()<1e-8)e1.set(0,1,0).cross(n);e1.normalize();const e2=n.clone().cross(e1);
+    ids.sort((i,j)=>{const a=V3(...nv[i]).sub(c),b=V3(...nv[j]).sub(c);return Math.atan2(a.dot(e2),a.dot(e1))-Math.atan2(b.dot(e2),b.dot(e1));});nf.push(ids);
+  });return {verts:nv,faces:corrigirWinding(nv,nf)};
+}
+
+/* Estrelação: substitui cada face por uma ponta (pirâmide) */
+function estrelar(verts, faces, fator) {
+  const nv = verts.map(v => v.slice()), nf = [];
+  faces.forEach(f => {
+    const c = new THREE.Vector3();
+    f.forEach(i => c.add(V3(verts[i][0], verts[i][1], verts[i][2])));
+    c.multiplyScalar(1 / f.length);
+    const n = normalFace(verts, f).normalize();
+    const aresta = V3(verts[f[0]][0], verts[f[0]][1], verts[f[0]][2]).distanceTo(V3(verts[f[1]][0], verts[f[1]][1], verts[f[1]][2]));
+    const apice = c.clone().add(n.multiplyScalar(aresta * fator));
+    const ia = nv.length;
+    nv.push([apice.x, apice.y, apice.z]);
+    for (let i = 0; i < f.length; i++) {
+      const tri = [f[i], f[(i + 1) % f.length], ia];
+      const nT = normalFace(nv, tri);
+      const p = V3(nv[tri[0]][0], nv[tri[0]][1], nv[tri[0]][2]).add(V3(nv[tri[1]][0], nv[tri[1]][1], nv[tri[1]][2])).add(V3(nv[tri[2]][0], nv[tri[2]][1], nv[tri[2]][2])).multiplyScalar(1 / 3);
+      const fora = p.clone().sub(c).normalize();
+      if (nT.dot(fora) < 0) tri.reverse();
+      nf.push(tri);
+    }
+  });
+  return { verts: nv, faces: nf };
+}
+
+/* Topologia geométrica: solda vértices coincidentes e junta triângulos coplanares. */
+function consolidarFaces(vertices, faces) {
+  const verts = [], mapa = new Map(), ids = vertices.map(v => {
+    const k = v.map(x => Math.round(x * 1e6)).join('|');
+    if (!mapa.has(k)) { mapa.set(k, verts.length); verts.push(v.slice()); }
+    return mapa.get(k);
+  });
+  const grupos = new Map();
+  faces.forEach(f => {
+    const ff = [...new Set(f.map(i => ids[i]))];
+    if (ff.length < 3) return;
+    const n = normalFace(verts, ff);
+    if (n.length() < 1e-7) return;
+    n.normalize();
+    const dist = n.dot(V3(...verts[ff[0]]));
+    const k = [n.x, n.y, n.z, dist].map(v => Math.round(v * 1e5)).join('|');
+    if (!grupos.has(k)) grupos.set(k, []);
+    grupos.get(k).push(ff);
+  });
+  const result = [];
+  grupos.forEach(fs => {
+    if (fs.length === 1) { result.push(fs[0]); return; }
+    const edges = new Map();
+    fs.forEach(f => f.forEach((a,i) => {
+      const b = f[(i+1)%f.length], k = a < b ? a+'|'+b : b+'|'+a;
+      if (edges.has(k)) edges.delete(k); else edges.set(k,[a,b]);
+    }));
+    while (edges.size) {
+      const [key, first] = edges.entries().next().value;
+      edges.delete(key); const loop = [first[0]]; let at = first[1];
+      for (let guard = 0; guard <= fs.length * 12; guard++) {
+        if (at === loop[0]) break;
+        loop.push(at);
+        const next = [...edges.entries()].find(([,e]) => e[0] === at || e[1] === at);
+        if (!next) break;
+        edges.delete(next[0]); at = next[1][0] === at ? next[1][1] : next[1][0];
+      }
+      if (loop.length >= 3) result.push(loop);
+    }
+  });
+  return { verts, faces: result };
+}
+
+/* Cada face tem seus próprios vértices. Somente as arestas da árvore são dobradiças.
+   Matrizes de rotação/translação preservam comprimentos e áreas durante toda a abertura. */
+function prepararRede(verts, faces) {
+  const pv = verts.map(v => V3(...v));
+  const normals = faces.map(f => normalFace(verts,f).normalize());
+  const area = f => medir(verts,[f]).area;
+  const lateralFirst=['cilindro','cone','tronco_cone','prisma','tronco_pir','prisma_trunc'].includes(Estado.solido?.id);
+  const root = lateralFirst ? 0 : faces.reduce((best,f,i) => area(f)>area(faces[best]) ? i : best,0);
+  const center = faces[root].reduce((s,i) => s.add(pv[i]),new THREE.Vector3()).multiplyScalar(1/faces[root].length);
+  const rootQ = new THREE.Quaternion().setFromUnitVectors(normals[root],V3(0,0,1));
+  const base = new THREE.Matrix4().makeRotationFromQuaternion(rootQ).multiply(new THREE.Matrix4().makeTranslation(-center.x,-center.y,-center.z));
+  const edgeMap = new Map(), adj = faces.map(() => []);
+  faces.forEach((f,i) => f.forEach((a,k) => {
+    const b=f[(k+1)%f.length],key=a<b?a+'|'+b:b+'|'+a;
+    if (!edgeMap.has(key)) edgeMap.set(key,[]);
+    edgeMap.get(key).push({i,a,b});
+  }));
+  edgeMap.forEach(es => { if(es.length===2) {
+    const [a,b]=es; adj[a.i].push({child:b.i,a:a.a,b:a.b}); adj[b.i].push({child:a.i,a:b.a,b:b.b});
+  }});
+  const hinge = (parent,child,a,b,t=1) => {
+    const axis=pv[b].clone().sub(pv[a]).normalize();
+    const angle=Math.atan2(axis.dot(normals[child].clone().cross(normals[parent])),normals[child].dot(normals[parent]));
+    return new THREE.Matrix4().makeTranslation(...verts[a])
+      .multiply(new THREE.Matrix4().makeRotationAxis(axis,angle*t))
+      .multiply(new THREE.Matrix4().makeTranslation(-verts[a][0],-verts[a][1],-verts[a][2]));
+  };
+  const polygon = (i,mat) => faces[i].map(k => {const p=pv[k].clone().applyMatrix4(mat);return new THREE.Vector2(p.x,p.y);});
+  // Teste SAT: tocar numa aresta é permitido, sobrepor áreas não é.
+  const overlap=(a,b) => {
+    for (const poly of [a,b]) for(let k=0;k<poly.length;k++) {
+      const e=poly[(k+1)%poly.length].clone().sub(poly[k]); if(e.lengthSq()<1e-12)continue;
+      const n=new THREE.Vector2(-e.y,e.x).normalize(), aa=a.map(p=>p.dot(n)),bb=b.map(p=>p.dot(n));
+      if(Math.min(Math.max(...aa),Math.max(...bb))-Math.max(Math.min(...aa),Math.min(...bb))<1e-5)return false;
+    }
+    return true;
+  };
+  const nodes = [], done = new Set([root]), mats=new Map([[root,base]]), polys=new Map([[root,polygon(root,base)]]);
+  nodes.push({i:root,parent:null});
+  while(done.size<faces.length) {
+    let selected=null;
+    const candidates=[];nodes.forEach(node=>adj[node.i].forEach(e=>{if(!done.has(e.child))candidates.push({node,e});}));
+    if(lateralFirst)candidates.sort((a,b)=>Math.abs(normals[a.e.child].y)-Math.abs(normals[b.e.child].y));
+    for(const {node,e} of candidates) {
+      {
+        if(done.has(e.child))continue;
+        const m=mats.get(node.i).clone().multiply(hinge(node.i,e.child,e.a,e.b));
+        const poly=polygon(e.child,m);
+        if([...polys.values()].some(p=>overlap(poly,p)))continue;
+        selected={i:e.child,parent:node.i,a:e.a,b:e.b,m,poly}; break;
+      }
+    }
+    if(!selected) break;
+    nodes.push(selected);done.add(selected.i);mats.set(selected.i,selected.m);polys.set(selected.i,selected.poly);
+  }
+  // Superfícies desconectadas/árvores que não encontraram rede livre: peças separadas,
+  // explicitamente identificadas, sem inventar deformações ou faces sobrepostas.
+  let separados=0;
+  let xmax=Math.max(...[...polys.values()].flat().map(p=>p.x));
+  faces.forEach((f,i)=>{if(done.has(i))return;
+    const c=f.reduce((s,k)=>s.add(pv[k]),new THREE.Vector3()).multiplyScalar(1/f.length);
+    const q=new THREE.Quaternion().setFromUnitVectors(normals[i],V3(0,0,1));
+    let m=new THREE.Matrix4().makeRotationFromQuaternion(q).multiply(new THREE.Matrix4().makeTranslation(-c.x,-c.y,-c.z));
+    const p=polygon(i,m), min=Math.min(...p.map(v=>v.x)),max=Math.max(...p.map(v=>v.x));
+    const offset=xmax-min+Math.max(2,Math.sqrt(area(f))*.08);
+    m.premultiply(new THREE.Matrix4().makeTranslation(offset,0,0));
+    nodes.push({i,parent:null,separado:true,c,q,offset});mats.set(i,m);polys.set(i,polygon(i,m));
+    xmax=offset+max; separados++;
+  });
+  const all=[...polys.values()].flat(), minx=Math.min(...all.map(p=>p.x)),maxx=Math.max(...all.map(p=>p.x)),miny=Math.min(...all.map(p=>p.y)),maxy=Math.max(...all.map(p=>p.y));
+  const shift=V3(-(minx+maxx)/2,-(miny+maxy)/2,0);
+  const original=[],indice=[],borders=[],ranges=new Map();
+  faces.forEach((f,i)=>{
+    const start=original.length/3;ranges.set(i,{start,count:f.length});
+    f.forEach(k=>original.push(...verts[k]));
+    for(let k=1;k<f.length-1;k++)indice.push(start,start+k,start+k+1);
+    for(let k=0;k<f.length;k++)borders.push(start+k,start+(k+1)%f.length);
+  });
+  return {pv,faces,nodes,root,rootQ,center,shift,hinge,original:Float32Array.from(original),indice,borders,ranges,separados};
+}
+function aplicarRede(g,t) {
+  const r=g.userData.rede;if(!r)return;
+  const mats=new Map(),identity=new THREE.Quaternion();
+  r.nodes.forEach(node=>{
+    let m;
+    if(node.parent===null) {
+      const c=node.separado?node.c:r.center;
+      const q=identity.clone().slerp(node.separado?node.q:r.rootQ,t);
+      const target=node.separado?V3(node.offset,0,0):V3(0,0,0);
+      const keep=c.clone().lerp(target,t).addScaledVector(r.shift,t);
+      m=new THREE.Matrix4().makeTranslation(keep.x,keep.y,keep.z)
+        .multiply(new THREE.Matrix4().makeRotationFromQuaternion(q))
+        .multiply(new THREE.Matrix4().makeTranslation(-c.x,-c.y,-c.z));
+    } else m=mats.get(node.parent).clone().multiply(r.hinge(node.parent,node.i,node.a,node.b,t));
+    mats.set(node.i,m);
+    const {start,count}=r.ranges.get(node.i),p=new THREE.Vector3();
+    for(let k=0;k<count;k++) {
+      const idx=start+k;p.fromArray(r.original,idx*3).applyMatrix4(m);g.attributes.position.setXYZ(idx,p.x,p.y,p.z);
+    }
+  });
+  g.attributes.position.needsUpdate=true;g.computeVertexNormals();g.computeBoundingSphere();g.computeBoundingBox();
+}
+
+/* Interseção em coordenadas de mundo. Pontos coincidentes são deduplicados. */
+function segmentosPlano(mesh,plano) {
+  mesh.updateWorldMatrix(true,false);
+  const g=mesh.geometry,p=g.attributes.position,idx=g.index,segments=[],seen=new Set(),eps=1e-6;
+  const key=v=>[v.x,v.y,v.z].map(x=>Math.round(x/eps)).join('|');
+  for(let t=0,n=(idx?idx.count:p.count)/3;t<n;t++) {
+    const vs=[0,1,2].map(k=>new THREE.Vector3().fromBufferAttribute(p,idx?idx.getX(t*3+k):t*3+k).applyMatrix4(mesh.matrixWorld));
+    const ds=vs.map(v=>plano.distanceToPoint(v));if(ds.every(d=>Math.abs(d)<eps))continue;
+    const pts=[];
+    vs.forEach((v,k)=>{
+      const j=(k+1)%3;
+      if(Math.abs(ds[k])<eps)pts.push(v.clone());
+      if(ds[k]*ds[j]<-eps*eps)pts.push(v.clone().lerp(vs[j],ds[k]/(ds[k]-ds[j])));
+    });
+    const unique=[...new Map(pts.map(v=>[key(v),v])).values()];
+    if(unique.length===2&&unique[0].distanceToSquared(unique[1])>eps*eps) {
+      const keys=unique.map(key).sort().join('/');if(!seen.has(keys)){seen.add(keys);segments.push(unique);}
+    }
+  }
+  return segments;
+}
+function contornosDe(segs) {
+  const key=p=>[p.x,p.y,p.z].map(x=>Math.round(x*1e5)).join('|'),edges=new Map(),map=new Map();
+  segs.forEach(([a,b])=>{const k=[key(a),key(b)].sort().join('/');edges.set(k,[a,b]);});
+  edges.forEach((sg,k)=>sg.forEach(p=>{const pk=key(p);if(!map.has(pk))map.set(pk,[]);map.get(pk).push(k);}));
+  const loops=[];
+  while(edges.size) {
+    const [k,sg]=edges.entries().next().value;edges.delete(k);
+    const loop=[sg[0]],first=key(sg[0]);let at=sg[1],closed=false;
+    for(let guard=0;guard<segs.length+2;guard++) {
+      if(key(at)===first){closed=true;break;}loop.push(at);
+      const next=(map.get(key(at))||[]).find(k=>edges.has(k));if(!next)break;
+      const s=edges.get(next);edges.delete(next);at=key(s[0])===key(at)?s[1]:s[0];
+    }
+    if(closed&&loop.length>=3)loops.push(loop);
+  }
+  return loops;
+}
+function triangulosSeccao(segs,normal) {
+  const loops=contornosDe(segs);if(!loops.length)return {pos:[],area:0,loops:0};
+  const e1=V3(1,0,0).cross(normal);if(e1.lengthSq()<1e-8)e1.set(0,1,0).cross(normal);e1.normalize();
+  const e2=normal.clone().cross(e1).normalize();
+  const polys=loops.map(points=>({points,poly:points.map(v=>new THREE.Vector2(v.dot(e1),v.dot(e2)))}));
+  const inside=(p,poly)=>{let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++) {
+    const a=poly[i],b=poly[j];if((a.y>p.y)!==(b.y>p.y)&&p.x<(b.x-a.x)*(p.y-a.y)/(b.y-a.y)+a.x)c=!c;
+  }return c;};
+  polys.forEach(a=>a.depth=polys.filter(b=>b!==a&&inside(a.poly[0],b.poly)).length);
+  const pos=[];let area=0;
+  polys.filter(p=>p.depth%2===0).forEach(outer=>{
+    const holes=polys.filter(p=>p.depth===outer.depth+1&&inside(p.poly[0],outer.poly));
+    const coords=outer.points.concat(...holes.map(h=>h.points));
+    const tris=THREE.ShapeUtils.triangulateShape(outer.poly,holes.map(h=>h.poly));
+    tris.forEach(t=>{const [a,b,c]=t.map(i=>coords[i]);if(!a||!b||!c)return;
+      pos.push(a.x,a.y,a.z,b.x,b.y,b.z,c.x,c.y,c.z);
+      area+=b.clone().sub(a).cross(c.clone().sub(a)).length()/2;
+    });
+  });
+  return {pos,area,loops:loops.length};
+}
+function preencherSeccao(segs,alvo,normal=planoCorte.normal,material) {
+  const result=triangulosSeccao(segs,normal);if(!result.pos.length)return result;
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(result.pos,3));g.computeVertexNormals();
+  const mesh=new THREE.Mesh(g,material||new THREE.MeshBasicMaterial({color:0xfacc15,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}));
+  mesh.userData.tampa=true;alvo.add(mesh);return result;
+}
+
+function objetoDe(verts, faces, planificavel = true) {
+  corrigirWinding(verts,faces);
+  const clean=consolidarFaces(verts,faces),med=medir(clean.verts,clean.faces);
+  if(!planificavel)return {geo:buildGeo(clean.verts,clean.faces),med};
+  const rede=prepararRede(clean.verts,clean.faces);
+  const geo=new THREE.BufferGeometry();
+  geo.setAttribute('position',new THREE.BufferAttribute(Float32Array.from(rede.original),3));
+  geo.setIndex(rede.indice);geo.computeVertexNormals();
+  geo.userData.rede=rede;geo.userData.pos3d=Float32Array.from(rede.original);
+  return {geo,med};
+}
+
+
+/* ---------- Fileiras de polígonos regulares (prismas, pirâmides) ---------- */
+function anel(n, L, y, ox = 0, oz = 0, giro = 0) {
+  const r = L / (2 * Math.sin(Math.PI / n)), out = [];
+  for (let i = 0; i < n; i++) {
+    const a = giro + TAU * i / n - Math.PI / 2;
+    out.push([ox + r * Math.cos(a), y, oz + r * Math.sin(a)]);
+  }
+  return out;
+}
+function anelTilt(n, L, y, ox, oz, tilt, giro = 0) { // anel inclinado (corte oblíquo)
+  const base = anel(n, L, 0, 0, 0, giro);
+  return base.map(p => [p[0] + ox, y + p[2] * Math.tan(tilt), p[2] + oz]);
+}
+function ligarAnel(verts, base, topo, n) { // faces laterais
+  const f = [];
+  for (let i = 0; i < n; i++) f.push([base + i, base + (i + 1) % n, topo + (i + 1) % n, topo + i]);
+  return f;
+}
+const faceTampa = (base, n) => [Array.from({ length: n }, (_, i) => base + i)];
+const faceTampaInv = (base, n) => [Array.from({ length: n }, (_, i) => base + (n - 1 - i))];
+
+/* =====================================================================
+   6. CATÁLOGO DE SÓLIDOS
+   Camadas: P=Platão · A=Arquimedes/compostos · R=corpos redondos
+   ===================================================================== */
+const SOLIDOS = [];
+const sol = (o) => { SOLIDOS.push(o); return o; };
+
+/* ---------- 6.1 SÓLIDOS DE PLATÃO ---------- */
+const PHI = (1 + Math.sqrt(5)) / 2;
+const PLATAO = {
+  tetraedro: {
+    nome: 'Tetraedro', vex: [[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]], div: 2 * Math.SQRT2,
+    desc: 'Quatro faces triangulares equiláteras, 4 vértices e 6 arestas. É o autodual: o dual do tetraedro é ele mesmo (espelhado).',
+    form: ['V=\\dfrac{a^3\\sqrt2}{12}', 'A_t=a^2\\sqrt3', 'h=\\dfrac{a\\sqrt6}{3}']
+  },
+  cubo: {
+    nome: 'Hexaedro (cubo)', vex: [[1, 1, 1], [1, 1, -1], [1, -1, 1], [1, -1, -1], [-1, 1, 1], [-1, 1, -1], [-1, -1, 1], [-1, -1, -1]], div: 2,
+    desc: 'Seis faces quadradas, 8 vértices e 12 arestas. Dual do octaedro. É um prisma quadrangular regular e o único cubo da lista.',
+    form: ['V=a^3', 'A_t=6a^2', 'd=a\\sqrt3']
+  },
+  octaedro: {
+    nome: 'Octaedro', vex: [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]], div: Math.SQRT2,
+    desc: 'Oito faces triangulares, 6 vértices e 12 arestas. Dual do cubo. Pode ser visto como duas pirâmides quadradas coladas pela base.',
+    form: ['V=\\dfrac{a^3\\sqrt2}{3}', 'A_t=2a^2\\sqrt3']
+  },
+  dodecaedro: {
+    nome: 'Dodecaedro', vex: [[1, 1, 1], [1, 1, -1], [1, -1, 1], [1, -1, -1], [-1, 1, 1], [-1, 1, -1], [-1, -1, 1], [-1, -1, -1]]
+      .concat([[0, 1 / PHI, PHI], [0, 1 / PHI, -PHI], [0, -1 / PHI, PHI], [0, -1 / PHI, -PHI],
+        [1 / PHI, PHI, 0], [1 / PHI, -PHI, 0], [-1 / PHI, PHI, 0], [-1 / PHI, -PHI, 0],
+        [PHI, 0, 1 / PHI], [PHI, 0, -1 / PHI], [-PHI, 0, 1 / PHI], [-PHI, 0, -1 / PHI]]), div: 2 / PHI,
+    desc: 'Doze faces pentagonais regulares, 20 vértices e 30 arestas. Dual do icosaedro. Nele aparece o número áureo φ = 1,618...',
+    form: ['V=\\dfrac{a^3(15+7\\sqrt5)}{4}', 'A_t=3a^2\\sqrt{25+10\\sqrt5}']
+  },
+  icosaedro: {
+    nome: 'Icosaedro', vex: [[0, 1, PHI], [0, 1, -PHI], [0, -1, PHI], [0, -1, -PHI],
+      [1, PHI, 0], [1, -PHI, 0], [-1, PHI, 0], [-1, -PHI, 0],
+      [PHI, 0, 1], [PHI, 0, -1], [-PHI, 0, 1], [-PHI, 0, -1]], div: 2,
+    desc: 'Vinte faces triangulares, 12 vértices e 30 arestas. Dual do dodecaedro. Seu truncamento gera a bola de futebol (icosaedro truncado).',
+    form: ['V=\\dfrac{5a^3(3+\\sqrt5)}{12}', 'A_t=5a^2\\sqrt3']
+  }
+};
+Object.entries(PLATAO).forEach(([k, s]) => sol({
+  id: 'plat_' + k, grupo: 'Poliedros de Platão', atalho: 'P', nome: s.nome + ' regular',
+  desc: s.desc,
+  formulas: [{ tag: 'Métricas (a = aresta)', tex: s.form.join('\\quad\\quad ') },
+  { tag: 'Euler', tex: 'V-A+F=2' }],
+  params: [{ k: 'a', rot: 'Aresta (a)', min: 10, max: 60, step: 1, val: 32 }],
+  build: (P) => {
+    const e = P.a / s.div;
+    const pont = s.vex.map(v => [v[0] * e, v[1] * e, v[2] * e]);
+    const { verts, faces } = malhaConvexa(pont);
+    const m = medir(verts, faces);
+    const { geo } = objetoDe(verts, faces, true);
+    const g = new THREE.Group();
+    const mesh = new THREE.Mesh(geo, matFaces()); g.add(mesh);
+    return {
+      group: g, raio: P.a * 1.4,
+      leitura: [['Aresta (a)', fx(P.a, 1)], ['Volume (V)', fx(m.volume, 0)], ['Área total', fx(m.area, 0)],
+      ['Vértices (V)', m.V], ['Arestas (A)', m.A], ['Faces (F)', m.F], ['V − A + F', m.V - m.A + m.F]],
+      nota: 'O desdobramento mostra a planificação real: todas as faces giram para o plano mantendo as medidas.'
+    };
+  }
+}));
+
+/* ---------- 6.2 ARQUIMEDES, TRUNCADOS E ESTRELADOS ---------- */
+Object.entries({
+  tetraedro_trunc: { base: 'tetraedro', t: 1 / 3, nome: 'Tetraedro truncado', desc: 'Corte dos 4 vértices do tetraedro: surgem 4 triângulos e 4 hexágonos regulares.' },
+  cubo_trunc: { base: 'cubo', t: 1 / (2 + Math.SQRT2), nome: 'Cubo truncado', desc: 'Corte dos 8 vértices do cubo: 8 triângulos e 6 octógonos. Aproxima-se da esfera.' },
+  octaedro_trunc: { base: 'octaedro', t: 1 / 3, nome: 'Octaedro truncado', desc: '6 quadrados e 8 hexágonos. É o resultado do truncamento do octaedro.' },
+  cuboctaedro: { base: 'cubo', t: 0.5, nome: 'Cuboctaedro (retificação)', desc: 'Truncamento na metade das arestas do cubo (t = 1/2): 6 quadrados e 8 triângulos. Todos os vértices são idênticos.' },
+  icosidodecaedro: { base: 'icosaedro', t: 0.5, nome: 'Icosidodecaedro', desc: 'Retificação do icosaedro: 20 triângulos e 12 pentágonos regulares.' },
+  icosaedro_trunc: { base: 'icosaedro', t: 1 / 3, nome: 'Icosaedro truncado (bola de futebol)', desc: '12 pentágonos e 20 hexágonos — a geometria clássica da bola de futebol.' }
+}).forEach(([k, d]) => sol({
+  id: 'arq_' + k, grupo: 'Semirregulares e compostos', atalho: 'A', nome: d.nome,
+  desc: d.desc + ' A configuração inicial corresponde ao sólido indicado; ao variar o corte, algumas faces podem deixar de ser regulares.',
+  formulas: [{ tag: 'Faces e arestas', tex: '\\text{faces regulares de }2\\text{ ou }3\\text{ tipos}' }, { tag: 'Euler', tex: 'V-A+F=2' }],
+  params: [{ k: 'a', rot: 'Aresta do sólido original', min: 6, max: 34, step: 0.5, val: 16 },
+  { k: 't', rot: 'Profundidade do corte', min: 0.05, max: 0.5, step: 0.01, val: d.t }],
+  build: (P) => {
+    const s = PLATAO[d.base];
+    const e = P.a / s.div;
+    const base = malhaConvexa(s.vex.map(v => [v[0] * e, v[1] * e, v[2] * e]));
+    const tr = truncar(base.verts, base.faces, P.t);
+    const m = medir(tr.verts, tr.faces);
+    const { geo } = objetoDe(tr.verts, tr.faces, true);
+    const g = new THREE.Group(); g.add(new THREE.Mesh(geo, matFaces()));
+    return {
+      group: g, raio: P.a * 2,
+      leitura: [['Vértices (V)', m.V], ['Arestas (A)', m.A], ['Faces (F)', m.F], ['V − A + F', m.V - m.A + m.F],
+      ['Volume', fx(m.volume, 0)], ['Área total', fx(m.area, 0)]],
+      nota: 'Truncamos um sólido de Platão em tempo real: cada vértice virou uma face nova e cada face original encolheu.'
+    };
+  }
+}));
+sol({
+  id: 'estrelado', grupo: 'Semirregulares e compostos', atalho: 'A', nome: 'Poliedro estrelado',
+  desc: 'Cada face de um sólido convexo é substituída por uma ponta (pirâmide). O resultado deixa de ser convexo — uma construção por pirâmides sobre as faces, que não deve ser confundida com os quatro poliedros regulares de Kepler-Poinsot.',
+  formulas: [{ tag: 'Ponta', tex: 'V_{ponta}=\\tfrac13 A_{face}\\cdot h' }],
+  params: [{ k: 'base', rot: 'Sólido de base', opcoes: ['tetraedro', 'cubo', 'dodecaedro', 'icosaedro', 'octaedro'], val: 'dodecaedro' },
+  { k: 'h', rot: 'Fator altura da ponta / aresta', min: 0.3, max: 2.5, step: 0.05, val: 1.2 },
+  { k: 'a', rot: 'Tamanho da aresta', min: 8, max: 40, step: 1, val: 22 }],
+  build: (P) => {
+    const qual = P.base === 'cinco Platon' ? 'icosaedro' : P.base;
+    const s = PLATAO[qual], e = P.a / s.div;
+    const base = malhaConvexa(s.vex.map(v => [v[0] * e, v[1] * e, v[2] * e]));
+    const es = estrelar(base.verts, base.faces, P.h);
+    const m = medir(es.verts, es.faces);
+    const geo = buildGeo(es.verts, es.faces);
+    const g = new THREE.Group(); g.add(new THREE.Mesh(geo, matFaces()));
+    return {
+      group: g, raio: P.a * 2.4,
+      leitura: [['Nº de pontas', base.faces.length], ['Faces', m.F], ['Vértices', m.V], ['Arestas', m.A], ['Volume', fx(m.volume, 0)]],
+      avisos: ['Este sólido não é convexo: note que a relação de Euler continua válida, mas o volume "soma" as pontas.'],
+      nota: 'A planificação deste modelo estrelado não está implementada; o sólido pode ser explorado sem aplicar deformações.'
+    };
+  }
+});
+
+/* ---------- 6.3 PRISMAS, PIRÂMIDES E TRONCOS ---------- */
+sol({
+  id: 'prisma', grupo: 'Prismas', atalho: 'P', nome: 'Prisma (reto e oblíquo)',
+  desc: 'Duas bases poligonais congruentes e paralelas, ligadas por faces retangulares (prisma reto) ou paralelogramos (prisma oblíquo). Varie o número de lados, a inclinação e compare volumes.',
+  formulas: [{ tag: 'Volume', tex: 'V=A_b\\cdot h' }, { tag: 'Área lateral (reto)', tex: 'A_l=P_b\\cdot h' },
+  { tag: 'Área total', tex: 'A_t=2A_b+A_l' }, { tag: 'Base regular', tex: 'A_b=\\dfrac{nL^2}{4\\tan(\\pi/n)}' }],
+  params: [{ k: 'n', rot: 'Nº de lados da base', min: 3, max: 12, step: 1, val: 6 },
+  { k: 'L', rot: 'Aresta da base (L)', min: 10, max: 50, step: 1, val: 28 },
+  { k: 'h', rot: 'Altura (h)', min: 10, max: 90, step: 1, val: 46 },
+  { k: 'tilt', rot: 'Inclinação (θ)', min: 0, max: 50, step: 1, val: 0 }],
+  build: (P) => {
+    const n = Math.round(P.n), B = P.tilt * DEG;
+    const desloc = P.h * Math.tan(B);
+    const b = anel(n, P.L, -P.h / 2), t = anel(n, P.L, P.h / 2, desloc);
+    const verts = b.concat(t);
+    const faces = ligarAnel(verts, 0, n, n).concat(faceTampaInv(0, n), faceTampa(n, n));
+    const { geo, med } = objetoDe(verts, faces, true);
+    const g = new THREE.Group(); g.add(new THREE.Mesh(geo, matFaces()));
+    const Ab = n * P.L * P.L / (4 * Math.tan(Math.PI / n));
+    const Pb = n * P.L;
+    const arestaLat = Math.hypot(P.h, desloc);
+    const Al = med.area - 2 * Ab;
+    return {
+      group: g, raio: P.h + P.L, planificavel: true,
+      leitura: [['Aresta da base (L)', fx(P.L, 1)], ['Apótema da base', fx(apotema(n, P.L), 2)],
+      ['Área da base', fx(Ab, 1)], ['Área lateral', fx(Al, 1)], ['Área total', fx(2 * Ab + Al, 1)],
+      ['Volume', fx(Ab * P.h, 1)], ['Aresta lateral', fx(arestaLat, 1)]],
+      nota: 'Mantendo a base e a altura, o volume não muda ao inclinar: é o Princípio de Cavalieri em ação.',
+      avisos: P.tilt > 0 ? ['No prisma oblíquo as faces laterais são paralelogramos, e a altura h é a distância entre as bases — não confunda com a aresta lateral.'] : []
+    };
+  }
+});
+sol({
+  id: 'piramide', grupo: 'Pirâmides', atalho: 'P', nome: 'Pirâmide (reta e oblíqua)',
+  desc: 'Uma base poligonal e faces triangulares que se encontram no vértice (ápice). Na pirâmide reta o ápice fica sobre o centro da base; na oblíqua ele se desloca.',
+  formulas: [{ tag: 'Volume', tex: 'V=\\dfrac{A_b\\cdot h}{3}' }, { tag: 'Apótema da pirâmide', tex: 'm=\\sqrt{h^2+a^2}' },
+  { tag: 'Área lateral (reta)', tex: 'A_l=\\dfrac{P_b\\cdot m}{2}' }, { tag: 'Aresta lateral', tex: '\\ell=\\sqrt{h^2+R^2}' }],
+  params: [{ k: 'n', rot: 'Nº de lados da base', min: 3, max: 12, step: 1, val: 4 },
+  { k: 'L', rot: 'Aresta da base (L)', min: 10, max: 50, step: 1, val: 32 },
+  { k: 'h', rot: 'Altura (h)', min: 10, max: 90, step: 1, val: 48 },
+  { k: 'off', rot: 'Deslocamento do ápice', min: 0, max: 40, step: 1, val: 0 }],
+  build: (P) => {
+    const n = Math.round(P.n), r = P.L / (2 * Math.sin(Math.PI / n));
+    const b = anel(n, P.L, -P.h / 2);
+    const verts = b.concat([[P.off, P.h / 2, 0]]);
+    const faces = [];
+    for (let i = 0; i < n; i++) faces.push([i, (i + 1) % n, n]);
+    faces.push(Array.from({ length: n }, (_, i) => n - 1 - i));
+    const { geo } = objetoDe(verts, faces, true);
+    const g = new THREE.Group(); g.add(new THREE.Mesh(geo, matFaces()));
+    const a = apotema(n, P.L), m = Math.hypot(P.h, a), Ab = n * P.L * P.L / (4 * Math.tan(Math.PI / n));
+    const AlNaoObliqua = n * P.L * m / 2;
+    let Al = AlNaoObliqua;
+    if (P.off > 0) { // soma real das faces triangulares
+      Al = 0;
+      for (let i = 0; i < n; i++) {
+        const A = V3(...verts[i]), B2 = V3(...verts[(i + 1) % n]), Cc = V3(...verts[n]);
+        Al += 0.5 * new THREE.Vector3().subVectors(B2, A).cross(new THREE.Vector3().subVectors(Cc, A)).length();
+      }
+    }
+    return {
+      group: g, raio: P.h + P.L, planificavel: true,
+      leitura: [['Lados da base (n)', n], ['Apótema da base (a)', fx(a, 2)], ['Apótema da pirâmide (m)', P.off===0?fx(m, 2):'não único (oblíqua)'],
+      ['Raio circunscrito da base', fx(r, 2)], ['Área da base', fx(Ab, 1)], ['Área lateral', fx(Al, 1)],
+      ['Área total', fx(Ab + Al, 1)], ['Volume', fx(Ab * P.h / 3, 1)]],
+      avisos: P.off > 0 ? ['Na pirâmide oblíqua as faces laterais têm áreas diferentes entre si e o ápice não está sobre o centro: a "apótema m" perde o sentido único.'] : [],
+      nota: 'Aumente n até 12: a base poligonal tende ao círculo e a pirâmide tende ao cone. É a passagem da geometria poligonal para os corpos redondos.'
+    };
+  }
+});
+sol({
+  id: 'tronco_pir', grupo: 'Troncos', atalho: 'P', nome: 'Tronco de pirâmide',
+  desc: 'Corte da pirâmide por um plano paralelo à base (ou oblíquo a ela). A parte de baixo é o tronco; a de cima é uma pirâmide semelhante, com razão de semelhança k.',
+  formulas: [{ tag: 'Volume do tronco', tex: 'V=\\dfrac{h}{3}\\left(A_B+A_b+\\sqrt{A_B\\,A_b}\\right)' },
+  { tag: 'Razão de semelhança', tex: 'k=\\dfrac{h_1}{h}' }, { tag: 'Áreas e volume', tex: '\\dfrac{A_1}{A}=k^2\\quad\\dfrac{V_1}{V}=k^3' }],
+  params: [{ k: 'n', rot: 'Nº de lados da base', min: 3, max: 10, step: 1, val: 4 },
+  { k: 'L', rot: 'Aresta da base maior (L)', min: 12, max: 50, step: 1, val: 36 },
+  { k: 'h', rot: 'Altura total (h)', min: 12, max: 90, step: 1, val: 52 },
+  { k: 'k', rot: 'Fração do topo (k)', min: 0.1, max: 0.85, step: 0.05, val: 0.5 },
+  { k: 'tilt', rot: 'Plano de corte oblíquo', min: 0, max: 35, step: 1, val: 0 }],
+  build: (P) => {
+    const n = Math.round(P.n), k = P.k, tilt = P.tilt * DEG;
+    const base = anel(n, P.L, -P.h / 2);
+    const H=P.h/(1-k);
+    const incl=Math.min(Math.tan(tilt),P.h*.95/Math.max(...base.map(v=>Math.abs(v[2]))));
+    const topo=base.map(v=>{const t=(P.h+v[2]*incl)/(H+v[2]*incl);return [v[0]*(1-t),-P.h/2+H*t,v[2]*(1-t)];});
+    const verts = base.concat(topo);
+    const faces = ligarAnel(verts, 0, n, n).concat(faceTampaInv(0, n), faceTampa(n, n));
+    const { geo } = objetoDe(verts, faces, true);
+    const g = new THREE.Group(); g.add(new THREE.Mesh(geo, matFaces()));
+    const Ab = n * P.L * P.L / (4 * Math.tan(Math.PI / n));
+    const Ab2 = n * (P.L * k) * (P.L * k) / (4 * Math.tan(Math.PI / n));
+    const hTronco = P.h;
+    const metrics=medir(verts,faces),areaTop=medir(verts,[faces[faces.length-1]]).area;
+    const V = P.tilt===0?hTronco / 3 * (Ab + Ab2 + Math.sqrt(Ab * Ab2)):metrics.volume;
+    return {
+      group: g, raio: P.h + P.L, planificavel: true,
+      leitura: [['Base maior', fx(P.L, 1)], ['Base menor', P.tilt===0?fx(P.L*k,1):'polígono de corte oblíquo'], ['Razão k (corte paralelo)', fx(k, 2)],
+      ['Área base maior', fx(Ab, 1)], ['Área base menor', fx(areaTop, 1)], ['Área lateral', fx(metrics.area - Ab - areaTop, 1)],
+      ['Volume do tronco', fx(V, 1)]],
+      avisos: P.tilt>0?['No corte oblíquo a base superior não é semelhante à inferior: as fórmulas de semelhança valem apenas para corte paralelo. O volume exibido é calculado pela malha.']:[],
+      nota: 'Em cortes paralelos, a razão entre áreas é k² e entre volumes é k³. É por isso que uma maquete em escala 1:10 usa 100 vezes menos papel e 1000 vezes menos volume.'
+    };
+  }
+});
+sol({
+  id: 'prisma_trunc', grupo: 'Troncos', atalho: 'A', nome: 'Prisma truncado por plano oblíquo',
+  desc: 'Prisma cortado por um plano inclinado em relação à base. As arestas laterais ficam com comprimentos diferentes e a face superior vira um polígono não paralelo à base.',
+  formulas: [{ tag: 'Volume', tex: 'V=A_b\\cdot h_{médio}' }, { tag: 'Altura média', tex: 'h_{médio}=\\dfrac{h_1+h_2+\\dots+h_n}{n}' }],
+  params: [{ k: 'n', rot: 'Nº de lados da base', min: 3, max: 10, step: 1, val: 6 },
+  { k: 'L', rot: 'Aresta da base', min: 12, max: 50, step: 1, val: 30 },
+  { k: 'h', rot: 'Altura média', min: 15, max: 80, step: 1, val: 44 },
+  { k: 'tilt', rot: 'Inclinação do corte', min: 0, max: 40, step: 1, val: 22 }],
+  build: (P) => {
+    const n = Math.round(P.n), tilt = P.tilt * DEG;
+    const base = anel(n, P.L, -P.h / 2);
+    const maxz=Math.max(...base.map(v=>Math.abs(v[2]))),tan=Math.min(Math.tan(tilt),P.h*.95/maxz);
+    const topo = anel(n, P.L, 0, 0, 0).map(p => [p[0], P.h / 2 + p[2] * tan, p[2]]);
+    const verts = base.concat(topo);
+    const faces = ligarAnel(verts, 0, n, n).concat(faceTampaInv(0, n), faceTampa(n, n));
+    corrigirWinding(verts, faces);
+    const { geo } = objetoDe(verts, faces, true);
+    const g = new THREE.Group(); g.add(new THREE.Mesh(geo, matFaces()));
+    const Ab = n * P.L * P.L / (4 * Math.tan(Math.PI / n));
+    const alturas = topo.map((t, i) => t[1] - base[i][1]);
+    return {
+      group: g, raio: P.h + P.L, planificavel: true,
+      leitura: [['Aresta da base', fx(P.L, 1)], ['Altura mínima', fx(Math.min(...alturas), 1)],
+      ['Altura máxima', fx(Math.max(...alturas), 1)], ['Altura média', fx(alturas.reduce((a, b) => a + b, 0) / n, 1)],
+      ['Área da base', fx(Ab, 1)], ['Volume', fx(Ab * alturas.reduce((a, b) => a + b, 0) / n, 1)]],
+      nota: 'O volume depende da altura média das arestas laterais: é a mesma ideia do volume do tronco de pirâmide.'
+    };
+  }
+});
+/* ---------- 6.4 CORPOS REDONDOS ---------- */
+/* Malha paramétrica com costura soldada (evita arestas falsas na emenda) */
+function malhaParam(fn, nu, nv, fechaU = false, fechaV = false, fechaV2 = true) {
+  const U = fechaU ? nu : nu + 1, Vn = fechaV ? nv : nv + 1;
+  const verts = [], faces = [];
+  for (let j = 0; j < Vn; j++) {
+    const v = fechaV ? j / nv : j / nv;
+    for (let i = 0; i < U; i++) {
+      const u = fechaU ? i / nu : i / nu;
+      verts.push(fn(u, v));
+    }
+  }
+  const id = (i, j) => j * U + i;
+  for (let j = 0; j < (fechaV ? nv : nv); j++) {
+    for (let i = 0; i < (fechaU ? nu : nu); i++) {
+      const i2 = (i + 1) % (fechaU ? nu : nu + 1), j2 = (j + 1) % (fechaV ? nv : nv + 1);
+      if (!fechaU && i2 > nu) continue;
+      if (!fechaV && j2 > nv) continue;
+      faces.push([id(i, j), id(i2, j), id(i2, j2), id(i, j2)].filter((x, k, a) => k === 0 || x !== a[k - 1]));
+    }
+  }
+  const limpas = faces.filter(f => f.length >= 3 && f.every((x, k) => f.indexOf(x) === k));
+  return consolidarFaces(verts, corrigirWinding(verts, limpas));
+}
+/* Perímetro da elipse de semieixos r e r/cosβ (integral elíptica completa) */
+function perimetroElipse(r, beta, N = 240) {
+  let s = 0;
+  for (let i = 0; i < N; i++) {
+    const phi = (i + 0.5) * TAU / N;
+    s += r * Math.sqrt(1 - Math.pow(Math.sin(beta) * Math.sin(phi), 2)) * (TAU / N);
+  }
+  return s;
+}
+
+sol({
+  id: 'cilindro', grupo: 'Cilindros', atalho: 'R', nome: 'Cilindro (reto, oblíquo e equilátero)',
+  desc: 'Superfície gerada por uma reta que se desloca sobre uma circunferência. No cilindro reto o eixo é perpendicular à base; no oblíquo ele é inclinado. Equilátero é o caso em que a altura vale o diâmetro (h = 2r).',
+  formulas: [{ tag: 'Volume (geral)', tex: 'V=\\pi r^2h' }, { tag: 'Área lateral oblíqua', tex: 'A_l=4r\\,E(\\sin\\theta)\\cdot g' },
+  { tag: 'Área lateral reta', tex: 'A_l=2\\pi r h' }, { tag: 'Área total', tex: 'A_t=2\\pi r^2+A_l' }, { tag: 'Equilátero', tex: 'h=2r' }],
+  params: [{ k: 'r', rot: 'Raio da base (r)', min: 8, max: 45, step: 0.5, val: 24 },
+  { k: 'h', rot: 'Altura vertical (h)', min: 10, max: 90, step: 1, val: 55 },
+  { k: 'tilt', rot: 'Inclinação (θ)', min: 0, max: 55, step: 1, val: 0 },
+  { k: 'n', rot: 'Suavidade (segmentos)', min: 16, max: 96, step: 8, val: 64 }],
+  build: (P) => {
+    const n = Math.round(P.n), B = P.tilt * DEG, g = P.h / Math.cos(B), desloc = P.h * Math.tan(B);
+    const meio = P.h / 2;
+    const verts = [], faces = [];
+    const baixo = [], alto = [];
+    for (let i = 0; i < n; i++) {
+      const a = TAU * i / n;
+      baixo.push(verts.push([P.r * Math.cos(a), -meio, P.r * Math.sin(a)]) - 1);
+    }
+    for (let i = 0; i < n; i++) {
+      const a = TAU * i / n;
+      alto.push(verts.push([P.r * Math.cos(a) + desloc, meio, P.r * Math.sin(a)]) - 1);
+    }
+    const cB = verts.push([0, -meio, 0]) - 1, cA = verts.push([desloc, meio, 0]) - 1;
+    faces.push(...ligarAnel(verts, 0, n, n));
+    for (let i = 0; i < n; i++) faces.push([cB, baixo[(i + 1) % n], baixo[i]]);
+    for (let i = 0; i < n; i++) faces.push([cA, alto[i], alto[(i + 1) % n]]);
+    corrigirWinding(verts, faces);
+    const { geo } = objetoDe(verts, faces, true);
+    const grp = new THREE.Group(); grp.add(new THREE.Mesh(geo, matFaces()));
+    const Ab = Math.PI * P.r * P.r;
+    const Al = B === 0 ? TAU * P.r * P.h : perimetroElipse(P.r, B) * g;
+    return {
+      group: grp, raio: P.h + P.r, planificavel: true,
+      leitura: [['Raio (r)', fx(P.r, 1)], ['Altura (h)', fx(P.h, 1)], ['Geratriz (g)', fx(g, 2)],
+      ['Diâmetro (2r)', fx(2 * P.r, 1)], ['Área da base', fx(Ab, 1)], ['Área lateral', fx(Al, 1)],
+      ['Área total', fx(2 * Ab + Al, 1)], ['Volume', fx(Ab * P.h, 1)],
+      ['Relação h/r', fx(P.h / P.r, 2)]],
+      avisos: [
+        Math.abs(P.h - 2 * P.r) < 1.5 ? '✅ Este é praticamente o cilindro equilátero: h = 2r.' : '',
+        P.tilt > 0 ? 'No cilindro oblíquo a área lateral é maior que 2πrh. A medida 2πr desenrola-se sobre uma curva, não sobre uma reta.' : ''
+      ].filter(Boolean),
+      nota: 'Gire o sólido e observe que o volume permanece πr²h ao inclinar — Princípio de Cavalieri. Já a superfície lateral aumenta.'
+    };
+  }
+});
+sol({
+  id: 'cone', grupo: 'Cones', atalho: 'R', nome: 'Cone (reto e oblíquo)',
+  desc: 'Superfície gerada por uma reta (geratriz) que gira apoiada numa circunferência e passa por um ponto fixo (vértice). No cone reto o vértice está sobre o centro da base.',
+  formulas: [{ tag: 'Volume', tex: 'V=\\dfrac{\\pi r^2h}{3}' }, { tag: 'Relação fundamental (cone reto)', tex: 'g^2=h^2+r^2' },
+  { tag: 'Área lateral (cone reto)', tex: 'A_l=\\pi r g' }, { tag: 'Área total (cone reto)', tex: 'A_t=\\pi r(g+r)' }, { tag: 'Equilátero (cone reto)', tex: 'g=2r' }],
+  params: [{ k: 'r', rot: 'Raio da base (r)', min: 8, max: 45, step: 0.5, val: 26 },
+  { k: 'h', rot: 'Altura (h)', min: 10, max: 90, step: 1, val: 52 },
+  { k: 'off', rot: 'Deslocamento do vértice', min: 0, max: 40, step: 1, val: 0 },
+  { k: 'n', rot: 'Suavidade (segmentos)', min: 16, max: 96, step: 8, val: 64 }],
+  build: (P) => {
+    const n = Math.round(P.n), meio = P.h / 2;
+    const verts = [], faces = [];
+    const anelB = [];
+    for (let i = 0; i < n; i++) { const a = TAU * i / n; anelB.push(verts.push([P.r * Math.cos(a), -meio, P.r * Math.sin(a)]) - 1); }
+    const apice = verts.push([P.off, meio, 0]) - 1, cB = verts.push([0, -meio, 0]) - 1;
+    for (let i = 0; i < n; i++) faces.push([anelB[i], anelB[(i + 1) % n], apice]);
+    for (let i = 0; i < n; i++) faces.push([cB, anelB[(i + 1) % n], anelB[i]]);
+    corrigirWinding(verts, faces);
+    const { geo } = objetoDe(verts, faces, true);
+    const grp = new THREE.Group(); grp.add(new THREE.Mesh(geo, matFaces()));
+    const g = Math.hypot(P.h, P.r);
+    let Al = Math.PI * P.r * g;
+    if (P.off > 0) {
+      Al = 0;
+      for (let i = 0; i < n; i++) {
+        const A = V3(...verts[anelB[i]]), B2 = V3(...verts[anelB[(i + 1) % n]]), Cc = V3(...verts[apice]);
+        Al += 0.5 * new THREE.Vector3().subVectors(B2, A).cross(new THREE.Vector3().subVectors(Cc, A)).length();
+      }
+    }
+    const Ab = Math.PI * P.r * P.r;
+    return {
+      group: grp, raio: P.h + P.r, planificavel: true,
+      leitura: [['Raio (r)', fx(P.r, 1)], ['Altura (h)', fx(P.h, 1)], ['Geratriz (g)', P.off===0?fx(g,2):'variável (oblíquo)'],
+      ['g² = h² + r² (cone reto)', P.off===0?`${fx(g*g,1)} = ${fx(P.h*P.h+P.r*P.r,1)}`:'não se aplica'],
+      ['Área da base', fx(Ab, 1)], ['Área lateral', fx(Al, 1)], ['Área total', fx(Ab + Al, 1)],
+      ['Volume', fx(Ab * P.h / 3, 1)]],
+      avisos: [P.off > 0 ? 'No cone oblíquo o eixo não passa pelo centro da base: use o volume com a altura vertical, não com a geratriz.' : '',
+      P.off===0 && Math.abs(g - 2 * P.r) < 1.2 ? '✅ Cone equilátero: a geratriz é igual ao diâmetro (g = 2r). A secção meridiana é um triângulo equilátero.' : ''].filter(Boolean),
+      nota: 'Ao planificar, a superfície lateral do cone reto abre num setor circular cujo raio é a geratriz.'
+    };
+  }
+});
+sol({
+  id: 'tronco_cone', grupo: 'Troncos', atalho: 'R', nome: 'Tronco de cone',
+  desc: 'Corte do cone por um plano paralelo à base. Os raios das bases são proporcionais às distâncias ao vértice.',
+  formulas: [{ tag: 'Volume', tex: 'V=\\dfrac{\\pi h}{3}\\left(R^2+Rr+r^2\\right)' },
+  { tag: 'Geratriz', tex: 'g=\\sqrt{h^2+(R-r)^2}' }, { tag: 'Área lateral', tex: 'A_l=\\pi(R+r)g' }],
+  params: [{ k: 'R', rot: 'Raio da base maior (R)', min: 12, max: 45, step: 0.5, val: 30 },
+  { k: 'r', rot: 'Raio da base menor (r)', min: 2, max: 40, step: 0.5, val: 14 },
+  { k: 'h', rot: 'Altura (h)', min: 10, max: 80, step: 1, val: 42 },
+  { k: 'n', rot: 'Suavidade (segmentos)', min: 16, max: 96, step: 8, val: 64 }],
+  build: (P) => {
+    const n = Math.round(P.n), meio = P.h / 2;
+    const verts = [], faces = [];
+    for (let i = 0; i < n; i++) { const a = TAU * i / n; verts.push([P.R * Math.cos(a), -meio, P.R * Math.sin(a)]); }
+    for (let i = 0; i < n; i++) { const a = TAU * i / n; verts.push([P.r * Math.cos(a), meio, P.r * Math.sin(a)]); }
+    const cB = verts.push([0, -meio, 0]) - 1, cA = verts.push([0, meio, 0]) - 1;
+    faces.push(...ligarAnel(verts, 0, n, n));
+    for (let i = 0; i < n; i++) faces.push([cB, (i + 1) % n, i]);
+    for (let i = 0; i < n; i++) faces.push([cA, n + i, n + (i + 1) % n]);
+    corrigirWinding(verts, faces);
+    const { geo } = objetoDe(verts, faces, true);
+    const grp = new THREE.Group(); grp.add(new THREE.Mesh(geo, matFaces()));
+    const g = Math.hypot(P.h, P.R - P.r);
+    const Ab = Math.PI * P.R * P.R, Ab2 = Math.PI * P.r * P.r;
+    const Al = Math.PI * (P.R + P.r) * g;
+    return {
+      group: grp, raio: P.h + P.R, planificavel: true,
+      leitura: [['Raio maior (R)', fx(P.R, 1)], ['Raio menor (r)', fx(P.r, 1)], ['Altura (h)', fx(P.h, 1)],
+      ['Geratriz (g)', fx(g, 2)], ['Área base maior', fx(Ab, 1)], ['Área base menor', fx(Ab2, 1)],
+      ['Área lateral', fx(Al, 1)], ['Volume', fx(Math.PI * P.h / 3 * (P.R * P.R + P.R * P.r + P.r * P.r), 1)]],
+      nota: 'Se você prolongar as geratrizes, elas se encontram num vértice: o tronco é um cone cortado, e as duas bases são semelhantes.'
+    };
+  }
+});
+
+/* ---------- 6.5 ESFERA E SUAS PARTES ---------- */
+const TIPOS_ESFERA = {
+  esfera: 'Esfera completa', hemisferio: 'Hemisfério', calota: 'Calota esférica',
+  zona: 'Zona esférica', fuso: 'Fuso esférico', cunha: 'Cunha esférica'
+};
+sol({
+  id: 'esfera', grupo: 'Esferas', atalho: 'R', nome: 'Esfera, calota, zona, fuso e cunha',
+  desc: 'A esfera é o conjunto dos pontos que estão à mesma distância do centro. Suas partes recebem nomes próprios: hemisfério, calota (tampa), zona (faixa), fuso (gomo) e cunha (gomo com volume).',
+  formulas: [{ tag: 'Volume da esfera', tex: 'V=\\dfrac{4}{3}\\pi r^3' }, { tag: 'Superfície', tex: 'A=4\\pi r^2' },
+  { tag: 'Calota (altura h)', tex: 'A_{cal}=2\\pi r h' }, { tag: 'Cunha (ângulo α)', tex: 'V_{cun}=\\dfrac{\\alpha}{2\\pi}\\cdot\\dfrac43\\pi r^3' }],
+  params: [{ k: 'tipo', rot: 'Parte da esfera', opcoes: Object.keys(TIPOS_ESFERA), val: 'esfera' },
+  { k: 'r', rot: 'Raio (r)', min: 10, max: 55, step: 0.5, val: 32 },
+  { k: 'a1', rot: 'Ângulo 1 (°)', min: 10, max: 180, step: 5, val: 60 },
+  { k: 'a2', rot: 'Ângulo 2 (°)', min: 10, max: 150, step: 5, val: 60 },
+  { k: 'n', rot: 'Suavidade', min: 16, max: 72, step: 8, val: 48 }],
+  build: (P) => {
+    const n = Math.round(P.n), r = P.r, tipo = P.tipo;
+    const esf = (u, v) => { // u: phi 0..1, v: theta 0..1
+      const phi = u * TAU, th = v * Math.PI;
+      return [r * Math.sin(th) * Math.cos(phi), r * Math.cos(th), r * Math.sin(th) * Math.sin(phi)];
+    };
+    const esfRec = (phi, th) => [r * Math.sin(th) * Math.cos(phi), r * Math.cos(th), r * Math.sin(th) * Math.sin(phi)];
+    let verts = [], faces = [];
+    const disco = (y, raio, cima) => {
+      const base = verts.length, c = verts.push([0, y, 0]) - 1;
+      for (let i = 0; i < n; i++) { const a = TAU * i / n; verts.push([raio * Math.cos(a), y, raio * Math.sin(a)]); }
+      for (let i = 0; i < n; i++) {
+        const A = base + 1 + i, B2 = base + 1 + (i + 1) % n;
+        faces.push(cima ? [c, A, B2] : [c, B2, A]);
+      }
+    };
+    if (tipo === 'esfera') {
+      const m = malhaParam(esf, n, n, true, false); verts = m.verts; faces = m.faces;
+    } else if (tipo === 'hemisferio') {
+      const m = malhaParam((u, v) => esf(u, v * 0.5), n, n, true, false); verts = m.verts; faces = m.faces;
+      disco(0, r, false);
+    } else if (tipo === 'calota') {
+      const frac = (P.a1 * DEG) / Math.PI;
+      const m = malhaParam((u, v) => esf(u, v * frac), n, Math.max(6, Math.round(n * frac)), true, false);
+      verts = m.verts; faces = m.faces;
+      disco(r * Math.cos(P.a1 * DEG), r * Math.sin(P.a1 * DEG), false);
+    } else if (tipo === 'zona') {
+      const t0 = P.a1 * DEG, t1 = Math.min(Math.PI, t0 + P.a2 * DEG);
+      const fr = (t1 - t0) / Math.PI;
+      const m = malhaParam((u, v) => esf(u, t0 / Math.PI + v * fr), n, Math.max(6, Math.round(n * fr)), true, false);
+      verts = m.verts; faces = m.faces;
+      disco(r * Math.cos(t0), r * Math.sin(t0), true);
+      disco(r * Math.cos(t1), r * Math.sin(t1), false);
+    } else { // fuso e cunha
+      const frac = (P.a1 * DEG) / TAU;
+      const m = malhaParam((u, v) => esf(u * frac, v), Math.max(6, Math.round(n * frac)), n, false, false);
+      verts = m.verts; faces = m.faces;
+      if (tipo === 'cunha') { // faces planas: dois semicírculos
+        [[0, 0], [P.a1 * DEG, 1]].forEach(([phi, lado]) => {
+          const base = verts.length, c = verts.push([0, 0, 0]) - 1;
+          for (let i = 0; i <= n; i++) {
+            const th = Math.PI * i / n;
+            verts.push(esfRec(phi, th));
+          }
+          for (let i = 0; i < n; i++) {
+            faces.push(lado ? [c, base + 1 + i, base + 2 + i] : [c, base + 2 + i, base + 1 + i]);
+          }
+        });
+      }
+    }
+    corrigirWinding(verts, faces);
+    const clean = consolidarFaces(verts,faces);
+    const med = medir(clean.verts,clean.faces);
+    const geo = buildGeo(clean.verts,clean.faces);
+    const grp = new THREE.Group(); grp.add(new THREE.Mesh(geo, matFaces()));
+    const V = 4 / 3 * Math.PI * r ** 3, S = 4 * Math.PI * r * r;
+    const hCal = r * (1 - Math.cos(P.a1 * DEG));
+    return {
+      group: grp, raio: r * 1.9,
+      leitura: [['Parte', TIPOS_ESFERA[tipo]], ['Raio (r)', fx(r, 1)],
+      ['Área (medida no modelo)', fx(med.area, 1)], ['Volume (medido no modelo)', tipo==='fuso'?'não se aplica (superfície)':fx(med.volume,1)],
+      ['Esfera completa: área', fx(S, 1)], ['Esfera completa: volume', fx(V, 1)],
+      tipo === 'calota' ? ['Altura da calota', fx(hCal, 2)] : [tipo==='fuso'?'Fração da superfície':'Fração do volume', fx((tipo==='fuso'?med.area/S:med.volume/V)*100,1)+'%']],
+      avisos: ['A esfera não é desenvolvível: não existe molde plano de papel que a reproduza sem esticar ou rasgar. É por isso que os mapas do planeta sempre deformam algo.'],
+      nota: 'Note que a superfície da esfera é exatamente 4 vezes a área do seu círculo máximo — resultado clássico de Arquimedes.'
+    };
+  }
+});
+sol({
+  id: 'toro', grupo: 'Toros e quádricas', atalho: 'R', nome: 'Toro (superfície anelar)',
+  desc: 'Superfície gerada pela rotação de um círculo de raio r em torno de um eixo distante R. É o formato da câmara de ar e da rosquinha.',
+  formulas: [{ tag: 'Volume', tex: 'V=2\\pi^2Rr^2' }, { tag: 'Área', tex: 'A=4\\pi^2Rr' }],
+  params: [{ k: 'R', rot: 'Raio maior (R)', min: 18, max: 60, step: 1, val: 40 },
+  { k: 'r', rot: 'Raio do tubo (r)', min: 3, max: 22, step: 0.5, val: 13 },
+  { k: 'n', rot: 'Suavidade', min: 16, max: 72, step: 8, val: 48 }],
+  build: (P) => {
+    const n = Math.round(P.n);
+    const m = malhaParam((u, v) => {
+      const phi = u * TAU, th = v * TAU;
+      const d = P.R + P.r * Math.cos(th);
+      return [d * Math.cos(phi), P.r * Math.sin(th), d * Math.sin(phi)];
+    }, n, n, true, true);
+    const geo = buildGeo(m.verts, m.faces);
+    const grp = new THREE.Group(); grp.add(new THREE.Mesh(geo, matFaces()));
+    return {
+      group: grp, raio: (P.R + P.r) * 1.6,
+      leitura: [['Raio maior (R)', fx(P.R, 1)], ['Raio do tubo (r)', fx(P.r, 1)],
+      ['Área', fx(4 * Math.PI ** 2 * P.R * P.r, 0)], ['Volume', fx(2 * Math.PI ** 2 * P.R * P.r * P.r, 0)],
+      ['Volume (medido)', fx(medir(m.verts, m.faces).volume, 0)]],
+      nota: 'O toro tem curvatura variável: a parte interna "afunda" (curvatura negativa) e a externa é convexa.'
+    };
+  }
+});
+Object.entries({
+  elipsoide: { nome: 'Elipsóide', fn: (u, v, P) => { const phi = u * TAU, th = v * Math.PI; return [P.a * Math.sin(th) * Math.cos(phi), P.c * Math.cos(th), P.b * Math.sin(th) * Math.sin(phi)]; }, form: 'V=\\dfrac43\\pi abc' },
+  paraboloide: { nome: 'Parabolóide elíptico', fn: (u, v, P) => { const phi = u * TAU, t = v; return [P.a * t * Math.cos(phi), P.h * (t * t) - P.h / 2, P.b * t * Math.sin(phi)]; }, form: 'V=\\dfrac12\\pi ab\\,h' },
+  hiperboloide1: { nome: 'Hiperbolóide de uma folha', fn: (u, v, P) => { const phi = u * TAU, t = (v - 0.5) * 2; return [P.a * Math.cosh(t) * Math.cos(phi), P.c * Math.sinh(t), P.b * Math.cosh(t) * Math.sin(phi)]; }, form: '\\dfrac{x^2}{a^2}+\\dfrac{z^2}{b^2}-\\dfrac{y^2}{c^2}=1' },
+  hiperboloide2: { nome: 'Hiperbolóide de duas folhas', fn: (u, v, P) => { const phi = u * TAU, t = v * 1.6; const ch = Math.cosh(t), sh = Math.sinh(t); const s = P.lado ? 1 : -1; return [P.a * sh * Math.cos(phi), s * P.c * ch, P.b * sh * Math.sin(phi)]; }, form: '\\dfrac{y^2}{c^2}-\\dfrac{x^2}{a^2}-\\dfrac{z^2}{b^2}=1' }
+}).forEach(([k, d]) => sol({
+  id: 'quad_' + k, grupo: 'Toros e quádricas', atalho: 'R', nome: d.nome,
+  desc: 'Superfície quádrica gerada por uma equação do segundo grau em x, y e z. Estas superfícies aparecem em antenas parabólicas, torres de refrigeração e estruturas arquitetônicas.',
+  formulas: [{ tag: 'Equação/volume', tex: d.form }, { tag: 'Forma geral', tex: 'Ax^2+By^2+Cz^2+Dx+Ey+Fz+G=0' }],
+  params: [{ k: 'a', rot: 'Semi-eixo a', min: 10, max: 45, step: 1, val: 26 },
+  { k: 'b', rot: 'Semi-eixo b', min: 10, max: 45, step: 1, val: 26 },
+  { k: 'c', rot: 'Semi-eixo c', min: 10, max: 45, step: 1, val: 30 },
+  { k: 'h', rot: 'Altura (parabolóide)', min: 10, max: 60, step: 1, val: 34 },
+  { k: 'lado', rot: 'Folha (hiperbolóide de 2 folhas)', opcoes: ['superior', 'inferior'], val: 'superior' },
+  { k: 'n', rot: 'Suavidade', min: 16, max: 64, step: 8, val: 40 }],
+  build: (P) => {
+    const n = Math.round(P.n), Pr = Object.assign({}, P, { lado: P.lado === 'superior' });
+    let m;
+    if (k === 'elipsoide') m = malhaParam((u, v) => d.fn(u, v, Pr), n, n, true, false);
+    else if (k === 'paraboloide') { const b2 = malhaParam((u, v) => d.fn(u, v, Pr), n, n, true, false); m = b2; }
+    else if (k === 'hiperboloide1') m = malhaParam((u, v) => d.fn(u, v, Pr), n, n, true, false);
+    else m = malhaParam((u, v) => d.fn(u, v, Pr), n, n, true, false);
+    const geo = buildGeo(m.verts, m.faces);
+    const grp = new THREE.Group(); grp.add(new THREE.Mesh(geo, matFaces()));
+    const med = medir(m.verts, m.faces);
+    const leit = [['Semi-eixos (a, b, c)', `${fx(P.a, 0)} · ${fx(P.b, 0)} · ${fx(P.c, 0)}`],
+    ['Área (medida)', fx(med.area, 0)], ['Volume (medido)', k==='elipsoide'?fx(med.volume,0):'superfície aberta']];
+    if (k === 'elipsoide') leit.push(['Volume teórico', fx(4 / 3 * Math.PI * P.a * P.b * P.c, 0)]);
+    return {
+      group: grp, raio: Math.max(P.a, P.c) * 2.2, leitura: leit,
+      nota: k === 'hiperboloide1' ? 'Estruturas de torres de refrigeração usam exatamente este formato: a superfície é uma "regrada" (feita de retas) — experimente olhar de perto.'
+        : 'Compare as três quádricas: o elipsóide é fechado, o parabolóide é aberto e o hiperbolóide tem uma ou duas "folhas".'
+    };
+  }
+}));
+
+/* ---------- 6.6 SÓLIDOS OCOS E COMPOSTOS ---------- */
+sol({
+  id: 'ocos', grupo: 'Sólidos ocos e compostos', atalho: 'A', nome: 'Sólidos ocos (parede com espessura)',
+  desc: 'Tubos, cascas e paredes: o volume do material é a diferença entre o sólido externo e a cavidade interna. É o caso dos canos, das cascas esféricas e das bolas ocas.',
+  formulas: [{ tag: 'Tubo cilíndrico', tex: 'V=\\pi h\\left(R^2-r^2\\right)' },
+  { tag: 'Casca esférica', tex: 'V=\\dfrac43\\pi\\left(R^3-r^3\\right)' }, { tag: 'Espessura', tex: 'e=R-r' }],
+  params: [{ k: 'tipo', rot: 'Tipo de sólido oco', opcoes: ['tubo cilíndrico', 'casca esférica', 'tubo com corte'], val: 'tubo cilíndrico' },
+  { k: 'R', rot: 'Raio externo (R)', min: 12, max: 50, step: 1, val: 30 },
+  { k: 'e', rot: 'Espessura da parede (e)', min: 1, max: 14, step: 0.5, val: 5 },
+  { k: 'h', rot: 'Altura (h)', min: 12, max: 80, step: 1, val: 50 },
+  { k: 'corte', rot: 'Abertura do corte', min: 0, max: 260, step: 5, val: 120 },
+  { k: 'n', rot: 'Suavidade', min: 16, max: 72, step: 8, val: 48 }],
+  build: (P) => {
+    const n = Math.round(P.n), r = P.R - P.e, meio = P.h / 2;
+const grp = new THREE.Group();
+    const verts = [], faces = [];
+    const fechado = P.tipo !== 'tubo com corte';
+    const abrir = fechado ? TAU : P.corte * DEG;
+    const colunas = fechado ? n : n + 1;
+    const angDe = (i) => abrir * i / n;
+
+    if (P.tipo === 'casca esférica') {
+      const casca = (raio, inv) => {
+        const base = verts.length;
+        for (let j = 0; j <= n; j++) {
+          const th = Math.PI * j / n;
+          for (let i = 0; i < colunas; i++) {
+            const a = angDe(i);
+            verts.push([raio * Math.sin(th) * Math.cos(a), raio * Math.cos(th), raio * Math.sin(th) * Math.sin(a)]);
+          }
+        }
+        for (let j = 0; j < n; j++) {
+          for (let i = 0; i < n; i++) {
+            const i2 = fechado ? (i + 1) % n : i + 1;
+            const a = base + j * colunas + i, b = base + j * colunas + i2;
+            const c = base + (j + 1) * colunas + i2, d = base + (j + 1) * colunas + i;
+            faces.push(inv ? [a, b, c, d] : [a, d, c, b]);
+          }
+        }
+      };
+      casca(P.R, false); casca(r, true);
+      if (!fechado) {
+        for (const a of [0, abrir]) {
+          const base = verts.length;
+          for (let j = 0; j <= n; j++) {
+            const th = Math.PI * j / n;
+            verts.push([r * Math.sin(th) * Math.cos(a), r * Math.cos(th), r * Math.sin(th) * Math.sin(a)]);
+            verts.push([P.R * Math.sin(th) * Math.cos(a), P.R * Math.cos(th), P.R * Math.sin(th) * Math.sin(a)]);
+          }
+          for (let j = 0; j < n; j++) {
+            const p = base + j * 2;
+            faces.push(a === 0 ? [p, p + 1, p + 3, p + 2] : [p, p + 2, p + 3, p + 1]);
+          }
+        }
+      }
+      grp.add(new THREE.Mesh(buildGeo(verts, faces), matFaces()));
+      const Vc = 4 / 3 * Math.PI * (P.R ** 3 - r ** 3);
+      return {
+        group: grp, raio: P.R * 1.9,
+        leitura: [['Raio externo (R)', fx(P.R, 1)], ['Raio interno (r)', fx(r, 1)], ['Espessura (e)', fx(P.e, 2)],
+        ['Área externa', fx(4 * Math.PI * P.R * P.R, 0)], ['Volume do material', fx(Vc, 1)],
+        ['Volume da cavidade', fx(4 / 3 * Math.PI * r ** 3, 0)],
+        ['Fração de material', fx((P.R ** 3 - r ** 3) / (P.R ** 3) * 100, 1) + '%']],
+        nota: 'Uma casca esférica tem volume 4/3·π(R³ − r³): a espessura não entra linearmente na conta, e sim o cubo dos raios.'
+      };
+    }
+
+    /* tubos cilíndricos (macio ou com corte) */
+    const lateral = (raio, inv) => {
+      const base = verts.length;
+      for (let i = 0; i < colunas; i++) {
+        const a = angDe(i);
+        verts.push([raio * Math.cos(a), -meio, raio * Math.sin(a)]);
+        verts.push([raio * Math.cos(a), meio, raio * Math.sin(a)]);
+      }
+      for (let i = 0; i < n; i++) {
+        const i2 = fechado ? (i + 1) % n : i + 1;
+        const a0 = base + i * 2, a1 = a0 + 1, b0 = base + i2 * 2, b1 = b0 + 1;
+        faces.push(inv ? [a0, b0, b1, a1] : [a0, a1, b1, b0]);
+      }
+    };
+    lateral(P.R, false); lateral(r, true);
+    const coroa = (y, cima) => {
+      const base = verts.length;
+      for (let i = 0; i < colunas; i++) {
+        const a = angDe(i);
+        verts.push([P.R * Math.cos(a), y, P.R * Math.sin(a)]);
+        verts.push([r * Math.cos(a), y, r * Math.sin(a)]);
+      }
+      for (let i = 0; i < n; i++) {
+        const i2 = fechado ? (i + 1) % n : i + 1;
+        const o0 = base + i * 2, i0 = o0 + 1, o1 = base + i2 * 2, i1 = o1 + 1;
+        faces.push(cima ? [o0, i0, i1, o1] : [o0, o1, i1, i0]);
+      }
+    };
+    coroa(meio, true); coroa(-meio, false);
+    if (!fechado) {
+      for (const [a, dir] of [[0, false], [abrir, true]]) {
+        const v0 = verts.length;
+        verts.push([P.R * Math.cos(a), -meio, P.R * Math.sin(a)]);
+        verts.push([r * Math.cos(a), -meio, r * Math.sin(a)]);
+        verts.push([r * Math.cos(a), meio, r * Math.sin(a)]);
+        verts.push([P.R * Math.cos(a), meio, P.R * Math.sin(a)]);
+        faces.push(dir ? [v0, v0 + 1, v0 + 2, v0 + 3] : [v0, v0 + 3, v0 + 2, v0 + 1]);
+      }
+    }
+    grp.add(new THREE.Mesh(buildGeo(verts, faces), matFaces()));
+    const V = Math.PI * P.h * (P.R * P.R - r * r) * (P.tipo === 'tubo com corte' ? P.corte / 360 : 1);
+    return {
+      group: grp, raio: P.h + P.R,
+      leitura: [['Raio externo (R)', fx(P.R, 1)], ['Raio interno (r)', fx(r, 1)], ['Espessura (e)', fx(P.e, 2)],
+      ['Área da coroa circular', fx(Math.PI * (P.R * P.R - r * r), 1)],
+      ['Volume do material', fx(V, 1)], ['Volume se fosse maciço', fx(Math.PI * P.h * P.R * P.R, 1)],
+      ['Porcentagem de material', fx(P.h * (P.R * P.R - r * r) / (P.h * P.R * P.R) * 100, 1) + '%']],
+      nota: 'Um cano de parede fina pesa muito menos que um cilindro maciço do mesmo tamanho: a razão entre os volumes cresce com o quadrado do raio.'
+    };
+  }
+});
+sol({
+  id: 'compostos', grupo: 'Sólidos ocos e compostos', atalho: 'A', nome: 'Justaposição de sólidos',
+  desc: 'Sólidos compostos por outros encaixados: cone sobre cilindro, pirâmide sobre prisma e cilindro dentro de hemisfério. O volume e a área são obtidos somando as partes.',
+  formulas: [{ tag: 'Volume total', tex: 'V=V_1+V_2' }, { tag: 'Área total', tex: 'A=A_1+A_2-2A_{contato}' }],
+  params: [{ k: 'tipo', rot: 'Composição', opcoes: ['cone + cilindro', 'pirâmide + prisma', 'cilindro + hemisfério'], val: 'cone + cilindro' },
+  { k: 'r', rot: 'Raio / aresta da base', min: 10, max: 42, step: 1, val: 24 },
+  { k: 'h1', rot: 'Altura da parte de baixo', min: 10, max: 70, step: 1, val: 40 },
+  { k: 'h2', rot: 'Altura da parte de cima', min: 8, max: 70, step: 1, val: 34 },
+  { k: 'n', rot: 'Suavidade', min: 16, max: 72, step: 8, val: 48 }],
+  build: (P) => {
+    const n = Math.round(P.n), grp = new THREE.Group();
+    const yC = P.h1 / 2; // topo da parte de baixo
+    let V1 = 0, V2 = 0, Ab = 0;
+    if (P.tipo === 'cone + cilindro') {
+      const cil = malhaParam((u, v) => { const a = u * TAU; return [P.r * Math.cos(a), -P.h1 / 2 + v * P.h1, P.r * Math.sin(a)]; }, n, 2, true, false);
+      const con = malhaParam((u, v) => { const a = u * TAU, rr = P.r * (1 - v); return [rr * Math.cos(a), yC + v * P.h2, rr * Math.sin(a)]; }, n, 12, true, false);
+      grp.add(new THREE.Mesh(buildGeo(cil.verts, cil.faces), matFaces()));
+      grp.add(new THREE.Mesh(buildGeo(con.verts, con.faces), matFaces()));
+      Ab = Math.PI * P.r * P.r; V1 = Ab * P.h1; V2 = Ab * P.h2 / 3;
+    } else if (P.tipo === 'cilindro + hemisfério') {
+      const cil = malhaParam((u, v) => { const a = u * TAU; return [P.r * Math.cos(a), -P.h1 / 2 + v * P.h1, P.r * Math.sin(a)]; }, n, 2, true, false);
+      const hem = malhaParam((u, v) => { const a = u * TAU, th = v * Math.PI / 2; return [P.r * Math.sin(th) * Math.cos(a), yC + P.r * Math.cos(th), P.r * Math.sin(th) * Math.sin(a)]; }, n, n / 2, true, false);
+      grp.add(new THREE.Mesh(buildGeo(cil.verts, cil.faces), matFaces()));
+      grp.add(new THREE.Mesh(buildGeo(hem.verts, hem.faces), matFaces()));
+      Ab = Math.PI * P.r * P.r; V1 = Ab * P.h1; V2 = 2 / 3 * Math.PI * P.r ** 3;
+    } else {
+      const nn = 4, L = P.r;
+      const p1 = malhaConvexa(anel(nn, L, -P.h1 / 2).concat(anel(nn, L, P.h1 / 2)));
+      const p2 = (() => {
+        const b = anel(nn, L, yC), ap = [[0, yC + P.h2, 0]];
+        const vv = b.concat(ap), ff = [];
+        for (let i = 0; i < nn; i++) ff.push([i, (i + 1) % nn, nn]);
+        ff.push(Array.from({ length: nn }, (_, i) => nn - 1 - i));
+        return { verts: vv, faces: corrigirWinding(vv, ff) };
+      })();
+      grp.add(new THREE.Mesh(buildGeo(p1.verts, p1.faces), matFaces()));
+      grp.add(new THREE.Mesh(buildGeo(p2.verts, p2.faces), matFaces()));
+      Ab = L * L; V1 = Ab * P.h1; V2 = Ab * P.h2 / 3; P.r = L;
+    }
+    if(P.tipo!=='pirâmide + prisma'){
+      const disk=[];for(let i=0;i<n;i++)disk.push([P.r*Math.cos(TAU*i/n),-P.h1/2,P.r*Math.sin(TAU*i/n)]);
+      grp.add(new THREE.Mesh(buildGeo(disk,[Array.from({length:n},(_,i)=>i)]),matFaces()));
+    }
+    return {
+      group: grp, raio: (P.h1 + P.h2) * 0.95,
+      leitura: [['Composição', P.tipo], ['Área da base', fx(Ab, 1)],
+      ['Volume da parte de baixo', fx(V1, 1)], ['Volume da parte de cima', fx(V2, 1)],
+      ['Volume total', fx(V1 + V2, 1)], ['Altura total', fx(P.h1 + (P.tipo==='cilindro + hemisfério'?P.r:P.h2), 1)]],
+      avisos: ['A área total NÃO é a soma das áreas: as faces em contato desaparecem quando as peças são coladas.'],
+      nota: 'Este é o raciocínio das peças de encaixe e das embalagens: decompor o objeto em sólidos conhecidos, somar volumes e cuidar das faces que se tocam.'
+    };
+  }
+});
+/* =====================================================================
+   7. RELAÇÕES ESPACIAIS: RETA×RETA, RETA×PLANO, PLANO×PLANO
+   ===================================================================== */
+const matPlano = (cor = 0x38bdf8) => new THREE.MeshBasicMaterial({ color: cor, transparent: true, opacity: 0.16, side: THREE.DoubleSide, depthWrite: false });
+const matPlanoBorda = (cor = 0x38bdf8) => new THREE.LineBasicMaterial({ color: cor, transparent: true, opacity: 0.75 });
+function reta3(a, b, cor, tracejada = false, esp = 3) {
+  const g = new THREE.BufferGeometry().setFromPoints([V3(...a), V3(...b)]);
+  const m = tracejada
+    ? new THREE.LineDashedMaterial({ color: cor, dashSize: esp, gapSize: esp * 0.7 })
+    : new THREE.LineBasicMaterial({ color: cor });
+  const l = new THREE.Line(g, m);
+  if (tracejada) l.computeLineDistances();
+  return l;
+}
+function quadPlano(tam, eixo = 'y', nivel = 0) {
+  const g = new THREE.PlaneGeometry(tam, tam);
+  const m = new THREE.Mesh(g, matPlano());
+  if (eixo === 'y') { m.rotation.x = -Math.PI / 2; m.position.y = nivel; }
+  else if (eixo === 'z') { m.position.z = nivel; }
+  else { m.rotation.y = Math.PI / 2; m.position.x = nivel; }
+  return m;
+}
+const grpPlanos = () => new THREE.Group();
+
+sol({
+  id: 'rel_retas', grupo: 'Relações espaciais', atalho: 'V', nome: 'Posições relativas entre duas retas',
+  desc: 'No espaço, duas retas podem ser coplanares (paralelas ou concorrentes) ou não coplanares (reversas). As reversas só existem em três dimensões — é impossível desenhá-las num plano sem "enganar" o olhar.',
+  formulas: [{ tag: 'Concorrentes', tex: '\\text{têm 1 ponto em comum}' },
+  { tag: 'Paralelas', tex: '\\vec r_1 \\parallel \\vec r_2,\\ \\text{nenhum ponto comum}' },
+  { tag: 'Reversas', tex: '\\text{não coplanares: } \\vec r_1\\times\\vec r_2\\neq\\vec 0,\\ d>0' }],
+  params: [{ k: 'caso', rot: 'Situação', opcoes: ['paralelas', 'concorrentes', 'reversas'], val: 'reversas' },
+  { k: 'ang', rot: 'Ângulo entre elas', min: 10, max: 160, step: 5, val: 60 }],
+  build: (P) => {
+    const g = new THREE.Group(); const a = P.ang * DEG;
+    const plano = quadPlano(210, 'y', -70); g.add(plano);
+    const setas = [];
+    if (P.caso === 'paralelas') {
+      g.add(reta3([-90, 10, -40], [70, 10, -40], 0x60a5fa), reta3([-90, 10, 40], [70, 10, 40], 0xf472b6));
+      g.add(reta3([-10, 10, -40], [-10, 10, 40], 0xe2e8f0, true));
+    } else if (P.caso === 'concorrentes') {
+      g.add(reta3([-80, 0, 0], [80, 0, 0], 0x60a5fa));
+      g.add(reta3([-80 * Math.cos(a), 0, -80 * Math.sin(a)], [80 * Math.cos(a), 0, 80 * Math.sin(a)], 0xf472b6));
+    } else {
+      g.add(reta3([-90,-25,0],[90,-25,0],0x60a5fa));
+      g.add(reta3([-90*Math.cos(a),25,-90*Math.sin(a)],[90*Math.cos(a),25,90*Math.sin(a)],0xf472b6));
+      g.add(reta3([0,-25,0],[0,25,0],0x22d3ee,true));
+    }
+    const L = P.caso === 'reversas' ? 'retas reversas' : P.caso === 'paralelas' ? 'retas paralelas' : 'retas concorrentes';
+    return {
+      group: g, raio: 200, rotulos: [
+        { txt: 'r', p: V3(85, 0, 0), cor: '#93c5fd' }, { txt: 's', p: V3(-85 * Math.cos(a), 0, -85 * Math.sin(a)), cor: '#f9a8d4' },
+        ...(P.caso === 'reversas' ? [{ txt: 'perpendicular comum', p: V3(14, 34, -45), cor: '#67e8f9' }] : []),
+        ...(P.caso === 'concorrentes' ? [{ txt: P.ang + '°', p: V3(40 * Math.cos(a / 2) + 8, 6, 40 * Math.sin(a / 2) + 8), cor: '#fcd34d' }] : []),
+        ...(P.caso === 'paralelas' ? [{ txt: 'distância constante', p: V3(-14, 18, 0), cor: '#e2e8f0' }] : [])
+      ],
+      leitura: [['Situação', L], ['Ângulo entre as direções', P.caso === 'paralelas' ? '0°' : P.ang + '°'],
+      ['São coplanares?', P.caso === 'reversas' ? 'NÃO' : 'SIM'],
+      ['Pontos em comum', P.caso === 'concorrentes' ? '1 ponto' : 'nenhum']],
+      nota: 'Para testar se duas retas são reversas, calcule o produto misto (r₂−r₁)·(v₁×v₂). Se for diferente de zero, elas não estão no mesmo plano.'
+    };
+  }
+});
+sol({
+  id: 'rel_reta_plano', grupo: 'Relações espaciais', atalho: 'V', nome: 'Posições relativas entre reta e plano',
+  desc: 'Uma reta pode estar contida no plano, ser paralela (mesma direção, nenhum ponto comum) ou secante. Se for secante e perpendicular a todas as retas do plano que passam pelo ponto de interseção, é perpendicular ao plano.',
+  formulas: [{ tag: 'Reta ⊥ plano', tex: '\\vec v \\parallel \\vec n' }, { tag: 'Ângulo reta-plano', tex: '\\operatorname{sen}\\alpha=\\dfrac{|\\vec v\\cdot\\vec n|}{|\\vec v||\\vec n|}' }],
+  params: [{ k: 'caso', rot: 'Situação', opcoes: ['contida no plano', 'paralela ao plano', 'secante oblíqua', 'perpendicular'], val: 'secante oblíqua' },
+  { k: 'ang', rot: 'Inclinação em relação ao plano', min: 10, max: 90, step: 5, val: 35 }],
+  build: (P) => {
+    const g = new THREE.Group();
+    g.add(quadPlano(210, 'y', -40)); g.add(reta3([-105, -40, 0], [105, -40, 0], 0x38bdf8));
+    const a = P.ang * DEG;
+    if (P.caso === 'contida no plano') g.add(reta3([-90, -40, -50], [90, -40, 50], 0xf472b6));
+    else if (P.caso === 'paralela ao plano') g.add(reta3([-90, 25, -50], [90, 25, 50], 0xf472b6));
+    else if (P.caso === 'secante oblíqua') {
+      g.add(reta3([-90*Math.cos(a), -40-90*Math.sin(a), 0], [90*Math.cos(a), -40+90*Math.sin(a), 0], 0xf472b6));
+      g.add(reta3([0, -40, 0], [0, -40, 55], 0x22d3ee, true));
+    } else g.add(reta3([0, -110, 0], [0, 60, 0], 0xf472b6));
+    return {
+      group: g, raio: 200,
+      rotulos: [{ txt: 'plano α', p: V3(-95, -38, -85), cor: '#7dd3fc' }, { txt: 'reta r', p: V3(100, P.caso === 'contida no plano' ? -30 : P.caso === 'secante oblíqua' ? 60 : 30, 55), cor: '#f9a8d4' },
+      ...(P.caso === 'secante oblíqua' ? [{ txt: P.ang + '°', p: V3(12, -35, 30), cor: '#fcd34d' }, { txt: 'projeção de r', p: V3(6, -36, 70), cor: '#67e8f9' }] : []),
+      ...(P.caso === 'perpendicular' ? [{ txt: '90°', p: V3(14, -30, 25), cor: '#fcd34d' }] : [])],
+      leitura: [['Situação', P.caso], ['Nº de pontos comuns', P.caso === 'paralela ao plano' ? 'nenhum' : P.caso==='contida no plano'?'infinitos':'1 ponto'],
+      ['Ângulo reta-plano', P.caso === 'perpendicular' ? '90°' : P.caso === 'paralela ao plano' || P.caso === 'contida no plano' ? '0°' : P.ang + '°']],
+      nota: 'A projeção ortogonal da reta sobre o plano é o "rastro" que permite medir o ângulo: o ângulo da reta com o plano é o ângulo entre a reta e sua projeção.'
+    };
+  }
+});
+sol({
+  id: 'rel_planos', grupo: 'Relações espaciais', atalho: 'V', nome: 'Posições relativas entre dois planos',
+  desc: 'Dois planos podem ser paralelos, coincidentes ou secantes. Quando são secantes, a interseção é uma reta e o ângulo entre eles define dois diedros suplementares.',
+  formulas: [{ tag: 'Ângulo entre planos', tex: '\\cos\\theta=\\dfrac{|\\vec n_1\\cdot\\vec n_2|}{|\\vec n_1||\\vec n_2|}' },
+  { tag: 'Perpendiculares', tex: '\\vec n_1\\cdot\\vec n_2=0' }],
+  params: [{ k: 'caso', rot: 'Situação', opcoes: ['paralelos', 'secantes (diedro)', 'perpendiculares'], val: 'secantes (diedro)' },
+  { k: 'ang', rot: 'Ângulo diedro', min: 10, max: 150, step: 5, val: 55 }],
+  build: (P) => {
+    const g = new THREE.Group(), a = (P.caso === 'perpendiculares' ? 90 : P.ang) * DEG;
+    g.add(quadPlano(210, 'y', -30));
+    const p2 = quadPlano(210, 'y', 0);
+    p2.rotation.set(-Math.PI/2,0,0);p2.rotateY(a);p2.position.y=-30;
+    g.add(p2);
+    if (P.caso === 'paralelos') { p2.rotation.set(-Math.PI/2,0,0); p2.position.y = 80; p2.position.x = 0; }
+    const linhaInt = reta3([-105 * Math.cos(a), -30 - 105 * Math.sin(a) * 0, 0], [105 * Math.cos(a), 0, 0], 0xfacc15);
+    if(P.caso!=='paralelos')g.add(reta3([0,-30,-105],[0,-30,105],0xfacc15));
+    return {
+      group: g, raio: 200,
+      rotulos: [{ txt: 'α', p: V3(-92, -27, -88), cor: '#7dd3fc' },
+      { txt: 'β', p: V3(30, P.caso === 'paralelos' ? 84 : 55, 80), cor: '#f9a8d4' },
+      ...(P.caso !== 'paralelos' ? [{ txt: 'reta de interseção', p: V3(0, -34, 100), cor: '#fde047' },
+      { txt: 'diedro ' + (P.caso === 'perpendiculares' ? 90 : P.ang) + '°', p: V3(58, 8, 40), cor: '#fcd34d' }] : [])],
+      leitura: [['Situação', P.caso], ['Interseção', P.caso === 'paralelos' ? 'conjunto vazio' : 'uma reta'],
+      ['Ângulo entre os planos', P.caso === 'paralelos' ? '0°' : (P.caso === 'perpendiculares' ? '90°' : P.ang + '°')],
+      ['Diedros formados', P.caso === 'paralelos' ? '—' : `${P.caso === 'perpendiculares' ? 90 : P.ang}° e ${180 - (P.caso === 'perpendiculares' ? 90 : P.ang)}°`]],
+      nota: 'O ângulo entre dois planos é o ângulo entre suas normais — por isso planos perpendiculares têm normais perpendiculares.'
+    };
+  }
+});
+
+/* =====================================================================
+   8. INSCRIÇÃO E CIRCUNSCRIÇÃO
+   ===================================================================== */
+sol({
+  id: 'inscricao', grupo: 'Inscrição e circunscrição', atalho: 'A', nome: 'Sólidos inscritos e circunscritos',
+  desc: 'Duas figuras são inscritas quando uma está "dentro" da outra, tocando todas as faces (ou todas as arestas, no caso da circunscrita). As relações métricas entre raio, aresta e altura aparecem nitidamente.',
+  formulas: [{ tag: 'Esfera no cilindro (Arquimedes)', tex: '\\dfrac{V_{esf}}{V_{cil}}=\\dfrac23,\\quad \\dfrac{A_{esf}}{A_{cil}}=\\dfrac23' },
+  { tag: 'Esfera no cubo', tex: 'r=\\dfrac{a}{2}' }, { tag: 'Cubo inscrito na esfera', tex: 'R_{esf}=\\dfrac{a\\sqrt3}{2}\\ (\\text{cubo})' }],
+  params: [{ k: 'caso', rot: 'Par de sólidos', opcoes: ['esfera inscrita no cubo', 'esfera inscrita no cilindro', 'cubo inscrito na esfera', 'cone inscrito na esfera'], val: 'esfera inscrita no cilindro' },
+  { k: 'r', rot: 'Raio / aresta de referência', min: 14, max: 50, step: 1, val: 30 },
+  { k: 'n', rot: 'Suavidade', min: 16, max: 72, step: 8, val: 48 }],
+  build: (P) => {
+    const n = Math.round(P.n), g = new THREE.Group();
+    const mk = (m, mat) => new THREE.Mesh(buildGeo(m.verts, m.faces), mat);
+    const esf = (r) => malhaParam((u, v) => { const phi = u * TAU, th = v * Math.PI; return [r * Math.sin(th) * Math.cos(phi), r * Math.cos(th), r * Math.sin(th) * Math.sin(phi)]; }, n, n, true, false);
+    const cubo = (h) => malhaConvexa([[-h, -h, -h], [h, -h, -h], [h, h, -h], [-h, h, -h], [-h, -h, h], [h, -h, h], [h, h, h], [-h, h, h]]);
+    const cil = (r, hh) => { const m = malhaParam((u, v) => { const a = u * TAU; return [r * Math.cos(a), -hh + v * 2 * hh, r * Math.sin(a)]; }, n, 2, true, false);
+      m.faces.push(Array.from({length:n},(_,i)=>n-1-i),Array.from({length:n},(_,i)=>2*n+i));corrigirWinding(m.verts,m.faces);return m; };
+    let leit = [], nota = '';
+    if (P.caso === 'esfera inscrita no cubo') {
+      const a = 2 * P.r;
+      g.add(mk(cubo(P.r), matVidro()), mk(esf(P.r), matFaces()));
+      leit = [['Aresta do cubo (a)', fx(a, 1)], ['Raio da esfera (r)', fx(P.r, 1)], ['Relação', 'a = 2r'],
+      ['Volume do cubo', fx(a ** 3, 0)], ['Volume da esfera', fx(4 / 3 * Math.PI * P.r ** 3, 0)],
+      ['Fração ocupada', fx(4 / 3 * Math.PI * P.r ** 3 / a ** 3 * 100, 1) + '%'], ['π/6', '52,36%']];
+      nota = 'Esfera inscrita no cubo: r = a/2. A esfera ocupa pouco mais da metade do cubo (π/6 ≈ 52,4%).';
+    } else if (P.caso === 'esfera inscrita no cilindro') {
+      g.add(mk(cil(P.r, P.r), matVidro()), mk(esf(P.r), matFaces()));
+      const Vc = Math.PI * P.r ** 2 * 2 * P.r, Ve = 4 / 3 * Math.PI * P.r ** 3;
+      const Ac = 2 * Math.PI * P.r * P.r + TAU * P.r * 2 * P.r, Ae = 4 * Math.PI * P.r * P.r;
+      leit = [['Raio = altura/2', `${fx(P.r, 1)} · ${fx(2 * P.r, 1)}`], ['Volume do cilindro', fx(Vc, 0)], ['Volume da esfera', fx(Ve, 0)],
+      ['V esfera / V cilindro', fx(Ve / Vc, 3)], ['Área da esfera / área do cilindro', fx(Ae / Ac, 3)],
+      ['Resultado de Arquimedes', '2/3 = 0,667']];
+      nota = 'Arquimedes considerava este o resultado mais bonito da geometria: a esfera inscrita no cilindro tem exatamente 2/3 do volume e 2/3 da área total. Ele pediu que a figura fosse gravada em seu túmulo.';
+    } else if (P.caso === 'cubo inscrito na esfera') {
+      const a = 2 * P.r / Math.sqrt(3);
+      g.add(mk(esf(P.r), matVidro()), mk(cubo(a / 2), matFaces()));
+      leit = [['Aresta do cubo (a)', fx(a, 1)], ['Raio da esfera (R)', fx(P.r, 1)], ['Diagonal do cubo', fx(a * Math.sqrt(3), 1)],
+      ['Relação', 'R = a√3/2'], ['Volume do cubo', fx(a ** 3, 0)], ['Fração do volume', fx(a ** 3 / (4 / 3 * Math.PI * P.r ** 3) * 100, 1) + '%']];
+      nota = 'O cubo inscrito usa a diagonal como diâmetro da esfera: é o "raio da esfera circunscrita".';
+    } else {
+      const R = P.r, rc = R * Math.sqrt(2) / 2, hc = R * (1 + Math.sqrt(2) / 2);
+      const yBase = R - hc;
+      const cone = malhaParam((u, v) => { const a = u * TAU, rr = rc * (1 - v); return [rr * Math.cos(a), yBase + v * hc, rr * Math.sin(a)]; }, n, 16, true, false);
+      cone.faces.push(Array.from({length:n},(_,i)=>n-1-i));corrigirWinding(cone.verts,cone.faces);
+      g.add(mk(esf(R), matVidro()), mk(cone, matFaces()));
+      leit = [['Raio da esfera (R)', fx(R, 1)], ['Raio do cone', fx(rc, 2)], ['Altura do cone', fx(hc, 2)],
+      ['Relação', 'h = R(1 + √2/2)'], ['Volume da esfera', fx(4 / 3 * Math.PI * R ** 3, 0)],
+      ['Volume do cone', fx(Math.PI * rc * rc * hc / 3, 0)]];
+      nota = 'O cone está contido na esfera: o vértice e a circunferência da base estão sobre a esfera.';
+    }
+    return { group: g, raio: P.r * 3, leitura: leit, nota };
+  }
+});
+
+/* =====================================================================
+   9. GERAÇÃO CINEMÁTICA: REVOLUÇÃO, EXTRUSÃO E VARRIMENTO (LOFT)
+   ===================================================================== */
+function perfisUsuais(tipo, r) {
+  if (tipo === 'retângulo') return [[0, -r], [r, -r], [r, r], [0, r]];
+  if (tipo === 'triângulo retângulo') return [[0, -r], [r, -r], [0, r]];
+  if (tipo === 'semicírculo') { const p = []; for (let i = 0; i <= 24; i++) { const a = Math.PI * i / 24; p.push([r * Math.sin(a), -r * Math.cos(a)]); } return p; }
+  if (tipo === 'trapézio') return [[0, -r], [r, -r], [r * 0.5, r], [0, r]];
+  if (tipo === 'meia coroa') return [[r * 0.55, -r], [r, -r], [r, -r * 0.25], [r * 0.55, -r * 0.25]];
+  return [[0, -r], [r, -r], [r, r], [0, r]];
+}
+sol({
+  id: 'revolucao', grupo: 'Geração cinemática', atalho: 'C', nome: 'Sólido de revolução (giro de uma figura)',
+  desc: 'Uma figura plana gira em torno de um eixo e "varre" um sólido. Retângulo → cilindro; triângulo retângulo → cone; semicírculo → esfera; círculo fora do eixo → toro. Controle o ângulo percorrido.',
+  formulas: [{ tag: 'Volume (Teorema de Pappus)', tex: 'V=2\\pi\\,\\bar d\\cdot A_{figura}' },
+  { tag: 'Superfície', tex: 'A=2\\pi\\,\\bar d\\cdot P_{contorno}' }],
+  params: [{ k: 'perfil', rot: 'Figura que gira', opcoes: ['retângulo', 'triângulo retângulo', 'semicírculo', 'trapézio', 'meia coroa'], val: 'triângulo retângulo' },
+  { k: 'r', rot: 'Tamanho da figura', min: 12, max: 46, step: 1, val: 28 },
+  { k: 'giro', rot: 'Ângulo percorrido', min: 5, max: 360, step: 5, val: 200, anima: true },
+  { k: 'mostrar', rot: 'Mostrar a figura geradora', opcoes: ['sim', 'não'], val: 'sim' }],
+  build: (P) => {
+    const g = new THREE.Group(), perf = perfisUsuais(P.perfil, P.r), giro = P.giro * DEG;
+    const nU = Math.max(6, Math.round(96 * P.giro / 360)), nV = perf.length;
+    const verts = [], faces = [];
+    for (let j = 0; j < nV; j++) {
+      for (let i = 0; i <= nU; i++) {
+        const a = giro * i / nU;
+        verts.push([perf[j][0] * Math.cos(a), perf[j][1], perf[j][0] * Math.sin(a)]);
+      }
+    }
+    const id = (i, j) => j * (nU + 1) + i;
+    for (let j = 0; j < nV; j++) for (let i = 0; i < nU; i++) faces.push([id(i, j), id(i, (j+1)%nV), id(i + 1, (j+1)%nV), id(i + 1, j)]);
+    if (giro < TAU - 0.01) { // fechar as duas faces do corte
+      for (const i of [0, nU]) {
+        const b = verts.length;
+        perf.forEach(p => verts.push([p[0] * Math.cos(giro * i / nU), p[1], p[0] * Math.sin(giro * i / nU)]));
+        faces.push(Array.from({ length: nV }, (_, k) => b + k));
+      }
+    }
+    const geo = buildGeo(verts, faces);
+    if (P.mostrar === 'sim') {
+      // figura geradora na posição final
+      const b = verts.length;
+      perf.forEach(p => verts.push([p[0] * Math.cos(giro), p[1], p[0] * Math.sin(giro)]));
+      const g2 = buildGeo(verts.slice(b), [Array.from({ length: nV }, (_, k) => k)], null);
+      const meshFig = new THREE.Mesh(g2, new THREE.MeshBasicMaterial({ color: 0xfacc15, transparent: true, opacity: 0.42, side: THREE.DoubleSide }));
+      g.add(meshFig);
+      const linha = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(perf.map(p => V3(p[0] * Math.cos(giro), p[1], p[0] * Math.sin(giro)))), new THREE.LineBasicMaterial({ color: 0xfde047 }));
+      g.add(linha);
+    }
+    g.add(new THREE.Mesh(geo, matFaces()));
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([V3(0, -P.r * 1.5, 0), V3(0, P.r * 1.5, 0)]), new THREE.LineDashedMaterial({ color: 0x22d3ee, dashSize: 4, gapSize: 3 })));
+    let area2=0,moment=0;
+    perf.forEach((a,i)=>{const b=perf[(i+1)%nV],cross=a[0]*b[1]-b[0]*a[1];area2+=cross;moment+=(a[0]+b[0])*cross;});
+    const area=Math.abs(area2)/2,dc=Math.abs(moment/(3*area2));
+
+
+    return {
+      group: g, raio: P.r * 2.2,
+      rotulos: [{ txt: 'eixo de revolução', p: V3(0, P.r * 1.6, 0), cor: '#67e8f9' }],
+      leitura: [['Figura geradora', P.perfil], ['Área da figura', fx(area, 1)], ['Distância média ao eixo', fx(dc, 2)],
+      ['Ângulo percorrido', fx(P.giro, 0) + '°'], ['Fração da volta', fx(P.giro / 360, 3)],
+      ['Volume gerado', fx(2 * Math.PI * dc * area * P.giro / 360, 0)],
+      ['Volume na volta completa', fx(2 * Math.PI * dc * area, 0)]],
+      nota: 'O Teorema de Pappus resolve o volume sem integrar: basta multiplicar a área da figura pelo caminho percorrido pelo seu centroide.'
+    };
+  }
+});
+sol({
+  id: 'extrusao', grupo: 'Geração cinemática', atalho: 'C', nome: 'Extrusão e translação (reto → oblíquo)',
+  desc: 'Uma área base se desloca ao longo de um vetor. Se o vetor é perpendicular à base, o sólido é reto; se é inclinado, o sólido é oblíquo. É a mesma construção do prisma e do cilindro.',
+  formulas: [{ tag: 'Volume (Cavalieri)', tex: 'V=A_b\\cdot h\\ \\ \\text{(independe da inclinação)}' },
+  { tag: 'Comprimento varrido', tex: '\\ell=\\dfrac{h}{\\cos\\theta}' }],
+  params: [{ k: 'base', rot: 'Base', opcoes: ['círculo', 'quadrado', 'triângulo', 'hexágono'], val: 'círculo' },
+  { k: 'L', rot: 'Tamanho da base', min: 12, max: 46, step: 1, val: 26 },
+  { k: 'h', rot: 'Deslocamento vertical', min: 10, max: 80, step: 1, val: 48 },
+  { k: 'tilt', rot: 'Inclinação do vetor', min: 0, max: 55, step: 1, val: 25, anima: true },
+  { k: 't', rot: 'Progresso da varredura', min: 0.05, max: 1, step: 0.05, val: 1 }],
+  build: (P) => {
+    const g = new THREE.Group(), ang = P.tilt * DEG;
+    const n = P.base === 'círculo' ? 64 : { quadrado: 4, triângulo: 3, hexágono: 6 }[P.base];
+    const rBase = P.base === 'círculo' ? P.L : P.L / (2 * Math.sin(Math.PI / n));
+    const desloc = P.h * Math.tan(ang) * P.t;
+    const b = [], tp = [];
+    for (let i = 0; i < n; i++) {
+      const a = TAU * i / n + (n === 4 ? Math.PI / 4 : 0);
+      b.push([rBase * Math.cos(a), -P.h / 2, rBase * Math.sin(a)]);
+      tp.push([rBase * Math.cos(a) + desloc, -P.h / 2 + P.h * P.t, rBase * Math.sin(a)]);
+    }
+    const verts = b.concat(tp), faces = ligarAnel(verts, 0, n, n)
+      .concat([Array.from({ length: n }, (_, i) => n - 1 - i)], [Array.from({ length: n }, (_, i) => n + i)]);
+    const geo = buildGeo(verts, faces);
+    g.add(new THREE.Mesh(geo, matFaces()));
+    g.add(new THREE.Mesh(buildGeo(b, [Array.from({ length: n }, (_, i) => i)]), new THREE.MeshBasicMaterial({ color: 0xfacc15, transparent: true, opacity: 0.35, side: THREE.DoubleSide })));
+    const Ab = P.base === 'círculo' ? Math.PI * P.L ** 2 : n * P.L * P.L / (4 * Math.tan(Math.PI / n));
+    return {
+      group: g, raio: P.h + P.L * 2,
+      rotulos: [{ txt: 'vetor diretor', p: V3(desloc + 12, P.h * (P.t - 0.5) + 10, 0), cor: '#fde047' }, { txt: 'altura h', p: V3(-rBase - 16, 0, 0), cor: '#67e8f9' }],
+      leitura: [['Base', P.base], ['Área da base', fx(Ab, 1)], ['Altura (perpendicular)', fx(P.h * P.t, 1)],
+      ['Comprimento varrido', fx(P.h * P.t / Math.cos(ang), 1)], ['Inclinação', fx(P.tilt, 0) + '°'],
+      ['Volume', fx(Ab * P.h * P.t, 1)]],
+      nota: 'Durante toda a animação o volume cresce proporcionalmente, e o valor final não depende da inclinação: só da base e da altura.'
+    };
+  }
+});
+sol({
+  id: 'loft', grupo: 'Geração cinemática', atalho: 'C', nome: 'Varrimento entre seções (lofting)',
+  desc: 'Uma seção transversal se transforma suavemente em outra ao longo de uma altura: por exemplo, um círculo que vira quadrado. É a técnica usada em projetos de peças de transição (dutos, funis).',
+  formulas: [{ tag: 'Volume aproximado', tex: 'V\\approx\\displaystyle\\int_0^h A(z)\\,dz' }],
+  params: [{ k: 'de', rot: 'Seção de baixo', opcoes: ['círculo', 'quadrado', 'hexágono', 'triângulo'], val: 'círculo' },
+  { k: 'para', rot: 'Seção de cima', opcoes: ['círculo', 'quadrado', 'hexágono', 'triângulo'], val: 'quadrado' },
+  { k: 'L', rot: 'Tamanho', min: 14, max: 46, step: 1, val: 28 },
+  { k: 'h', rot: 'Altura', min: 20, max: 90, step: 1, val: 58 },
+  { k: 'suave', rot: 'Suavidade', min: 0, max: 1, step: 0.05, val: 0.6 },
+  { k: 'n', rot: 'Suavidade da malha', min: 16, max: 72, step: 8, val: 48 }],
+  build: (P) => {
+    const g = new THREE.Group(), n = Math.round(P.n), N = 24;
+    const semAcento = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const mapa = { 'circulo': () => Infinity, 'quadrado': () => 4, 'hexagono': () => 6, 'triangulo': () => 3 };
+    const de=semAcento(P.de),para=semAcento(P.para);
+    const L1 = P.L, L2 = P.L * 1.15;
+    const raioRadial = (a, lados, L) => {
+      if (lados === Infinity) return L;
+      const r = L / (2 * Math.sin(Math.PI / lados));
+      const passo = TAU / lados;
+      const d = Math.abs(((a + Math.PI / 2) % passo + passo) % passo - passo / 2);
+      return r * Math.cos(Math.PI / lados) / Math.cos(d);
+    };
+    const pts = [];
+    for (let j = 0; j <= N; j++) {
+      const v = j / N, y = -P.h / 2 + P.h * v;
+      const mistura = P.suave > 0 ? (Math.pow(v, 1 / (0.35 + P.suave)) ) : v;
+      const k = clamp(mistura, 0, 1);
+      const linha = [];
+      for (let i = 0; i < n; i++) {
+        const a = TAU * i / n;
+        const r1 = raioRadial(a, mapa[de](), L1), r2 = raioRadial(a, mapa[para](), L2);
+        const r = lerp(r1, r2, k);
+        linha.push([r * Math.cos(a), y, r * Math.sin(a)]);
+      }
+      pts.push(linha);
+    }
+    const verts = [], faces = [];
+    pts.forEach(l => l.forEach(p => verts.push(p)));
+    const id = (i, j) => j * n + (i % n);
+    for (let j = 0; j < N; j++) for (let i = 0; i < n; i++) faces.push([id(i, j), id(i + 1, j), id(i + 1, j + 1), id(i, j + 1)]);
+    faces.push(Array.from({ length: n }, (_, i) => id(n - 1 - i, 0)));
+    faces.push(Array.from({ length: n }, (_, i) => id(i, N)));
+    const geo = buildGeo(verts, faces);
+    g.add(new THREE.Mesh(geo, matFaces()));
+    const med = medir(verts, faces);
+    const areaPoli = (linha) => { let s = 0; for (let i = 0; i < linha.length; i++) { const p = linha[i], q = linha[(i + 1) % linha.length]; s += p[0] * q[2] - q[0] * p[2]; } return Math.abs(s) / 2; };
+    const bonito = { circulo: 'círculo', quadrado: 'quadrado', hexagono: 'hexágono', triangulo: 'triângulo' };
+    return {
+      group: g, raio: P.h * 1.5,
+      leitura: [['Seção de baixo', bonito[de] || de], ['Seção de cima', bonito[para] || para], ['Altura', fx(P.h, 1)],
+      ['Área da seção de baixo', fx(areaPoli(pts[0]), 1)], ['Área da seção de cima', fx(areaPoli(pts[N]), 1)],
+      ['Volume medido no modelo', fx(med.volume, 0)], ['Área da superfície', fx(med.area, 0)]],
+      nota: 'O lofting é o que permite ligar um tubo redondo a um cano quadrado sem cantos vivos. O volume é a integral das áreas das seções.'
+    };
+  }
+});
+
+/* =====================================================================
+   10. OPERAÇÕES BOOLEANAS (CSG) COM CAMPOS DE DISTÂNCIA
+   ===================================================================== */
+const SDF = {
+  caixa: (p, h) => { const q = [Math.abs(p[0]) - h[0], Math.abs(p[1]) - h[1], Math.abs(p[2]) - h[2]]; const m = Math.max(q[0], q[1], q[2]); return Math.hypot(Math.max(q[0], 0), Math.max(q[1], 0), Math.max(q[2], 0)) + Math.min(m, 0); },
+  esfera: (p, r) => Math.hypot(p[0], p[1], p[2]) - r,
+  cilindro: (p, r, hh) => { const dx = Math.hypot(p[0], p[2]) - r, dy = Math.abs(p[1]) - hh; return Math.min(Math.max(dx, dy), 0) + Math.hypot(Math.max(dx, 0), Math.max(dy, 0)); },
+  cilindroX: (p, r, hh) => SDF.cilindro([p[1], p[0], p[2]], r, hh),
+  prisma: (p, r, n, hh) => { // prisma regular de n lados
+    const ang = TAU / n, a = (Math.atan2(p[2], p[0]) + Math.PI / 2 + TAU) % ang - ang / 2;
+    const rad = Math.hypot(p[0], p[2]);
+    const ray = rad * Math.cos(a) - r * Math.cos(Math.PI / n);
+    const dy = Math.abs(p[1]) - hh;
+    return Math.min(Math.max(ray, dy), 0) + Math.hypot(Math.max(ray, 0), Math.max(dy, 0));
+  },
+  toro: (p, R, r) => { const q = Math.hypot(p[0], p[2]) - R; return Math.hypot(q, p[1]) - r; }
+};
+const opSDF = {
+  uniao: (a, b) => Math.min(a, b),
+  diferenca: (a, b) => Math.max(a, -b),
+  intersecao: (a, b) => Math.max(a, b)
+};
+/* Marching tetrahedra: extrai a superfície de um campo de distância */
+function extrair(sdf, limite, res) {
+  const [x0, x1, y0, y1, z0, z1] = limite;
+  const dx = (x1 - x0) / res, dy = (y1 - y0) / res, dz = (z1 - z0) / res;
+  const val = new Float32Array((res + 1) ** 3);
+  const idx = (i, j, k) => (k * (res + 1) + j) * (res + 1) + i;
+  for (let k = 0; k <= res; k++) for (let j = 0; j <= res; j++) for (let i = 0; i <= res; i++)
+    val[idx(i, j, k)] = sdf([x0 + i * dx, y0 + j * dy, z0 + k * dz]);
+  const P = (i, j, k) => [x0 + i * dx, y0 + j * dy, z0 + k * dz];
+  const interp = (a, b, va, vb) => {
+    const den = va - vb;
+    const t = Math.abs(den) < 1e-12 ? 0.5 : va / den;
+    return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+  };
+  const pos = [];
+  const TETS = [[0, 5, 1, 6], [0, 1, 2, 6], [0, 2, 3, 6], [0, 3, 7, 6], [0, 7, 4, 6], [0, 4, 5, 6]];
+  const C = [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0], [0, 0, 1], [1, 0, 1], [1, 1, 1], [0, 1, 1]];
+  for (let k = 0; k < res; k++) for (let j = 0; j < res; j++) for (let i = 0; i < res; i++) {
+    const pts = C.map(c => P(i + c[0], j + c[1], k + c[2]));
+    const vs = C.map(c => val[idx(i + c[0], j + c[1], k + c[2])]);
+    for (const t of TETS) {
+      const posi = t.filter(x => vs[x] < 0), neg = t.filter(x => vs[x] >= 0);
+      if (posi.length === 0 || posi.length === 4) continue;
+      const arestas = [];
+      if (posi.length === 1) {
+        const a = posi[0];
+        neg.forEach(b => arestas.push(interp(pts[a], pts[b], vs[a], vs[b])));
+        if (arestas.length === 3) pos.push(arestas[0], arestas[1], arestas[2]);
+      } else if (posi.length === 3) {
+        const d = neg[0];
+        posi.forEach(b => arestas.push(interp(pts[d], pts[b], vs[d], vs[b])));
+        if (arestas.length === 3) pos.push(arestas[0], arestas[2], arestas[1]);
+      } else {
+        const [a, b] = posi, [c, d] = neg;
+        const p1 = interp(pts[a], pts[c], vs[a], vs[c]), p2 = interp(pts[a], pts[d], vs[a], vs[d]);
+        const p3 = interp(pts[b], pts[d], vs[b], vs[d]), p4 = interp(pts[b], pts[c], vs[b], vs[c]);
+        pos.push(p1, p2, p3, p1, p3, p4);
+      }
+    }
+  }
+  // achata os triângulos e descarta os que tiverem coordenadas inválidas
+  const limpo = [];
+  for (let i = 0; i + 2 < pos.length; i += 3) {
+    const tri = [pos[i], pos[i + 1], pos[i + 2]];
+    if (!tri.every(p => p && isFinite(p[0]) && isFinite(p[1]) && isFinite(p[2]))) continue;
+    tri.forEach(p => limpo.push(p[0], p[1], p[2]));
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(limpo, 3));
+  // normais pelo gradiente do campo (mais suaves que a normal da face)
+  const nor = new Float32Array(limpo.length);
+  const e = 0.6;
+  for (let i = 0; i < limpo.length; i += 3) {
+    const p = [limpo[i], limpo[i + 1], limpo[i + 2]];
+    const nx = sdf([p[0] + e, p[1], p[2]]) - sdf([p[0] - e, p[1], p[2]]);
+    const ny = sdf([p[0], p[1] + e, p[2]]) - sdf([p[0], p[1] - e, p[2]]);
+    const nz = sdf([p[0], p[1], p[2] + e]) - sdf([p[0], p[1], p[2] - e]);
+    const l = Math.hypot(nx, ny, nz) || 1;
+    nor[i] = nx / l; nor[i + 1] = ny / l; nor[i + 2] = nz / l;
+  }
+  geo.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
+  geo.computeBoundingSphere();
+  return geo;
+}
+sol({
+  id: 'csg', grupo: 'Operações booleanas (CSG)', atalho: 'A', nome: 'União, diferença e interseção de sólidos',
+  desc: 'Operações construtivas: somar volumes (união), perfurar (diferença) e destacar a parte comum (interseção). A interseção de dois cilindros perpendiculares gera o sólido de Steinmetz, com volume 16r³/3.',
+  formulas: [{ tag: 'Steinmetz (2 cilindros)', tex: 'V=\\dfrac{16}{3}r^3' },
+  { tag: 'Furo cilíndrico no cubo', tex: 'V=a^3-\\pi r^2a' }, { tag: 'União', tex: 'V(A\\cup B)=V(A)+V(B)-V(A\\cap B)' }],
+  params: [{ k: 'op', rot: 'Operação', opcoes: ['uniao', 'diferenca', 'intersecao'], val: 'diferenca' },
+  { k: 'a', rot: 'Sólido A', opcoes: ['cubo', 'esfera', 'cilindro', 'prisma hexagonal'], val: 'cubo' },
+  { k: 'b', rot: 'Sólido B', opcoes: ['cilindro perpendicular', 'cilindro vertical', 'esfera', 'prisma hexagonal'], val: 'cilindro vertical' },
+  { k: 'r', rot: 'Tamanho de A', min: 14, max: 42, step: 1, val: 28 },
+  { k: 'rb', rot: 'Tamanho de B', min: 6, max: 34, step: 0.5, val: 15 },
+  { k: 'desloc', rot: 'Deslocamento de B', min: -30, max: 30, step: 1, val: 0 },
+  { k: 'resolucao', rot: 'Resolução da malha', min: 24, max: 72, step: 8, val: 48 }],
+  build: (P) => {
+    const A = {
+      'cubo': p => SDF.caixa(p, [P.r, P.r, P.r]),
+      'esfera': p => SDF.esfera(p, P.r),
+      'cilindro': p => SDF.cilindro(p, P.r * 0.72, P.r),
+      'prisma hexagonal': p => SDF.prisma(p, P.r * 0.85, 6, P.r)
+    }[P.a];
+    const B = {
+      'cilindro perpendicular': p => SDF.cilindroX([p[0] - P.desloc, p[1], p[2]], P.rb, P.r * 1.9),
+      'cilindro vertical': p => SDF.cilindro([p[0] - P.desloc, p[1], p[2]], P.rb, P.r * 1.9),
+      'esfera': p => SDF.esfera([p[0] - P.desloc, p[1], p[2]], P.rb),
+      'prisma hexagonal': p => SDF.prisma([p[0] - P.desloc, p[1], p[2]], P.rb * 1.2, 6, P.r * 1.9)
+    }[P.b];
+    const sdf = p => opSDF[P.op](A(p), B(p));
+    const lim = P.op==='uniao'?Math.max(P.r*1.2,Math.abs(P.desloc)+P.rb*1.25,P.r*1.9)*1.12:P.r*1.35;
+    const geo = extrair(sdf, [-lim, lim, -lim, lim, -lim, lim], Math.round(P.resolucao));
+    const g = new THREE.Group();
+    g.add(new THREE.Mesh(geo, matFaces()));
+    const nTri = geo.attributes.position.count / 3;
+    const res=Math.round(P.resolucao),step=2*lim/res;
+    let inside=0;
+    for(let i=0;i<res;i++)for(let j=0;j<res;j++)for(let k=0;k<res;k++) {
+      if(sdf([-lim+(i+.5)*step,-lim+(j+.5)*step,-lim+(k+.5)*step])<0)inside++;
+    }
+    const med=inside*step**3;
+    const nomes = { uniao: 'União (A ∪ B)', diferenca: 'Diferença (A − B)', intersecao: 'Interseção (A ∩ B)' };
+    return {
+      group: g, raio: P.r * 2.6,
+      leitura: [['Operação', nomes[P.op]], ['Sólido A', P.a], ['Sólido B', P.b],
+      ['Triângulos gerados', nTri.toLocaleString('pt-BR')], ['Volume aproximado (grade '+P.resolucao+'³)', fx(med, 0)],
+      P.a==='cilindro' && P.b === 'cilindro perpendicular' && P.op === 'intersecao' && Math.abs(P.rb-P.r*.72)<1e-6 && P.desloc===0 ? ['Steinmetz: 16r³/3', fx(16 / 3 * P.rb ** 3, 0)] : ['Resolução da malha', P.resolucao + '³']],
+      nota: 'O resultado é calculado por campos de distância com sinal: cada ponto do espaço guarda a distância até a superfície, negativa por dentro. União é o mínimo, interseção é o máximo, diferença é o máximo com o sinal trocado.'
+    };
+  }
+});
+/* =====================================================================
+   11. MONTAGEM DA CENA DO SÓLIDO ATUAL
+   ===================================================================== */
+let meshesAtuais = [], arestasAtuais = [], ajudaAtual = new THREE.Group();
+let infoAtual = null;
+
+function montarCena() {
+  const reg = Estado.solido; if (!reg) return;
+  limpar(capaFaces); limpar(capaArestas); limpar(capaOcultas); limpar(capaAjuda);
+  limparRotulos(); limpar(grupoSeccao); limpar(capaFatias); meshesAtuais = []; arestasAtuais = [];
+  const P = Estado.params;
+  if(reg.id==='toro'&&P.r>=P.R)P.r=Math.max(1,P.R-1);
+  if(reg.id==='ocos'&&P.e>=P.R)P.e=P.R-1;
+  if(reg.id==='tronco_cone'&&P.r>P.R)P.r=P.R;
+  if(reg.id==='esfera'&&P.tipo==='zona'&&P.a1+P.a2>180)P.a1=Math.max(1,180-P.a2);
+  if(['tronco_pir','prisma_trunc'].includes(reg.id)&&P.tilt){
+    const base=anel(Math.round(P.n),P.L,0),maxz=Math.max(...base.map(v=>Math.abs(v[2])));
+    P.tilt=Math.min(P.tilt,Math.floor(Math.atan(P.h*.95/maxz)/DEG));
+  }
+  sincronizarControles();
+  let res = null;
+  try { res = reg.build(P); } catch (e) { console.error(e); res = null; }
+  if (!res) { Erros.push("Erro ao construir " + reg.id); mostrarErros(); return; }
+  infoAtual = res;
+
+  const fonte = res.group;
+  fonte.traverse(o => { if (o.isMesh) { const velho=o.material; if(velho.isMeshBasicMaterial||velho.isMeshPhysicalMaterial) o.userData.materialDidatico=velho.clone(); o.material = pinturaMaterial(o); velho?.dispose?.(); meshesAtuais.push(o); } });
+  capaFaces.add(fonte);
+  if (res.ajuda) capaAjuda.add(res.ajuda);
+
+  /* transformação escolhida: planificação ou vista explodida */
+  if (Estado.ferramenta === 'explodir') prepararExplosao();
+  aplicarMorph(false);
+
+  atualizarArestas();
+
+  grupoEixos.visible=Estado.mostrarEixos;
+  /* rótulos */
+  /* elementos de apoio: alturas, apótemas, geratrizes e diagonais */
+  if (Estado.medidas && Estado.ferramenta === 'nenhuma' && !Estado.fatiar.ativo && AJUDAS[reg.id]) {
+    const a = ajudaDe(reg.id, P, (txt, p, cor) => novoRotulo(txt, p, cor));
+    if (a) capaAjuda.add(a);
+  }
+
+  (res.rotulos || []).forEach(r => novoRotulo(r.txt, r.p, r.cor));
+
+  aplicarPintura();
+  aplicarClipping();
+  if (Estado.seccao.ativo) atualizarSeccao();
+  atualizarFatias();
+  
+}
+
+
+function prepararExplosao() {
+  meshesAtuais.forEach(m => {
+    const g=m.geometry,r=g.userData.rede;
+    m.userData.expPos=Float32Array.from(g.attributes.position.array);
+    const out=Float32Array.from(m.userData.expPos),scale=(infoAtual?.raio||50)*.16;
+    if(r)r.faces.forEach((f,i)=>{
+      const n=normalFace(r.pv.map(p=>p.toArray()),f).normalize(),range=r.ranges.get(i);
+      for(let k=range.start;k<range.start+range.count;k++) {out[k*3]+=n.x*scale;out[k*3+1]+=n.y*scale;out[k*3+2]+=n.z*scale;}
+    });
+    else {
+      // Não confundir superfícies curvas com desmontagem de faces planas.
+      m.userData.expPos=null;return;
+    }
+    m.userData.exp=out;
+  });
+}
+function atualizarArestas() {
+  limpar(capaArestas);limpar(capaOcultas);arestasAtuais=[];
+  capaFaces.updateWorldMatrix(true,true);
+  meshesAtuais.forEach(m=>{
+    const g=m.geometry,nt=(g.index?g.index.count:g.attributes.position.count)/3;
+    let edge;
+    if(g.userData.rede) {
+      // Usar bordas de faces, não o ângulo entre triângulos. Ao planificar,
+      // faces vizinhas ficam coplanares, mas suas arestas continuam existindo.
+      const p=g.attributes.position, borders=g.userData.rede.borders;
+      const points=[],seen=new Set(),a=new THREE.Vector3(),b=new THREE.Vector3();
+      const key=v=>[v.x,v.y,v.z].map(x=>Math.round(x*1e5)).join('|');
+      for(let i=0;i<borders.length;i+=2) {
+        a.fromBufferAttribute(p,borders[i]);b.fromBufferAttribute(p,borders[i+1]);
+        if(a.distanceToSquared(b)<1e-14)continue;
+        const ka=key(a),kb=key(b),k=ka<kb?ka+'>'+kb:kb+'>'+ka;
+        if(seen.has(k))continue;
+        seen.add(k);points.push(a.x,a.y,a.z,b.x,b.y,b.z);
+      }
+      edge=new THREE.BufferGeometry();
+      edge.setAttribute('position',new THREE.Float32BufferAttribute(points,3));
+      edge.userData.contornoDasFaces=true;
+    } else {
+      if(nt>6000)return;
+      edge=new THREE.EdgesGeometry(g,18);
+    }
+    if(!edge.attributes.position.count){edge.dispose();return;}
+    const matrix=new THREE.Matrix4().copy(raiz.matrixWorld).invert().multiply(m.matrixWorld);edge.applyMatrix4(matrix);
+    const l=new THREE.LineSegments(edge,matArestaSolida()),h=new THREE.LineSegments(edge.clone(),matArestaOculta());
+    h.computeLineDistances();capaArestas.add(l);capaOcultas.add(h);arestasAtuais.push(l,h);
+  });
+}
+function aplicarMorph(atualizar=true) {
+  const t=Estado.ferramenta==='planificar'?Estado.planT:0;
+  meshesAtuais.forEach(m=>{
+    const g=m.geometry;
+    if(g.userData.rede)aplicarRede(g,t);
+    if(m.userData.expPos) {
+      const a=g.attributes.position,p=m.userData.expPos,ex=m.userData.exp;
+      const t=Estado.ferramenta==='explodir'?Estado.expT:0;
+      for(let i=0;i<a.array.length;i++)a.array[i]=lerp(p[i],ex[i],t);
+      a.needsUpdate=true;g.computeVertexNormals();g.computeBoundingSphere();
+    }
+  });
+  if(atualizar)atualizarArestas();
+  capaAjuda.visible=Estado.medidas&&Estado.ferramenta==='nenhuma'&&!Estado.fatiar.ativo;
+  if(Estado.ferramenta==='planificar')rotulos.forEach(r=>r.el.style.display='none');
+}
+
+
+/* =====================================================================
+   12. MODOS DE PINTURA
+   ===================================================================== */
+function pinturaMaterial(mesh) {
+  const velho = mesh.material;
+  if(mesh.userData.materialDidatico)return mesh.userData.materialDidatico.clone();
+  const novo = Estado.modoPintura === 'vidro' ? matVidro() : matFaces();
+  if (velho && velho.color && mesh.userData.corForcada) novo.color = velho.color.clone();
+  return novo;
+}
+function aplicarPintura() {
+  const modo = Estado.modoPintura;
+  capaFaces.visible = modo !== 'aramado' && !Estado.fatiar.ativo;
+  capaFaces.traverse(o => {
+    if (!o.isMesh) return;
+    if(o.userData.materialDidatico){o.material.clippingPlanes=clipAtivos();return;}
+    const era = o.material.isMeshPhysicalMaterial ? 'vidro' : 'faces';
+    if ((modo === 'vidro') !== (era === 'vidro')) { const old=o.material;o.material=pinturaMaterial(o);old.dispose(); }
+    o.material.side = THREE.DoubleSide;
+    o.material.transparent = modo === 'vidro';
+    if (modo === 'vidro') { o.material.opacity = 0.22; o.material.depthWrite = false; }
+    o.material.needsUpdate = true;
+  });
+  capaArestas.visible = modo !== 'faces' && !Estado.fatiar.ativo;
+  capaOcultas.visible = modo === 'ocultas' && !Estado.fatiar.ativo;
+  capaAjuda.visible = Estado.medidas && Estado.ferramenta === 'nenhuma' && !Estado.fatiar.ativo;
+  capaFatias.traverse(o=>{if(o.isMesh){o.visible=modo!=='aramado';if(!o.userData.tampa){const old=o.material;o.material=modo==='vidro'?matVidro():matFaces();o.material.clippingPlanes=[];old.dispose();}}else if(o.isLineSegments)o.visible=modo!=='faces';});
+  $('pill-arestas').textContent = { aramado: 'Aramado', faces: 'Faces opacas', vidro: 'Transparência', ocultas: 'Linhas ocultas' }[modo];
+}
+
+
+/* =====================================================================
+   13. PLANO DE SEÇÃO: CORTE, CURVA E ÁREA REAL
+   ===================================================================== */
+let linhaSeccao = null, quadSeccao = null, grupoSeccao = new THREE.Group();
+scene.add(grupoSeccao);
+
+function atualizarSeccao() {
+  limpar(grupoSeccao);linhaSeccao=null;quadSeccao=null;grupoSeccao.visible=true;
+  const S=Estado.seccao;Estado.ultimaAreaSeccao=undefined;Estado.ultimosSegs=[];
+  if(!S.ativo){aplicarClipping();atualizarLeitura();return;}
+  const inc=S.inclinacao*DEG;
+  const n=S.eixo==='y'?V3(Math.sin(inc),Math.cos(inc),0):S.eixo==='x'?V3(Math.cos(inc),Math.sin(inc),0):V3(0,Math.sin(inc),Math.cos(inc));
+  n.normalize();capaFaces.updateWorldMatrix(true,true);
+  const box=new THREE.Box3().setFromObject(capaFaces);if(box.isEmpty())return;
+  const c=box.getCenter(new THREE.Vector3()),size=box.getSize(new THREE.Vector3());
+  const half=(Math.abs(n.x)*size.x+Math.abs(n.y)*size.y+Math.abs(n.z)*size.z)/2;
+  const point=c.clone().addScaledVector(n,S.pos*half);
+  planoCorte.setFromNormalAndCoplanarPoint(n,point);
+  const segs=[];meshesAtuais.forEach(m=>segs.push(...segmentosPlano(m,planoCorte)));
+  if(segs.length) {
+    linhaSeccao=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(segs.flat()),new THREE.LineBasicMaterial({color:0xfacc15,depthTest:false}));
+    linhaSeccao.visible=S.mostrarCurva;linhaSeccao.renderOrder=3;grupoSeccao.add(linhaSeccao);
+  }
+  const tam=size.length()*1.15;
+  quadSeccao=new THREE.Mesh(new THREE.PlaneGeometry(tam,tam),new THREE.MeshBasicMaterial({color:0xfacc15,transparent:true,opacity:.09,side:THREE.DoubleSide,depthWrite:false}));
+  quadSeccao.position.copy(point);quadSeccao.quaternion.setFromUnitVectors(V3(0,0,1),n);quadSeccao.visible=S.mostrarPlano;grupoSeccao.add(quadSeccao);
+  const cap=preencherSeccao(segs,grupoSeccao,n);
+  Estado.ultimaAreaSeccao=cap.area;Estado.ultimosSegs=segs;
+  aplicarClipping();atualizarLeitura();
+}
+
+
+function aplicarClipping() {
+  const ativo = Estado.seccao.ativo;
+  const alvos = [];
+  capaFaces.traverse(o => { if (o.isMesh) alvos.push(o.material); });
+  capaArestas.traverse(o => { if (o.material) alvos.push(o.material); });
+  capaOcultas.traverse(o => { if (o.material) alvos.push(o.material); });
+  alvos.forEach(m => { m.clippingPlanes = ativo ? [planoCorte] : []; m.needsUpdate = true; });
+}
+
+/* =====================================================================
+   14. FATIAMENTO (PRINCÍPIO DE CAVALIERI / TOMOGRAFIA)
+   ===================================================================== */
+
+const capaFatias = new THREE.Group(); scene.add(capaFatias);
+function cortarPoligono(poly,y,acima) {
+  const out=[];for(let i=0;i<poly.length;i++) {
+    const a=poly[i],b=poly[(i+1)%poly.length],da=acima?a.y-y:y-a.y,db=acima?b.y-y:y-b.y;
+    if(da>=-1e-7)out.push(a.clone());
+    if((da<0&&db>0)||(da>0&&db<0))out.push(a.clone().lerp(b,da/(da-db)));
+  }return out;
+}
+function atualizarFatias() {
+  limpar(capaFatias);const F=Estado.fatiar;
+  if(!F.ativo){aplicarPintura();return;}
+  capaFaces.updateWorldMatrix(true,true);const box=new THREE.Box3().setFromObject(capaFaces);if(box.isEmpty())return;
+  const n=Math.round(F.n),y0=box.min.y,y1=box.max.y,h=(y1-y0)/n,gap=F.afastar*h;
+  for(let k=0;k<n;k++) {
+    const inf=y0+k*h,sup=y0+(k+1)*h,group=new THREE.Group();group.userData.faixa={k,inf,sup,desloc:k*gap};
+    const pos=[];
+    meshesAtuais.forEach(m=>{
+      const g=m.geometry,p=g.attributes.position,idx=g.index;
+      for(let t=0,N=(idx?idx.count:p.count)/3;t<N;t++) {
+        let poly=[0,1,2].map(j=>new THREE.Vector3().fromBufferAttribute(p,idx?idx.getX(t*3+j):t*3+j).applyMatrix4(m.matrixWorld));
+        poly=cortarPoligono(cortarPoligono(poly,inf,true),sup,false);
+        for(let j=1;j<poly.length-1;j++)[poly[0],poly[j],poly[j+1]].forEach(v=>pos.push(v.x,v.y,v.z));
+      }
+    });
+    if(pos.length) {
+      const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.computeVertexNormals();
+      const mat=matFaces();mat.clippingPlanes=[];group.add(new THREE.Mesh(g,mat));
+      for(const y of [inf,sup]) {
+        if(Math.abs(y-y0)<1e-5||Math.abs(y-y1)<1e-5)continue;
+        const plane=new THREE.Plane(V3(0,1,0),-y),segs=[];
+        meshesAtuais.forEach(m=>segs.push(...segmentosPlano(m,plane)));
+        const material=matFaces();material.color.setHex(0x93c5fd);material.clippingPlanes=[];
+        preencherSeccao(segs,group,V3(0,1,0),material);
+      }
+      const edges=new THREE.EdgesGeometry(g,25);group.add(new THREE.LineSegments(edges,matArestaSolida()));
+    }
+    group.position.y=k*gap;capaFatias.add(group);
+  }
+  aplicarPintura();atualizarLeitura();
+}
+
+
+/* =====================================================================
+   15. LAÇO DE RENDERIZAÇÃO E ANIMAÇÃO
+   ===================================================================== */
+let mLarg = 1, mAlt = 1;
+function redimensionar() {
+  const r = lienzo.getBoundingClientRect();
+  mLarg = Math.max(1, r.width); mAlt = Math.max(1, r.height);
+  renderer.setSize(mLarg, mAlt, false);
+  renderer.domElement.style.width = '100%';
+  renderer.domElement.style.height = '100%';
+  camera.aspect = mLarg / mAlt; camera.updateProjectionMatrix();
+  camOrtho.left=-Zona*camera.aspect;camOrtho.right=Zona*camera.aspect;camOrtho.top=Zona;camOrtho.bottom=-Zona;camOrtho.updateProjectionMatrix();
+}
+new ResizeObserver(() => redimensionar()).observe(lienzo);
+
+function projetar(p, cam) {
+  const v = p.clone().project(cam);
+  return [(v.x * 0.5 + 0.5) * mLarg, (-v.y * 0.5 + 0.5) * mAlt];
+}
+let fps = 0, ultimo = performance.now(), contador = 0;
+let somaDt = 0;
+function laco(agora) {
+  requestAnimationFrame(laco);
+  try { passo(agora); }
+  catch (e) { if (!laco.jaErrou) { laco.jaErrou = true; Erros.push('[loop] ' + (e && e.stack || e)); mostrarErros(); } }
+}
+function passo(agora) {
+  const dt = Math.min(0.05, (agora - ultimo) / 1000); ultimo = agora;
+  contador++;
+  somaDt += dt;
+  if (somaDt > 0.5) { $('pill-fps').textContent = Math.round(contador / somaDt) + ' fps'; contador = 0; somaDt = 0; }
+
+  /* animação de parâmetros */
+  if (Estado.anim.ativa && Estado.solido) {
+    const p = (Estado.solido.params || []).find(x => x.k === Estado.anim.chave && x.anima);
+    if (p) {
+      let v = Estado.params[p.k] + Estado.anim.dir * Estado.anim.vel * dt;
+      if (v > p.max) { v = p.max; Estado.anim.dir = -1; }
+      if (v < p.min) { v = p.min; Estado.anim.dir = 1; }
+      Estado.params[p.k] = v;
+      sincronizarControles(); montarCena();
+    } else Estado.anim.ativa = false;
+  }
+  controls.autoRotate=Estado.girar&&Estado.projecao==='perspectiva';controls.autoRotateSpeed=1.2;
+  if(Estado.animRede&&Estado.ferramenta==='planificar'){
+    Estado.planT=clamp(Estado.planT+Estado.direcaoRede*dt*.45,0,1);aplicarMorph();sincronizarRede();
+    if(Estado.planT===0||Estado.planT===1){Estado.animRede=false;atualizarControles();}
+  }
+
+  controls.update();
+  if (Estado.projecao === 'monge') { atualizarCamerasMonge(); }
+
+  grupoEixos.visible=Estado.mostrarEixos;
+  /* rótulos */
+  if (Estado.projecao !== 'monge' && Estado.medidas && Estado.ferramenta === 'nenhuma' && !Estado.fatiar.ativo) {
+    rotulos.forEach(r => {
+      const [x, y] = projetar(r.p.clone().applyMatrix4(raiz.matrixWorld), Estado.projecao==='perspectiva'?camera:camOrtho);
+      if (x < -80 || y < -40 || x > mLarg + 80 || y > mAlt + 40) { r.el.style.display = 'none'; return; }
+      r.el.style.display = 'block';
+      r.el.style.left = x + 'px'; r.el.style.top = y + 'px';
+    });
+  } else rotulos.forEach(r => r.el.style.display = 'none');
+
+  labelsEixos.forEach((e,i)=>{
+    const visible=Estado.mostrarEixos&&Estado.projecao!=='monge';e.style.display=visible?'block':'none';
+    if(visible){const p=[V3(108,0,0),V3(0,108,0),V3(0,0,108)][i],xy=projetar(p,Estado.projecao==='perspectiva'?camera:camOrtho);e.style.left=xy[0]+'px';e.style.top=xy[1]+'px';}
+  });
+  const W = Math.floor(mLarg / 2), H = Math.floor(mAlt / 2);
+  renderer.clear();
+  if (Estado.projecao === 'monge') {
+    renderer.setScissorTest(true);
+    const cfg = [[0, H, camera], [W, H, camPlanta], [0, 0, camElev], [W, 0, camPerfil]];
+    cfg.forEach(([x, y, cam]) => {
+      renderer.setViewport(x, y, W, H);
+      renderer.setScissor(x, y, W, H);
+      renderer.render(scene, cam);
+    });
+    renderer.setScissorTest(false);
+    // linhas divisórias
+    renderer.setViewport(0, 0, mLarg, mAlt);
+  } else {
+    renderer.setViewport(0, 0, mLarg, mAlt);
+    renderer.render(scene, Estado.projecao === 'perspectiva' ? camera : camOrtho);
+  }
+}
+requestAnimationFrame(laco);
+
+/* divisórias do modo Monge desenhadas em HTML */
+const divMonge = document.createElement('div');
+divMonge.style.cssText = 'position:absolute;inset:0;display:none;pointer-events:none;z-index:4';
+divMonge.innerHTML = '<div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.14)"></div>' +
+  '<div style="position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(255,255,255,.14)"></div>';
+lienzo.appendChild(divMonge);
+const _ap = aplicarProjecao;
+aplicarProjecao = function () { _ap(); divMonge.style.display = Estado.projecao === 'monge' ? 'block' : 'none'; };
+/* =====================================================================
+   16. ELEMENTOS DE APOIO: ALTURAS, APÓTEMAS, GERATRIZES E DIAGONAIS
+   ===================================================================== */
+function seg(a, b, cor) {
+  const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints([V3(...a), V3(...b)]), matAjuda(cor));
+  return l;
+}
+const AJUDAS = {
+  prisma: (P, rot) => {
+    const g = new THREE.Group(), n = Math.round(P.n), h = P.h, desloc = h * Math.tan(P.tilt * DEG);
+    const a = apotema(n, P.L), th = -Math.PI / 2 + Math.PI / n;
+    g.add(seg([0, -h / 2, 0], [0, h / 2, 0], 0x22d3ee), seg([a * Math.cos(th), -h / 2, a * Math.sin(th)], [0, -h / 2, 0], 0xfacc15));
+    // Mesmos vértices e mesma orientação angular usados na construção do prisma.
+    const i=Math.round(n/2)%n;
+    const inferior=anel(n,P.L,-h/2)[i],superior=anel(n,P.L,h/2,desloc)[i];
+    const lateral=seg(inferior,superior,0xf472b6);
+    lateral.userData.medida='aresta lateral';g.add(lateral);
+    rot('h = altura', V3(-10, 0, 0), '#67e8f9');
+    rot('apótema da base', V3(a * 0.6 * Math.cos(th), -h / 2 + 6, a * 0.6 * Math.sin(th)), '#fde047');
+    const meio=V3(...inferior).lerp(V3(...superior),.5);
+    rot('aresta lateral', meio.add(V3(-14,0,8)), '#f9a8d4');
+    return g;
+  },
+  piramide: (P, rot) => {
+    const g = new THREE.Group(), n = Math.round(P.n), h = P.h, off = P.off;
+    const a = apotema(n, P.L), th = -Math.PI / 2 + Math.PI / n;
+    const r = P.L / (2 * Math.sin(Math.PI / n));
+    const pontA = [a * Math.cos(th), -h / 2, a * Math.sin(th)];
+    g.add(seg([off, -h / 2, 0], [off, h / 2, 0], 0x22d3ee));
+    g.add(seg([0, -h / 2, 0], pontA, 0xfacc15));
+    if (off === 0) g.add(seg(pontA, [0, h / 2, 0], 0xf472b6));
+    g.add(seg([r * Math.cos(-Math.PI / 2), -h / 2, r * Math.sin(-Math.PI / 2)], [off, h / 2, 0], 0xa78bfa));
+    rot('altura h', V3(off - 12, 0, 0), '#67e8f9');
+    rot('apótema da base', V3(a * 0.55 * Math.cos(th), -h / 2 + 7, a * 0.55 * Math.sin(th)), '#fde047');
+    if (off === 0) rot('apótema m', V3(a * Math.cos(th) + 10, 0, a * Math.sin(th)), '#f9a8d4');
+    rot('aresta lateral', V3(r * 0.6, h * 0.28, -r * 0.6), '#c4b5fd');
+    return g;
+  },
+  cilindro: (P, rot) => {
+    const g = new THREE.Group(), h = P.h, d = h * Math.tan(P.tilt * DEG);
+    g.add(seg([0, -h / 2, 0], [0, h / 2, 0], 0x22d3ee));
+    g.add(seg([0, -h / 2, 0], [P.r, -h / 2, 0], 0xfacc15));
+    g.add(seg([P.r, -h / 2, 0], [P.r + d, h / 2, 0], 0xf472b6));
+    rot('altura h', V3(-10, 0, 0), '#67e8f9');
+    rot('raio r', V3(P.r / 2, -h / 2 + 5, 0), '#fde047');
+    rot('geratriz g', V3(P.r + d / 2 + 12, 0, 0), '#f9a8d4');
+    return g;
+  },
+  cone: (P, rot) => {
+    const g = new THREE.Group(), h = P.h, off = P.off;
+    g.add(seg([off, -h / 2, 0], [off, h / 2, 0], 0x22d3ee));
+    g.add(seg([0, -h / 2, 0], [P.r, -h / 2, 0], 0xfacc15));
+    g.add(seg([P.r, -h / 2, 0], [off, h / 2, 0], 0xf472b6));
+    rot('altura h', V3(off - 12, 0, 0), '#67e8f9');
+    rot('raio r', V3(P.r / 2, -h / 2 + 5, 0), '#fde047');
+    rot('geratriz g', V3(P.r * 0.62 + off * 0.25, -h * 0.1, 0), '#f9a8d4');
+    return g;
+  },
+  esfera: (P, rot) => {
+    const g = new THREE.Group(), r = P.r;
+    g.add(seg([0, 0, 0], [r, 0, 0], 0xfacc15));
+    g.add(seg([0, -r, 0], [0, r, 0], 0x22d3ee));
+    rot('raio r', V3(r / 2, 5, 0), '#fde047');
+    rot('diâmetro', V3(10, r * 0.75, 0), '#67e8f9');
+    return g;
+  },
+  tronco_pir: (P, rot) => {
+    const g = new THREE.Group(), n = Math.round(P.n), h = P.h, k = P.k;
+    const a1 = apotema(n, P.L), a2 = apotema(n, P.L * k), th = -Math.PI / 2 + Math.PI / n;
+    g.add(seg([0, -h / 2, 0], [0, h / 2, 0], 0x22d3ee));
+    g.add(seg([a1 * Math.cos(th), -h / 2, a1 * Math.sin(th)], [a2 * Math.cos(th), h / 2, a2 * Math.sin(th)], 0xfacc15));
+    g.add(seg([0, -h / 2, 0], [a1 * Math.cos(th), -h / 2, a1 * Math.sin(th)], 0x94a3b8));
+    rot('altura h', V3(-12, 0, 0), '#67e8f9');
+    rot('apótema do tronco', V3(a1 * 0.8 * Math.cos(th) + 8, 0, a1 * 0.8 * Math.sin(th)), '#fde047');
+    return g;
+  },
+  tronco_cone: (P, rot) => {
+    const g = new THREE.Group(), h = P.h;
+    g.add(seg([0, -h / 2, 0], [0, h / 2, 0], 0x22d3ee));
+    g.add(seg([0, -h / 2, 0], [P.R, -h / 2, 0], 0xfacc15));
+    g.add(seg([0, h / 2, 0], [P.r, h / 2, 0], 0xfcd34d));
+    g.add(seg([P.R, -h / 2, 0], [P.r, h / 2, 0], 0xf472b6));
+    rot('altura h', V3(-12, 0, 0), '#67e8f9');
+    rot('R', V3(P.R * 0.5, -h / 2 + 5, 0), '#fde047');
+    rot('r', V3(P.r * 0.5, h / 2 + 5, 0), '#fde047');
+    rot('geratriz', V3(P.R * 0.6, 0, 0), '#f9a8d4');
+    return g;
+  },
+  plat_cubo: (P, rot) => {
+    const g = new THREE.Group(), e = P.a / 2;
+    g.add(seg([-e, -e, -e], [e, e, e], 0xfacc15));
+    g.add(seg([-e, -e, e], [e, e, -e], 0xf472b6));
+    g.add(seg([-e, -e, -e], [e, -e, -e], 0x94a3b8), seg([e, -e, -e], [e, e, -e], 0x94a3b8));
+    rot('aresta a', V3(e, -e - 8, e), '#e2e8f0');
+    rot('diagonal a√3', V3(0, e + 8, 0), '#fde047');
+    return g;
+  }
+};
+function ajudaDe(id, P, rot) {
+  const f = AJUDAS[id]; if (!f) return null;
+  try { return f(P, rot); } catch (e) { return null; }
+}
+
+/* =====================================================================
+   17. LEITURA NUMÉRICA E PAINEL DE INFORMAÇÃO
+   ===================================================================== */
+function renderTex(el, tex) {
+  try { window.katex.render(String(tex),el,{throwOnError:true,displayMode:false}); }
+  catch(e) {el.textContent='Fórmula temporariamente indisponível';el.title=String(e);el.className='formula-falha';console.error(e);}
+}
+
+function atualizarLeitura() {
+  const alvo = $('leitura'); alvo.innerHTML = '';
+  if (!infoAtual || !infoAtual.leitura) return;
+  infoAtual.leitura.forEach(([k, v]) => {
+    const d = document.createElement('div'); d.className = 'l';
+    const a = document.createElement('span'); a.textContent = k;
+    const b = document.createElement('span'); b.textContent = v;
+    d.append(a, b); alvo.appendChild(d);
+  });
+  if (Estado.seccao.ativo && Estado.ultimaAreaSeccao !== undefined) {
+    const d = document.createElement('div'); d.className = 'l';
+    const a = document.createElement('span'); a.textContent = 'Área da seção (medida)';
+    const b = document.createElement('span'); b.textContent = fx(Estado.ultimaAreaSeccao, 2);
+    d.append(a, b); alvo.appendChild(d);
+    const cls = classificarConica();
+    if (cls) {
+      const d2 = document.createElement('div'); d2.className = 'l';
+      const a2 = document.createElement('span'); a2.textContent = 'Tipo de seção';
+      const b2 = document.createElement('span'); b2.textContent = cls;
+      d2.append(a2, b2); alvo.appendChild(d2);
+    }
+  }
+  if (Estado.fatiar.ativo) {
+    const d = document.createElement('div'); d.className = 'l';
+    const a = document.createElement('span'); a.textContent = 'Fatias exibidas';
+    const b = document.createElement('span'); b.textContent = Estado.fatiar.n;
+    d.append(a, b); alvo.appendChild(d);
+  }
+}
+
+function classificarConica() {
+  const reg=Estado.solido,S=Estado.seccao,P=Estado.params;
+  if(!reg||!['cone','tronco_cone'].includes(reg.id))return null;
+  if(!Estado.ultimosSegs?.length)return 'sem interseção';
+  if(P.off)return 'cone oblíquo: curva limitada pelo sólido';
+  if(reg.id==='tronco_cone'&&Math.abs(P.R-P.r)<1e-7)return 'seção de cilindro';
+  const radius=reg.id==='cone'?P.r:Math.abs(P.R-P.r),alpha=Math.atan2(radius,P.h);
+  const beta=Math.asin(clamp(Math.abs(planoCorte.normal.y),0,1));
+  const apex=reg.id==='cone'?V3(0,P.h/2,0):V3(0,-P.h/2+P.h*P.R/(P.R-P.r),0);
+  if(Math.abs(planoCorte.distanceToPoint(apex))<1e-5)return Math.abs(planoCorte.normal.y)<1e-6?'triângulo (seção meridiana do sólido)':'seção degenerada: plano passa pelo vértice';
+  if(beta>Math.PI/2-1e-5)return 'circunferência (corte paralelo à base)';
+  if(Math.abs(beta-alpha)<.006)return 'trecho de parábola (limitado pelo sólido)';
+  return beta>alpha?'elipse (pode ser limitada pelas bases)':'trecho de hipérbole (limitado pelo sólido)';
+}
+
+
+function atualizarInfo() {
+  const reg = Estado.solido; if (!reg) return;
+  $('nome-solido').textContent = reg.nome;
+  $('grupo-solido').textContent = (reg.atalho ? reg.atalho + ' · ' : '') + reg.grupo;
+  $('desc-solido').textContent = reg.desc || '';
+  const f = $('formulas'); f.innerHTML = '';
+  (reg.formulas || []).forEach(x => {
+    const d = document.createElement('div'); d.className = 'f';
+    const t = document.createElement('span'); t.className = 'ftag'; t.textContent = x.tag;
+    const c = document.createElement('div'); renderTex(c, x.tex);
+    d.append(t, c); f.appendChild(d);
+  });
+  const av = $('avisos'); av.innerHTML = '';
+  const lista = [...(infoAtual?.avisos || [])];
+  if (infoAtual?.nota) lista.push('💡 ' + infoAtual.nota);
+  if (reg.nota) lista.push('💡 ' + reg.nota);
+  lista.forEach(txt => { const d = document.createElement('div'); d.className = 'aviso'; d.textContent = txt; av.appendChild(d); });
+}
+
+/* =====================================================================
+   18. CONTROLES
+   ===================================================================== */
+const refs = {};
+function atualizarControles() {
+  const alvo = $('controles'); alvo.innerHTML = ''; Object.keys(refs).forEach(k => delete refs[k]);
+  const reg = Estado.solido; if (!reg) return;
+
+  /* bloco de ferramentas ativas */
+  const F = Estado.ferramenta;
+  const blocoF = document.createElement('div');
+  const tit = (t) => { const d = document.createElement('div'); d.className = 'sec-title'; d.style.paddingLeft = '0'; d.textContent = t; return d; };
+
+  if(F==='planificar'||F==='explodir') {
+    blocoF.appendChild(tit(F==='planificar'?'📄 Planificação — faces articuladas':'🧩 Vista explodida'));
+    const can=meshesAtuais.some(m=>m.geometry.userData.rede);
+    if(can) {
+      blocoF.appendChild(campoRange(F==='planificar'?'Abertura (0: fechado · 1: aberto)':'Separação das faces',F==='planificar'?Estado.planT:Estado.expT,0,1,.01,v=>{
+        Estado.animRede=false;if(F==='planificar')Estado.planT=v;else Estado.expT=v;aplicarMorph();aplicarPintura();
+      },false,F==='planificar'?'__rede':undefined));
+      if(F==='planificar') {
+        const b=document.createElement('button');b.className='b prim';b.textContent=Estado.animRede?'Pausar abertura':Estado.planT>.5?'Animar fechamento':'Animar abertura';
+        b.onclick=()=>{Estado.direcaoRede=Estado.planT>.5?-1:1;Estado.animRede=!Estado.animRede;atualizarControles();};blocoF.appendChild(b);
+        const q=document.createElement('button');q.className='b';q.textContent='Mostrar totalmente aberto';q.onclick=()=>{Estado.animRede=false;Estado.planT=1;aplicarMorph();atualizarControles();enquadrarAtual();};blocoF.appendChild(q);
+        const aviso=document.createElement('div');aviso.className='nota';
+        const partes=meshesAtuais.reduce((n,m)=>n+(m.geometry.userData.rede?.separados||0),0);
+        aviso.textContent=(partes?`Rede com ${partes} faces recortadas separadamente para evitar sobreposição. `:'')+'As faces mantêm suas medidas e giram nas arestas. Nos corpos redondos, a superfície é aproximada pelos segmentos da malha.';blocoF.appendChild(aviso);
+      }
+    } else {const a=document.createElement('div');a.className='aviso';a.textContent='Planificação indisponível para este modelo; nenhuma deformação será aplicada.';blocoF.appendChild(a);}
+  }
+
+
+  if (F === 'seccao' || Estado.seccao.ativo) {
+    blocoF.appendChild(tit('✂️ Plano de seção'));
+    blocoF.appendChild(campoSelect('Corte', ['transversal (eixo y)', 'longitudinal (eixo x)', 'frontal (eixo z)'],
+      Estado.seccao.eixo === 'y' ? 'transversal (eixo y)' : Estado.seccao.eixo === 'x' ? 'longitudinal (eixo x)' : 'frontal (eixo z)',
+      (v) => { Estado.seccao.eixo = v.startsWith('transversal') ? 'y' : v.startsWith('longitudinal') ? 'x' : 'z'; atualizarSeccao(); }));
+    blocoF.appendChild(campoRange('Posição do plano', Estado.seccao.pos, -1, 1, 0.01, (v) => { Estado.seccao.pos = v; atualizarSeccao(); }));
+    blocoF.appendChild(campoRange('Inclinação do plano (°)', Estado.seccao.inclinacao, 0, 85, 1, (v) => { Estado.seccao.inclinacao = v; atualizarSeccao(); }));
+    blocoF.appendChild(campoCheck('Mostrar o plano', Estado.seccao.mostrarPlano, (v) => { Estado.seccao.mostrarPlano = v; if(quadSeccao)quadSeccao.visible = v; }));
+    blocoF.appendChild(campoCheck('Destacar a curva da seção', Estado.seccao.mostrarCurva, (v) => { Estado.seccao.mostrarCurva = v; if (linhaSeccao) linhaSeccao.visible = v; }));
+  }
+  if (F === 'fatiar' || Estado.fatiar.ativo) {
+    blocoF.appendChild(tit('🧅 Fatiamento (Cavalieri)'));
+    blocoF.appendChild(campoRange('Número de fatias', Estado.fatiar.n, 2, 16, 1, (v) => { Estado.fatiar.n = v; atualizarFatias(); }));
+    blocoF.appendChild(campoRange('Afastamento das fatias', Estado.fatiar.afastar, 0, 2.5, 0.05, (v) => { Estado.fatiar.afastar = v; atualizarFatias(); }, true));
+  }
+  if (blocoF.children.length) { alvo.appendChild(blocoF); const hr = document.createElement('div'); hr.className = 'sec-title'; hr.style.paddingLeft = '0'; hr.textContent = '⚙️ Parâmetros do sólido'; alvo.appendChild(hr); }
+
+  (reg.params || []).forEach(p => {
+    if(reg.id==='compostos'&&(p.k==='h2'&&Estado.params.tipo==='cilindro + hemisfério'||p.k==='n'&&Estado.params.tipo==='pirâmide + prisma'))return;
+    if(reg.id==='quad_elipsoide'&&['h','lado'].includes(p.k))return;
+    if(reg.id==='quad_paraboloide'&&['c','lado'].includes(p.k))return;
+    if(reg.id==='quad_hiperboloide1'&&['h','lado'].includes(p.k))return;
+    if(reg.id==='quad_hiperboloide2'&&p.k==='h')return;
+    if(reg.id==='esfera'&&['a1','a2'].includes(p.k)&&(['esfera','hemisferio'].includes(Estado.params.tipo)||p.k==='a2'&&Estado.params.tipo!=='zona'))return;
+    if(reg.id==='ocos'&&(p.k==='corte'&&Estado.params.tipo!=='tubo com corte'||p.k==='h'&&Estado.params.tipo==='casca esférica'))return;
+    if (p.opcoes) {
+      const rotulo = p.opcoes.map(o => o.startsWith('circulo') ? o.replace('circulo', 'círculo') : o);
+      alvo.appendChild(campoSelect(p.rot, p.opcoes, Estado.params[p.k], (v) => {
+        Estado.params[p.k] = v; montarCena(); atualizarLeitura(); atualizarInfo(); atualizarFerramentas(); atualizarControles();
+      }, rotulo));
+    } else {
+      alvo.appendChild(campoRange(p.rot, Estado.params[p.k], p.min, p.max, p.step, (v) => {
+        Estado.params[p.k] = v; montarCena(); atualizarLeitura(); atualizarInfo(); atualizarFerramentas();
+      }, p.anima, p.k));
+    }
+  });
+  const botoes = document.createElement('div'); botoes.className = 'botoes';
+  const bR = document.createElement('button'); bR.className = 'b prim'; bR.textContent = '↺ Valores iniciais';
+  bR.onclick = () => selecionar(Estado.solido.id);
+  const bE = document.createElement('button'); bE.className = 'b ambar'; bE.textContent = '⤢ Enquadrar';
+  bE.onclick = enquadrarAtual;
+  const bA = document.createElement('button'); bA.className = 'b cian'; bA.textContent = '🖼️ Salvar imagem';
+  bA.onclick = salvarImagem;
+  botoes.append(bR, bE, bA); alvo.appendChild(botoes);
+}
+function campoRange(rot, val, min, max, step, aoMudar, comAnimar, chave) {
+  const d = document.createElement('div'); d.className = 'campo';
+  const l = document.createElement('label');
+  const s = document.createElement('span'); s.textContent = rot;
+  const v = document.createElement('span'); v.className = 'val'; v.textContent = fmtVal(val);
+  l.append(s, v);
+  const i = document.createElement('input');
+  i.type = 'range'; i.min = min; i.max = max; i.step = step; i.value = val;
+  i.addEventListener('input', () => { const x = parseFloat(i.value); v.textContent = fmtVal(x); aoMudar(x); });
+  d.append(l, i);
+  if (chave) refs[chave] = { input: i, span: v };
+  if (comAnimar && chave) {
+    const b = document.createElement('button');
+    b.className = 'b ambar'; b.style.marginTop = '8px'; b.style.flex = 'none';
+    b.textContent = Estado.anim.ativa && Estado.anim.chave === chave ? '⏸ Pausar' : '▶ Animar';
+    b.onclick = () => {
+      if (Estado.anim.ativa && Estado.anim.chave === chave) Estado.anim.ativa = false;
+      else { Estado.anim = { ativa: true, chave, dir: 1, vel: (max - min) / 6 }; }
+      atualizarControles();
+    };
+    d.appendChild(b);
+  }
+  return d;
+}
+function campoSelect(rot, opcoes, val, aoMudar, rotulos) {
+  const d = document.createElement('div'); d.className = 'campo';
+  const l = document.createElement('label'); const s = document.createElement('span'); s.textContent = rot; l.appendChild(s);
+  const sel = document.createElement('select');
+  opcoes.forEach((o, i) => {
+    const op = document.createElement('option'); op.value = o;
+    op.textContent = rotulos ? rotulos[i] : o.replace(/_/g, ' ');
+    if (o === val) op.selected = true;
+    sel.appendChild(op);
+  });
+  sel.addEventListener('change', () => aoMudar(sel.value));
+  d.append(l, sel); return d;
+}
+function campoCheck(rot, val, aoMudar) {
+  const d = document.createElement('div'); d.className = 'campo';
+  const lab = document.createElement('label'); lab.className = 'toggle';
+  const i = document.createElement('input'); i.type = 'checkbox'; i.checked = !!val;
+  i.addEventListener('change', () => aoMudar(i.checked));
+  const t = document.createElement('span'); t.textContent = rot;
+  lab.append(i, t); d.appendChild(lab); return d;
+}
+const fmtVal = (v) => (Number.isInteger(v) ? v : (Math.abs(v) >= 10 ? v.toFixed(1) : v.toFixed(2))).toString().replace('.', ',');
+function sincronizarControles() {
+  Object.entries(refs).forEach(([k, r]) => {
+    const v = Estado.params[k];
+    if (v === undefined) return;
+    if (parseFloat(r.input.value) !== v) { r.input.value = v; r.span.textContent = fmtVal(v); }
+  });
+}
+function salvarImagem() {
+  passo(performance.now());
+  const a = document.createElement('a');
+  a.download = 'geometria-' + (Estado.solido?.id || 'modelo') + '.png';
+  a.href = renderer.domElement.toDataURL('image/png');
+  a.click();
+}
+
+/* =====================================================================
+   19. SELEÇÃO DE SÓLIDO E BARRA DE FERRAMENTAS
+   ===================================================================== */
+function largar() {
+  const reg = Estado.solido; if (!reg) return;
+  Estado.params = {};
+  (reg.params || []).forEach(p => Estado.params[p.k] = p.val);
+}
+function selecionar(id, semEnquadrar) {
+  const reg = SOLIDOS.find(s => s.id === id); if (!reg) return;
+  Estado.solido = reg;
+  Estado.anim.ativa = false;
+  Estado.ferramenta = 'nenhuma';
+  Estado.planT = 0; Estado.expT = 0; Estado.animRede=false;
+  Estado.seccao.ativo = false; Estado.ultimaAreaSeccao=undefined; Estado.ultimosSegs=[];
+  Estado.fatiar.ativo = false; Estado.fatiar.afastar = 0.25;
+  raiz.rotation.y = 0;
+  largar();
+  document.body.classList.add('cat-fechado');
+  document.body.classList.remove('cat-aberto');
+  document.querySelectorAll('#arvore .item').forEach(b => b.classList.toggle('ativo', b.dataset.id === id));
+  montarCena();
+  if (!semEnquadrar) enquadrarAtual();
+  atualizarControles(); atualizarLeitura(); atualizarInfo(); atualizarFerramentas();
+  try { history.replaceState(null, '', '#' + id); } catch (e) { }
+}
+function montarArvore() {
+  const arv = $('arvore'); arv.innerHTML = '';
+  const grupos = [];
+  SOLIDOS.forEach(s => { let g = grupos.find(x => x.nome === s.grupo); if (!g) { g = { nome: s.grupo, itens: [] }; grupos.push(g); } g.itens.push(s); });
+  grupos.forEach(g => {
+    const d = document.createElement('div'); d.className = 'grupo';
+    const b = document.createElement('button'); b.className = 'gtitulo';
+    const seta = document.createElement('span'); seta.className = 'gseta'; seta.textContent = '▶';
+    const t = document.createElement('span'); t.textContent = g.nome;
+    const num = document.createElement('span'); num.className = 'gnum'; num.textContent = g.itens.length;
+    b.append(seta, t, num);
+    const lista = document.createElement('div'); lista.className = 'glista';
+    g.itens.forEach(s => {
+      const it = document.createElement('button'); it.className = 'item'; it.dataset.id = s.id;
+      it.textContent = s.nome;
+      it.onclick = () => selecionar(s.id);
+      lista.appendChild(it);
+    });
+    b.onclick = () => d.classList.toggle('aberto');
+    d.append(b, lista); arv.appendChild(d);
+  });
+  const primeira = SOLIDOS[0];
+  arv.querySelector('.grupo')?.classList.add('aberto');
+}
+function montarBarra() {
+  const barra = $('barra-topo'); barra.innerHTML = '';
+  const grupo = (rot, botoes) => {
+    const g = document.createElement('div'); g.className = 'tgrupo';
+    const r = document.createElement('span'); r.className = 'rot'; r.textContent = rot;
+    g.appendChild(r);
+    botoes.forEach(([txt, ativo, aoClicar, data]) => {
+      const b = document.createElement('button'); b.className = 'tbtn' + (ativo ? ' on' : '');
+      b.textContent = txt; b.onclick = aoClicar;
+      if(txt.includes('Planificar')||txt.includes('Explodir')){b.disabled=!!Estado.solido&&!meshesAtuais.some(m=>m.geometry.userData.rede);}
+      if(txt.includes('Seção')||txt.includes('Fatiar')){b.disabled=Estado.solido?.id.startsWith('rel_')||Estado.solido?.id.startsWith('quad_')&&Estado.solido.id!=='quad_elipsoide'||Estado.solido?.id==='esfera'&&Estado.params.tipo==='fuso';}
+      if (data) Object.entries(data).forEach(([k, v]) => b.dataset[k] = v);
+      g.appendChild(b);
+    });
+    return g;
+  };
+  barra.appendChild(grupo('Projeção', [
+    ['Perspectiva', Estado.projecao === 'perspectiva', () => ativarProjecao('perspectiva'), { proj: 'perspectiva' }],
+    ['Isométrica', Estado.projecao === 'isometrica', () => ativarProjecao('isometrica'), { proj: 'isometrica' }],
+    ['Dimétrica', Estado.projecao === 'dimetrica', () => ativarProjecao('dimetrica'), { proj: 'dimetrica' }],
+    ['Cavaleira', Estado.projecao === 'cavaleira', () => ativarProjecao('cavaleira'), { proj: 'cavaleira' }],
+    ['Vistas (Monge)', Estado.projecao === 'monge', () => ativarProjecao('monge'), { proj: 'monge' }]
+  ]));
+  barra.appendChild(grupo('Modo', [
+    ['Aramado', Estado.modoPintura === 'aramado', () => { Estado.modoPintura = 'aramado'; aplicarPintura(); atualizarFerramentas(); }],
+    ['Faces', Estado.modoPintura === 'faces', () => { Estado.modoPintura = 'faces'; aplicarPintura(); atualizarFerramentas(); }],
+    ['Vidro', Estado.modoPintura === 'vidro', () => { Estado.modoPintura = 'vidro'; aplicarPintura(); atualizarFerramentas(); }],
+    ['Ocultas', Estado.modoPintura === 'ocultas', () => { Estado.modoPintura = 'ocultas'; aplicarPintura(); atualizarFerramentas(); }]
+  ]));
+  barra.appendChild(grupo('Ferramentas', [
+    ['📄 Planificar', Estado.ferramenta === 'planificar', () => alternarFerramenta('planificar')],
+    ['🧩 Explodir', Estado.ferramenta === 'explodir', () => alternarFerramenta('explodir')],
+    ['✂️ Seção', Estado.seccao.ativo, () => alternarFerramenta('seccao')],
+    ['🧅 Fatiar', Estado.fatiar.ativo, () => alternarFerramenta('fatiar')],
+    ['🧭 Medidas', Estado.medidas, () => { Estado.medidas = !Estado.medidas; montarCena(); atualizarFerramentas(); }],
+    ['Eixos XYZ', Estado.mostrarEixos, () => { Estado.mostrarEixos=!Estado.mostrarEixos;grupoEixos.visible=Estado.mostrarEixos;atualizarFerramentas(); }],
+    ['⟳ Girar', Estado.girar, () => { Estado.girar = !Estado.girar; atualizarFerramentas(); }]
+  ]));
+}
+function atualizarFerramentas() { montarBarra(); }
+
+function alternarFerramenta(f) {
+  const was=f==='seccao'?Estado.seccao.ativo:f==='fatiar'?Estado.fatiar.ativo:Estado.ferramenta===f;
+  Estado.ferramenta='nenhuma';Estado.seccao.ativo=false;Estado.fatiar.ativo=false;Estado.animRede=false;Estado.anim.ativa=false;
+  Estado.planT=0;Estado.expT=0;
+  if(!was) {
+    if(f==='seccao'){Estado.seccao.ativo=true;Estado.seccao.pos=0;Estado.seccao.inclinacao=0;Estado.seccao.mostrarPlano=true;Estado.seccao.mostrarCurva=true;}
+    else if(f==='fatiar'){Estado.fatiar.ativo=true;Estado.fatiar.afastar=.25;}
+    else {Estado.ferramenta=f;if(f==='planificar')Estado.planT=1;if(f==='explodir')Estado.expT=.6;}
+  }
+  montarCena();atualizarSeccao();atualizarControles();atualizarLeitura();atualizarInfo();atualizarFerramentas();enquadrarAtual();
+}
+function sincronizarRede(){const r=refs.__rede;if(r){r.input.value=Estado.planT;r.span.textContent=fmtVal(Estado.planT);}}
+function enquadrarAtual() {
+  const obj=Estado.fatiar.ativo?capaFatias:capaFaces;
+  const box=new THREE.Box3().setFromObject(obj);
+  if(box.isEmpty()){enquadrar(infoAtual?.raio||80);return;}
+  const center=box.getCenter(new THREE.Vector3()),size=box.getSize(new THREE.Vector3());
+  enquadrar(Math.max(size.x,size.y,size.z)*.7);
+  controls.target.copy(center);camera.position.add(center);
+  if(Estado.projecao!=='perspectiva'){camOrtho.position.add(center);camOrtho.lookAt(center);camOrtho.updateMatrixWorld();}
+  controls.update();
+}
+
+
+/* =====================================================================
+   20. CELULAR: GAVETA E ABAS
+   ===================================================================== */
+$('btn-cat-mob').onclick = () => document.body.classList.toggle('cat-aberto');
+$('fundo-cat').onclick = () => document.body.classList.remove('cat-aberto');
+document.querySelectorAll('#abas-mob button').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('#abas-mob button').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    document.body.classList.remove('aba-p', 'aba-l', 'aba-s');
+    document.body.classList.add('aba-' + b.dataset.aba);
+    document.querySelector('#painel .scroll').scrollTop = 0;
+  };
+});
+document.body.classList.add('aba-p');
+addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.body.classList.remove('cat-aberto');
+  if (['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName))return;
+  if (e.key === 'f' || e.key === 'F') enquadrarAtual();
+  if (e.key === 'r' || e.key === 'R') { Estado.girar = !Estado.girar; atualizarFerramentas(); }
+});
+
+/* =====================================================================
+   21. INICIALIZAÇÃO
+   ===================================================================== */
+$('busca').addEventListener('input', (e) => {
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll('#arvore .grupo').forEach(g => {
+    let visiveis = 0;
+    g.querySelectorAll('.item').forEach(it => {
+      const ok = it.textContent.toLowerCase().includes(q);
+      it.style.display = ok ? 'block' : 'none';
+      if (ok) visiveis++;
+    });
+    g.style.display = visiveis ? 'block' : 'none';
+    if (q) g.classList.add('aberto');
+  });
+});
+function iniciar() {
+  montarArvore();
+  montarBarra();
+  atualizarFerramentas();
+  redimensionar();
+  const alvo = (location.hash || '').replace('#', '');
+  const reg = SOLIDOS.find(s => s.id === alvo) || SOLIDOS.find(s => s.id === 'plat_cubo') || SOLIDOS[0];
+  selecionar(reg.id);
+  $('carregando').style.display = 'none';
+  setTimeout(redimensionar, 60);
+}
+window.__lab = {
+  Erros, Estado, scene, renderer, camera, camOrtho, THREE,
+  capaFaces, capaArestas, capaOcultas, capaAjuda, capaFatias, grupoSeccao,
+  atualizarSeccao, atualizarFatias, atualizarControles, montarCena, selecionar, alternarFerramenta,
+  SOLIDOS, grupoEixos, planoCorte, aplicarMorph, aplicarPintura, ativarProjecao, enquadrarAtual, segmentosPlano, triangulosSeccao,
+  meshes:()=>meshesAtuais,
+
+  render: () => { try { passo(performance.now()); return 'ok'; } catch (e) { return String(e && e.stack || e); } },
+  diag: () => ({
+    fatias: capaFatias.children.length, faces: capaFaces.children.length,
+    seccao: grupoSeccao.children.length, meshes: meshesAtuais.length,
+    ferramenta: Estado.ferramenta, area: Estado.ultimaAreaSeccao
+  }),
+  info: () => ({
+    fps: $('pill-fps').textContent, projecao: Estado.projecao, modo: Estado.modoPintura,
+    solido: Estado.solido && Estado.solido.id, katex: typeof katex !== 'undefined',
+    canvas: [renderer.domElement.width, renderer.domElement.height],
+    objetos: (() => { let c = 0; scene.traverse(() => c++); return c; })(),
+    triangulos: renderer.info.render.triangles
+  })
+};
+iniciar();
+</script>
+</body>
+</html>
