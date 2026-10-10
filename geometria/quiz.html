@@ -25,7 +25,7 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
   <style>
     :root {
       --bg-color: #0a0a0c;
-      --panel-bg: rgba(23, 23, 26, 0.92);
+      --panel-bg: rgba(23, 23, 26, 0.94);
       --card-bg: rgba(255, 255, 255, 0.03);
       --primary: #6366f1; /* Indigo */
       --primary-hover: #4f46e5;
@@ -79,11 +79,13 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
     .status-pill { 
       display: flex; align-items: center; gap: 9px; padding: 7px 15px; border-radius: 100px; 
       background: rgba(255,255,255,0.04); font-weight: 600; color: var(--text-muted); font-size: 0.82rem; 
-      border: 1px solid var(--border-light); 
+      border: 1px solid var(--border-light); transition: all 0.3s ease;
     }
     .dot { width: 8px; height: 8px; border-radius: 50%; background: #64748b; transition: all 0.3s; }
     .dot.live { background: var(--success); box-shadow: 0 0 10px var(--success); }
-    .dot.connecting { background: var(--warning); box-shadow: 0 0 10px var(--warning); }
+    .dot.warning { background: var(--warning); box-shadow: 0 0 10px var(--warning); }
+    .dot.pulse { animation: pulseDot 1s infinite alternate; }
+    @keyframes pulseDot { from { opacity: 0.4; } to { opacity: 1; } }
     
     .screen { display: none; padding: 40px 32px; animation: slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
     .screen.active { display: block; }
@@ -94,37 +96,29 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
     h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; margin-bottom: 18px; color: #fff; font-weight: 700; }
     
     .input-field {
-      width: 100%; max-width: 380px; padding: 16px 20px; border-radius: 16px; border: 2px solid var(--border-light); 
-      background: rgba(255,255,255,0.03); color: #fff; font-size: 1.15rem; font-weight: 600; text-align: center; 
+      width: 100%; max-width: 380px; padding: 15px 20px; border-radius: 16px; border: 2px solid var(--border-light); 
+      background: rgba(255,255,255,0.03); color: #fff; font-size: 1.1rem; font-weight: 600; text-align: center; 
       transition: all 0.3s ease; font-family: inherit; margin-bottom: 15px; display: inline-block;
     }
     .input-field:focus { border-color: var(--primary); outline: none; box-shadow: var(--glow-primary); background: rgba(255,255,255,0.06); }
     
     .btn {
-      border: none; padding: 16px 28px; border-radius: 16px; color: white; font-weight: 700; font-size: 1.05rem; 
+      border: none; padding: 15px 26px; border-radius: 16px; color: white; font-weight: 700; font-size: 1.05rem; 
       cursor: pointer; background: linear-gradient(135deg, var(--primary), var(--primary-hover)); 
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); font-family: inherit; 
-      display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
       box-shadow: 0 10px 20px -8px rgba(99, 102, 241, 0.45);
     }
     .btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 18px 28px -8px rgba(99, 102, 241, 0.55); }
     .btn:active { transform: translateY(-1px); }
-    .btn-secondary { background: linear-gradient(135deg, var(--secondary), #db2777); box-shadow: 0 10px 20px -8px rgba(236, 72, 153, 0.4); }
     .btn-success { background: linear-gradient(135deg, var(--success), #059669); box-shadow: 0 10px 20px -8px rgba(16, 185, 129, 0.4); }
     .btn-accent { background: linear-gradient(135deg, var(--accent), #0891b2); box-shadow: 0 10px 20px -8px rgba(6, 182, 212, 0.4); }
     .btn-danger { background: linear-gradient(135deg, var(--danger), #dc2626); box-shadow: 0 10px 20px -8px rgba(239, 68, 68, 0.4); }
     .btn-ghost { background: transparent; border: 1px solid var(--border-light); color: var(--text-muted); box-shadow: none; }
     .btn-ghost:hover { background: rgba(255,255,255,0.06); color: #fff; transform: translateY(-2px); }
-    .btn-sm { padding: 10px 18px; font-size: 0.9rem; border-radius: 12px; }
+    .btn-sm { padding: 9px 16px; font-size: 0.88rem; border-radius: 12px; }
 
-    .mode-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 780px; margin: 30px auto; text-align: left; }
-    .mode-card {
-      background: var(--card-bg); border: 1px solid var(--border-light); border-radius: 20px; padding: 25px;
-      transition: all 0.3s; position: relative; display: flex; flex-direction: column; justify-content: space-between;
-    }
-    .mode-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: var(--glow-primary); }
-    .mode-card h4 { font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-    .mode-card p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+    .login-box { max-width: 450px; margin: 30px auto; background: var(--card-bg); padding: 35px 30px; border-radius: 24px; border: 1px solid var(--border-light); }
 
     .progress-container { width: 100%; height: 8px; background: rgba(0,0,0,0.4); border-radius: 10px; margin-bottom: 25px; overflow: hidden; border: 1px solid var(--border-light); }
     .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -149,7 +143,6 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       font-size: 1.1rem; font-weight: 600; position: relative; overflow: hidden;
     }
     .option-btn:hover:not(:disabled) { border-color: var(--primary); transform: translateY(-3px); background: rgba(99, 102, 241, 0.08); box-shadow: 0 12px 24px -8px rgba(0,0,0,0.4); }
-    
     .option-btn.correct { background: rgba(16,185,129,0.18) !important; border-color: var(--success) !important; color: #fff; box-shadow: 0 0 25px rgba(16, 185, 129, 0.3); }
     .option-btn.wrong { background: rgba(239,68,68,0.18) !important; border-color: var(--danger) !important; color: #fff; opacity: 0.7; }
     .option-btn:disabled { cursor: not-allowed; }
@@ -167,14 +160,32 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
     .overlay h1 { font-size: 2.8rem; color: var(--danger); margin-bottom: 0; letter-spacing: -0.04em; }
     .overlay p { font-size: 1.25rem; color: var(--text-muted); font-weight: 500; margin-top: 15px; }
 
+    /* Modal do Professor */
+    .modal {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(12px);
+      display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px;
+    }
+    .modal.active { display: flex; }
+    .modal-box {
+      background: var(--panel-bg); border: 1px solid var(--border-light); border-radius: 26px;
+      padding: 35px 30px; width: 100%; max-width: 520px; box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+      position: relative; animation: slideUp 0.35s ease;
+    }
+    .modal-tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 1px solid var(--border-light); padding-bottom: 12px; }
+    .modal-tab-btn {
+      background: none; border: none; color: var(--text-muted); font-family: inherit; font-size: 1rem;
+      font-weight: 700; cursor: pointer; padding: 8px 16px; border-radius: 10px; transition: all 0.2s;
+    }
+    .modal-tab-btn.active { color: #fff; background: rgba(99, 102, 241, 0.15); }
+
     .topics-selector {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 12px;
-      margin: 20px 0; max-height: 280px; overflow-y: auto; padding-right: 8px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px;
+      margin: 18px 0; max-height: 260px; overflow-y: auto; padding-right: 8px;
     }
     .topic-checkbox-label {
       display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 14px;
       background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); cursor: pointer;
-      font-size: 0.95rem; font-weight: 600; color: #e2e8f0; transition: all 0.2s;
+      font-size: 0.92rem; font-weight: 600; color: #e2e8f0; transition: all 0.2s;
     }
     .topic-checkbox-label:hover { background: rgba(99, 102, 241, 0.08); border-color: var(--primary); }
     .topic-checkbox-label input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
@@ -193,12 +204,18 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
     .rank-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 10px; transition: width 0.5s ease; }
 
     .room-badge {
-      display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px; border-radius: 16px;
+      display: inline-flex; align-items: center; gap: 10px; padding: 10px 22px; border-radius: 14px;
       background: rgba(99, 102, 241, 0.12); border: 2px dashed rgba(99, 102, 241, 0.4);
-      font-family: 'Plus Jakarta Sans', monospace; font-size: 1.4rem; font-weight: 800; color: #818cf8; letter-spacing: 2px;
+      font-family: 'Plus Jakarta Sans', monospace; font-size: 1.35rem; font-weight: 800; color: #818cf8; letter-spacing: 2px;
     }
 
-    .katex-display { overflow-x: auto; overflow-y: hidden; padding: 6px 0; }
+    /* Banner de reconexão de rede */
+    .offline-banner {
+      display: none; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fbbf24; padding: 10px 18px; border-radius: 14px; margin-bottom: 20px; font-weight: 600;
+      text-align: center; font-size: 0.95rem; animation: pulseDot 1s infinite alternate;
+    }
+    .offline-banner.active { display: block; }
 
     @media (max-width: 768px) {
       .teacher-layout { grid-template-columns: 1fr; }
@@ -221,7 +238,48 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       <div class="overlay-card">
         <h1>RESPOSTA INCORRETA</h1>
         <p>Penalidade: <span style="color: #fff; font-weight: 800;">+5.0s</span> no cronômetro.</p>
-        <p style="font-size: 1rem; color: #e2e8f0; margin-top: 10px;">Revise com calma e tente outra alternativa!</p>
+        <p style="font-size: 1rem; color: #e2e8f0; margin-top: 10px;">Analise a questão e tente outra alternativa!</p>
+      </div>
+    </div>
+
+    <!-- Modal do Professor: Criação de Sala com Senha Única -->
+    <div class="modal" id="modal-teacher-auth">
+      <div class="modal-box">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3 style="margin-bottom: 0;">🔑 Acesso do Professor</h3>
+          <button class="btn btn-ghost btn-sm" onclick="closeTeacherModal()">✕ Fechar</button>
+        </div>
+
+        <div class="modal-tabs">
+          <button class="modal-tab-btn active" id="tab-btn-create" onclick="switchTeacherTab('create')">Criar Nova Sala</button>
+          <button class="modal-tab-btn" id="tab-btn-login" onclick="switchTeacherTab('login')">Reabrir Minha Sala</button>
+        </div>
+
+        <!-- Criar Sala -->
+        <div id="tab-content-create">
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">
+            Defina o código da sala e uma <strong>senha mestra</strong> criada por você para gerenciar o quiz:
+          </p>
+          <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+            <input type="text" id="create-room-code" class="input-field" placeholder="CÓDIGO (ex: 3A-MAT)" style="text-transform: uppercase; margin-bottom: 0; flex: 2;">
+            <button class="btn btn-ghost btn-sm" style="flex: 1;" onclick="generateRandomRoomCode()">🎲 Gerar</button>
+          </div>
+          <input type="password" id="create-room-pass" class="input-field" placeholder="Crie sua Senha da Sala" style="max-width: 100%; margin-bottom: 12px;">
+          <input type="password" id="create-room-pass-confirm" class="input-field" placeholder="Confirme sua Senha" style="max-width: 100%; margin-bottom: 20px;">
+          
+          <button class="btn btn-success" style="width: 100%;" onclick="submitCreateRoom()">🚀 Abrir Sala de Aula</button>
+        </div>
+
+        <!-- Reabrir Sala -->
+        <div id="tab-content-login" style="display: none;">
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">
+            Se você recarregou a página ou reconectou a internet, entre com a senha que você definiu:
+          </p>
+          <input type="text" id="login-room-code" class="input-field" placeholder="CÓDIGO DA SALA" style="text-transform: uppercase; max-width: 100%; margin-bottom: 12px;">
+          <input type="password" id="login-room-pass" class="input-field" placeholder="Sua Senha da Sala" style="max-width: 100%; margin-bottom: 20px;">
+          
+          <button class="btn btn-accent" style="width: 100%;" onclick="submitLoginRoom()">🔓 Retomar Minha Sala</button>
+        </div>
       </div>
     </div>
 
@@ -238,50 +296,30 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
         </div>
         <div class="status-pill">
           <span class="dot" id="server-dot"></span>
-          <span id="server-status">Pronto</span>
+          <span id="server-status">Aguardando</span>
         </div>
       </div>
     </div>
 
-    <!-- TELA 1: LOGIN E ESCOLHA DE MODO -->
+    <!-- TELA 1: LOGIN DO ALUNO -->
     <section id="screen-login" class="screen active" style="text-align: center;">
       <div style="margin: 25px 0;">
         <div style="display: inline-block; padding: 8px 20px; border-radius: 100px; background: rgba(99, 102, 241, 0.1); color: var(--primary); font-weight: 700; font-size: 0.85rem; margin-bottom: 16px; border: 1px solid rgba(99, 102, 241, 0.25);">
           ENSINO MÉDIO • GEOMETRIA ESPACIAL
         </div>
         <h1>Desafio Tridimensional</h1>
-        <h2>Resolva desafios de poliedros, corpos redondos, relações métricas e seções espaciais em tempo real.</h2>
+        <h2>Quiz em tempo real com ranking ao vivo na sala do professor.</h2>
         
-        <input type="text" id="player-name" class="input-field" placeholder="Digite seu nome completo" autocomplete="off" style="font-size: 1.15rem; max-width: 420px;">
-
-        <div class="mode-cards">
-          <!-- Modo Sala de Aula P2P -->
-          <div class="mode-card">
-            <div>
-              <h4>👥 Sala de Aula (Ao Vivo)</h4>
-              <p>Conecte-se com o código gerado pelo seu professor para participar da rodada coletiva com ranking da turma.</p>
-              <input type="text" id="room-code-input" class="input-field" placeholder="Código da Sala (ex: GEO-101)" style="text-transform: uppercase; margin-bottom: 15px; max-width: 100%;">
-            </div>
-            <button class="btn btn-accent" style="width: 100%;" onclick="joinRoomLobby()">Entrar na Sala do Professor</button>
-          </div>
-
-          <!-- Modo Prática Individual -->
-          <div class="mode-card">
-            <div>
-              <h4>⚡ Treino Individual</h4>
-              <p>Jogue agora mesmo sozinho! O sistema sorteia questões aleatórias do banco completo para você treinar sua velocidade.</p>
-              <div style="margin-bottom: 20px; color: var(--text-muted); font-size: 0.88rem;">
-                📚 Banco com <strong>90 questões</strong> de todos os 9 tópicos.
-              </div>
-            </div>
-            <button class="btn" style="width: 100%;" onclick="startSoloPractice()">Iniciar Treino Solo</button>
-          </div>
+        <div class="login-box">
+          <input type="text" id="player-name" class="input-field" placeholder="Digite seu nome completo" autocomplete="off" style="width: 100%; max-width: 100%; margin-bottom: 15px;">
+          <input type="text" id="room-code-input" class="input-field" placeholder="CÓDIGO DA SALA (ex: GEO-101)" style="text-transform: uppercase; width: 100%; max-width: 100%; margin-bottom: 20px;">
+          <button class="btn btn-accent" style="width: 100%; font-size: 1.15rem;" onclick="joinRoomLobby()">Entrar na Sala do Professor</button>
         </div>
 
       </div>
 
       <div style="margin-top: 35px; border-top: 1px solid var(--border-light); padding-top: 25px;">
-        <button class="btn btn-ghost" onclick="enterTeacherMode()">🔑 Acesso do Professor (Criar Sala)</button>
+        <button class="btn btn-ghost" onclick="openTeacherModal()">🔑 Painel do Professor (Criar ou Retomar Sala)</button>
       </div>
     </section>
 
@@ -289,10 +327,10 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
     <section id="screen-lobby" class="screen" style="text-align: center;">
       <div style="margin: 35px 0;">
         <h1>Olá, <span id="display-name" style="color: var(--primary);"></span>!</h1>
-        <h2>Você está conectado à sala <span id="lobby-room-code" style="color: var(--accent); font-weight: 700;"></span>.</h2>
+        <h2>Você está conectado à sala <span id="lobby-room-code" style="color: var(--accent); font-weight: 700;"></span> do professor.</h2>
         
         <div style="margin: 30px auto; padding: 25px 35px; border-radius: 20px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-light); display: inline-block; font-weight: 600; color: var(--accent); font-size: 1.15rem;" id="sync-text">
-          <span style="display: inline-block; animation: pulse 1.5s infinite;">⏳</span> Aguardando o professor liberar a partida...
+          <span style="display: inline-block; animation: pulseDot 1.2s infinite alternate;">⏳</span> Conectado! Aguardando o professor liberar a partida...
         </div>
 
         <div style="margin-top: 40px;">
@@ -303,6 +341,11 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
 
     <!-- TELA 3: O QUIZ (ALUNO) -->
     <section id="screen-quiz" class="screen">
+      <!-- Banner de alerta se a internet oscilar -->
+      <div class="offline-banner" id="student-offline-banner">
+        ⚠️ Conexão oscilando. Continue respondendo normalmente! Suas respostas estão salvas e serão enviadas assim que a rede voltar.
+      </div>
+
       <div class="progress-container"><div class="progress-bar" id="quiz-progress"></div></div>
       <div class="status-bar">
         <span class="chip" id="q-counter">Questão 1 de 10</span>
@@ -318,15 +361,14 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       <div style="text-align: center; margin-bottom: 35px;">
         <div style="font-size: 3.8rem; margin-bottom: 8px;">🎉</div>
         <h1>Quiz Concluído!</h1>
-        <h2>Tempo total registrado: <span id="final-time" style="color: #fff; font-weight: 800; font-size: 2.2rem;"></span></h2>
+        <h2>Seu tempo final registrado: <span id="final-time" style="color: #fff; font-weight: 800; font-size: 2.2rem;"></span></h2>
         <div id="result-stats" style="color: var(--text-muted); font-size: 1rem; margin-top: 8px;"></div>
       </div>
       
       <div style="background: rgba(255,255,255,0.02); padding: 30px; border-radius: 24px; border: 1px solid var(--border-light);">
-        <h3 style="text-align: center; margin-bottom: 20px;">Classificação da Rodada 🏆</h3>
+        <h3 style="text-align: center; margin-bottom: 20px;">Classificação da Sala 🏆</h3>
         <div id="student-leaderboard" class="leaderboard"></div>
         <div style="text-align: center; margin-top: 35px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-           <button class="btn" onclick="restartSameMode()">Jogar Novamente</button>
            <button class="btn btn-ghost" onclick="location.reload()">Menu Principal</button>
         </div>
       </div>
@@ -334,30 +376,35 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
 
     <!-- TELA 5: PAINEL DO PROFESSOR -->
     <section id="screen-teacher" class="screen">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; flex-wrap: wrap; gap: 15px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
         <div>
-          <h1 style="margin-bottom: 5px;">Painel do Professor</h1>
-          <p style="color: var(--text-muted); margin: 0;">Configure os conteúdos, compartilhe o código com a turma e acompanhe em tempo real.</p>
+          <h1 style="margin-bottom: 4px;">Painel da Sala de Aula</h1>
+          <p style="color: var(--text-muted); margin: 0;">Selecione os conteúdos, compartilhe o código com a turma e acompanhe em tempo real.</p>
         </div>
-        <button class="btn btn-ghost btn-sm" onclick="location.reload()">Sair do Painel</button>
+        <button class="btn btn-ghost btn-sm" onclick="location.reload()">🚪 Sair da Sala</button>
+      </div>
+
+      <!-- Banner de alerta de oscilação do professor -->
+      <div class="offline-banner" id="teacher-offline-banner">
+        ⚠️ Reconectando rede da sala... Aguarde um instante enquanto a conexão é restabelecida.
       </div>
 
       <!-- Informações da Sala e Conexão -->
       <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; padding: 22px 28px; background: rgba(255,255,255,0.03); border-radius: 22px; border: 1px solid var(--border-light); margin-bottom: 25px;">
         <div>
-          <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Código da Sala</div>
-          <div class="room-badge" id="teacher-room-code">GERANDO...</div>
+          <div style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Código da Sala</div>
+          <div class="room-badge" id="teacher-room-code">--</div>
         </div>
         <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
           <button class="btn btn-ghost btn-sm" onclick="copyRoomLink()">📋 Copiar Link da Sala</button>
-          <div class="chip" style="font-size: 1rem; color: var(--accent);">
+          <div class="chip" style="font-size: 0.95rem; color: var(--accent);">
             👥 Alunos conectados: <strong id="teacher-student-count" style="color: #fff; margin-left: 5px;">0</strong>
           </div>
         </div>
       </div>
       
       <!-- Seletor de Conteúdos da Geometria Espacial -->
-      <div style="background: rgba(255,255,255,0.02); padding: 25px; border-radius: 22px; border: 1px solid var(--border-light); margin-bottom: 25px;">
+      <div style="background: rgba(255,255,255,0.02); padding: 24px; border-radius: 22px; border: 1px solid var(--border-light); margin-bottom: 25px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 10px;">
           <div>
             <h3 style="margin-bottom: 4px;">Conteúdos Inclusos no Quiz</h3>
@@ -371,7 +418,7 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
 
         <div class="topics-selector" id="topics-checklist-container"></div>
 
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 18px; padding-top: 15px; border-top: 1px solid var(--border-light); flex-wrap: wrap; gap: 15px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-light); flex-wrap: wrap; gap: 15px;">
           <div style="display: flex; align-items: center; gap: 12px;">
             <label for="num-questions-select" style="font-weight: 600; color: var(--text-main); font-size: 0.95rem;">Quantidade de questões:</label>
             <select id="num-questions-select" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-light); color: #fff; padding: 8px 14px; border-radius: 12px; font-weight: 700; font-family: inherit;">
@@ -390,21 +437,22 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       <!-- Ações do Professor -->
       <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 30px;">
         <button class="btn btn-success" style="flex: 2; min-width: 240px; font-size: 1.15rem;" onclick="teacherStartGame()">🚀 Liberar Início (Todos os Alunos)</button>
-        <button class="btn btn-danger" style="flex: 1; min-width: 160px;" onclick="teacherResetGame()">Resetar Sessão</button>
+        <button class="btn btn-danger" style="flex: 1; min-width: 160px;" onclick="teacherResetGame()">Resetar Rodada</button>
+        <button class="btn btn-accent btn-sm" onclick="exportResultsCSV()">📥 Baixar Relatório (CSV)</button>
       </div>
       
       <!-- Telas de Acompanhamento ao Vivo -->
       <div class="teacher-layout">
-        <div style="background: rgba(255,255,255,0.02); padding: 25px; border-radius: 22px; border: 1px solid var(--border-light);">
-          <h3 style="display: flex; align-items: center; gap: 10px;"><span style="color: var(--accent);">●</span> Progresso ao Vivo dos Alunos</h3>
+        <div style="background: rgba(255,255,255,0.02); padding: 22px; border-radius: 22px; border: 1px solid var(--border-light);">
+          <h3 style="display: flex; align-items: center; gap: 10px;"><span style="color: var(--accent);">●</span> Progresso ao Vivo</h3>
           <div id="teacher-live-status" class="leaderboard">
             <div style="color: var(--text-muted); text-align: center; padding: 30px 10px;">Aguardando entrada dos alunos...</div>
           </div>
         </div>
-        <div style="background: rgba(255,255,255,0.02); padding: 25px; border-radius: 22px; border: 1px solid var(--border-light);">
-          <h3 style="display: flex; align-items: center; gap: 10px;"><span style="color: var(--warning);">★</span> Ranking de Conclusão</h3>
+        <div style="background: rgba(255,255,255,0.02); padding: 22px; border-radius: 22px; border: 1px solid var(--border-light);">
+          <h3 style="display: flex; align-items: center; gap: 10px;"><span style="color: var(--warning);">★</span> Ranking de Velocidade</h3>
           <div id="teacher-leaderboard" class="leaderboard">
-            <div style="color: var(--text-muted); text-align: center; padding: 30px 10px;">Nenhum aluno concluiu o teste ainda.</div>
+            <div style="color: var(--text-muted); text-align: center; padding: 30px 10px;">Nenhum aluno concluiu a rodada ainda.</div>
           </div>
         </div>
       </div>
@@ -415,9 +463,8 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
   <!-- Carrega banco de questões externo (banco_questoes.js) caso exista na pasta -->
   <script src="banco_questoes.js"></script>
 
-  <!-- Lógica da Aplicação -->
+  <!-- Lógica da Aplicação com Proteção contra Quedas de Rede e Senha do Professor -->
   <script>
-    // Fallback: se o banco_questoes.js não for carregado, o sistema usa as variáveis locais
     const TOPICOS = (typeof TOPICOS_INFO !== 'undefined') ? TOPICOS_INFO : {
       "fundamentos": "Fundamentos & Posições Relativas",
       "poliedros": "Poliedros & Teorema de Euler",
@@ -431,14 +478,19 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
     };
 
     let playerName = '';
-    let currentMode = 'solo'; // 'solo' ou 'multiplayer'
     let currentRoomCode = '';
+    let isTeacher = false;
     
-    // PeerJS
+    // PeerJS e Conexões
     let peer = null;
     let peerConn = null;
     let studentConnections = new Map();
-    let studentsState = new Map();
+    let studentsLiveState = new Map();
+    
+    // Fila de Envio Offline (Outbox)
+    let offlineOutboxQueue = [];
+    let isReconnecting = false;
+    let reconnectTimer = null;
     
     // Quiz Local
     let currentQ = 0;
@@ -448,6 +500,14 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
     let gameActive = false;
     let quizData = [];
     let currentQuizLength = 10;
+
+    // Hashing Seguro SHA-256 no Navegador
+    async function sha256(str) {
+      const buffer = new TextEncoder().encode(str);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
 
     function renderMathSafe(elementId) {
       setTimeout(() => {
@@ -479,9 +539,28 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       if (dot) {
         dot.className = 'dot';
         if (state === 'live') dot.classList.add('live');
-        if (state === 'connecting') dot.classList.add('connecting');
+        if (state === 'warning') { dot.classList.add('warning'); dot.classList.add('pulse'); }
       }
     }
+
+    // Monitoramento Nativo de Conexão do Navegador
+    window.addEventListener('online', () => {
+      document.getElementById('student-offline-banner').classList.remove('active');
+      document.getElementById('teacher-offline-banner').classList.remove('active');
+      setServerStatus("Online - Sincronizado", "live");
+      if (!isTeacher && peerConn && !peerConn.open) {
+        attemptStudentReconnect();
+      }
+    });
+
+    window.addEventListener('offline', () => {
+      if (isTeacher) {
+        document.getElementById('teacher-offline-banner').classList.add('active');
+      } else {
+        document.getElementById('student-offline-banner').classList.add('active');
+      }
+      setServerStatus("Internet Instável", "warning");
+    });
 
     document.addEventListener("DOMContentLoaded", () => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -494,338 +573,225 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       renderTopicsChecklist();
       updateAvailableQuestionsCount();
       renderMathSafe('screen-login');
+
+      // Restaura sessão se a página tiver sido recarregada acidentalmente
+      restoreActiveSessionIfAny();
     });
 
-    // MODO PRÁTICA INDIVIDUAL
-    function startSoloPractice() {
-      const nameInput = document.getElementById('player-name');
-      playerName = nameInput.value.trim() || 'Estudante';
-      currentMode = 'solo';
-      
-      quizData = pickRandomQuestions(BANCO_QUESTOES, 10);
-      currentQuizLength = quizData.length;
-
-      document.getElementById('room-pill').style.display = 'none';
-      setServerStatus("Modo Treino Solo", "live");
-      
-      startQuizRound();
-    }
-
-    // MODO MULTIPLAYER P2P (ALUNO)
-    function joinRoomLobby() {
-      const nameInput = document.getElementById('player-name');
-      const roomInput = document.getElementById('room-code-input');
-      
-      if (!nameInput.value.trim()) return alert("Por favor, digite seu nome completo.");
-      if (!roomInput.value.trim()) return alert("Por favor, digite o código da sala fornecido pelo professor.");
-      
-      playerName = nameInput.value.trim();
-      currentRoomCode = roomInput.value.trim().toUpperCase();
-      currentMode = 'multiplayer';
-
-      document.getElementById('display-name').innerText = playerName;
-      document.getElementById('lobby-room-code').innerText = currentRoomCode;
-      document.getElementById('active-room-display').innerText = currentRoomCode;
-      document.getElementById('room-pill').style.display = 'inline-flex';
-      
-      showScreen('screen-lobby');
-      setServerStatus("Conectando ao professor...", "connecting");
-
-      const teacherPeerId = 'mat-geo-room-' + currentRoomCode.toLowerCase();
-      
-      if (peer) { try { peer.destroy(); } catch(e){} }
-      peer = new Peer();
-
-      peer.on('open', () => {
-        peerConn = peer.connect(teacherPeerId);
-        
-        peerConn.on('open', () => {
-          setServerStatus("Conectado à sala", "live");
-          document.getElementById('sync-text').innerHTML = '✅ Conectado ao professor! Aguardando liberação...';
-          peerConn.send({ type: 'student_join', nome: playerName });
-        });
-
-        peerConn.on('data', (data) => {
-          handleTeacherMessage(data);
-        });
-
-        peerConn.on('close', () => {
-          setServerStatus("Desconectado", "normal");
-          alert("A conexão com a sala do professor foi encerrada.");
-          location.reload();
-        });
-
-        peerConn.on('error', () => {
-          alert("Não foi possível conectar à sala. Verifique o código e tente novamente.");
-          showScreen('screen-login');
-        });
-      });
-
-      peer.on('error', (err) => {
-        alert("Erro de conexão P2P: " + err.type);
-        showScreen('screen-login');
-      });
-    }
-
-    function handleTeacherMessage(data) {
-      if (data.type === 'start_game') {
-        quizData = data.quiz;
-        currentQuizLength = quizData.length;
-        startQuizRound();
-      } else if (data.type === 'reset_game') {
-        if (gameActive) {
-          clearInterval(timerInterval);
-          gameActive = false;
-        }
-        alert("O professor reiniciou a sessão.");
-        showScreen('screen-lobby');
-        document.getElementById('sync-text').innerHTML = 'Aguardando início...';
-      } else if (data.type === 'leaderboard_update') {
-        renderLeaderboard('student-leaderboard', data.ranking);
-      }
-    }
-
-    function leaveLobby() {
-      if (peerConn) { try { peerConn.close(); } catch(e){} }
-      if (peer) { try { peer.destroy(); } catch(e){} }
-      location.reload();
-    }
-
-    // CONTROLE DA RODADA
-    function startQuizRound() {
-      gameActive = true;
-      currentQ = 0;
-      timePenalty = 0;
-      startTime = Date.now();
-      
-      showScreen('screen-quiz');
-      
-      if (timerInterval) clearInterval(timerInterval);
-      timerInterval = setInterval(updateTimer, 100);
-      
-      loadQuestion();
-    }
-
-    function updateTimer() {
+    // =========================================================================
+    // MECANISMO DE PROTEÇÃO: SALVAMENTO E RECUPERAÇÃO DE SESSÃO LOCAL
+    // =========================================================================
+    function saveSessionProgress() {
       if (!gameActive) return;
-      const elapsed = (Date.now() - startTime) / 1000 + timePenalty;
-      document.getElementById('time-display').innerText = elapsed.toFixed(1) + 's';
+      const session = {
+        type: 'student_session',
+        roomCode: currentRoomCode,
+        playerName: playerName,
+        currentQ: currentQ,
+        startTime: startTime,
+        timePenalty: timePenalty,
+        quizData: quizData,
+        currentQuizLength: currentQuizLength
+      };
+      sessionStorage.setItem('geo_quiz_active_session', JSON.stringify(session));
     }
 
-    function loadQuestion() {
-      if (currentQ >= quizData.length) return finishQuiz();
-      
-      const q = quizData[currentQ];
-      const container = document.getElementById('options-container');
-      const qText = document.getElementById('question-text');
-      const topicBadge = document.getElementById('q-topic-badge');
-      
-      const progress = ((currentQ) / quizData.length) * 100;
-      document.getElementById('quiz-progress').style.width = progress + '%';
-      document.getElementById('q-counter').innerText = `Questão ${currentQ + 1} de ${quizData.length}`;
-      
-      topicBadge.innerText = TOPICOS[q.topico] || 'Geometria Espacial';
-      qText.innerHTML = q.q;
-      renderMathSafe('question-text');
-      
-      container.innerHTML = '';
-      q.options.forEach((opt, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.onclick = () => {
-          checkAnswer(idx);
-          btn.blur();
-        };
-        
-        if (opt.type === 'image') {
-          btn.innerHTML = `<div class="option-image-wrap">${opt.content}</div><span>${opt.label}</span>`;
-        } else if (opt.type === 'latex') {
-          btn.innerHTML = `<span id="opt-math-${idx}">${opt.content}</span>`;
-          renderMathSafe(`opt-math-${idx}`);
-        } else {
-          btn.innerHTML = `<span>${opt.content}</span>`;
+    function clearSessionProgress() {
+      sessionStorage.removeItem('geo_quiz_active_session');
+    }
+
+    function restoreActiveSessionIfAny() {
+      try {
+        const raw = sessionStorage.getItem('geo_quiz_active_session');
+        if (!raw) return;
+        const session = JSON.parse(raw);
+        if (session && session.type === 'student_session' && session.quizData && session.quizData.length > 0) {
+          if (confirm(`Detectamos que você estava na rodada da sala ${session.roomCode}. Deseja restaurar seu quiz em andamento?`)) {
+            currentRoomCode = session.roomCode;
+            playerName = session.playerName;
+            currentQ = session.currentQ;
+            startTime = session.startTime;
+            timePenalty = session.timePenalty;
+            quizData = session.quizData;
+            currentQuizLength = session.currentQuizLength;
+
+            document.getElementById('active-room-display').innerText = currentRoomCode;
+            document.getElementById('room-pill').style.display = 'inline-flex';
+
+            gameActive = true;
+            showScreen('screen-quiz');
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 100);
+            loadQuestion();
+
+            connectStudentPeer(true);
+          } else {
+            clearSessionProgress();
+          }
         }
-        container.appendChild(btn);
-      });
-
-      if (currentMode === 'multiplayer' && peerConn && peerConn.open) {
-        const elapsed = (Date.now() - startTime) / 1000 + timePenalty;
-        peerConn.send({
-          type: 'student_progress',
-          nome: playerName,
-          questao: currentQ + 1,
-          tempo: elapsed.toFixed(1)
-        });
-      }
-    }
-
-    function checkAnswer(idx) {
-      const btns = document.querySelectorAll('.option-btn');
-      const correctIdx = quizData[currentQ].ans;
-      
-      if (idx === correctIdx) {
-        btns.forEach(b => b.disabled = true);
-        btns[idx].classList.add('correct');
-        setTimeout(() => {
-          currentQ++;
-          loadQuestion();
-        }, 500);
-      } else {
-        btns[idx].disabled = true;
-        btns[idx].classList.add('wrong');
-        
-        timePenalty += 5.0;
-        document.getElementById('penalty-overlay').classList.add('active');
-        
-        setTimeout(() => {
-          document.getElementById('penalty-overlay').classList.remove('active');
-        }, 1800);
-      }
-    }
-
-    function finishQuiz() {
-      gameActive = false;
-      clearInterval(timerInterval);
-      
-      const finalSeconds = (Date.now() - startTime) / 1000 + timePenalty;
-      document.getElementById('final-time').innerText = finalSeconds.toFixed(1) + 's';
-      document.getElementById('quiz-progress').style.width = '100%';
-      document.getElementById('result-stats').innerText = `Total de ${quizData.length} questões respondidas!`;
-      
-      showScreen('screen-result');
-      
-      if (currentMode === 'multiplayer' && peerConn && peerConn.open) {
-        peerConn.send({
-          type: 'student_finish',
-          nome: playerName,
-          tempo_segundos: finalSeconds.toFixed(2)
-        });
-      } else {
-        saveLocalLeaderboard(playerName, finalSeconds);
-        loadLocalLeaderboard('student-leaderboard');
-      }
-    }
-
-    function restartSameMode() {
-      if (currentMode === 'solo') {
-        startSoloPractice();
-      } else {
-        showScreen('screen-lobby');
-      }
-    }
-
-    function saveLocalLeaderboard(name, time) {
-      try {
-        let list = JSON.parse(localStorage.getItem('geo_quiz_solo_ranking') || '[]');
-        list.push({ nome: name, tempo: Number(time) });
-        list.sort((a, b) => a.tempo - b.tempo);
-        list = list.slice(0, 10);
-        localStorage.setItem('geo_quiz_solo_ranking', JSON.stringify(list));
       } catch(e){}
     }
 
-    function loadLocalLeaderboard(containerId) {
-      try {
-        let list = JSON.parse(localStorage.getItem('geo_quiz_solo_ranking') || '[]');
-        renderLeaderboard(containerId, list.map(item => [item.nome, item.tempo]));
-      } catch(e){}
+    // =========================================================================
+    // MODAL DE AUTENTICAÇÃO DO PROFESSOR (SENHA CRIADA POR ELE)
+    // =========================================================================
+    function openTeacherModal() {
+      document.getElementById('modal-teacher-auth').classList.add('active');
+      switchTeacherTab('create');
     }
 
-    function renderLeaderboard(containerId, ranking) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      container.innerHTML = '';
+    function closeTeacherModal() {
+      document.getElementById('modal-teacher-auth').classList.remove('active');
+    }
+
+    function switchTeacherTab(tab) {
+      document.getElementById('tab-btn-create').classList.toggle('active', tab === 'create');
+      document.getElementById('tab-btn-login').classList.toggle('active', tab === 'login');
+      document.getElementById('tab-content-create').style.display = tab === 'create' ? 'block' : 'none';
+      document.getElementById('tab-content-login').style.display = tab === 'login' ? 'block' : 'none';
+    }
+
+    function generateRandomRoomCode() {
+      const code = 'GEO-' + Math.floor(100 + Math.random() * 900);
+      document.getElementById('create-room-code').value = code;
+    }
+
+    async function submitCreateRoom() {
+      const codeInput = document.getElementById('create-room-code');
+      const passInput = document.getElementById('create-room-pass');
+      const passConfirm = document.getElementById('create-room-pass-confirm');
+
+      let code = codeInput.value.trim().toUpperCase();
+      const pass = passInput.value.trim();
+      const passConf = passConfirm.value.trim();
+
+      if (!code) code = 'GEO-' + Math.floor(100 + Math.random() * 900);
+      if (!pass) return alert("Por favor, crie uma senha para sua sala.");
+      if (pass.length < 3) return alert("A senha deve ter no mínimo 3 caracteres.");
+      if (pass !== passConf) return alert("As senhas digitadas não conferem.");
+
+      const passHash = await sha256(pass);
       
-      if (!ranking || ranking.length === 0) {
-        container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Nenhum registro ainda.</div>';
-        return;
-      }
-      
-      ranking.forEach((r, i) => {
-        const div = document.createElement('div');
-        let topClass = '';
-        if (i === 0) topClass = 'top-1';
-        else if (i === 1) topClass = 'top-2';
-        else if (i === 2) topClass = 'top-3';
+      const rooms = JSON.parse(localStorage.getItem('geo_teacher_vault') || '{}');
+      rooms[code] = { code, passHash, createdAt: Date.now() };
+      localStorage.setItem('geo_teacher_vault', JSON.stringify(rooms));
 
-        div.className = `rank-item ${topClass}`;
-        div.innerHTML = `
-          <div class="rank-header">
-            <span>${i + 1}º • ${r[0]}</span>
-            <span style="color: var(--primary); font-weight: 700;">${Number(r[1]).toFixed(1)}s</span>
-          </div>
-        `;
-        container.appendChild(div);
-      });
+      currentRoomCode = code;
+      isTeacher = true;
+
+      closeTeacherModal();
+      openTeacherDashboard();
     }
 
-    // PAINEL DO PROFESSOR
-    function enterTeacherMode() {
-      const pass = prompt("Digite a senha de acesso do Professor:");
-      if (pass === "123") {
-        initTeacherSession();
-      } else if (pass !== null) {
-        alert("Senha incorreta.");
+    async function submitLoginRoom() {
+      const codeInput = document.getElementById('login-room-code');
+      const passInput = document.getElementById('login-room-pass');
+
+      const code = codeInput.value.trim().toUpperCase();
+      const pass = passInput.value.trim();
+
+      if (!code) return alert("Digite o código da sala.");
+      if (!pass) return alert("Digite a senha que você criou para a sala.");
+
+      const rooms = JSON.parse(localStorage.getItem('geo_teacher_vault') || '{}');
+      if (!rooms[code]) {
+        return alert(`Nenhuma sala "${code}" encontrada neste dispositivo.`);
       }
+
+      const passHash = await sha256(pass);
+      if (passHash !== rooms[code].passHash) {
+        return alert("Senha incorreta.");
+      }
+
+      currentRoomCode = code;
+      isTeacher = true;
+
+      closeTeacherModal();
+      openTeacherDashboard();
     }
 
-    function initTeacherSession() {
+    function openTeacherDashboard() {
       showScreen('screen-teacher');
-      setServerStatus("Painel do Professor", "live");
-      
-      currentRoomCode = 'GEO-' + Math.floor(100 + Math.random() * 900);
+      setServerStatus("Painel do Professor: " + currentRoomCode, "live");
+
       document.getElementById('teacher-room-code').innerText = currentRoomCode;
       document.getElementById('active-room-display').innerText = currentRoomCode;
       document.getElementById('room-pill').style.display = 'inline-flex';
 
+      startTeacherPeer();
+    }
+
+    function startTeacherPeer() {
       const teacherPeerId = 'mat-geo-room-' + currentRoomCode.toLowerCase();
-      
       if (peer) { try { peer.destroy(); } catch(e){} }
       peer = new Peer(teacherPeerId);
 
       peer.on('open', () => {
-        setServerStatus("Sala Ativa: " + currentRoomCode, "live");
+        setServerStatus("Sala Aberta: " + currentRoomCode, "live");
+        document.getElementById('teacher-offline-banner').classList.remove('active');
       });
 
       peer.on('connection', (conn) => {
-        conn.on('data', (data) => {
-          handleStudentData(conn, data);
-        });
+        setupTeacherConnection(conn);
+      });
 
-        conn.on('close', () => {
-          studentConnections.delete(conn.peer);
-          updateTeacherStudentCount();
-        });
+      peer.on('disconnected', () => {
+        document.getElementById('teacher-offline-banner').classList.add('active');
+        setServerStatus("Reconectando Sala...", "warning");
+        setTimeout(() => { if (peer && !peer.destroyed) peer.reconnect(); }, 2000);
       });
 
       peer.on('error', (err) => {
-        if (err.type === 'unavailable-id') {
-          initTeacherSession();
+        if (err.type !== 'unavailable-id') {
+          console.warn("PeerJS aviso:", err);
         }
       });
     }
 
-    function handleStudentData(conn, data) {
-      if (data.type === 'student_join') {
+    function setupTeacherConnection(conn) {
+      conn.on('open', () => {
         studentConnections.set(conn.peer, conn);
-        studentsState.set(conn.peer, {
+        updateTeacherStudentCount();
+      });
+
+      conn.on('data', (data) => {
+        handleStudentData(conn, data);
+      });
+
+      conn.on('close', () => {
+        studentConnections.delete(conn.peer);
+        updateTeacherStudentCount();
+      });
+    }
+
+    function handleStudentData(conn, data) {
+      if (data.type === 'student_join' || data.type === 'student_reconnect') {
+        studentConnections.set(conn.peer, conn);
+        
+        const existing = studentsLiveState.get(data.nome) || {
           nome: data.nome,
-          questao: 0,
-          tempo: '0.0',
+          questao: data.questao || 0,
+          tempo: data.tempo || '0.0',
           final: false,
           finalTime: 0
-        });
+        };
+
+        studentsLiveState.set(data.nome, existing);
         updateTeacherStudentCount();
         renderTeacherLiveStatus();
+
+        if (data.type === 'student_reconnect' && gameActive) {
+          conn.send({ type: 'start_game', quiz: quizData });
+        }
       } else if (data.type === 'student_progress') {
-        const st = studentsState.get(conn.peer);
+        const st = studentsLiveState.get(data.nome);
         if (st) {
           st.questao = data.questao;
           st.tempo = data.tempo;
         }
         renderTeacherLiveStatus();
       } else if (data.type === 'student_finish') {
-        const st = studentsState.get(conn.peer);
+        const st = studentsLiveState.get(data.nome);
         if (st) {
           st.questao = currentQuizLength;
           st.tempo = data.tempo_segundos;
@@ -833,7 +799,7 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
           st.finalTime = Number(data.tempo_segundos);
         }
         renderTeacherLiveStatus();
-        broadcastLeaderboard();
+        broadcastRoundLeaderboard();
       }
     }
 
@@ -846,13 +812,13 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       const container = document.getElementById('teacher-live-status');
       if (!container) return;
       
-      if (studentsState.size === 0) {
+      if (studentsLiveState.size === 0) {
         container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 25px;">Aguardando entrada dos alunos...</div>';
         return;
       }
 
       container.innerHTML = '';
-      studentsState.forEach(s => {
+      studentsLiveState.forEach(s => {
         const pct = Math.min(100, (s.questao / currentQuizLength) * 100);
         const div = document.createElement('div');
         div.className = 'rank-item';
@@ -867,9 +833,9 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       });
     }
 
-    function broadcastLeaderboard() {
+    function broadcastRoundLeaderboard() {
       const ranking = [];
-      studentsState.forEach(s => {
+      studentsLiveState.forEach(s => {
         if (s.final) ranking.push([s.nome, s.finalTime]);
       });
       ranking.sort((a, b) => a[1] - b[1]);
@@ -918,7 +884,7 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       const filtered = BANCO_QUESTOES.filter(q => selected.includes(q.topico));
       const countEl = document.getElementById('available-questions-count');
       if (countEl) {
-        countEl.innerHTML = `Questões disponíveis nos tópicos selecionados: <strong>${filtered.length}</strong>`;
+        countEl.innerHTML = `Questões disponíveis: <strong>${filtered.length}</strong>`;
       }
     }
 
@@ -930,12 +896,13 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       if (filtered.length === 0) return alert("Não há questões disponíveis para os tópicos selecionados.");
 
       const numQuestions = parseInt(document.getElementById('num-questions-select').value) || 10;
-      const roundQuestions = pickRandomQuestions(filtered, numQuestions);
-      currentQuizLength = roundQuestions.length;
+      quizData = pickRandomQuestions(filtered, numQuestions);
+      currentQuizLength = quizData.length;
+      gameActive = true;
 
-      if (!confirm(`Iniciar desafio com ${currentQuizLength} questões para os ${studentConnections.size} alunos conectados?`)) return;
+      if (!confirm(`Iniciar rodada com ${currentQuizLength} questões para os ${studentConnections.size} alunos conectados?`)) return;
 
-      studentsState.forEach(s => {
+      studentsLiveState.forEach(s => {
         s.questao = 0; s.tempo = '0.0'; s.final = false; s.finalTime = 0;
       });
       renderTeacherLiveStatus();
@@ -943,17 +910,18 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
 
       studentConnections.forEach(conn => {
         if (conn.open) {
-          conn.send({ type: 'start_game', quiz: roundQuestions });
+          conn.send({ type: 'start_game', quiz: quizData });
         }
       });
 
-      alert(`Desafio liberado com sucesso para ${studentConnections.size} alunos!`);
+      alert(`Rodada liberada com sucesso para ${studentConnections.size} alunos!`);
     }
 
     function teacherResetGame() {
-      if (!confirm("Tem certeza que deseja resetar a sessão? Todos os alunos retornarão ao lobby.")) return;
+      if (!confirm("Tem certeza que deseja resetar a rodada? Todos os alunos retornarão ao lobby.")) return;
 
-      studentsState.forEach(s => {
+      gameActive = false;
+      studentsLiveState.forEach(s => {
         s.questao = 0; s.tempo = '0.0'; s.final = false; s.finalTime = 0;
       });
       renderTeacherLiveStatus();
@@ -962,6 +930,28 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       studentConnections.forEach(conn => {
         if (conn.open) conn.send({ type: 'reset_game' });
       });
+    }
+
+    function exportResultsCSV() {
+      if (studentsLiveState.size === 0) return alert("Nenhum registro para exportar.");
+
+      let csv = "Posicao;Nome;Tempo_Segundos;Concluido\n";
+      const ranking = [];
+      studentsLiveState.forEach(s => ranking.push(s));
+      ranking.sort((a, b) => a.finalTime - b.finalTime);
+
+      ranking.forEach((r, idx) => {
+        csv += `${idx + 1};"${r.nome}";${r.tempo};${r.final ? 'SIM' : 'NAO'}\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `resultado_quiz_${currentRoomCode}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
 
     function copyRoomLink() {
@@ -973,7 +963,301 @@ descricao: "Desafio interativo com ranking ao vivo de toda a Geometria Espacial 
       });
     }
 
-    // ALGORITMO FISHER-YATES DE EMBARALHAMENTO
+    // =========================================================================
+    // EXECUÇÃO DO QUIZ PELO ALUNO COM RESILIÊNCIA A QUEDAS DE CONEXÃO
+    // =========================================================================
+    function joinRoomLobby() {
+      const nameInput = document.getElementById('player-name');
+      const roomInput = document.getElementById('room-code-input');
+      
+      if (!nameInput.value.trim()) return alert("Por favor, digite seu nome completo.");
+      if (!roomInput.value.trim()) return alert("Por favor, digite o código da sala fornecido pelo professor.");
+      
+      playerName = nameInput.value.trim();
+      currentRoomCode = roomInput.value.trim().toUpperCase();
+
+      document.getElementById('display-name').innerText = playerName;
+      document.getElementById('lobby-room-code').innerText = currentRoomCode;
+      document.getElementById('active-room-display').innerText = currentRoomCode;
+      document.getElementById('room-pill').style.display = 'inline-flex';
+      
+      showScreen('screen-lobby');
+      setServerStatus("Conectando...", "warning");
+
+      connectStudentPeer(false);
+    }
+
+    function connectStudentPeer(isRestore = false) {
+      const teacherPeerId = 'mat-geo-room-' + currentRoomCode.toLowerCase();
+      
+      if (peer) { try { peer.destroy(); } catch(e){} }
+      peer = new Peer();
+
+      peer.on('open', () => {
+        attemptConnectToTeacher(teacherPeerId, isRestore);
+      });
+
+      peer.on('disconnected', () => {
+        handleNetworkDisconnection();
+      });
+
+      peer.on('error', () => {
+        if (!gameActive) {
+          alert("Não foi possível conectar à sala. Verifique se o professor está com a sala aberta.");
+          showScreen('screen-login');
+        } else {
+          handleNetworkDisconnection();
+        }
+      });
+    }
+
+    function attemptConnectToTeacher(teacherPeerId, isRestore = false) {
+      peerConn = peer.connect(teacherPeerId);
+
+      peerConn.on('open', () => {
+        setServerStatus("Conectado ao Professor", "live");
+        document.getElementById('student-offline-banner').classList.remove('active');
+        isReconnecting = false;
+
+        const type = isRestore ? 'student_reconnect' : 'student_join';
+        peerConn.send({
+          type: type,
+          nome: playerName,
+          questao: currentQ + 1,
+          tempo: ((Date.now() - startTime) / 1000 + timePenalty).toFixed(1)
+        });
+
+        flushOfflineQueue();
+      });
+
+      peerConn.on('data', (data) => {
+        handleTeacherMessage(data);
+      });
+
+      peerConn.on('close', () => {
+        handleNetworkDisconnection();
+      });
+
+      peerConn.on('error', () => {
+        handleNetworkDisconnection();
+      });
+    }
+
+    function handleNetworkDisconnection() {
+      if (!gameActive && currentQ === 0) return;
+
+      setServerStatus("Reconectando...", "warning");
+      document.getElementById('student-offline-banner').classList.add('active');
+
+      if (isReconnecting) return;
+      isReconnecting = true;
+
+      if (reconnectTimer) clearTimeout(reconnectTimer);
+      reconnectTimer = setTimeout(() => {
+        attemptStudentReconnect();
+      }, 2500);
+    }
+
+    function attemptStudentReconnect() {
+      if (!currentRoomCode) return;
+      const teacherPeerId = 'mat-geo-room-' + currentRoomCode.toLowerCase();
+      
+      if (!peer || peer.destroyed) {
+        connectStudentPeer(true);
+        return;
+      }
+
+      if (peer.disconnected) {
+        peer.reconnect();
+      }
+
+      attemptConnectToTeacher(teacherPeerId, true);
+    }
+
+    function safeStudentSend(msg) {
+      if (peerConn && peerConn.open) {
+        try {
+          peerConn.send(msg);
+          return;
+        } catch(e){}
+      }
+      offlineOutboxQueue.push(msg);
+      handleNetworkDisconnection();
+    }
+
+    function flushOfflineQueue() {
+      if (!peerConn || !peerConn.open) return;
+      while (offlineOutboxQueue.length > 0) {
+        const msg = offlineOutboxQueue.shift();
+        try { peerConn.send(msg); } catch(e){ offlineOutboxQueue.unshift(msg); break; }
+      }
+    }
+
+    function handleTeacherMessage(data) {
+      if (data.type === 'start_game') {
+        quizData = data.quiz;
+        currentQuizLength = quizData.length;
+        startQuizRound();
+      } else if (data.type === 'reset_game') {
+        if (gameActive) {
+          clearInterval(timerInterval);
+          gameActive = false;
+          clearSessionProgress();
+        }
+        alert("O professor reiniciou a rodada.");
+        showScreen('screen-lobby');
+        document.getElementById('sync-text').innerHTML = 'Aguardando o professor iniciar nova rodada...';
+      } else if (data.type === 'leaderboard_update') {
+        renderLeaderboard('student-leaderboard', data.ranking);
+      }
+    }
+
+    function leaveLobby() {
+      clearSessionProgress();
+      if (peerConn) { try { peerConn.close(); } catch(e){} }
+      if (peer) { try { peer.destroy(); } catch(e){} }
+      location.reload();
+    }
+
+    function startQuizRound() {
+      gameActive = true;
+      currentQ = 0;
+      timePenalty = 0;
+      startTime = Date.now();
+      
+      showScreen('screen-quiz');
+      saveSessionProgress();
+      
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(updateTimer, 100);
+      
+      loadQuestion();
+    }
+
+    function updateTimer() {
+      if (!gameActive) return;
+      const elapsed = (Date.now() - startTime) / 1000 + timePenalty;
+      document.getElementById('time-display').innerText = elapsed.toFixed(1) + 's';
+    }
+
+    function loadQuestion() {
+      if (currentQ >= quizData.length) return finishQuiz();
+      
+      saveSessionProgress();
+      
+      const q = quizData[currentQ];
+      const container = document.getElementById('options-container');
+      const qText = document.getElementById('question-text');
+      const topicBadge = document.getElementById('q-topic-badge');
+      
+      const progress = ((currentQ) / quizData.length) * 100;
+      document.getElementById('quiz-progress').style.width = progress + '%';
+      document.getElementById('q-counter').innerText = `Questão ${currentQ + 1} de ${quizData.length}`;
+      
+      topicBadge.innerText = TOPICOS[q.topico] || 'Geometria Espacial';
+      qText.innerHTML = q.q;
+      renderMathSafe('question-text');
+      
+      container.innerHTML = '';
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.onclick = () => {
+          checkAnswer(idx);
+          btn.blur();
+        };
+        
+        if (opt.type === 'image') {
+          btn.innerHTML = `<div class="option-image-wrap">${opt.content}</div><span>${opt.label}</span>`;
+        } else if (opt.type === 'latex') {
+          btn.innerHTML = `<span id="opt-math-${idx}">${opt.content}</span>`;
+          renderMathSafe(`opt-math-${idx}`);
+        } else {
+          btn.innerHTML = `<span>${opt.content}</span>`;
+        }
+        container.appendChild(btn);
+      });
+
+      const elapsed = (Date.now() - startTime) / 1000 + timePenalty;
+      safeStudentSend({
+        type: 'student_progress',
+        nome: playerName,
+        questao: currentQ + 1,
+        tempo: elapsed.toFixed(1)
+      });
+    }
+
+    function checkAnswer(idx) {
+      const btns = document.querySelectorAll('.option-btn');
+      const correctIdx = quizData[currentQ].ans;
+      
+      if (idx === correctIdx) {
+        btns.forEach(b => b.disabled = true);
+        btns[idx].classList.add('correct');
+        setTimeout(() => {
+          currentQ++;
+          loadQuestion();
+        }, 500);
+      } else {
+        btns[idx].disabled = true;
+        btns[idx].classList.add('wrong');
+        
+        timePenalty += 5.0;
+        document.getElementById('penalty-overlay').classList.add('active');
+        
+        setTimeout(() => {
+          document.getElementById('penalty-overlay').classList.remove('active');
+        }, 1800);
+      }
+    }
+
+    function finishQuiz() {
+      gameActive = false;
+      clearInterval(timerInterval);
+      clearSessionProgress();
+      
+      const finalSeconds = (Date.now() - startTime) / 1000 + timePenalty;
+      document.getElementById('final-time').innerText = finalSeconds.toFixed(1) + 's';
+      document.getElementById('quiz-progress').style.width = '100%';
+      document.getElementById('result-stats').innerText = `Total de ${quizData.length} questões respondidas!`;
+
+      showScreen('screen-result');
+      
+      safeStudentSend({
+        type: 'student_finish',
+        nome: playerName,
+        tempo_segundos: finalSeconds.toFixed(2)
+      });
+    }
+
+    function renderLeaderboard(containerId, ranking) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+      
+      if (!ranking || ranking.length === 0) {
+        container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Aguardando conclusões...</div>';
+        return;
+      }
+      
+      ranking.forEach((r, i) => {
+        const div = document.createElement('div');
+        let topClass = '';
+        if (i === 0) topClass = 'top-1';
+        else if (i === 1) topClass = 'top-2';
+        else if (i === 2) topClass = 'top-3';
+
+        div.className = `rank-item ${topClass}`;
+        div.innerHTML = `
+          <div class="rank-header">
+            <span>${i + 1}º • ${r[0]}</span>
+            <span style="color: var(--primary); font-weight: 700;">${Number(r[1]).toFixed(1)}s</span>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
     function pickRandomQuestions(banco, count) {
       const pool = [...banco];
       for (let i = pool.length - 1; i > 0; i--) {
