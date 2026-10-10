@@ -1,0 +1,1171 @@
+---
+titulo: "Bingo Geométrico"
+icone: "🎲"
+descricao: "Sorteador eletrônico e gerador de cartelas para o Bingo de Geometria Espacial (Ensino Médio)."
+---
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo de Geometria Espacial (5x5)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* =========================================================================
+           CONFIGURAÇÕES GERAIS E DIMENSÕES FÍSICAS (PADRÃO A4: 2x2 = 4 CARTELAS)
+           ========================================================================= */
+        :root {
+            /* Dimensões físicas exatas para 4 cartelas em 1 folha A4 (94mm x 136mm) */
+            --card-width: 94mm;
+            --card-height: 136mm;
+
+            /* Tema Dark/Neon do Portal */
+            --bg-dark: #0b0c10;
+            --bg-card: #1f2833;
+            --electric-cyan: #00f0ff;
+            --neon-pink: #ff007f;
+            --text-light: #c5c6c7;
+            --white: #ffffff;
+            --success: #00ff88;
+            --danger: #ff3366;
+            --warning: #ffcc00;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+        /* CABEÇALHO PADRÃO */
+        header {
+            background: linear-gradient(135deg, #12121c 0%, #1f2833 100%);
+            border-bottom: 2px solid var(--electric-cyan);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 240, 255, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header img {
+            height: 70px;
+            margin-bottom: 12px;
+        }
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            color: var(--white);
+            text-shadow: 0 0 10px var(--electric-cyan);
+            letter-spacing: 2px;
+            line-height: 1.2;
+        }
+        header p {
+            font-size: 1.05rem;
+            color: var(--electric-cyan);
+            margin-top: 5px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        header .authors {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-top: 8px;
+        }
+
+        /* NAVEGAÇÃO POR ABAS */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            background-color: #121212;
+            border-bottom: 1px solid #333;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            padding: 14px 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .tab-btn:hover {
+            color: var(--electric-cyan);
+        }
+        .tab-btn.active {
+            color: var(--electric-cyan);
+            font-weight: bold;
+            background: rgba(0, 240, 255, 0.05);
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--electric-cyan);
+            box-shadow: 0 0 10px var(--electric-cyan);
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 25px auto;
+            padding: 0 20px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* PAINÉIS */
+        .panel {
+            background-color: var(--bg-card);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 25px;
+        }
+        .panel h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            color: var(--white);
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* BOTÕES */
+        .btn {
+            background: transparent;
+            border: 2px solid var(--electric-cyan);
+            color: var(--electric-cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            font-size: 0.95rem;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:hover {
+            background-color: var(--electric-cyan);
+            color: var(--bg-dark);
+            box-shadow: 0 0 15px var(--electric-cyan);
+        }
+        .btn-success {
+            border-color: var(--success);
+            color: var(--success);
+        }
+        .btn-success:hover {
+            background-color: var(--success);
+            color: var(--bg-dark);
+            box-shadow: 0 0 15px var(--success);
+        }
+        .btn-danger {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+        }
+        .btn-danger:hover {
+            background-color: var(--neon-pink);
+            color: var(--white);
+            box-shadow: 0 0 15px var(--neon-pink);
+        }
+        .btn-warning {
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+        .btn-warning:hover {
+            background-color: var(--warning);
+            color: var(--bg-dark);
+            box-shadow: 0 0 15px var(--warning);
+        }
+
+        /* FORMULÁRIOS E INPUTS */
+        .input-field, .select-field {
+            background-color: rgba(0,0,0,0.5);
+            border: 1px solid #555;
+            color: var(--white);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            padding: 10px;
+            border-radius: 4px;
+            outline: none;
+        }
+        .input-field:focus, .select-field:focus {
+            border-color: var(--electric-cyan);
+        }
+
+        /* PAINEL DO SORTEIO (DASHBOARD) */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 25px;
+        }
+        @media (max-width: 950px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .draw-display {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 6px;
+            border: 1px dashed rgba(0, 240, 255, 0.4);
+            margin-bottom: 20px;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .draw-counter {
+            font-size: 1rem;
+            color: var(--neon-pink);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .draw-question {
+            font-size: 1.45rem;
+            color: var(--white);
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.35;
+        }
+        .draw-answer-container {
+            width: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        .draw-answer-text {
+            font-size: 1.4rem;
+            color: var(--success);
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--success);
+            padding: 10px 25px;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* HISTÓRICO DE PEDRAS SORTEADAS */
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 8px;
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        .history-item {
+            background-color: rgba(255,255,255,0.03);
+            border: 1px solid #444;
+            padding: 7px;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .history-item.drawn {
+            border-color: var(--success);
+            color: var(--success);
+            background-color: rgba(0, 255, 136, 0.08);
+            font-weight: bold;
+        }
+
+        /* CONFERIDOR DE CARTELAS */
+        .checker-form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .checker-result {
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            padding: 15px;
+            display: none;
+        }
+        .checker-status-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .checker-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            margin-top: 12px;
+        }
+        .checker-cell {
+            background: #252e3a;
+            border: 1px solid #444;
+            padding: 8px 4px;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 55px;
+            word-break: break-word;
+            line-height: 1.15;
+        }
+        .checker-cell.matched {
+            border-color: var(--success);
+            background-color: rgba(0, 255, 136, 0.12);
+            color: var(--success);
+            font-weight: bold;
+        }
+        .checker-cell.missing {
+            border-color: var(--danger);
+            background-color: rgba(255, 51, 102, 0.06);
+            color: rgba(255,255,255,0.45);
+        }
+
+        /* =========================================================================
+           SISTEMA DE IMPRESSÃO DAS CARTELAS (PADRONIZADO COM SUPER TRUNFO)
+           A visualização na tela organiza os cartões exatamente nas folhas A4!
+           ========================================================================= */
+        .print-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background: rgba(0,0,0,0.3);
+            padding: 15px 20px;
+            border-radius: 8px;
+            flex-wrap: wrap;
+            gap: 15px;
+            border: 1px solid #333;
+        }
+
+        .cards-grid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            padding: 10px 0;
+        }
+
+        /* Representação física de uma folha A4 com 4 cartelas (2x2) */
+        .sheet-page {
+            display: grid;
+            grid-template-columns: repeat(2, var(--card-width));
+            grid-template-rows: repeat(2, var(--card-height));
+            gap: 0;
+            width: calc(var(--card-width) * 2);
+            height: calc(var(--card-height) * 2);
+            margin: 0 auto;
+            background: #ffffff;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
+            border-radius: 2px;
+            box-sizing: border-box;
+        }
+
+        /* Cartela física de Bingo (94mm x 136mm) */
+        .bingo-card {
+            width: var(--card-width);
+            height: var(--card-height);
+            background: #ffffff;
+            border: 0.3mm solid #000000;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            padding: 2.5mm 2.5mm 2mm 2.5mm;
+            color: #000000;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1.5px solid #000000;
+            padding-bottom: 1.2mm;
+            margin-bottom: 1.2mm;
+        }
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 8.5pt;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+        .card-id {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 7.5pt;
+            font-weight: 900;
+            background-color: #000000;
+            color: #ffffff;
+            padding: 1px 5px;
+            border-radius: 2px;
+        }
+
+        /* Tarja das Letras B-I-N-G-O */
+        .card-bingo-letters {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 11pt;
+            border: 1.5px solid #000000;
+            border-bottom: none;
+            background: #e2e8f0;
+            box-sizing: border-box;
+        }
+        .card-bingo-letters div {
+            padding: 0.8mm 0;
+            border-right: 1px solid #000000;
+        }
+        .card-bingo-letters div:last-child {
+            border-right: none;
+        }
+
+        /* Grade 5x5 de Termos */
+        .card-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            border: 1.5px solid #000000;
+            box-sizing: border-box;
+        }
+
+        .card-cell {
+            border-right: 1px solid #000000;
+            border-bottom: 1px solid #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 7.2pt;
+            font-weight: 700;
+            line-height: 1.15;
+            padding: 0.8mm 1mm;
+            background: #ffffff;
+            word-break: break-word;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .card-cell:nth-child(5n) {
+            border-right: none;
+        }
+        .card-cell:nth-child(n+21) {
+            border-bottom: none;
+        }
+        .card-cell.free {
+            background: #f1f5f9;
+            font-size: 7.8pt;
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .card-footer-info {
+            margin-top: 1mm;
+            text-align: center;
+            font-size: 5.5pt;
+            color: #333;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        /* GUIA / GABARITO DO PROFESSOR */
+        .guide-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            color: #000;
+            background: #fff;
+            font-size: 0.95rem;
+        }
+        .guide-table th, .guide-table td {
+            border: 1px solid #444;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .guide-table th {
+            background-color: #f1f5f9;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        /* =========================================================================
+           CONFIGURAÇÕES RÍGIDAS DE IMPRESSÃO EM A4 (BASEADAS NO SUPER TRUNFO)
+           ========================================================================= */
+        @page {
+            size: A4 portrait;
+            margin: 10mm 10.5mm;
+        }
+
+        @media print {
+            html, body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            header, .tabs, .print-controls, .panel h2, #btn-voltar {
+                display: none !important;
+            }
+            .print-hidden {
+                display: none !important;
+            }
+
+            .container {
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
+            }}
+
+            /* --- MODO DE IMPRESSÃO: CARTELAS --- */
+            body.print-mode-cards #panel-sorteio,
+            body.print-mode-cards #panel-regras {
+                display: none !important;
+            }
+            body.print-mode-cards #panel-cartelas {
+                display: block !important;
+            }
+            body.print-mode-cards .cards-grid {
+                display: block !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            body.print-mode-cards .sheet-page {
+                margin: 0 auto !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            body.print-mode-cards .sheet-page:last-child {
+                page-break-after: auto !important;
+                break-after: auto !important;
+            }
+            body.print-mode-cards .bingo-card {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            /* --- MODO DE IMPRESSÃO: GABARITO / REGRAS --- */
+            body.print-mode-guide #panel-sorteio,
+            body.print-mode-guide #panel-cartelas {
+                display: none !important;
+            }
+            body.print-mode-guide #panel-regras {
+                display: block !important;
+            }
+            body.print-mode-guide .guide-table {
+                font-size: 8pt !important;
+            }
+            body.print-mode-guide .guide-table th,
+            body.print-mode-guide .guide-table td {
+                padding: 4px 6px !important;
+                border: 1px solid #000 !important;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="https://res.cloudinary.com/dmvxu7ioq/image/upload/v1781662337/dakz1wjsar6xpener1ur.png" alt="Logo PIBID">
+        <h1>🎲 BINGO DE GEOMETRIA ESPACIAL</h1>
+        <p>Poliedros · Corpos Redondos · Áreas e Volumes · Relações Espaciais</p>
+        <div class="authors">Desenvolvido por: Mateus Goldschmidt e Lavínia Mello Ferreira (PIBID)</div>
+    </header>
+
+    <div class="tabs print-hidden">
+        <button class="tab-btn active" onclick="switchTab('sorteio')">🎯 Painel do Sorteio</button>
+        <button class="tab-btn" onclick="switchTab('cartelas')">🖨️ Gerar & Imprimir Cartelas</button>
+        <button class="tab-btn" onclick="switchTab('regras')">📚 Regras & Gabarito Completo</button>
+    </div>
+
+    <div class="container">
+
+        <!-- ABA 1: PAINEL DO SORTEIO -->
+        <div id="panel-sorteio" class="tab-content active">
+            <div class="dashboard">
+
+                <!-- Coluna Esquerda: Sorteador Principal -->
+                <div class="panel">
+                    <h2>
+                        <span>🎯 Sorteador Eletrônico</span>
+                        <button class="btn btn-danger" onclick="resetGame()" style="font-size: 0.8rem; padding: 6px 12px;">Reiniciar</button>
+                    </h2>
+
+                    <div class="draw-display">
+                        <div class="draw-counter" id="draw-count">Nenhum item sorteado</div>
+                        <div class="draw-question" id="draw-question">Clique em "Sortear Próxima Pergunta" para começar o bingo!</div>
+
+                        <div class="draw-answer-container" id="answer-container">
+                            <button id="btn-reveal" class="btn" onclick="toggleAnswer()" style="font-size: 0.85rem; padding: 6px 14px;">👁️ Revelar Resposta</button>
+                            <div class="draw-answer-text" id="draw-answer">Gabarito: </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 15px;">
+                        <button class="btn btn-success" onclick="drawItem()" style="flex: 1; padding: 14px; font-size: 1.1rem;">🎲 Sortear Próxima Pergunta</button>
+                    </div>
+
+                    <div style="margin-top: 25px;">
+                        <h3 style="font-family: 'Orbitron'; font-size: 1.1rem; margin-bottom: 12px; color: var(--electric-cyan);">
+                            📜 Pedras Sorteadas (<span id="drawn-count-label">0</span> de <span id="total-count-label">76</span>)
+                        </h3>
+                        <div class="history-grid" id="history-container">
+                            <!-- Injetado via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coluna Direita: Validador de Cartelas Vencedoras -->
+                <div class="panel">
+                    <h2>
+                        <span>🏆 Conferência de Cartela</span>
+                    </h2>
+
+                    <p style="font-size: 0.95rem; margin-bottom: 15px; color: var(--text-light);">
+                        Quando um aluno cantar <strong>"BINGO!"</strong>, digite o número da cartela dele abaixo para auditar imediatamente se todos os itens foram realmente sorteados.
+                    </p>
+
+                    <div class="checker-form">
+                        <input type="number" id="check-card-id" class="input-field" placeholder="Nº da Cartela (Ex: 1 a 48)" min="1" max="100">
+                        <button class="btn btn-warning" onclick="validateCard()">🔍 Conferir</button>
+                    </div>
+
+                    <div class="checker-result" id="checker-result">
+                        <div class="checker-status-header" id="checker-status"></div>
+                        <div style="font-size: 0.9rem; text-align: center; margin-bottom: 10px; color: var(--text-light);" id="checker-details"></div>
+                        <div class="checker-grid" id="checker-grid">
+                            <!-- Grade de validação visual -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ABA 2: GERAR & IMPRIMIR CARTELAS -->
+        <div id="panel-cartelas" class="tab-content">
+            <div class="print-controls print-hidden">
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                    <label style="font-family: 'Orbitron'; font-size: 0.95rem; color: var(--electric-cyan);">Quantidade de Cartelas:</label>
+                    <select id="print-quantity" class="select-field" onchange="renderAllCards()">
+                        <option value="4">4 Cartelas (1 Folha A4)</option>
+                        <option value="8">8 Cartelas (2 Folhas A4)</option>
+                        <option value="12">12 Cartelas (3 Folhas A4)</option>
+                        <option value="16">16 Cartelas (4 Folhas A4)</option>
+                        <option value="20">20 Cartelas (5 Folhas A4)</option>
+                        <option value="24" selected>24 Cartelas (6 Folhas A4)</option>
+                        <option value="28">28 Cartelas (7 Folhas A4)</option>
+                        <option value="32">32 Cartelas (8 Folhas A4)</option>
+                        <option value="36">36 Cartelas (9 Folhas A4)</option>
+                        <option value="40">40 Cartelas (10 Folhas A4)</option>
+                        <option value="48">48 Cartelas (12 Folhas A4)</option>
+                    </select>
+                </div>
+                <div>
+                    <button class="btn btn-success" onclick="printCards()">🖨️ IMPRIMIR CARTELAS (4 POR FOLHA A4)</button>
+                </div>
+            </div>
+
+            <div class="cards-grid" id="cards-container">
+                <!-- Cartelas agrupadas de 4 em 4 dentro de .sheet-page geradas via JS -->
+            </div>
+        </div>
+
+        <!-- ABA 3: REGRAS & GABARITO COMPLETO -->
+        <div id="panel-regras" class="tab-content">
+            <div class="panel" style="background: #fff; color: #000;">
+                <div class="print-controls print-hidden" style="background: #f1f5f9; border-color: #cbd5e1;">
+                    <div>
+                        <strong style="color: #0f172a; font-family: 'Orbitron'; font-size: 1.1rem;">Manual do Professor & Gabarito Oficial</strong><br>
+                        <span style="font-size: 0.9rem; color: #475569;">Lista com os 76 desafios para guiar o sorteio ou imprimir como suporte.</span>
+                    </div>
+                    <button class="btn btn-warning" onclick="printGuide()" style="color: #b45309; border-color: #b45309;">🖨️ Imprimir Gabarito Completo</button>
+                </div>
+
+                <div style="line-height: 1.6; margin-bottom: 25px;">
+                    <h2 style="color: #0f172a; border-bottom: 2px solid #0f172a;">📜 Regras do Bingo de Geometria Espacial</h2>
+                    <ul style="margin-left: 20px; margin-top: 10px; font-size: 1rem;">
+                        <li><strong>Objetivo:</strong> Relacionar o conceito, fórmula ou cálculo mental de geometria espacial falado pelo professor com o respectivo termo na cartela.</li>
+                        <li><strong>Dinâmica:</strong> O professor sorteia uma pedra no painel e lê a <strong>pergunta/desafio</strong>. Os alunos pensam na resposta e procuram o termo correspondente em suas cartelas.</li>
+                        <li><strong>Espaço Livre:</strong> A casa central marcada com <strong>⭐ LIVRE</strong> já conta como ponto marcado para todos os jogadores.</li>
+                        <li><strong>Critérios de Vitória:</strong> Pode-se disputar por <em>Linha Completa (5 acertos horizontais)</em>, <em>Coluna Completa (5 acertos verticais)</em> ou <em>Cartela Cheia (BINGO tradicional)</em>.</li>
+                    </ul>
+                </div>
+
+                <h3 style="font-family: 'Orbitron'; color: #0f172a; margin-top: 25px; margin-bottom: 10px;">📋 Tabela das 76 Pedras e Respostas</h3>
+                <table class="guide-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 8%;">Nº</th>
+                            <th style="width: 25%;">Resposta na Cartela</th>
+                            <th>Pergunta / Desafio Didático</th>
+                        </tr>
+                    </thead>
+                    <tbody id="guide-table-body">
+                        <!-- Injetado via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BOTÃO FIXO: VOLTAR AO PORTAL -->
+    <style>
+      #btn-voltar {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        z-index: 9999;
+        background: linear-gradient(135deg, #1a237e, #1565c0);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 16px;
+        font-size: 0.88rem;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+        transition: transform 0.15s, box-shadow 0.15s;
+      }
+      #btn-voltar:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.45); }
+      @media print { #btn-voltar { display: none !important; } }
+    </style>
+    <a id="btn-voltar" href="index.html">
+      &#8592; Voltar ao Portal
+    </a>
+
+    <script>
+        // =========================================================================
+        // BANCO DE DADOS: 76 ITENS DE TODA A GEOMETRIA ESPACIAL DO ENSINO MÉDIO
+        // Totalmente únicos, diretos e sem cálculos excessivos ou complexos.
+        // =========================================================================
+        const BINGO_DATABASE = [
+            { id: 0, q: "Três pontos não colineares determinam no espaço um único...", a: "Plano" },
+            { id: 1, q: "Duas retas que não pertencem ao mesmo plano e nunca se cruzam são chamadas de...", a: "Retas Reversas" },
+            { id: 2, q: "Duas retas contidas no mesmo plano que nunca se cruzam são...", a: "Retas Paralelas" },
+            { id: 3, q: "A projeção perpendicular de um ponto ou figura sobre um plano é a...", a: "Projeção Ortogonal" },
+            { id: 4, q: "A interseção de dois planos secantes distintos forma sempre uma...", a: "Reta" },
+            { id: 5, q: "O ângulo diedro é o ângulo formado pela abertura entre dois...", a: "Planos" },
+            { id: 6, q: "Qual é a Relação de Euler válida para todo poliedro convexo?", a: "V - A + F = 2" },
+            { id: 7, q: "Fórmula da soma dos ângulos de todas as faces de um poliedro com V vértices:", a: "(V - 2)·360°" },
+            { id: 8, q: "Poliedro regular de Platão com 4 faces triangulares equiláteras:", a: "Tetraedro" },
+            { id: 9, q: "Poliedro regular de Platão formado por 6 faces quadradas:", a: "Hexaedro (Cubo)" },
+            { id: 10, q: "Poliedro regular de Platão que possui 8 faces triangulares equiláteras:", a: "Octaedro" },
+            { id: 11, q: "Poliedro regular de Platão formado por 12 faces pentagonais regulares:", a: "Dodecaedro" },
+            { id: 12, q: "Poliedro regular de Platão que possui 20 faces triangulares equiláteras:", a: "Icosaedro" },
+            { id: 13, q: "O segmento de reta formado pelo encontro de duas faces de um poliedro:", a: "Aresta" },
+            { id: 14, q: "O ponto onde três ou mais arestas de um poliedro se encontram:", a: "Vértice" },
+            { id: 15, q: "Poliedro convexo que tem 6 vértices e 8 faces possui quantas arestas?", a: "12 Arestas" },
+            { id: 16, q: "Fórmula matemática do Volume de qualquer prisma (reto ou oblíquo):", a: "V = Ab·h" },
+            { id: 17, q: "A diagonal espacial de um cubo de aresta \"a\" mede exatamente...", a: "a√3" },
+            { id: 18, q: "A diagonal de uma face quadrada de um cubo de aresta \"a\" mede...", a: "a√2" },
+            { id: 19, q: "A fórmula da Área Total de um cubo de aresta \"a\" é:", a: "6a²" },
+            { id: 20, q: "Volume de um cubo que possui aresta medindo 3 cm:", a: "27 cm³" },
+            { id: 21, q: "Volume de uma caixa (paralelepípedo) com dimensões 2 cm, 3 cm e 4 cm:", a: "24 cm³" },
+            { id: 22, q: "Fórmula da diagonal de um paralelepípedo reto-retângulo com dimensões a, b e c:", a: "D = √(a²+b²+c²)" },
+            { id: 23, q: "As faces laterais de qualquer prisma reto são sempre...", a: "Retângulos" },
+            { id: 24, q: "Prisma reto regular cujas bases são triângulos equiláteros:", a: "Prisma Triangular" },
+            { id: 25, q: "Prisma reto regular cujas bases são hexágonos regulares:", a: "Prisma Hexagonal" },
+            { id: 26, q: "Capacidade em litros de uma caixa de água com volume de 1 m³:", a: "1.000 Litros" },
+            { id: 27, q: "Fórmula matemática do Volume de qualquer pirâmide:", a: "V = (Ab·h)/3" },
+            { id: 28, q: "Relação de Pitágoras no apótema da pirâmide (g), altura (h) e apótema da base (m):", a: "g² = h² + m²" },
+            { id: 29, q: "A altura de uma das faces triangulares de uma pirâmide regular chama-se...", a: "Apótema da Pirâmide" },
+            { id: 30, q: "O segmento que vai do centro da base regular até o ponto médio de uma aresta da base:", a: "Apótema da Base" },
+            { id: 31, q: "As faces laterais de qualquer pirâmide regular reta têm o formato de...", a: "Triângulos Isósceles" },
+            { id: 32, q: "Volume de uma pirâmide cuja área da base é Ab = 30 e a altura é h = 5:", a: "50" },
+            { id: 33, q: "Razão entre o volume de uma pirâmide e o de um prisma de mesma base e mesma altura:", a: "1/3" },
+            { id: 34, q: "Fórmula da altura de um tetraedro regular de aresta \"a\":", a: "a√6 / 3" },
+            { id: 35, q: "Fórmula da área total de um tetraedro regular de aresta \"a\":", a: "a²√3" },
+            { id: 36, q: "Pirâmide cuja base é um quadrado:", a: "Pirâmide Quadrangular" },
+            { id: 37, q: "Sólido geométrico formado pela rotação completa de um retângulo em torno de um lado:", a: "Cilindro" },
+            { id: 38, q: "Fórmula matemática do Volume de qualquer cilindro circular reto:", a: "V = π·r²·h" },
+            { id: 39, q: "Fórmula da Área Lateral de um cilindro circular reto desdobrado:", a: "Al = 2π·r·h" },
+            { id: 40, q: "Relação matemática que define que um cilindro é EQUILÁTERO:", a: "h = 2r" },
+            { id: 41, q: "O corte vertical que passa pelo eixo de um cilindro equilátero forma um...", a: "Quadrado" },
+            { id: 42, q: "A planificação completa da superfície lateral de um cilindro reto resulta em um...", a: "Retângulo" },
+            { id: 43, q: "Volume de um cilindro com raio da base r=2 e altura h=5:", a: "20π" },
+            { id: 44, q: "Área da base circular de um cilindro de raio r=4:", a: "16π" },
+            { id: 45, q: "Como chamamos um cilindro cujo eixo é inclinado em relação à base?", a: "Cilindro Oblíquo" },
+            { id: 46, q: "Sólido gerado pela rotação de um triângulo retângulo em torno de um dos catetos:", a: "Cone" },
+            { id: 47, q: "Relação de Pitágoras no cone reto entre geratriz (g), raio (r) e altura (h):", a: "g² = r² + h²" },
+            { id: 48, q: "Fórmula matemática do Volume de um cone circular reto:", a: "V = (π·r²·h)/3" },
+            { id: 49, q: "Fórmula da Área Lateral de um cone circular reto:", a: "Al = π·r·g" },
+            { id: 50, q: "Relação matemática que define que um cone é EQUILÁTERO:", a: "g = 2r" },
+            { id: 51, q: "A secção meridiana de um cone equilátero tem o formato de um...", a: "Triângulo Equilátero" },
+            { id: 52, q: "A planificação da superfície lateral de um cone reto forma um...", a: "Setor Circular" },
+            { id: 53, q: "Segmento reto que liga o topo (vértice) até qualquer ponto da borda da base do cone:", a: "Geratriz (g)" },
+            { id: 54, q: "Se o raio de um cone mede 3 e a altura mede 4, a geratriz (g) vale...", a: "5" },
+            { id: 55, q: "Área lateral de um cone com raio r=2 e geratriz g=5:", a: "10π" },
+            { id: 56, q: "A parte inferior que sobra ao cortar um cone paralelamente à base e retirar o topo:", a: "Tronco de Cone" },
+            { id: 57, q: "A parte inferior que sobra ao cortar uma pirâmide paralelamente à base:", a: "Tronco de Pirâmide" },
+            { id: 58, q: "As faces laterais de um tronco de pirâmide regular têm a forma de...", a: "Trapézios Isósceles" },
+            { id: 59, q: "Sólido gerado girando-se um trapézio retângulo em torno de sua altura:", a: "Tronco de Cone Reto" },
+            { id: 60, q: "Sólido de revolução gerado pela rotação de um semicírculo em torno do seu diâmetro:", a: "Esfera" },
+            { id: 61, q: "Fórmula matemática da Área da Superfície Esférica de raio R:", a: "A = 4π·R²" },
+            { id: 62, q: "Fórmula matemática do Volume da Esfera de raio R:", a: "V = (4/3)π·R³" },
+            { id: 63, q: "Qualquer corte plano feito em uma esfera resulta sempre em um...", a: "Círculo" },
+            { id: 64, q: "Relação de Pitágoras na secção esférica (raio da esfera R, distância d, raio do corte r):", a: "R² = d² + r²" },
+            { id: 65, q: "O maior círculo que se pode obter seccionando a esfera (passando pelo centro):", a: "Círculo Máximo" },
+            { id: 66, q: "A superfície da casca entre dois meridianos da esfera (semelhante ao gomo) chama-se...", a: "Fuso Esférico" },
+            { id: 67, q: "O sólido interno equivalente a um gomo da esfera (com volume) chama-se...", a: "Cunha Esférica" },
+            { id: 68, q: "Volume de uma esfera que possui raio R = 3 cm:", a: "36π cm³" },
+            { id: 69, q: "Área da superfície de uma esfera com raio R = 5 cm:", a: "100π cm²" },
+            { id: 70, q: "Se a razão de semelhança linear entre dois sólidos é k, a razão entre seus volumes é...", a: "k³" },
+            { id: 71, q: "Se a razão de semelhança linear entre figuras semelhantes é k, a razão de suas áreas é...", a: "k²" },
+            { id: 72, q: "Em uma esfera inscrita perfeitamente em um cubo de aresta \"a\", o raio da esfera é...", a: "a/2" },
+            { id: 73, q: "Se dobrarmos o raio de uma esfera, seu volume fica multiplicado por...", a: "8" },
+            { id: 74, q: "Se duplicarmos a aresta de um cubo, sua área total fica multiplicada por...", a: "4" },
+            { id: 75, q: "Princípio geométrico que garante que sólidos com áreas de corte iguais têm mesmo volume:", a: "Princípio de Cavalieri" }
+        ];
+
+        const TOTAL_POOL_SIZE = BINGO_DATABASE.length; // 76
+        const ITEMS_PER_CARD = 24; // 24 itens + 1 espaço central livre = 25 casas
+
+        let drawnIndices = [];
+
+        // =========================================================================
+        // GERADOR DETERMINÍSTICO DE CARTELAS
+        // Garante que a Cartela #001 sempre tenha as mesmas pedras para conferência
+        // =========================================================================
+        function generateIndicesForCard(cardId, poolSize, sampleSize) {
+            let indices = Array.from({ length: poolSize }, (_, i) => i);
+            let seed = cardId * 1543;
+
+            for (let i = indices.length - 1; i > 0; i--) {
+                let r = Math.sin(seed++) * 10000;
+                let randomFloat = r - Math.floor(r);
+                let j = Math.floor(randomFloat * (i + 1));
+                
+                let temp = indices[i];
+                indices[i] = indices[j];
+                indices[j] = temp;
+            }
+            return indices.slice(0, sampleSize).sort((a, b) => a - b);
+        }
+
+        // =========================================================================
+        // GERENCIAMENTO DE ABAS
+        // =========================================================================
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if (tab === 'sorteio') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('panel-sorteio').classList.add('active');
+            } else if (tab === 'cartelas') {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('panel-cartelas').classList.add('active');
+                renderAllCards();
+            } else {
+                document.querySelectorAll('.tab-btn')[2].classList.add('active');
+                document.getElementById('panel-regras').classList.add('active');
+            }
+        }
+
+        // =========================================================================
+        // MOTOR DE SORTEIO
+        // =========================================================================
+        function drawItem() {
+            if (drawnIndices.length >= TOTAL_POOL_SIZE) {
+                alert("Todas as 76 pedras já foram sorteadas!");
+                return;
+            }
+
+            let available = [];
+            for (let i = 0; i < TOTAL_POOL_SIZE; i++) {
+                if (!drawnIndices.includes(i)) available.push(i);
+            }
+
+            let randomIndex = available[Math.floor(Math.random() * available.length)];
+            drawnIndices.push(randomIndex);
+
+            const item = BINGO_DATABASE[randomIndex];
+
+            document.getElementById('draw-count').innerText = `Sorteio Nº ${drawnIndices.length} de ${TOTAL_POOL_SIZE}`;
+            document.getElementById('draw-question').innerText = item.q;
+            
+            document.getElementById('answer-container').style.display = 'flex';
+            document.getElementById('draw-answer').innerText = `Gabarito: ${item.a}`;
+            document.getElementById('draw-answer').style.display = 'none';
+
+            const btnReveal = document.getElementById('btn-reveal');
+            btnReveal.innerHTML = '👁️ Revelar Resposta';
+            btnReveal.style.backgroundColor = 'transparent';
+            btnReveal.style.color = 'var(--electric-cyan)';
+
+            document.getElementById('drawn-count-label').innerText = drawnIndices.length;
+            renderGeneralHistoryBoard();
+
+            if (document.getElementById('check-card-id').value !== "") {
+                validateCard();
+            }
+        }
+
+        function toggleAnswer() {
+            const ansDiv = document.getElementById('draw-answer');
+            const btn = document.getElementById('btn-reveal');
+
+            if (ansDiv.style.display === 'none' || ansDiv.style.display === '') {
+                ansDiv.style.display = 'block';
+                btn.innerHTML = '🙈 Ocultar Resposta';
+                btn.style.backgroundColor = 'rgba(0, 255, 136, 0.2)';
+                btn.style.color = 'var(--success)';
+            } else {
+                ansDiv.style.display = 'none';
+                btn.innerHTML = '👁️ Revelar Resposta';
+                btn.style.backgroundColor = 'transparent';
+                btn.style.color = 'var(--electric-cyan)';
+            }
+        }
+
+        function resetGame() {
+            if (confirm("Deseja realmente reiniciar o sorteio do bingo? Todo o histórico de pedras será limpo.")) {
+                drawnIndices = [];
+                document.getElementById('draw-count').innerText = "Nenhum item sorteado";
+                document.getElementById('draw-question').innerText = 'Clique em "Sortear Próxima Pergunta" para começar o bingo!';
+                document.getElementById('answer-container').style.display = 'none';
+                document.getElementById('drawn-count-label').innerText = "0";
+                document.getElementById('checker-result').style.display = 'none';
+                document.getElementById('check-card-id').value = '';
+                renderGeneralHistoryBoard();
+            }
+        }
+
+        function renderGeneralHistoryBoard() {
+            const container = document.getElementById('history-container');
+            container.innerHTML = '';
+
+            BINGO_DATABASE.forEach((item, index) => {
+                const el = document.createElement('div');
+                const isDrawn = drawnIndices.includes(index);
+                el.className = `history-item ${isDrawn ? 'drawn' : ''}`;
+                
+                const drawOrder = isDrawn ? ` #${drawnIndices.indexOf(index) + 1}` : '';
+                el.innerHTML = `<strong>${item.a}</strong>${drawOrder ? `<br><small style="color:var(--success);">${drawOrder}</small>` : ''}`;
+                container.appendChild(el);
+            });
+        }
+
+        // =========================================================================
+        // VALIDADOR DE CARTELAS VENCEDORAS
+        // =========================================================================
+        function validateCard() {
+            const cardInput = document.getElementById('check-card-id');
+            const cardId = parseInt(cardInput.value);
+
+            if (!cardId || cardId < 1) {
+                alert("Por favor, digite um número de cartela válido (ex: 1, 2, 3...)");
+                return;
+            }
+
+            const cardIndices = generateIndicesForCard(cardId, TOTAL_POOL_SIZE, ITEMS_PER_CARD);
+            const gridContainer = document.getElementById('checker-grid');
+            gridContainer.innerHTML = '';
+
+            let matchesCount = 0;
+            let itemIndex = 0;
+
+            for (let i = 0; i < 25; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'checker-cell';
+
+                if (i === 12) {
+                    cell.className += ' matched';
+                    cell.innerHTML = `<strong>⭐ LIVRE</strong>`;
+                    matchesCount++;
+                } else {
+                    const dbIdx = cardIndices[itemIndex];
+                    const item = BINGO_DATABASE[dbIdx];
+                    const isMatched = drawnIndices.includes(dbIdx);
+
+                    if (isMatched) {
+                        cell.className += ' matched';
+                        cell.innerHTML = `<span>${item.a}</span><small>✅ Sorteado</small>`;
+                        matchesCount++;
+                    } else {
+                        cell.className += ' missing';
+                        cell.innerHTML = `<span>${item.a}</span><small>⏳ Pendente</small>`;
+                    }
+                    itemIndex++;
+                }
+                gridContainer.appendChild(cell);
+            }
+
+            const resultPanel = document.getElementById('checker-result');
+            const statusHeader = document.getElementById('checker-status');
+            const detailsDiv = document.getElementById('checker-details');
+
+            resultPanel.style.display = 'block';
+
+            if (matchesCount === 25) {
+                statusHeader.style.color = "var(--success)";
+                statusHeader.innerHTML = "🎉 BINGO COMPLETO! CARTELA VENCEDORA! 🎉";
+                detailsDiv.innerHTML = `Cartela #${cardId} acertou todas as 25 casas (24 itens + casa livre).`;
+            } else {
+                statusHeader.style.color = "var(--warning)";
+                statusHeader.innerHTML = `Cartela #${cardId}: ${matchesCount} de 25 casas`;
+                const missing = 25 - matchesCount;
+                detailsDiv.innerHTML = `Faltam <strong>${missing}</strong> pedras para completar a cartela.`;
+            }
+        }
+
+        // =========================================================================
+        // GERADOR DAS CARTELAS EM FOLHAS A4 (PADRÃO SUPER TRUNFO: .sheet-page)
+        // Agrupa estritamente em blocos de 4 cartelas (2 colunas x 2 linhas) por folha
+        // =========================================================================
+        function makeCardHTML(cardId) {
+            const cardIndices = generateIndicesForCard(cardId, TOTAL_POOL_SIZE, ITEMS_PER_CARD);
+            
+            let cellsHTML = '';
+            let itemIndex = 0;
+            for (let i = 0; i < 25; i++) {
+                if (i === 12) {
+                    cellsHTML += `<div class="card-cell free">⭐ LIVRE</div>`;
+                } else {
+                    const item = BINGO_DATABASE[cardIndices[itemIndex]];
+                    cellsHTML += `<div class="card-cell">${item.a}</div>`;
+                    itemIndex++;
+                }
+            }
+
+            return `
+                <div class="bingo-card">
+                    <div class="card-header">
+                        <div class="card-title">BINGO: GEOMETRIA ESPACIAL</div>
+                        <div class="card-id">CÓD: ${String(cardId).padStart(3, '0')}</div>
+                    </div>
+                    <div class="card-bingo-letters">
+                        <div>B</div><div>I</div><div>N</div><div>G</div><div>O</div>
+                    </div>
+                    <div class="card-grid">
+                        ${cellsHTML}
+                    </div>
+                    <div class="card-footer-info">
+                        Ouça o desafio e marque o termo correspondente · Ganha quem preencher primeiro!
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAllCards() {
+            const container = document.getElementById('cards-container');
+            container.innerHTML = "";
+            const quantity = parseInt(document.getElementById('print-quantity').value) || 24;
+
+            let pagesHtml = "";
+            for (let i = 1; i <= quantity; i += 4) {
+                let cardsInPage = "";
+                for (let j = 0; j < 4 && (i + j) <= quantity; j++) {
+                    cardsInPage += makeCardHTML(i + j);
+                }
+                pagesHtml += `<div class="sheet-page">${cardsInPage}</div>`;
+            }
+            container.innerHTML = pagesHtml;
+        }
+
+        function printCards() {
+            document.body.classList.add('print-mode-cards');
+            window.print();
+            document.body.classList.remove('print-mode-cards');
+        }
+
+        function printGuide() {
+            document.body.classList.add('print-mode-guide');
+            window.print();
+            document.body.classList.remove('print-mode-guide');
+        }
+
+        window.addEventListener('afterprint', () => {
+            document.body.classList.remove('print-mode-cards', 'print-mode-guide');
+        });
+
+        // =========================================================================
+        // MONTAGEM DA TABELA DE GABARITO DO PROFESSOR
+        // =========================================================================
+        function renderGuideTable() {
+            const tbody = document.getElementById('guide-table-body');
+            tbody.innerHTML = '';
+
+            BINGO_DATABASE.forEach((item, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight: bold; text-align: center;">${idx + 1}</td>
+                    <td style="font-weight: bold; color: #1e3a8a;">${item.a}</td>
+                    <td>${item.q}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // =========================================================================
+        // INICIALIZAÇÃO
+        // =========================================================================
+        window.onload = function() {
+            document.getElementById('total-count-label').innerText = TOTAL_POOL_SIZE;
+            renderGeneralHistoryBoard();
+            renderGuideTable();
+            renderAllCards();
+        };
+    </script>
+</body>
+</html>
