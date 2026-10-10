@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Caderno Completo da Oficina • Do Ensino ao Desenvolvimento</title>
+<style>
+/* Variáveis de estilo integradas */
+:root { 
+    --ink: #111; 
+    --dark: #222;
+    --light: #f0f2f5;
+    --muted: #555;
+    --border-color: #333;
+    --accent: #2d5f81;
+}
+
+* { box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+body { margin: 0; background: var(--light); color: var(--ink); }
+
+/* =========================================================
+   TOOLBAR DE NAVEGAÇÃO E IMPRESSÃO
+   ========================================================= */
+.toolbar {
+    position: sticky; top: 0; z-index: 1000;
+    background: #1e293b; color: white; padding: 10px 18px;
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.35);
+}
+.toolbar .title { font-size: 13.5px; font-weight: bold; margin-right: 12px; color: #f8fafc; letter-spacing: 0.5px; }
+.btn-group { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.toolbar button {
+    background: #fff; color: #1e293b; border: none; border-radius: 4px;
+    padding: 7px 11px; font-size: 11.5px; font-weight: bold; cursor: pointer; transition: 0.2s;
+    display: inline-flex; align-items: center; gap: 4px;
+}
+.toolbar button:hover { background: #38bdf8; color: #0f172a; }
+.toolbar button.btn-all { background: #10b981; color: white; }
+.toolbar button.btn-all:hover { background: #059669; }
+.toolbar .tip { width: 100%; text-align: center; font-size: 10.5px; color: #94a3b8; margin-top: 2px; }
+
+/* =========================================================
+   FOLHAS A4 (PADRÃO DE IMPRESSÃO)
+   ========================================================= */
+.sheet {
+    width: 210mm; min-height: 297mm; margin: 20px auto;
+    padding: 12mm 15mm; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    position: relative; display: flex; flex-direction: column;
+}
+
+/* Cabeçalhos e Títulos */
+.header { text-align: center; margin-bottom: 16px; border-bottom: 2px solid #222; padding-bottom: 7px; }
+.header h1 { font-family: Georgia, serif; font-size: 21pt; margin: 0 0 3px; color: var(--dark); }
+.header p { font-size: 9.8pt; color: var(--muted); margin: 0; font-style: italic; }
+.kicker { font-size: 8.5pt; letter-spacing: 1.5px; text-transform: uppercase; font-weight: bold; margin: 0 0 2mm; color: #666; }
+.tag-gabarito { font-size: 9.5pt; font-weight: bold; color: #d32f2f; text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 3px; }
+
+h2 { font-family: Georgia, serif; font-size: 15pt; margin: 0 0 3mm; border-bottom: 2px solid var(--dark); padding-bottom: 2px; }
+h3 { font-size: 11pt; margin: 0 0 2mm; color: #333; }
+p, li { font-size: 10.5pt; line-height: 1.45; }
+p { margin: 0 0 3.5mm; }
+ul { padding-left: 6mm; margin: 0 0 4mm; }
+li { margin-bottom: 1.5mm; }
+.reference { font-size: 8pt; line-height: 1.35; margin-top: 4mm; color: #555; }
+
+/* =========================================================
+   SEÇÃO: CARTÕES DE SITUAÇÃO
+   ========================================================= */
+.cards-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    border-top: 1.5px dashed #888; border-left: 1.5px dashed #888;
+}
+.card {
+    border-right: 1.5px dashed #888; border-bottom: 1.5px dashed #888;
+    padding: 7.5mm; background: #fff; break-inside: avoid; position: relative;
+}
+.card-tag {
+    display: inline-block; font-size: 8pt; font-weight: bold; text-transform: uppercase;
+    background: var(--dark); color: white; padding: 2px 6px; border-radius: 3px; margin-bottom: 7px;
+}
+.card h3 { font-size: 12pt; margin-bottom: 5px; border-bottom: none; color: #111; }
+.card p { font-size: 9.2pt; line-height: 1.38; text-align: justify; margin-bottom: 0; }
+.card .challenge { margin-top: 7px; border-top: 1px solid #ddd; padding-top: 5px; font-weight: bold; color: #d32f2f; }
+
+/* =========================================================
+   SEÇÃO: FICHA DE RESPOSTA
+   ========================================================= */
+.ficha-full { display: flex; flex-direction: column; flex: 1; }
+.identify { font-size: 11pt; padding-bottom: 2mm; line-height: 1.8; border-bottom: 2px solid #222; margin-bottom: 5mm; }
+.identify p { margin: 0; display: flex; align-items: baseline; gap: 3mm; }
+.identify strong { white-space: nowrap; }
+.blank { flex: 1; min-width: 0; border-bottom: 1px solid #999; }
+.prompt { margin-bottom: 5.5mm; break-inside: avoid; }
+.prompt:last-child { margin-bottom: 0; }
+.prompt h4 { margin: 0 0 2px 0; font-size: 11.5pt; color: #111; }
+.prompt p { font-size: 9.5pt; color: #444; margin: 0 0 3px 0; }
+.lines-container { height: 34mm; width: 100%; display: flex; flex-direction: column; }
+.answer-line { flex: 1; border-bottom: 1px solid #bbb; }
+
+/* =========================================================
+   SEÇÃO: CRUZADINHA (GRADE OTIMIZADA)
+   ========================================================= */
+.grid-wrap { 
+    width: 100%; 
+    max-width: 185mm; 
+    margin: 0 auto 16px auto; 
+}
+.grid { 
+    width: 100%; 
+    border-collapse: collapse; 
+    table-layout: fixed; 
+    border: 1.5px solid #111; 
+}
+.grid td {
+    position: relative;
+    border: 0.65px solid var(--border-color);
+    background: white;
+    padding: 0;
+}
+.grid td::before {
+    content: "";
+    display: block;
+    padding-top: 100%; 
+}
+.cell-inner { 
+    position: absolute; 
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex; align-items: center; justify-content: center; 
+}
+.marker { 
+    position: absolute; top: 1px; left: 2px; 
+    font-size: 4.8pt; font-weight: bold; line-height: 1; 
+    display: flex; gap: 1px; 
+    color: #111;
+}
+.letter { 
+    font-size: 11.5pt; font-weight: bold; 
+    text-transform: uppercase;
+}
+.grid td.block {
+    background: repeating-linear-gradient(45deg, #fff, #fff 2px, #888 2px, #888 3px);
+}
+.clues-container { display: grid; grid-template-columns: 1fr 1fr; column-gap: 10mm; }
+.clue-group h3 { font-size: 10.5pt; border-bottom: 1px solid #333; padding-bottom: 3px; margin: 0 0 8px; text-align: left; }
+.clue { display: flex; gap: 6px; font-size: 8.2pt; line-height: 1.32; margin-bottom: 7px; text-align: justify; }
+.clue .num { font-weight: bold; min-width: 22px; text-align: right; }
+.meta { font-size: 7.2pt; color: #666; white-space: nowrap; }
+
+/* =========================================================
+   SEÇÃO: ARTIGO FRAGMENTADO (2 COLUNAS ACADÊMICAS)
+   ========================================================= */
+.article-header { text-align: left; margin-bottom: 10px; border-bottom: 1.5px solid #333; padding-bottom: 6px; }
+.article-header h2 { font-family: Georgia, serif; font-size: 13pt; margin: 0 0 3px; border: none; padding: 0; color: #111; }
+.article-header .authors { font-size: 9pt; color: #555; margin: 0; font-style: italic; }
+.article-body {
+    column-count: 2;
+    column-gap: 7mm;
+    text-align: justify;
+    font-size: 8pt;
+    line-height: 1.32;
+    flex: 1;
+}
+.article-body p {
+    margin: 0 0 2mm;
+    text-indent: 3.5mm;
+}
+.article-body p:first-of-type {
+    text-indent: 0;
+}
+.article-section-title {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 8.8pt;
+    font-weight: bold;
+    color: #111;
+    margin: 3mm 0 1mm;
+    break-after: avoid;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 1px;
+    text-indent: 0;
+}
+.omission {
+    text-align: center;
+    color: #666;
+    font-size: 7.8pt;
+    letter-spacing: 2px;
+    margin: 1.2mm 0;
+    text-indent: 0;
+}
+.article-reference {
+    font-size: 7.4pt;
+    line-height: 1.28;
+    border-top: 1px solid #ccc;
+    padding-top: 2mm;
+    margin-top: 3mm;
+    color: #444;
+    text-indent: 0;
+}
+.article-footer {
+    text-align: right;
+    font-size: 7.8pt;
+    color: #888;
+    border-top: 1px solid #eee;
+    padding-top: 3px;
+    margin-top: 5px;
+}
+
+/* =========================================================
+   REGRAS DE IMPRESSÃO A4
+   ========================================================= */
+@page { size: A4 portrait; margin: 0; }
+@media print {
+    body { background: white; margin: 0; }
+    .toolbar { display: none !important; }
+    .sheet { 
+        margin: 0; box-shadow: none; break-after: page; 
+        padding: 10mm 12mm; width: 210mm; min-height: 297mm; 
+    }
+    
+    /* Filtro por Alvo de Impressão */
+    body[data-print-target="sec-guia"] .print-area:not(#sec-guia),
+    body[data-print-target="sec-cartoes"] .print-area:not(#sec-cartoes),
+    body[data-print-target="sec-fichas"] .print-area:not(#sec-fichas),
+    body[data-print-target="sec-cruzadinha-atividade"] .print-area:not(#sec-cruzadinha-atividade),
+    body[data-print-target="sec-cruzadinha-gabarito"] .print-area:not(#sec-cruzadinha-gabarito),
+    body[data-print-target="sec-artigo"] .print-area:not(#sec-artigo) {
+        display: none !important;
+    }
+    
+    /* Evita folha em branco residual no final */
+    body[data-print-target="sec-guia"] #sec-guia .sheet,
+    body[data-print-target="sec-cartoes"] #sec-cartoes .sheet:last-child,
+    body[data-print-target="sec-fichas"] #sec-fichas .sheet,
+    body[data-print-target="sec-cruzadinha-atividade"] #sec-cruzadinha-atividade .sheet,
+    body[data-print-target="sec-cruzadinha-gabarito"] #sec-cruzadinha-gabarito .sheet,
+    body[data-print-target="sec-artigo"] #sec-artigo .sheet:last-child {
+        break-after: auto;
+    }
+    
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* Visualizador e Ações do PDF Embutido */
+.sheet-pdf-viewer {
+    min-height: 297mm;
+    display: flex;
+    flex-direction: column;
+}
+.pdf-action-bar {
+    background: #f8fafc;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+.pdf-info {
+    font-size: 10pt;
+    color: #334155;
+}
+.pdf-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.pdf-buttons button, .pdf-buttons a {
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.btn-pdf-print { background: #2563eb; color: white; }
+.btn-pdf-print:hover { background: #1d4ed8; }
+.btn-pdf-download { background: #0f172a; color: white; }
+.btn-pdf-download:hover { background: #334155; }
+.btn-pdf-open { background: #e2e8f0; color: #0f172a; }
+.btn-pdf-open:hover { background: #cbd5e1; }
+
+.pdf-frame-container {
+    flex: 1;
+    width: 100%;
+    min-height: 220mm;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #525659;
+}
+.pdf-frame {
+    width: 100%;
+    height: 100%;
+    min-height: 220mm;
+    border: none;
+}
+
+@media print {
+    .sheet-pdf-viewer {
+        display: none !important;
+    }
+}
+</style>
+</head>
+<body>
+<nav aria-label="Menu de Impressão da Oficina" class="toolbar">
+<span class="title">Oficina Pedagógica • Material Completo</span>
+<div class="btn-group"><button onclick="printSection('sec-guia')" type="button">📖 Guia da Turma</button><button onclick="printSection('sec-cartoes')" type="button">✂️ Cartões de Situação</button><button onclick="printSection('sec-fichas')" type="button">📝 Ficha de Resposta</button><button onclick="printSection('sec-cruzadinha-atividade')" type="button">🧩 Cruzadinha (Atividade)</button><button onclick="printSection('sec-cruzadinha-gabarito')" type="button">🔑 Cruzadinha (Gabarito)</button><button onclick="printPDF('artigo_fragmentado.pdf')" type="button">📄 Imprimir Artigo (PDF)</button><button onclick="downloadPDF('artigo_fragmentado.pdf')" type="button">📥 Baixar Artigo (PDF)</button><button class="btn-all" onclick="printAll()" type="button">📑 Imprimir Atividades (HTML)</button></div>
+<span class="tip">Impressão configurada para A4, orientação retrato, escala 100% e margens padrão.</span>
+</nav>
+<main>
+<!-- SEÇÃO 1: GUIA DA TURMA -->
+<div class="print-area" id="sec-guia">
+<section class="sheet">
+<p class="kicker">Oficina Colaborativa • Guia da Turma</p>
+<h1>Escolha uma situação.<br/>Transforme a aula.</h1>
+<p>Doze situações: duas de Letras, Química, Matemática e Biologia, mais quatro situações gerais do trabalho docente.</p>
+<h2>Como participar</h2>
+<ul>
+<li>Formem grupos de <strong>3 a 5 pessoas</strong>. Podem ser da mesma licenciatura ou grupos mistos.</li>
+<li>Os cartões estão sobre a mesa. <strong>Escolham somente uma situação</strong>, específica ou geral.</li>
+<li>Discutam e proponham uma intervenção simples, <strong>fundamentada nas ideias do artigo</strong>, para favorecer a aprendizagem e o desenvolvimento dos estudantes.</li>
+<li>Respondam às <strong>quatro perguntas</strong> da ficha. Não é necessário elaborar um plano de aula completo: indiquem o que os alunos farão e como o professor orientará esse processo.</li>
+<li>Usem no mínimo <strong>dois conceitos do artigo</strong> para justificar as escolhas pedagógicas do grupo.</li>
+</ul>
+<h2>Conceitos de Apoio</h2>
+<p><strong>Mediação:</strong> Orientação intencional do professor, uso da linguagem e de signos para favorecer a reorganização do pensamento do aluno.<br/>
+<strong>Interação:</strong> Troca entre sujeitos que contribui para a significação de conceitos.<br/>
+<strong>Contextualização:</strong> Relação entre o conhecimento e uma situação concreta, considerando a vivência do estudante.<br/>
+<strong>Protagonismo:</strong> Envolvimento ativo dos alunos no estudo, sem anular a responsabilidade do professor de ensinar.<br/>
+<strong>Trabalho Coletivo:</strong> Planejamento e reflexão conjuntos para superar o isolamento e qualificar o ensino.</p>
+<p class="reference">Artigo-base: FRISON, Marli Dallagnol; WYZYKOWSKI, Tamini. Interdependência entre os processos de ensino, de aprendizagem e de desenvolvimento humano. <em>Interfaces da Educação</em>, v. 12, n. 34, p. 238–264, 2021.</p>
+</section>
+</div>
+<!-- SEÇÃO 2: CARTÕES PARA RECORTE (12 CASOS) -->
+<div class="print-area" id="sec-cartoes">
+<section class="sheet">
+<div class="cards-grid">
+<article class="card">
+<span class="card-tag">Letras</span>
+<h3>L1 — Pontuação muda o sentido</h3>
+<p>Em uma turma do ensino fundamental, a professora apresenta: “Vamos comer, crianças!” e “Vamos comer crianças!”. Alguns estudantes dizem que a vírgula serve apenas para uma pausa na respiração e que as frases comunicam a mesma coisa. Eles têm dificuldade para explicar a mudança na função de “crianças” e no sentido da mensagem.</p>
+<p class="challenge">Desafio: Como ajudar os alunos a perceber e explicar a mudança de sentido provocada pela vírgula?</p>
+</article>
+<article class="card">
+<span class="card-tag">Letras</span>
+<h3>L2 — O que a notícia realmente diz?</h3>
+<p>A turma lê a notícia: “A praça foi fechada temporariamente após fortes chuvas e será reaberta depois de uma vistoria”. Alguns estudantes afirmam que a praça ficará fechada para sempre. Outros copiam a frase, mas não explicam por que essa conclusão está errada. A leitura estagnou na mera reprodução de palavras.</p>
+<p class="challenge">Desafio: Que mediação usar para ajudar os alunos a justificarem suas conclusões com base no texto?</p>
+</article>
+<article class="card">
+<span class="card-tag">Química</span>
+<h3>Q1 — O sal desapareceu?</h3>
+<p>A turma coloca sal na água e mexe até não ver mais os grãos. Alguns dizem que o sal “desapareceu”; outros que se transformou em água. Quando questionados sobre a composição atual do copo, não conseguem explicar a dissolução e o nível microscópico do processo.</p>
+<p class="challenge">Desafio: Como ajudar os alunos a compreender que a matéria continua presente no sistema?</p>
+</article>
+<article class="card">
+<span class="card-tag">Química</span>
+<h3>Q2 — Gelo e ferrugem são iguais?</h3>
+<p>Observando imagens de um gelo derretendo e um portão enferrujado, alguns alunos afirmam que os casos são iguais “porque a matéria mudou de aparência”. Eles não conseguem distinguir alteração física de reação química formadora de nova substância.</p>
+<p class="challenge">Desafio: Como interagir com os alunos para que diferenciem mudança de estado físico e transformação química?</p>
+</article>
+<article class="card">
+<span class="card-tag">Matemática</span>
+<h3>M1 — Desconto de 25% ou 25 reais?</h3>
+<p>Ao ler que uma mochila de R$ 80 está com 25% de desconto, alguns concluem que o desconto é de R$ 25 (associando o número diretamente ao dinheiro). Outros acertam a conta por regra mecânica, mas não sabem explicar o conceito de porcentagem.</p>
+<p class="challenge">Desafio: Como intervir para que compreendam a porcentagem como relação, e não só apliquem uma regra cega?</p>
+</article>
+<article class="card">
+<span class="card-tag">Matemática</span>
+<h3>M2 — Qual fatia de pizza é maior?</h3>
+<p>Duas pizzas do mesmo tamanho: uma dividida em 4 partes iguais (3 pintadas) e outra em 6 partes iguais (4 pintadas). Alunos dizem que 4/6 é maior que 3/4 “porque quatro pedaços são mais que três”. Ignoram os denominadores e os tamanhos relativos das fatias.</p>
+<p class="challenge">Desafio: Que contextualização propor para que comparem as frações considerando o tamanho das partes?</p>
+</article>
+</div>
+</section><section class="sheet">
+<div class="cards-grid">
+<article class="card">
+<span class="card-tag">Biologia</span>
+<h3>B1 — E se houver menos sapos?</h3>
+<p>Esquema da aula: gafanhotos comem capim e sapos comem gafanhotos. Questionados sobre o que ocorre se os sapos diminuírem, alguns afirmam que “tudo na cadeia vai diminuir junto”. Entendem quem come quem, mas não a interdependência populacional.</p>
+<p class="challenge">Desafio: Como mediar a compreensão das possíveis consequências da diminuição dos sapos nessa cadeia alimentar?</p>
+</article>
+<article class="card">
+<span class="card-tag">Biologia</span>
+<h3>B2 — De onde vem o corpo da planta?</h3>
+<p>Uma muda cresce no vaso. Alunos dizem que a planta “comeu” a terra ou que a água se transformou em folhas sólidas. Sabem que a luz é importante, mas não conseguem explicar a fixação de carbono e a formação de massa celular orgânica (fotossíntese).</p>
+<p class="challenge">Desafio: Como promover o entendimento do papel da luz e do ar na construção da massa da planta?</p>
+</article>
+<article class="card">
+<span class="card-tag">Situação geral</span>
+<h3>G1 — “Isso vai cair na prova?”</h3>
+<p>Ao iniciar um conteúdo, o professor ouve: “Isso vai cair na prova?”. Os alunos copiam e fazem exercícios para conseguir nota, mas não conseguem explicar por que estudar aquele conhecimento nem em que situações ele ajuda a compreender algo. O professor percebe que mencionar a prova garante a realização da tarefa, mas não necessariamente a compreensão.</p>
+<p class="challenge">Desafio: Como organizar o ensino para criar motivos para estudar, além de obter uma nota?</p>
+</article>
+<article class="card">
+<span class="card-tag">Situação geral</span>
+<h3>G2 — Um faz, os outros copiam</h3>
+<p>O professor propõe um trabalho em grupo para explicar um conteúdo. Um estudante resolve tudo e escreve as respostas; os demais apenas copiam. Na apresentação, só ele fala. Quando o professor pergunta aos outros como chegaram à conclusão, eles não conseguem explicar. A tarefa ficou pronta, mas a participação e a compreensão foram desiguais.</p>
+<p class="challenge">Desafio: Como organizar o trabalho para que todos participem do raciocínio e consigam explicar o que aprenderam?</p>
+</article>
+<article class="card">
+<span class="card-tag">Situação geral</span>
+<h3>G3 — Entendeu ou só repetiu?</h3>
+<p>Após acompanhar um exemplo explicado pelo professor, a turma resolve tarefas quase iguais. Na aula seguinte, aparece uma situação diferente que exige o mesmo conceito. Muitos não sabem por onde começar e dizem: “Mas esse você não mostrou”. Conseguem repetir os passos do exemplo, mas não explicar por que funcionam nem quando podem ser usados.</p>
+<p class="challenge">Desafio: Como ajudar os alunos a usar o conceito em novas situações, em vez de apenas repetir um modelo?</p>
+</article>
+<article class="card">
+<span class="card-tag">Situação geral</span>
+<h3>G4 — Duas explicações, uma discussão</h3>
+<p>Ao discutir uma situação em sala, dois alunos apresentam explicações diferentes. O professor informa qual está correta e segue a aula. Alguns estudantes anotam a resposta, mas não compreendem por que uma explicação é mais adequada que a outra nem conseguem justificar sua escolha.</p>
+<p class="challenge">Desafio: Como aproveitar as diferentes explicações para ajudar os alunos a comparar ideias e construir uma compreensão fundamentada?</p>
+</article>
+</div>
+</section>
+</div>
+<!-- SEÇÃO 3: FICHA DE RESPOSTA -->
+<div class="print-area" id="sec-fichas">
+<section class="sheet">
+<div class="ficha-full">
+<div class="identify">
+<p><strong>Integrantes do Grupo:</strong><span aria-hidden="true" class="blank"></span></p>
+<p><strong>Situação:</strong><span aria-hidden="true" class="blank"></span></p>
+</div>
+<div class="prompt">
+<h4>1. O que falta compreender?</h4>
+<p>Qual é a dificuldade específica dos alunos apresentada na situação escolhida?</p>
+<div aria-hidden="true" class="lines-container"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+</div>
+<div class="prompt">
+<h4>2. O que vocês mudariam na aula?</h4>
+<p>Proponham uma mudança simples: o que os alunos farão para compreender melhor e como o professor orientará esse processo?</p>
+<div aria-hidden="true" class="lines-container"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+</div>
+<div class="prompt">
+<h4>3. Como verificar a compreensão?</h4>
+<p>Indiquem uma pergunta ou tarefa curta que ofereça indícios de compreensão, e não apenas de memorização ou conclusão da atividade.</p>
+<div aria-hidden="true" class="lines-container"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+</div>
+<div class="prompt">
+<h4>4. Como isso se relaciona à teoria?</h4>
+<p>Escolham dois conceitos do artigo (por exemplo: mediação, interação, contextualização, protagonismo ou trabalho coletivo) e expliquem onde aparecem na proposta de vocês.</p>
+<div aria-hidden="true" class="lines-container"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+</div>
+</div>
+</section>
+</div>
+<!-- SEÇÃO 4: CRUZADINHA (ATIVIDADE DO ALUNO) -->
+<div class="print-area" id="sec-cruzadinha-atividade">
+<section class="sheet">
+<div class="header">
+<h1>Cruzadinha de Conceitos</h1>
+<p>Interdependência entre os processos de ensino, de aprendizagem e de desenvolvimento humano (Frison &amp; Wyzykowski, 2021)</p>
+</div>
+<div class="grid-wrap">
+<table aria-label="Grade da cruzadinha para preenchimento" class="grid" id="table-atividade"></table>
+</div>
+<div class="clues-container">
+<div class="clue-group">
+<h3>→ HORIZONTAIS</h3>
+<div class="clue"><span class="num">6→</span><span>Processo de ampliação das capacidades humanas, relacionado à apropriação da cultura e à aprendizagem. <span class="meta">(15 letras)</span></span></div>
+<div class="clue"><span class="num">7→</span><span>Termo para a prática humana e docente articulada à reflexão, que o professor deve qualificar. <span class="meta">(6 letras)</span></span></div>
+<div class="clue"><span class="num">8→</span><span>Princípio da Situação de Estudo que articula conhecimentos de diferentes disciplinas, preservando suas especificidades. <span class="meta">(21 letras)</span></span></div>
+<div class="clue"><span class="num">11→</span><span>Capacidade docente de produzir e reorganizar o próprio currículo, construída também pelo diálogo coletivo. <span class="meta">(9 letras)</span></span></div>
+<div class="clue"><span class="num">12→</span><span>O que se passa a desenvolver ao compreender melhor as próprias ações, sentidos e implicações educacionais. <span class="meta">(11 letras)</span></span></div>
+<div class="clue"><span class="num">13→</span><span>Processo pelo qual a relação com o conhecimento ocorre por meio do outro, da linguagem e de signos. <span class="meta">(8 letras)</span></span></div>
+<div class="clue"><span class="num">15→</span><span>Ação de organizar antecipadamente o ensino, realizada coletivamente nos encontros quinzenais da pesquisa. <span class="meta">(12 letras)</span></span></div>
+<div class="clue"><span class="num">17→</span><span>Relação entre sujeitos pela qual o ser humano aprende, se desenvolve e se constitui como tal. <span class="meta">(9 letras)</span></span></div>
+<div class="clue"><span class="num">19→</span><span>Categoria de resultados que destaca a participação ativa; os projetos investigativos favoreceram essa atuação. <span class="meta">(12 letras)</span></span></div>
+<div class="clue"><span class="num">20→</span><span>Relação recíproca entre ensino, aprendizagem e desenvolvimento (não avançam de modo paralelo). <span class="meta">(16 letras)</span></span></div>
+<div class="clue"><span class="num">24→</span><span>Modalidade curricular organizada a partir de uma situação concreta e rica em conceitos das ciências. <span class="meta">(8, 2, 6 letras)</span></span></div>
+<div class="clue"><span class="num">25→</span><span>Perspectiva teórica que compreende a constituição humana a partir da história, cultura e relações sociais. <span class="meta">(9, 8 letras)</span></span></div>
+<div class="clue"><span class="num">27→</span><span>Recursos simbólicos, como as palavras, que medeiam o trabalho educativo e a atividade cognitiva. (Plural) <span class="meta">(6 letras)</span></span></div>
+<div class="clue"><span class="num">28→</span><span>Movimento de examinar a própria prática, que favorece a tomada de consciência e transformação pedagógica. <span class="meta">(8 letras)</span></span></div>
+<div class="clue"><span class="num">29→</span><span>Processo que vai além da memorização, envolvendo se apropriar de conhecimentos e reorganizar o pensamento. <span class="meta">(12 letras)</span></span></div>
+<div class="clue"><span class="num">30→</span><span>Meio verbal em que a experiência histórico-social se generaliza e que atua na constituição dos conceitos. <span class="meta">(9 letras)</span></span></div>
+</div>
+<div class="clue-group">
+<h3>↓ VERTICAIS</h3>
+<div class="clue"><span class="num">1↓</span><span>Nome dado por Vigotski à gênese das funções intrapsíquicas a partir das relações sociais. <span class="meta">(14 letras)</span></span></div>
+<div class="clue"><span class="num">2↓</span><span>Condição ligada aos interesses que impulsionam o envolvimento profundo nas atividades de estudo. <span class="meta">(9 letras)</span></span></div>
+<div class="clue"><span class="num">3↓</span><span>Atividade do professor que, quando intencional e organizada, pode redirecionar o desenvolvimento humano. <span class="meta">(6 letras)</span></span></div>
+<div class="clue"><span class="num">4↓</span><span>Ação de ajudar o outro, exemplificada pelo apoio dos demais professores à orientação dos projetos. <span class="meta">(11 letras)</span></span></div>
+<div class="clue"><span class="num">5↓</span><span>Tipo de pesquisa empregado no artigo, articulando investigação, reflexão e transformação da prática. <span class="meta">(8, 4 letras)</span></span></div>
+<div class="clue"><span class="num">9↓</span><span>Troca verbal constante entre sujeitos, apontada como caminho para retomar princípios e prioridades. <span class="meta">(7 letras)</span></span></div>
+<div class="clue"><span class="num">10↓</span><span>Princípio que relaciona conceitos à situação estudada e à vivência, em vez de apresentá-los isolados. <span class="meta">(16 letras)</span></span></div>
+<div class="clue"><span class="num">14↓</span><span>Atividade dominante do aluno no período de escolarização, cujo objetivo primário é a aprendizagem. <span class="meta">(6 letras)</span></span></div>
+<div class="clue"><span class="num">16↓</span><span>Processo pelo qual o indivíduo faz suas as conquistas da humanidade, desenvolvendo capacidades psíquicas. <span class="meta">(11 letras)</span></span></div>
+<div class="clue"><span class="num">18↓</span><span>Instrumentos de pensamento pelos quais interpretamos a realidade; devem integrar um sistema. (Plural) <span class="meta">(9 letras)</span></span></div>
+<div class="clue"><span class="num">21↓</span><span>Designa a atuação conjunta dos professores, fonte de apoio essencial para superar o isolamento letivo. <span class="meta">(8, 8 letras)</span></span></div>
+<div class="clue"><span class="num">22↓</span><span>Processo de atribuir e elaborar sentidos às palavras ou aos conceitos por meio da interação constante. <span class="meta">(12 letras)</span></span></div>
+<div class="clue"><span class="num">23↓</span><span>Conjunto de produções materiais e intelectuais cuja apropriação é necessária ao desenvolvimento do sujeito. <span class="meta">(7 letras)</span></span></div>
+<div class="clue"><span class="num">26↓</span><span>Organização dos conhecimentos escolares, reestruturada na modalidade SE, que o professor precisa produzir. <span class="meta">(9 letras)</span></span></div>
+</div>
+</div>
+</section>
+</div>
+<!-- SEÇÃO 5: CRUZADINHA (GABARITO DO PROFESSOR) -->
+<div class="print-area" id="sec-cruzadinha-gabarito">
+<section class="sheet">
+<div class="header">
+<span class="tag-gabarito">Material de Conferência</span>
+<h1>Gabarito da Cruzadinha</h1>
+<p>Interdependência entre os processos de ensino, de aprendizagem e de desenvolvimento humano (Frison &amp; Wyzykowski, 2021)</p>
+</div>
+<div class="grid-wrap">
+<table aria-label="Grade da cruzadinha com gabarito preenchido" class="grid" id="table-gabarito"></table>
+</div>
+</section>
+</div>
+<!-- SEÇÃO 6: ARTIGO FRAGMENTADO (3 PÁGINAS) -->
+<div class="print-area" id="sec-artigo">
+<section class="sheet sheet-pdf-viewer">
+<div class="header">
+<p class="kicker">Texto de Apoio Oficial • 3 Páginas</p>
+<h1>Artigo Fragmentado (PDF Original)</h1>
+<p>Interdependência entre os processos de ensino, de aprendizagem e de desenvolvimento humano (Frison &amp; Wyzykowski, 2021)</p>
+</div>
+<div class="pdf-action-bar">
+<div class="pdf-info">
+<strong>Documento Oficial da Oficina:</strong> Formato diagramado original em 3 páginas A4 (duas colunas acadêmicas).
+        </div>
+<div class="pdf-buttons">
+<button class="btn-pdf-print" onclick="printPDF('artigo_fragmentado.pdf')" type="button">🖨️ Imprimir PDF (3 Páginas)</button>
+<button class="btn-pdf-download" onclick="downloadPDF('artigo_fragmentado.pdf')" type="button">📥 Baixar PDF</button>
+<a class="btn-pdf-open" href="artigo_fragmentado.pdf" target="_blank">↗️ Abrir em Nova Aba</a>
+</div>
+</div>
+<div class="pdf-frame-container">
+<iframe class="pdf-frame" src="artigo_fragmentado.pdf" title="Visualizador do Artigo Fragmentado">
+<p>Seu navegador não suporta visualização direta de PDFs. <a href="artigo_fragmentado.pdf" target="_blank">Clique aqui para baixar ou abrir o PDF</a>.</p>
+</iframe>
+</div>
+</section>
+</div>
+</main>
+<script>
+// Dados da grade da cruzadinha (32 linhas x 29 colunas)
+const gridData = ["#########I###################", "#########N###################", "#########T####M#####E#C######", "#####P##DESENVOLVIMENTO######", "#####E###R####T#####S#L######", "PRAXIS##INTERDISCIPLINARIDADE", "#####Q#C#A####V#####N#B##I###", "#####U#O#L####A##AUTONOMIA###", "CONSCIENCIA###C#######R##L###", "#####S#T#Z####A###MEDIACAO###", "###PLANEJAMENTO####S##C##G###", "#####A#X#C#####A#INTERACAO###", "#####C#T#A#####P###U##O######", "#####A#U#O#####R###D####C####", "#####O#A#####PROTAGONISMO####", "#######L#######P########N####", "#######I###INTERDEPENDENCIA##", "#######Z#####R#I########E####", "#######A#####A#A########I####", "#######C##S##B#C######C#T####", "#######A#SITUACAODEESTUDO####", "#######O##G##L#O######L#S####", "##########N##H########T######", "#########HISTORICOCULTURAL###", "##########F##C##U#####R######", "#########SIGNOS#REFLEXAO#####", "##########C##L##R############", "##########APRENDIZAGEM#######", "##########C##T##C############", "##########A#LINGUAGEM########", "##########O##V##L############", "#############O##O############"];
+const markers = {"0,9": ["1", "↓"], "2,14": ["2", "↓"], "2,20": ["3", "↓"], "2,22": ["4", "↓"], "3,5": ["5", "↓"], "3,8": ["6", "→"], "5,0": ["7", "→"], "5,8": ["8", "→"], "5,25": ["9", "↓"], "6,7": ["10", "↓"], "7,17": ["11", "→"], "8,0": ["12", "→"], "9,18": ["13", "→"], "9,19": ["14", "↓"], "10,3": ["15", "→"], "11,15": ["16", "↓"], "11,17": ["17", "→"], "13,24": ["18", "↓"], "14,13": ["19", "→"], "16,11": ["20", "→"], "16,13": ["21", "↓"], "19,10": ["22", "↓"], "19,22": ["23", "↓"], "20,9": ["24", "→"], "23,9": ["25", "→"], "23,16": ["26", "↓"], "25,9": ["27", "→"], "25,16": ["28", "→"], "27,10": ["29", "→"], "29,12": ["30", "→"]};
+
+function buildGrid(tableId, showLetters) {
+    const table = document.getElementById(tableId);
+    let tbody = document.createElement('tbody');
+    
+    gridData.forEach((rowStr, r) => {
+        const tr = document.createElement('tr');
+        for (let c = 0; c < rowStr.length; c++) {
+            const char = rowStr[c];
+            const td = document.createElement('td');
+            
+            if (char === '#') {
+                td.className = 'block';
+                td.setAttribute('aria-hidden', 'true');
+            } else {
+                const inner = document.createElement('div');
+                inner.className = 'cell-inner';
+                
+                const key = `${r},${c}`;
+                if (markers[key]) {
+                    const [num, arrow] = markers[key];
+                    const marker = document.createElement('span');
+                    marker.className = 'marker';
+                    marker.innerHTML = `<span>${num}</span><span class="arrow">${arrow}</span>`;
+                    inner.appendChild(marker);
+                }
+                
+                if (showLetters && char.trim() !== '') {
+                    const letter = document.createElement('span');
+                    letter.className = 'letter';
+                    letter.textContent = char;
+                    inner.appendChild(letter);
+                }
+                
+                td.appendChild(inner);
+            }
+            tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+}
+
+// Constrói ambas as grades da cruzadinha na inicialização
+buildGrid('table-atividade', false);
+buildGrid('table-gabarito', true);
+
+// Gerenciamento de Impressão Dinâmica por Seção
+function printSection(sectionId) {
+    document.body.dataset.printTarget = sectionId;
+    window.print();
+}
+
+function printAll() {
+    delete document.body.dataset.printTarget;
+    window.print();
+}
+
+window.addEventListener('afterprint', () => {
+    delete document.body.dataset.printTarget;
+});
+
+// Funções de Manipulação do PDF Oficial
+function printPDF(pdfUrl) {
+    // Cria ou reutiliza iframe oculto para impressão limpa do PDF
+    let iframe = document.getElementById('pdf-print-frame');
+    if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.id = 'pdf-print-frame';
+        iframe.style.position = 'fixed';
+        iframe.style.right = '0';
+        iframe.style.bottom = '0';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+        iframe.style.border = '0';
+        document.body.appendChild(iframe);
+    }
+    iframe.src = pdfUrl;
+    iframe.onload = function() {
+        try {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+        } catch(e) {
+            // Caso o navegador bloqueie impressão em iframe por sandbox, abre o PDF em nova aba para imprimir
+            window.open(pdfUrl, '_blank');
+        }
+    };
+}
+
+function downloadPDF(pdfUrl) {
+    const link = document.createElement('a');
+    link.href = pdfUrl;
+    link.download = 'artigo_fragmentado.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+</script>
+
+<style>
+  #btn-voltar-diretorio {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 9999;
+    background: linear-gradient(135deg, #1a237e, #1565c0);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.88rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  #btn-voltar-diretorio:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.45);
+  }
+  @media print { #btn-voltar-diretorio { display: none !important; } }
+</style>
+<a id="btn-voltar-diretorio" href="index.html">&#8592; Voltar ao índice</a>
+
+</body>
+</html>
