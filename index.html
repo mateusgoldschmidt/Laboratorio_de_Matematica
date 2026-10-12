@@ -186,6 +186,47 @@
     .tag-espacial { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.3); }
     .tag-inclusao { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3); }
     .tag-obmep { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .tag-ferramenta { background: rgba(236, 72, 153, 0.15); color: #f9a8d4; border: 1px solid rgba(236, 72, 153, 0.3); }
+
+    /* Card de ferramenta interativa (editor de PDF) */
+    .card.featured {
+      position: relative;
+      background: linear-gradient(150deg, rgba(99, 102, 241, 0.14), rgba(236, 72, 153, 0.1));
+      border-color: rgba(99, 102, 241, 0.35);
+    }
+
+    .card.featured::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 24px;
+      padding: 1px;
+      background: linear-gradient(120deg, rgba(99, 102, 241, 0.7), rgba(6, 182, 212, 0.5), rgba(236, 72, 153, 0.6));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .card.featured:hover::after { opacity: 1; }
+
+    .card-badge {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.16);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #6ee7b7;
+    }
 
     .card h3 {
       font-family: 'Plus Jakarta Sans', sans-serif;
@@ -287,6 +328,22 @@
           <h3>Outros Materiais</h3>
           <p>Reúne materiais didáticos e atividades da oficina para apoio às práticas de aprendizagem.</p>
           <div class="card-footer">Abrir Diretório →</div>
+        </a>
+
+      </div>
+    </section>
+
+    <section class="projects-section">
+      <h2 class="section-title">Ferramentas</h2>
+      <div class="grid">
+
+        <!-- FERRAMENTA: EDITOR DE PDF -->
+        <a href="editor_pdf/" class="card featured">
+          <span class="card-badge">Grátis · offline</span>
+          <span class="card-tag tag-ferramenta">Ferramenta Digital</span>
+          <h3>PDF Workspace — Editor de PDF</h3>
+          <p>Junte, gire, recorte, reordene, duplique e extraia páginas de PDFs e imagens. Também monta folhas com 2 ou 4 páginas por página e gera o arquivo final direto no navegador, sem enviar nada para servidores.</p>
+          <div class="card-footer">Abrir Editor →</div>
         </a>
 
       </div>
