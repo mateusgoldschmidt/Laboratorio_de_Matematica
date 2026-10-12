@@ -1,0 +1,1128 @@
+---
+titulo: "Kit das Frações"
+icone: "🍕"
+descricao: "Material para imprimir e projetar: tiras de fração, baralho de cartas, painel de duelo e gabarito para o 6º ano."
+---
+<!DOCTYPE html>
+<html lang="pt-BR">
+<!-- Desenvolvido por Mateus Goldschmidt -->
+<head>
+    {% include analytics.html %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kit das Frações — 6º ano | Laboratório de Matemática</title>
+    <meta name="description" content="Kit das Frações para o 6º ano: tiras de fração para recortar, baralho de cartas, folha de registro, gabarito e painel para projetar no quadro. Nada precisa ser instalado.">
+    <meta name="author" content="Mateus Goldschmidt">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+      :root{
+        --bg:#0a0912;
+        --panel:rgba(255,255,255,.045);
+        --line:rgba(255,255,255,.11);
+        --txt:#f5f4fb;
+        --muted:#9d93c4;
+        --violet:#8b5cf6;
+        --pink:#ec4899;
+        --verde:#22c55e;
+        --vermelho:#ef4444;
+      }
+      *{box-sizing:border-box;margin:0;padding:0}
+      html,body{min-height:100%}
+      body{
+        background:radial-gradient(1100px 620px at 12% -5%, #241b3d 0%, #0d0b1a 55%, #08070f 100%);
+        background-attachment:fixed;
+        color:var(--txt);
+        font-family:'Outfit',system-ui,-apple-system,sans-serif;
+        -webkit-font-smoothing:antialiased;
+      }
+      button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+      input,select{font-family:inherit}
+
+      /* ================= BARRA SUPERIOR ================= */
+      .app-bar{
+        display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+        padding:13px clamp(14px,3vw,26px);
+        border-bottom:1px solid var(--line);
+        background:rgba(10,9,18,.86);backdrop-filter:blur(14px);
+        position:sticky;top:0;z-index:20;
+      }
+      .brand{display:flex;align-items:center;gap:12px;min-width:0}
+      .brand-icon{
+        width:44px;height:44px;border-radius:14px;flex:none;
+        background:linear-gradient(135deg,var(--violet),var(--pink));
+        display:grid;place-items:center;font-size:21px;
+        box-shadow:0 10px 26px rgba(139,92,246,.4);
+      }
+      .brand h1{font-size:1.14rem;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+      .brand p{font-size:.68rem;color:var(--muted);font-weight:300}
+      .tabs{display:flex;gap:7px;margin-left:auto;flex-wrap:wrap}
+      .tab{
+        padding:10px 17px;border-radius:12px;font-size:.83rem;font-weight:600;
+        border:1px solid var(--line);background:rgba(255,255,255,.05);color:#cdc7e6;
+        transition:.15s;
+      }
+      .tab:hover{border-color:rgba(192,132,252,.45)}
+      .tab.on{background:linear-gradient(135deg,var(--violet),#7c3aed);color:#fff;border-color:transparent;box-shadow:0 8px 22px rgba(124,58,237,.38)}
+      .voltar{
+        padding:10px 16px;border-radius:12px;font-size:.83rem;font-weight:600;
+        border:1px solid var(--line);background:rgba(255,255,255,.05);color:#cdc7e6;
+        text-decoration:none;display:flex;align-items:center;gap:8px;
+      }
+      .voltar:hover{border-color:rgba(192,132,252,.45)}
+
+      main{padding:clamp(14px,2.4vw,26px) clamp(14px,3vw,26px) 60px;max-width:1500px;margin:0 auto}
+      .view{display:none}
+      .view.on{display:block}
+
+      /* ================= PAINEL ================= */
+      .modes{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+      .modes button{
+        padding:10px 16px;border-radius:12px;font-size:.82rem;font-weight:600;
+        border:1px solid var(--line);background:rgba(255,255,255,.05);color:#cdc7e6;
+      }
+      .modes button.on{background:rgba(139,92,246,.22);border-color:rgba(192,132,252,.6);color:#fff}
+      .modo{display:none}
+      .modo.on{display:block}
+      .board-panel{
+        background:var(--panel);border:1px solid var(--line);border-radius:22px;
+        padding:clamp(14px,2vw,24px);backdrop-filter:blur(12px);
+      }
+      .rotulo{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:10px}
+
+      /* cartas do duelo */
+      .duelo{display:grid;grid-template-columns:1fr auto 1fr;gap:clamp(10px,2vw,22px);align-items:center}
+      .carta-painel{
+        background:rgba(0,0,0,.34);border:1px solid var(--line);border-radius:18px;
+        padding:clamp(14px,2.4vw,26px);display:flex;flex-direction:column;align-items:center;gap:14px;
+        min-height:190px;justify-content:center;
+      }
+      .frac-grande{display:flex;flex-direction:column;align-items:center;line-height:.94;font-weight:800;
+        font-size:clamp(2.2rem,6vw,4rem)}
+      .frac-grande .den{border-top:4px solid currentColor;padding-top:4px;margin-top:2px}
+      .barra{width:100%;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.28);
+        display:flex;overflow:hidden;background:rgba(0,0,0,.3)}
+      .barra i{display:block;border-right:1px solid rgba(0,0,0,.45)}
+      .barra i:ultimo,.barra i:last-child{border-right:0}
+      .vs{font-size:1.7rem;font-weight:800;color:#c4b5fd;text-align:center}
+      .dica-carta{font-size:.68rem;color:var(--muted);text-align:center}
+
+      .veredito{
+        margin-top:16px;border-radius:16px;padding:15px 18px;font-size:clamp(.86rem,1.5vw,1rem);
+        line-height:1.6;background:rgba(34,197,94,.11);border:1px solid rgba(34,197,94,.38);color:#bbf7d0;
+        display:none;
+      }
+      .veredito.on{display:block}
+      .veredito.empate{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.42);color:#fde68a}
+      .veredito b{color:#fff}
+      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+      .linha-acoes{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}
+      .btn{
+        padding:12px 20px;border-radius:13px;font-size:.86rem;font-weight:600;color:#fff;
+        background:linear-gradient(135deg,var(--violet),#7c3aed);box-shadow:0 8px 22px rgba(124,58,237,.36);
+      }
+      .btn:hover{filter:brightness(1.08)}
+      .btn.claro{background:rgba(255,255,255,.08);box-shadow:none;border:1px solid var(--line)}
+      .btn.ok{background:linear-gradient(135deg,#16a34a,#22c55e);box-shadow:none}
+      .btn.ruim{background:rgba(239,68,68,.18);border:1px solid rgba(239,68,68,.45);box-shadow:none}
+      .btn:disabled{opacity:.4;cursor:not-allowed;filter:none}
+      .nota{font-size:.76rem;color:var(--muted)}
+
+      .placar{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+      .time{flex:1;min-width:170px;display:flex;align-items:center;gap:12px;
+        background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:15px;padding:12px 16px}
+      .time.a{border-color:rgba(139,92,246,.55)}
+      .time.b{border-color:rgba(236,72,153,.55)}
+      .time .nm{font-size:.82rem;color:var(--muted)}
+      .time .sc{margin-left:auto;font-size:1.7rem;font-weight:800}
+      .mini{padding:7px 12px;border-radius:10px;font-size:.76rem;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#ded9f2}
+      .mini:hover{border-color:rgba(192,132,252,.5)}
+
+      .historico{margin-top:20px;display:flex;flex-direction:column;gap:8px}
+      .hrow{display:flex;align-items:center;gap:14px;font-size:.84rem;padding:10px 14px;border-radius:12px;
+        background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.07);flex-wrap:wrap}
+      .hrow .quem{font-weight:700}
+      .hrow .res{margin-left:auto;color:var(--muted);font-size:.78rem}
+
+      /* monte a meta */
+      .meta-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(14px,2.4vw,26px)}
+      .caldeirao{display:flex;flex-direction:column;gap:16px}
+      .linha-barra{display:flex;flex-direction:column;gap:7px}
+      .linha-barra .cab{display:flex;justify-content:space-between;font-size:.82rem;color:var(--muted)}
+      .linha-barra .cab b{color:#fff}
+      .barra.grande{height:52px;border-radius:13px}
+      .marcas{display:flex;font-size:.62rem;color:#7d74a5;height:15px}
+      .marcas span{flex:1;text-align:center;border-left:1px dashed rgba(255,255,255,.16);padding-top:2px}
+      .marcas span:last-child{border-right:1px dashed rgba(255,255,255,.16)}
+      .doses{display:flex;gap:10px;flex-wrap:wrap}
+      .dose{
+        flex:1 1 88px;border-radius:14px;padding:11px 8px;text-align:center;
+        border:1px solid var(--line);background:rgba(255,255,255,.05);transition:.14s;
+      }
+      .dose:hover{border-color:rgba(192,132,252,.55);transform:translateY(-2px)}
+      .dose .vial{width:34px;height:50px;margin:0 auto 7px;border:2px solid rgba(255,255,255,.32);
+        border-radius:5px 5px 14px 14px;position:relative;overflow:hidden;background:rgba(0,0,0,.25)}
+      .dose .vial i{position:absolute;left:0;right:0;bottom:0;display:block}
+      .dose b{font-size:1.02rem;font-weight:800;display:block}
+      .dose small{font-size:.62rem;color:var(--muted);display:block;margin-top:2px}
+      .dose.fora{opacity:.32}
+      .dose.fora .vial i{background:#64748b !important}
+      .somado{display:flex;flex-wrap:wrap;gap:7px;min-height:34px;align-items:center}
+      .chip{padding:7px 13px;border-radius:10px;font-size:.84rem;font-weight:700;background:rgba(139,92,246,.22);
+        border:1px solid rgba(192,132,252,.45)}
+      .aviso{border-radius:14px;padding:13px 16px;font-size:.92rem;line-height:1.5;display:none}
+      .aviso.on{display:block}
+      .aviso.certo{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#bbf7d0}
+      .aviso.falta{background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.38);color:#bae6fd}
+      .aviso.passou{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#fecaca}
+      .solucoes{display:flex;flex-direction:column;gap:7px;max-height:300px;overflow:auto;margin-top:10px}
+      .sol{font-family:ui-monospace,monospace;font-size:.84rem;padding:9px 13px;border-radius:10px;
+        background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08)}
+
+      /* conferir conta */
+      .campo{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+      .campo input{
+        flex:1;min-width:210px;padding:14px 16px;border-radius:13px;font-size:1.05rem;
+        background:rgba(0,0,0,.35);border:1px solid var(--line);color:#fff;
+      }
+      .campo input:focus{outline:2px solid rgba(192,132,252,.55);outline-offset:1px}
+      .atalhos{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+      .passos{margin-top:18px;display:flex;flex-direction:column;gap:10px}
+      .passo{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:13px;padding:13px 16px;
+        font-size:.95rem;line-height:1.6;display:flex;gap:12px;align-items:flex-start}
+      .passo .num{width:26px;height:26px;border-radius:9px;flex:none;display:grid;place-items:center;
+        font-size:.74rem;font-weight:800;background:linear-gradient(135deg,var(--violet),var(--pink))}
+      .passo.destaque{background:rgba(34,197,94,.11);border-color:rgba(34,197,94,.4)}
+
+      /* tabelas */
+      table{width:100%;border-collapse:collapse;font-size:.86rem}
+      th,td{text-align:left;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.08)}
+      th{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+      td.mono{font-family:ui-monospace,monospace}
+
+      /* ================= MATERIAL IMPRESSO ================= */
+      .barra-impressao{
+        display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:20px;
+        background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px 18px;
+      }
+      .check{display:flex;align-items:center;gap:9px;font-size:.83rem;color:#ded9f2;cursor:pointer}
+      .check input{width:17px;height:17px;accent-color:var(--violet)}
+
+      .paper{
+        width:210mm;min-height:297mm;padding:10mm;margin:0 auto 26px;background:#fff;color:#141414;
+        border-radius:7px;box-shadow:0 22px 55px rgba(0,0,0,.5);
+      }
+      .sheet{width:100%}
+      .sheet-head{border-bottom:2px solid #141414;padding-bottom:3mm;margin-bottom:4mm}
+      .sheet-head h2{font-size:15pt;font-weight:800;letter-spacing:-.01em}
+      .sheet-head p{font-size:7.6pt;color:#666;margin-top:.6mm}
+      .nome-linha{font-size:8.4pt;margin-top:2.6mm;letter-spacing:.02em}
+      .instr{font-size:7.8pt;color:#444;line-height:1.5;margin-bottom:4mm}
+
+      .tira-linha{margin-bottom:3.4mm;break-inside:avoid}
+      .tira-cap{font-size:6.4pt;font-weight:700;color:#666;letter-spacing:.08em;margin-bottom:.9mm}
+      .tira{display:flex;height:16mm;border:1.4pt solid #1b1b1b;border-radius:1.8mm;overflow:hidden}
+      .seg{flex:1;display:flex;align-items:center;justify-content:center;
+        font-size:8.6pt;font-weight:800;color:#fff;border-right:1pt solid rgba(255,255,255,.85)}
+      .seg:last-child{border-right:0}
+      .tira.compacta .seg{font-size:6.4pt}
+
+      .cartas-grid{display:grid;grid-template-columns:repeat(3,60mm);grid-template-rows:repeat(3,88mm);gap:4mm}
+      .carta{border:1pt dashed #a3a3a3;border-radius:2.6mm;display:flex;flex-direction:column;
+        align-items:center;justify-content:center;gap:5mm;padding:4mm;break-inside:avoid}
+      .carta-frac{display:flex;flex-direction:column;align-items:center;line-height:.95;font-weight:800;font-size:27pt}
+      .carta-frac .den{border-top:2.4pt solid #141414;padding-top:1.1mm;margin-top:.6mm}
+      .carta-barra{width:44mm;height:8mm;border:1pt solid #333;border-radius:1.4mm;display:flex;overflow:hidden}
+      .carta-barra i{display:block;border-right:1pt solid rgba(0,0,0,.4)}
+      .carta-barra i:last-child{border-right:0}
+      .carta-pe{font-size:5.8pt;color:#9a9a9a;letter-spacing:.05em}
+      .carta.cor .carta-frac{color:#6d28d9}
+
+      .bloco{border-top:1.6pt dashed #b5b5b5;padding-top:4mm;margin-top:5mm}
+      .bloco h3{font-size:11pt;font-weight:800;margin-bottom:2.5mm}
+      .bloco .sub{font-size:7.6pt;color:#666;margin-bottom:3mm}
+      .reg-table{width:100%;border-collapse:collapse;font-size:8pt}
+      .reg-table th,.reg-table td{border:1pt solid #bbb;padding:2.6mm 2mm;color:#141414;text-align:left}
+      .reg-table th{background:#f1f1f1;font-size:7pt;letter-spacing:.05em;text-transform:uppercase}
+      .reg-table td{height:12mm}
+      .gab-grid{display:grid;grid-template-columns:1fr 1fr;gap:5mm}
+      .gab-grid table{border-collapse:collapse;font-size:8pt}
+      .gab-grid th,.gab-grid td{border:1pt solid #ccc;padding:1.9mm 2mm;color:#141414}
+      .gab-grid th{background:#f1f1f1;font-size:7pt;text-transform:uppercase;letter-spacing:.05em}
+
+      footer.rodape{text-align:center;font-size:.76rem;color:#7d74a5;padding:26px 14px 40px}
+      footer.rodape a{color:#c4b5fd;text-decoration:none}
+
+      @media (max-width:900px){
+        .duelo{grid-template-columns:1fr;gap:12px}
+        .vs{transform:rotate(90deg)}
+        .meta-grid{grid-template-columns:1fr}
+        .paper{width:100%;min-height:0;padding:5mm}
+      }
+
+      /* ================= IMPRESSÃO ================= */
+      @page{size:A4 portrait;margin:10mm}
+      @media print{
+        body{background:#fff !important;color:#000}
+        .no-print{display:none !important}
+        main{padding:0;max-width:none}
+        .view{display:block !important}
+        #view-painel{display:none !important}
+        .paper{
+          width:auto;min-height:0;padding:0;margin:0;background:none;
+          box-shadow:none;border-radius:0;
+        }
+        .paper{break-after:page}
+        .paper.ultima{break-after:auto}
+        body[data-print="tiras"] .paper:not([data-sheet="tiras"]),
+        body[data-print="cartas"] .paper:not([data-sheet="cartas"]),
+        body[data-print="registro"] .paper:not([data-sheet="registro"]){display:none !important}
+        *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+      }
+    </style>
+</head>
+<body>
+
+  <header class="app-bar no-print">
+    <div class="brand">
+      <div class="brand-icon">🍕</div>
+      <div>
+        <h1>Kit das Frações</h1>
+        <p>Laboratório de Matemática · 6º ano · EF06MA07, 08, 09 e 10</p>
+      </div>
+    </div>
+    <nav class="tabs">
+      <button class="tab on" id="tab-painel" type="button">📺 Painel do professor</button>
+      <button class="tab" id="tab-material" type="button">🖨️ Material para imprimir</button>
+      <a class="voltar" href="../index.html">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m0 0l7-7m-7 7l7 7"/></svg>
+        Portfólio
+      </a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ============================ PAINEL ============================ -->
+    <section class="view on" id="view-painel">
+
+      <div class="modes">
+        <button class="on" data-modo="duelo" type="button">⚔️ Duelo: quem é maior?</button>
+        <button data-modo="meta" type="button">🎯 Monte a meta</button>
+        <button data-modo="conta" type="button">🧮 Conferir conta</button>
+        <button data-modo="gabarito" type="button">📋 Gabarito</button>
+      </div>
+
+      <!-- ---------- DUELO ---------- -->
+      <div class="modo on" id="modo-duelo">
+        <div class="board-panel">
+          <div class="duelo">
+            <div class="carta-painel" id="carta-a">
+              <div class="frac-grande"><span class="num">–</span><span class="den">–</span></div>
+            </div>
+            <div class="vs" id="vs">?</div>
+            <div class="carta-painel" id="carta-b">
+              <div class="frac-grande"><span class="num">–</span><span class="den">–</span></div>
+            </div>
+          </div>
+
+          <div class="veredito" id="veredito"></div>
+
+          <div class="linha-acoes">
+            <button class="btn" id="btn-sortear" type="button">Sortear dupla de cartas</button>
+            <button class="btn claro" id="btn-revelar" type="button" disabled>Revelar comparação</button>
+            <label class="check" style="margin-left:auto">
+              <input type="checkbox" id="chk-figura" checked>
+              Mostrar figura antes de revelar
+            </label>
+            <select id="sel-dificuldade" class="mini" style="padding:10px 12px;font-size:.82rem">
+              <option value="misto">Misturado</option>
+              <option value="facil">Fácil (denominadores que se encaixam)</option>
+              <option value="desafio">Desafio (denominadores que não se encaixam)</option>
+            </select>
+            <span class="nota" id="restantes"></span>
+          </div>
+
+          <div class="placar">
+            <div class="time a">
+              <span class="nm">Time Azul</span>
+              <span class="sc" id="score-a">0</span>
+              <button class="mini" data-time="a" type="button">+1</button>
+              <button class="mini" data-time="a-0" type="button">−1</button>
+            </div>
+            <div class="time b">
+              <span class="nm">Time Rosa</span>
+              <span class="sc" id="score-b">0</span>
+              <button class="mini" data-time="b" type="button">+1</button>
+              <button class="mini" data-time="b-0" type="button">−1</button>
+            </div>
+            <div class="time" style="flex:0 0 auto">
+              <span class="nm" id="cronometro">0:00</span>
+              <button class="mini" id="btn-crono" type="button">Iniciar</button>
+              <button class="mini" id="btn-crono-zero" type="button">Zerar</button>
+            </div>
+            <div class="time" style="flex:0 0 auto">
+              <button class="mini" id="btn-limpar-placar" type="button">Zerar placar</button>
+            </div>
+          </div>
+
+          <div class="rotulo" style="margin-top:22px">Histórico da aula</div>
+          <div class="historico" id="historico">
+            <div class="nota">Nenhuma rodada ainda. Sorteie a primeira dupla de cartas.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- MONTE A META ---------- -->
+      <div class="modo" id="modo-meta">
+        <div class="meta-grid">
+          <div class="board-panel">
+            <div class="caldeirao">
+              <div class="linha-barra">
+                <div class="cab"><span>Meta da receita</span><b id="meta-txt">7/8</b></div>
+                <div class="barra grande" id="barra-meta"></div>
+              </div>
+              <div class="linha-barra">
+                <div class="cab"><span>No caldeirão agora</span><b id="atual-txt">0</b></div>
+                <div class="barra grande" id="barra-atual"></div>
+                <div class="marcas" id="marcas"></div>
+              </div>
+              <div>
+                <div class="rotulo">Doses despejadas</div>
+                <div class="somado" id="somado"><span class="nota">Nenhuma dose ainda.</span></div>
+              </div>
+              <div class="aviso" id="aviso"></div>
+            </div>
+          </div>
+
+          <div class="board-panel">
+            <div class="rotulo">Frascos disponíveis (clique para despejar)</div>
+            <div class="doses" id="doses"></div>
+            <div class="linha-acoes">
+              <button class="btn claro" id="btn-desfazer" type="button">Desfazer última</button>
+              <button class="btn claro" id="btn-limpar-meta" type="button">Esvaziar caldeirão</button>
+              <button class="btn" id="btn-sortar-meta" type="button">Sortear nova meta</button>
+            </div>
+            <div class="rotulo" style="margin-top:20px">Todas as soluções possíveis</div>
+            <button class="btn claro" id="btn-solucoes" type="button">Mostrar todas as soluções</button>
+            <div class="solucoes" id="solucoes"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- CONFERIR CONTA ---------- -->
+      <div class="modo" id="modo-conta">
+        <div class="board-panel">
+          <div class="rotulo">Digite a conta que a turma escreveu</div>
+          <div class="campo">
+            <input id="conta" type="text" value="1/2 + 1/3" spellcheck="false" autocomplete="off">
+            <button class="btn" id="btn-calcular" type="button">Resolver passo a passo</button>
+          </div>
+          <div class="atalhos" id="atalhos"></div>
+          <div class="passos" id="passos"></div>
+        </div>
+      </div>
+
+      <!-- ---------- GABARITO ---------- -->
+      <div class="modo" id="modo-gabarito">
+        <div class="meta-grid">
+          <div class="board-panel">
+            <div class="rotulo">Cartas do baralho, da menor para a maior</div>
+            <table>
+              <thead><tr><th>Fração</th><th>Decimal</th><th>Porcentagem</th><th>Ordem</th></tr></thead>
+              <tbody id="tab-deck"></tbody>
+            </table>
+          </div>
+          <div class="board-panel">
+            <div class="rotulo">Equivalências que aparecem no kit</div>
+            <table>
+              <thead><tr><th>Fração</th><th>Equivalentes</th><th>Decimal</th><th>Porcentagem</th></tr></thead>
+              <tbody id="tab-equiv"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================ MATERIAL ============================ -->
+    <section class="view" id="view-material">
+      <div class="barra-impressao no-print">
+        <button class="btn" data-print="tiras" type="button">🖨️ Imprimir tiras de fração</button>
+        <button class="btn" data-print="cartas" type="button">🖨️ Imprimir baralho (27 cartas)</button>
+        <button class="btn" data-print="registro" type="button">🖨️ Imprimir registro e gabarito</button>
+        <button class="btn claro" data-print="tudo" type="button">🖨️ Imprimir tudo</button>
+        <label class="check"><input type="checkbox" id="chk-fig-carta" checked> Cartas com figura de apoio</label>
+        <button class="btn claro" id="btn-novo-baralho" type="button">🔄 Gerar novo baralho</button>
+        <span class="nota" id="info-baralho"></span>
+      </div>
+
+      <div id="folhas"></div>
+    </section>
+
+  </main>
+
+  <footer class="rodape no-print">
+    Kit das Frações · 6º ano · <a href="../index.html">Laboratório de Matemática</a> — material gratuito para imprimir e projetar. Nenhum dado é enviado para servidores.
+  </footer>
+
+<script>
+{% raw %}
+(function(){
+  'use strict';
+
+  /* ================= utilidades de fração ================= */
+  function mdc(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t}return a||1}
+  function mmc(a,b){return a/mdc(a,b)*b}
+  function F(n,d){var g=mdc(n,d);return {n:n/g,d:d/g}}
+  function cmp(a,b){var l=mmc(a.d,b.d);return a.n*(l/a.d)-b.n*(l/b.d)}
+  function soma(a,b){return F(a.n*b.d+b.n*a.d,a.d*b.d)}
+  function subt(a,b){return F(a.n*b.d-b.n*a.d,a.d*b.d)}
+  function valor(f){return f.n/f.d}
+  function txt(f){return f.n+'/'+f.d}
+  function igual(a,b){return a.n===b.n && a.d===b.d}
+  function decBR(v){
+    var s=v.toFixed(4).replace(/0+$/,'').replace(/\.$/,'');
+    return s.replace('.',',');
+  }
+  function pctBR(v){
+    var s=(v*100).toFixed(2).replace(/0+$/,'').replace(/\.$/,'');
+    return s.replace('.',',')+'%';
+  }
+  function barraHTML(f,cor){
+    /* uma parte por denominador: o aluno consegue CONTAR as partes preenchidas */
+    var h='<div class="barra">';
+    for(var i=0;i<f.d;i++){
+      h+='<i style="flex:1;background:'+(i<f.n?cor:'rgba(255,255,255,.09)')+'"></i>';
+    }
+    return h+'</div>';
+  }
+  function embaralhar(a){
+    for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}
+    return a;
+  }
+
+  /* ================= baralho ================= */
+  /* Denominadores pensados para o 6º ano, com grupos de frações equivalentes
+     (1/2, 2/4, 4/8 · 1/3, 2/6, 3/9 · 2/3, 4/6, 8/12 · 3/5, 6/10) para render empates. */
+  var POOL=[[1,2],[2,4],[4,8],[1,3],[2,3],[4,6],[8,12],[1,4],[3,4],[1,5],[2,5],[3,5],[6,10],
+            [4,5],[1,6],[5,6],[1,8],[3,8],[5,8],[7,8],[1,10],[3,10],[7,10],[9,10],
+            [1,12],[5,12],[7,12],[11,12],[3,7],[5,7],[2,9],[7,9],[2,6],[3,9],[5,9]];
+  var CORES={2:'#8b5cf6',3:'#ec4899',4:'#06b6d4',5:'#22c55e',6:'#f59e0b',
+             8:'#a855f7',10:'#14b8a6',12:'#ef4444',7:'#f97316',9:'#0ea5e9'};
+  function corDe(d){return CORES[d]||'#8b5cf6'}
+
+  var baralho=[];       /* cartas do baralho atual (com .n .d .key) */
+  var usadas={};        /* chaves já sorteadas na rodada */
+
+  /* Cada grupo reúne a MESMA quantidade escrita de formas diferentes. O baralho
+     sempre inclui um grupo inteiro, para que o duelo possa terminar em empate e
+     a turma precise perceber a equivalência. */
+  var GRUPOS_EQUIV=[
+    [[1,2],[2,4],[4,8]],
+    [[1,3],[2,6],[3,9]],
+    [[2,3],[4,6],[8,12]],
+    [[3,5],[6,10]]
+  ];
+
+  function montarBaralho(qtd){
+    qtd=qtd||27;
+    var grupo=GRUPOS_EQUIV[Math.floor(Math.random()*GRUPOS_EQUIV.length)];
+    var vistos={}, saida=[];
+    function juntar(p){
+      var k=p[0]+'/'+p[1];
+      if(vistos[k]) return;
+      vistos[k]=1;
+      saida.push({n:p[0],d:p[1]});
+    }
+    grupo.forEach(juntar);
+    var resto=embaralhar(POOL.filter(function(p){return !vistos[p[0]+'/'+p[1]]}));
+    for(var i=0;i<resto.length && saida.length<qtd;i++) juntar(resto[i]);
+    return embaralhar(saida);
+  }
+
+  function chave(f){return f.n+'/'+f.d}
+
+  /* ================= elementos ================= */
+  var $=function(id){return document.getElementById(id)};
+
+  /* ================= abas ================= */
+  function mostrarView(qual){
+    $('view-painel').classList.toggle('on',qual==='painel');
+    $('view-material').classList.toggle('on',qual==='material');
+    $('tab-painel').classList.toggle('on',qual==='painel');
+    $('tab-material').classList.toggle('on',qual==='material');
+  }
+  $('tab-painel').addEventListener('click',function(){mostrarView('painel')});
+  $('tab-material').addEventListener('click',function(){mostrarView('material')});
+
+  /* ================= modos ================= */
+  Array.prototype.forEach.call(document.querySelectorAll('.modes button'),function(b){
+    b.addEventListener('click',function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.modes button'),function(o){o.classList.remove('on')});
+      Array.prototype.forEach.call(document.querySelectorAll('.modo'),function(o){o.classList.remove('on')});
+      b.classList.add('on');
+      $('modo-'+b.dataset.modo).classList.add('on');
+    });
+  });
+
+  /* ================= DUELO ================= */
+  var atual=null, revelado=false, pontos={a:0,b:0}, historico=[], segundos=0, cronoId=null;
+
+  function aceita(a,b){
+    var dif=$('sel-dificuldade').value;
+    var encaixam=(a.d===b.d)||(a.d%b.d===0)||(b.d%a.d===0);
+    if(dif==='facil') return encaixam;
+    if(dif==='desafio') return !encaixam;
+    return true;
+  }
+
+  function sortearDupla(){
+    var resta=baralho.filter(function(c){return !usadas[chave(c)]});
+    if(resta.length<2){usadas={};resta=baralho.slice()}
+    embaralhar(resta);
+    var par=null;
+    for(var i=0;i<resta.length-1 && !par;i++){
+      for(var j=i+1;j<resta.length && !par;j++){
+        if(aceita(resta[i],resta[j])) par=[resta[i],resta[j]];
+      }
+    }
+    if(!par){
+      var copia=baralho.slice();
+      embaralhar(copia);
+      par=[copia[0],copia[1]||copia[0]];
+    }
+    usadas[chave(par[0])]=1;
+    usadas[chave(par[1])]=1;
+    atual=par;
+    revelado=false;
+    $('btn-revelar').disabled=false;
+    $('veredito').className='veredito';
+    $('vs').textContent='?';
+    pintarCartas();
+    atualizarRestantes();
+  }
+
+  function pintarCartas(){
+    if(!atual) return;
+    var mostrar=$('chk-figura').checked;
+    [['carta-a',atual[0],'#8b5cf6'],['carta-b',atual[1],'#ec4899']].forEach(function(t){
+      var f=t[1];
+      var h='<div class="frac-grande"><span class="num">'+f.n+'</span><span class="den">'+f.d+'</span></div>';
+      if(mostrar && !revelado) h+=barraHTML(f,t[2]);
+      else if(revelado) h+=barraHTML(f,t[2]);
+      if(mostrar) h+='<div class="dica-carta">a barra é o inteiro</div>';
+      $(t[0]).innerHTML=h;
+    });
+  }
+
+  /* Função pura: monta o texto do veredito a partir das duas frações.
+     Separada do DOM para poder ser conferida nos testes. */
+  function textoRevelar(a,b){
+    var l=mmc(a.d,b.d);
+    var na=a.n*(l/a.d), nb=b.n*(l/b.d);
+    var d=cmp(a,b);
+    var classe='veredito on', vs='?';
+    var h='';
+
+    if(a.d===b.d){
+      h+='<b>Os denominadores já são iguais.</b> Basta comparar os numeradores: ';
+      h+='<span class="mono">'+a.n+'</span> e <span class="mono">'+b.n+'</span>. ';
+    }else{
+      h+='<b>MMC('+a.d+', '+b.d+') = '+l+'.</b> ';
+      var convs=[];
+      if(a.d!==l) convs.push('<span class="mono">'+txt(a)+' = '+na+'/'+l+'</span>');
+      if(b.d!==l) convs.push('<span class="mono">'+txt(b)+' = '+nb+'/'+l+'</span>');
+      h+='Deixe as duas com o mesmo denominador: '+convs.join(' e ')+'. ';
+      if(convs.length===1){
+        h+='Só uma precisou ser convertida, porque '+l+' já era múltiplo dos dois denominadores. ';
+      }
+    }
+
+    if(d===0){
+      classe='veredito on empate';
+      h+='Como os numeradores ficaram iguais, as frações são <b>equivalentes</b>: ';
+      h+='<span class="mono">'+txt(a)+' = '+txt(b)+' = '+decBR(valor(a))+'</span>. '+
+         'Aproveite para perguntar à turma por que <span class="mono">'+a.n+'/'+a.d+'</span> e '+
+         '<span class="mono">'+b.n+'/'+b.d+'</span> representam a mesma quantidade.';
+      vs='=';
+    }else{
+      var maior = d>0 ? a : b, menor = d>0 ? b : a;
+      h+='<b>'+txt(maior)+' é maior que '+txt(menor)+'.</b> ';
+      h+='Na reta numérica, <span class="mono">'+txt(maior)+' = '+decBR(valor(maior))+'</span> fica à direita de '+
+         '<span class="mono">'+txt(menor)+' = '+decBR(valor(menor))+'</span>.';
+      vs=(d>0?'>':'<');
+    }
+    return {classe:classe, html:h, vs:vs, empate:d===0};
+  }
+
+  function revelar(){
+    if(!atual) return;
+    revelado=true;
+    var a=atual[0], b=atual[1];
+    pintarCartas();
+    var d=cmp(a,b);
+    var r=textoRevelar(a,b);
+    var el=$('veredito');
+    el.className=r.classe;
+    el.innerHTML=r.html;
+    $('vs').textContent=r.vs;
+
+    historico.unshift({a:a,b:b,r:(d===0?'empate':txt(d>0?a:b))});
+    pintarHistorico();
+    $('btn-revelar').disabled=true;
+  }
+
+  function pintarHistorico(){
+    var el=$('historico');
+    if(!historico.length){
+      el.innerHTML='<div class="nota">Nenhuma rodada ainda. Sorteie a primeira dupla de cartas.</div>';
+      return;
+    }
+    el.innerHTML=historico.slice(0,8).map(function(r){
+      return '<div class="hrow"><span class="quem mono">'+txt(r.a)+' &nbsp;×&nbsp; '+txt(r.b)+'</span>'+
+             '<span class="res">'+(r.r==='empate'?'equivalentes — empate':'venceu '+r.r)+'</span></div>';
+    }).join('');
+  }
+
+  function atualizarRestantes(){
+    var n=baralho.filter(function(c){return !usadas[chave(c)]}).length;
+    $('restantes').textContent=n+' de '+baralho.length+' cartas ainda não sorteadas';
+  }
+
+  $('btn-sortear').addEventListener('click',sortearDupla);
+  $('btn-revelar').addEventListener('click',revelar);
+  $('chk-figura').addEventListener('change',pintarCartas);
+  $('sel-dificuldade').addEventListener('change',function(){usadas={};atualizarRestantes()});
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-time]'),function(b){
+    b.addEventListener('click',function(){
+      var t=b.dataset.time;
+      if(t==='a') pontos.a++; else if(t==='b') pontos.b++;
+      else if(t==='a-0') pontos.a=Math.max(0,pontos.a-1);
+      else pontos.b=Math.max(0,pontos.b-1);
+      $('score-a').textContent=pontos.a;
+      $('score-b').textContent=pontos.b;
+    });
+  });
+  $('btn-limpar-placar').addEventListener('click',function(){
+    pontos={a:0,b:0};$('score-a').textContent='0';$('score-b').textContent='0';
+  });
+
+  function pintarCrono(){
+    var m=Math.floor(segundos/60), s=segundos%60;
+    $('cronometro').textContent=m+':'+(s<10?'0':'')+s;
+  }
+  $('btn-crono').addEventListener('click',function(){
+    if(cronoId){clearInterval(cronoId);cronoId=null;$('btn-crono').textContent='Iniciar'}
+    else{
+      cronoId=setInterval(function(){segundos++;pintarCrono()},1000);
+      $('btn-crono').textContent='Pausar';
+    }
+  });
+  $('btn-crono-zero').addEventListener('click',function(){
+    segundos=0;pintarCrono();
+  });
+
+  document.addEventListener('keydown',function(e){
+    if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT') return;
+    if(!$('view-painel').classList.contains('on')) return;
+    if(!$('modo-duelo').classList.contains('on')) return;
+    if(e.key==='s'||e.key==='S'){sortearDupla()}
+    else if(e.key==='r'||e.key==='R'){if(!$('btn-revelar').disabled) revelar()}
+    else if(e.key==='Escape'){$('veredito').className='veredito'}
+  });
+
+  /* ================= MONTE A META ================= */
+  var DOSES_TODAS=[{n:1,d:2},{n:1,d:3},{n:1,d:4},{n:1,d:5},{n:1,d:6},{n:1,d:8},{n:1,d:10},{n:1,d:12}];
+  var METAS=[{n:1,d:2},{n:3,d:4},{n:7,d:8},{n:5,d:6},{n:11,d:12},{n:9,d:10},{n:2,d:3},{n:3,d:5},
+             {n:7,d:10},{n:5,d:8},{n:4,d:5},{n:3,d:8},{n:7,d:12},{n:5,d:12},{n:1,d:4},{n:1,d:3}];
+  var meta={n:7,d:8}, dosesAtivas=DOSES_TODAS.slice(), escolhidas=[], somaAtual={n:0,d:1};
+
+  function dosesDisponiveis(){
+    return dosesAtivas.slice().sort(function(a,b){return valor(a)-valor(b)});
+  }
+
+  function pintarDoses(){
+    $('doses').innerHTML=DOSES_TODAS.map(function(d,i){
+      var ativa=dosesAtivas.some(function(x){return igual(x,d)});
+      return '<div class="dose'+(ativa?'':' fora')+'" data-dose="'+i+'" title="'+(ativa?'Despejar ':'Frasco fora do kit')+'">'+
+        '<div class="vial"><i style="height:'+(100/d.d)+'%;background:'+corDe(d.d)+'"></i></div>'+
+        '<b>'+txt(d)+'</b><small>'+(ativa?'disponível':'fora do kit')+'</small></div>';
+    }).join('');
+    Array.prototype.forEach.call($('doses').querySelectorAll('.dose'),function(el){
+      el.addEventListener('click',function(){
+        var d=DOSES_TODAS[+el.dataset.dose];
+        if(!dosesAtivas.some(function(x){return igual(x,d)})) return;
+        escolhidas.push(d); recalcMeta();
+      });
+    });
+  }
+
+  function recalcMeta(){
+    somaAtual=escolhidas.reduce(function(acc,d){return soma(acc,d)},{n:0,d:1});
+    var m=meta;
+    $('meta-txt').textContent=txt(m);
+    $('barra-meta').innerHTML='<i style="flex:'+m.n+';background:linear-gradient(90deg,#7c3aed,#ec4899)"></i>'+
+      (m.d-m.n>0?'<i style="flex:'+(m.d-m.n)+';background:rgba(255,255,255,.09)"></i>':'');
+
+    var s=somaAtual;
+    $('atual-txt').textContent=(escolhidas.length? txt(s)+(igual(s,F(1,1))?' (inteiro)':''):'0');
+    var l=mmc(m.d,s.d)||1;
+    var ns=s.n*(l/s.d), nm=m.n*(l/m.d);
+    var fracaoBarra = Math.min(1, valor(s));
+    $('barra-atual').innerHTML='<i style="flex:'+Math.round(fracaoBarra*1000)+';background:linear-gradient(90deg,#8b5cf6,#c084fc)"></i>'+
+      '<i style="flex:'+Math.round((1-fracaoBarra)*1000)+';background:rgba(255,255,255,.06)"></i>';
+
+    $('somado').innerHTML=escolhidas.length
+      ? escolhidas.map(function(d){return '<span class="chip">'+txt(d)+'</span>'}).join('<span class="nota">+</span>')
+      : '<span class="nota">Nenhuma dose ainda.</span>';
+
+    var av=$('aviso');
+    if(!escolhidas.length){av.className='aviso';av.innerHTML=''}
+    else if(igual(s,m)){
+      av.className='aviso on certo';
+      av.innerHTML='<b>Meta alcançada.</b> '+escolhidas.map(txt).join(' + ')+' = '+txt(s)+
+        (l!==s.d||l!==m.d ? ' &nbsp;→&nbsp; <span class="mono">'+ns+'/'+l+'</span>' : '')+
+        '. Com o mesmo denominador fica claro que os dois lados são iguais.';
+    }else if(cmp(s,m)>0){
+      av.className='aviso on passou';
+      var passou=subt(s,m);
+      av.innerHTML='<b>Passou da meta.</b> Sobrou <span class="mono">'+txt(passou)+'</span> '+
+        '('+decBR(valor(passou))+' do inteiro). No jogo, encher demais invalida a rodada — '+
+        'esse é o momento de perguntar à turma qual dose teria sido a certa.';
+    }else{
+      var falta=subt(m,s);
+      av.className='aviso on falta';
+      if(s.d===m.d){
+        av.innerHTML='<b>Faltam '+txt(falta)+'.</b> As duas já estão em '+m.d+
+          ' avos: temos <span class="mono">'+s.n+'/'+m.d+'</span> de <span class="mono">'+m.n+'/'+m.d+'</span>. '+
+          'Pergunte à turma: quanto falta para chegar em '+m.n+'?';
+      }else{
+        av.innerHTML='<b>Faltam '+txt(falta)+'.</b> Convertendo para o mesmo denominador ('+l+'): '+
+          '<span class="mono">'+txt(m)+' = '+nm+'/'+l+'</span> e <span class="mono">'+txt(s)+' = '+ns+'/'+l+'</span>. '+
+          'Quanto falta para '+nm+'?';
+      }
+    }
+  }
+
+  function todasSolucoes(){
+    var alvo=meta, out=[], disp=dosesDisponiveis(), MAX=5;
+    (function rec(i,atual,acc){
+      if(acc.length>0 && acc.length<=MAX && igual(atual,alvo)) out.push(acc.slice());
+      if(acc.length>=MAX) return;
+      for(var k=i;k<disp.length;k++){
+        var s=soma(atual,disp[k]);
+        if(cmp(s,alvo)>0) break;      /* doses ordenadas: daqui pra frente só piora */
+        acc.push(disp[k]);
+        rec(k,s,acc);
+        acc.pop();
+      }
+    })(0,{n:0,d:1},[]);
+
+    var el=$('solucoes');
+    if(!out.length){el.innerHTML='<div class="nota">Nenhuma combinação de até '+MAX+' doses alcança '+txt(alvo)+' com os frascos do kit.</div>';return}
+    out.sort(function(a,b){return a.length-b.length});
+    el.innerHTML='<div class="nota" style="margin-bottom:4px">'+out.length+' combinação(ões) de até '+MAX+' doses:</div>'+
+      out.slice(0,40).map(function(c){
+        return '<div class="sol">'+c.map(txt).join(' + ')+' = '+txt(alvo)+'</div>';
+      }).join('')+
+      (out.length>40?'<div class="nota">… e mais '+(out.length-40)+' combinações.</div>':'');
+  }
+
+  $('btn-desfazer').addEventListener('click',function(){escolhidas.pop();recalcMeta()});
+  $('btn-limpar-meta').addEventListener('click',function(){escolhidas=[];recalcMeta()});
+  $('btn-solucoes').addEventListener('click',todasSolucoes);
+  $('btn-sortar-meta').addEventListener('click',function(){
+    var possiveis=METAS.filter(function(m){
+      var salvo=meta; meta=m;
+      var achou=false;
+      (function rec(i,atual,acc){
+        if(achou) return;
+        if(acc.length>0 && acc.length<=4 && igual(atual,m)){achou=true;return}
+        if(acc.length>=4) return;
+        for(var k=i;k<DOSES_TODAS.length;k++){
+          var s=soma(atual,DOSES_TODAS[k]);
+          if(cmp(s,m)>0) break;
+          acc.push(DOSES_TODAS[k]);rec(k,s,acc);acc.pop();
+        }
+      })(0,{n:0,d:1},[]);
+      meta=salvo;
+      return achou;
+    });
+    var lista=possiveis.length?possiveis:METAS;
+    meta=lista[Math.floor(Math.random()*lista.length)];
+    escolhidas=[];$('solucoes').innerHTML='';
+    recalcMeta();
+  });
+
+  /* ================= CONFERIR CONTA ================= */
+  function parseConta(str){
+    var s=String(str).replace(/\s+/g,'').replace(/,/g,'.');
+    if(!s) return null;
+    if(!/^[+\-]?[0-9/]+([+\-][0-9/]+)*$/.test(s)) return null;
+    var partes=s.match(/[+\-]?[^+\-]+/g), termos=[];
+    for(var i=0;i<partes.length;i++){
+      var p=partes[i], sinal=1;
+      if(p[0]==='+'){p=p.slice(1)}
+      else if(p[0]==='-'){sinal=-1;p=p.slice(1)}
+      var f;
+      if(p.indexOf('/')>=0){
+        var q=p.split('/');
+        if(!q[0]||!q[1]) return null;
+        f={n:parseInt(q[0],10),d:parseInt(q[1],10)};
+      }else{
+        f={n:parseInt(p,10),d:1};
+      }
+      if(!isFinite(f.n)||!isFinite(f.d)||f.d<=0) return null;
+      termos.push({sinal:sinal,f:f});
+    }
+    return termos.length?termos:null;
+  }
+
+  function resolverConta(){
+    var termos=parseConta($('conta').value);
+    var el=$('passos');
+    if(!termos){
+      el.innerHTML='<div class="passo"><span class="num">!</span><span>Não consegui ler essa conta. '+
+        'Use o formato <span class="mono">1/2 + 1/3</span> ou <span class="mono">3/4 - 1/8</span>.</span></div>';
+      return;
+    }
+    var l=1;
+    termos.forEach(function(t){l=mmc(l,t.f.d)});
+    var numTotal=0;
+    termos.forEach(function(t){numTotal+=t.sinal*(t.f.n*(l/t.f.d))});
+    var resultado=F(numTotal,l);
+
+    var h='';
+    var passos=[];
+
+    passos.push('Os denominadores são '+termos.map(function(t){return t.f.d}).join(', ')+
+      '. Antes de somar ou subtrair, todas as partes precisam ter o <b>mesmo tamanho</b>.');
+
+    if(l!==1){
+      passos.push('MMC('+termos.map(function(t){return t.f.d}).join(', ')+') = <b>'+l+'</b>. '+
+        'Esse é o denominador comum — o tamanho de parte que serve para todas.');
+    }else{
+      passos.push('Todas já estão com o denominador 1, então não há nada para converter.');
+    }
+
+    var conversoes=termos.map(function(t){
+      var novo=t.f.n*(l/t.f.d);
+      return '<span class="mono">'+txt(t.f)+' = '+novo+'/'+l+'</span>';
+    }).join(' &nbsp;·&nbsp; ');
+    passos.push('Convertendo cada fração: '+conversoes+'.');
+
+    var linhaConta=termos.map(function(t,i){
+      var novo=t.f.n*(l/t.f.d);
+      return (i===0?(t.sinal<0?'−':''):(t.sinal<0?' − ':' + '))+'<span class="mono">'+novo+'/'+l+'</span>';
+    }).join('');
+    passos.push('Agora some (ou subtraia) apenas os numeradores: '+linhaConta+' = '+
+      '<span class="mono">'+numTotal+'/'+l+'</span>.');
+
+    if(resultado.d!==l){
+      passos.push('Simplificando por '+mdc(numTotal,l)+': <span class="mono">'+numTotal+'/'+l+' = '+
+        txt(resultado)+'</span>.');
+    }
+
+    passos.push('<b>Resultado: '+txt(resultado)+'</b> = '+decBR(valor(resultado))+' = '+pctBR(valor(resultado))+
+      ' do inteiro.');
+
+    h=passos.map(function(p,i){
+      return '<div class="passo'+(i===passos.length-1?' destaque':'')+'"><span class="num">'+(i+1)+'</span><span>'+p+'</span></div>';
+    }).join('');
+    el.innerHTML=h;
+  }
+
+  $('btn-calcular').addEventListener('click',resolverConta);
+  $('conta').addEventListener('keydown',function(e){if(e.key==='Enter') resolverConta()});
+  var EXEMPLOS=['1/2 + 1/3','3/4 - 1/8','1/2 + 1/4 + 1/8','5/6 - 1/3','2/3 + 1/6','7/8 - 3/4'];
+  $('atalhos').innerHTML=EXEMPLOS.map(function(e){
+    return '<button class="mini" data-ex="'+e+'" type="button">'+e+'</button>';
+  }).join('');
+  Array.prototype.forEach.call($('atalhos').querySelectorAll('button'),function(b){
+    b.addEventListener('click',function(){$('conta').value=b.dataset.ex;resolverConta()});
+  });
+
+  /* ================= GABARITO ================= */
+  function pintarGabarito(){
+    var ordenado=baralho.slice().sort(function(a,b){return cmp(a,b)});
+    $('tab-deck').innerHTML=ordenado.map(function(f,i){
+      return '<tr><td class="mono">'+txt(f)+'</td><td class="mono">'+decBR(valor(f))+'</td>'+
+        '<td class="mono">'+pctBR(valor(f))+'</td><td class="mono">'+(i+1)+'º</td></tr>';
+    }).join('');
+
+    var bases=[[1,2],[1,3],[2,3],[1,4],[3,4],[1,5],[2,5],[3,5],[4,5],[1,6],[5,6],
+               [1,8],[3,8],[5,8],[7,8],[1,10],[3,10],[7,10],[9,10],[1,12],[5,12],[7,12],[11,12]];
+    $('tab-equiv').innerHTML=bases.map(function(b){
+      var f=F(b[0],b[1]);
+      var eq=[];
+      for(var d=2;d<=12;d++){
+        var n=f.n*d/f.d;
+        if(n===Math.round(n) && n>0 && n<d) eq.push(n+'/'+d);
+      }
+      return '<tr><td class="mono">'+txt(f)+'</td><td class="mono">'+eq.join(' = ')+'</td>'+
+        '<td class="mono">'+decBR(valor(f))+'</td><td class="mono">'+pctBR(valor(f))+'</td></tr>';
+    }).join('');
+  }
+
+  /* ================= MATERIAL IMPRESSO ================= */
+  var TIRAS=[
+    {d:1,cap:'INTEIRO',cor:'#475569'},
+    {d:2,cap:'MEIOS · 1/2',cor:'#8b5cf6'},
+    {d:3,cap:'TERÇOS · 1/3',cor:'#ec4899'},
+    {d:4,cap:'QUARTOS · 1/4',cor:'#06b6d4'},
+    {d:5,cap:'QUINTOS · 1/5',cor:'#22c55e'},
+    {d:6,cap:'SEXTOS · 1/6',cor:'#f59e0b'},
+    {d:8,cap:'OITAVOS · 1/8',cor:'#a855f7'},
+    {d:10,cap:'DÉCIMOS · 1/10',cor:'#14b8a6'},
+    {d:12,cap:'DOZE AVOS · 1/12',cor:'#ef4444'}
+  ];
+
+  function folhaTiras(){
+    var tiras=TIRAS.map(function(t){
+      var segs='';
+      for(var i=0;i<t.d;i++){
+        segs+='<div class="seg" style="background:'+t.cor+'">'+(t.d===1?'1':(1+'/'+t.d))+'</div>';
+      }
+      return '<div class="tira-linha"><div class="tira-cap">'+t.cap+'</div>'+
+        '<div class="tira'+(t.d>=10?' compacta':'')+'">'+segs+'</div></div>';
+    }).join('');
+
+    return '<div class="paper" data-sheet="tiras"><div class="sheet">'+
+      '<div class="sheet-head"><h2>Tiras de Fração</h2>'+
+      '<p>Kit das Frações · 6º ano · Laboratório de Matemática</p>'+
+      '<div class="nome-linha">Nome: ______________________________________&nbsp;&nbsp;Turma: ________&nbsp;&nbsp;Data: ____/____/______</div>'+
+      '</div>'+
+      '<p class="instr">Recorte cada tira na linha pontilhada. <b>Todas as tiras têm o mesmo comprimento</b>, porque todas representam o mesmo inteiro. '+
+      'Sobreponha as tiras para comparar frações, descobrir quais são maiores e encontrar as equivalências: 1/2 encaixa exatamente sobre 2/4, 4/8 e 5/10.</p>'+
+      tiras+
+      '</div></div>';
+  }
+
+  function folhasCartas(){
+    var comFigura=$('chk-fig-carta').checked;
+    var porFolha=9, total=baralho.length, folhas=[];
+    for(var p=0;p*porFolha<total;p++){
+      var cartas='';
+      for(var i=p*porFolha;i<Math.min(total,(p+1)*porFolha);i++){
+        var f=baralho[i];
+        var barra='';
+        if(comFigura){
+          var cor=corDe(f.d);
+          var segs='';
+          for(var k=0;k<f.d;k++) segs+='<i style="flex:1;background:'+(k<f.n?cor:'#f3f4f6')+'"></i>';
+          barra='<div class="carta-barra">'+segs+'</div>';
+        }
+        cartas+='<div class="carta"><div class="carta-frac"><span class="num">'+f.n+'</span>'+
+          '<span class="den">'+f.d+'</span></div>'+barra+
+          '<div class="carta-pe">KIT DAS FRAÇÕES · 6º ANO</div></div>';
+      }
+      folhas.push('<div class="paper" data-sheet="cartas"><div class="sheet">'+
+        '<div class="cartas-grid">'+cartas+'</div>'+
+        '<p class="instr" style="margin-top:3mm;margin-bottom:0;font-size:6.8pt">Folha '+(p+1)+' de '+Math.ceil(total/porFolha)+
+        ' · recorte nas linhas pontilhadas'+(comFigura?'':' · versão sem figura de apoio, para o desafio')+'.</p>'+
+        '</div></div>');
+    }
+    return folhas.join('');
+  }
+
+  function folhaRegistro(){
+    var linhas='';
+    for(var i=1;i<=8;i++){
+      linhas+='<tr><td>'+i+'</td><td></td><td></td><td></td></tr>';
+    }
+    var ordenado=baralho.slice().sort(function(a,b){return cmp(a,b)});
+    var gab1=ordenado.slice(0,Math.ceil(ordenado.length/2)).map(function(f){
+      return '<tr><td class="mono">'+txt(f)+'</td><td class="mono">'+decBR(valor(f))+'</td><td class="mono">'+pctBR(valor(f))+'</td></tr>';
+    }).join('');
+    var gab2=ordenado.slice(Math.ceil(ordenado.length/2)).map(function(f){
+      return '<tr><td class="mono">'+txt(f)+'</td><td class="mono">'+decBR(valor(f))+'</td><td class="mono">'+pctBR(valor(f))+'</td></tr>';
+    }).join('');
+
+    return '<div class="paper" data-sheet="registro"><div class="sheet">'+
+      '<div class="sheet-head"><h2>Folha de Registro</h2>'+
+      '<p>Kit das Frações · 6º ano · Laboratório de Matemática</p>'+
+      '<div class="nome-linha">Nome: ______________________________________&nbsp;&nbsp;Turma: ________&nbsp;&nbsp;Data: ____/____/______</div>'+
+      '</div>'+
+      '<p class="instr">Anote cada rodada do duelo. Na última coluna escreva <b>a conversão que você usou</b> para decidir — '+
+      'não basta dizer quem é maior: é a conta que mostra que você entendeu.</p>'+
+      '<table class="reg-table"><thead><tr><th style="width:12mm">Rodada</th><th style="width:44mm">Frações comparadas</th>'+
+      '<th style="width:26mm">Quem é maior</th><th>Como eu descobri (a conversão que usei)</th></tr></thead>'+
+      '<tbody>'+linhas+'</tbody></table>'+
+
+      '<div class="bloco">'+
+        '<h3>Gabarito do professor — cartas do baralho em ordem crescente</h3>'+
+        '<p class="sub">Confere com a tela do painel. Se você gerou um baralho novo, imprima este gabarito junto.</p>'+
+        '<div class="gab-grid">'+
+          '<table><thead><tr><th>Fração</th><th>Decimal</th><th>%</th></tr></thead><tbody>'+gab1+'</tbody></table>'+
+          '<table><thead><tr><th>Fração</th><th>Decimal</th><th>%</th></tr></thead><tbody>'+gab2+'</tbody></table>'+
+        '</div>'+
+      '</div>'+
+      '</div></div>';
+  }
+
+  function renderFolhas(){
+    $('folhas').innerHTML=folhaTiras()+folhasCartas()+folhaRegistro();
+    $('info-baralho').textContent=baralho.length+' cartas · '+Math.ceil(baralho.length/9)+
+      ' folhas de cartas · tiras em 1 folha · registro e gabarito em 1 folha';
+  }
+
+  function imprimir(alvo){
+    mostrarView('material');
+    document.body.dataset.print=alvo;
+    var papers=Array.prototype.slice.call(document.querySelectorAll('.paper'));
+    papers.forEach(function(p){p.classList.remove('ultima')});
+    var visiveis=papers.filter(function(p){return alvo==='tudo'||p.dataset.sheet===alvo});
+    if(visiveis.length) visiveis[visiveis.length-1].classList.add('ultima');
+    window.print();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-print]'),function(b){
+    b.addEventListener('click',function(){imprimir(b.dataset.print)});
+  });
+  window.addEventListener('afterprint',function(){delete document.body.dataset.print});
+
+  $('chk-fig-carta').addEventListener('change',renderFolhas);
+  $('btn-novo-baralho').addEventListener('click',function(){
+    baralho=montarBaralho(27);
+    usadas={};atual=null;
+    $('btn-revelar').disabled=true;
+    $('carta-a').innerHTML='<div class="frac-grande"><span class="num">–</span><span class="den">–</span></div>';
+    $('carta-b').innerHTML='<div class="frac-grande"><span class="num">–</span><span class="den">–</span></div>';
+    $('veredito').className='veredito';
+    historico=[];pintarHistorico();
+    atualizarRestantes();pintarGabarito();renderFolhas();
+  });
+
+  /* ================= inicialização ================= */
+  function boot(){
+    baralho=montarBaralho(27);
+    pintarDoses();
+    meta={n:7,d:8};
+    recalcMeta();
+    resolverConta();
+    pintarGabarito();
+    pintarHistorico();
+    atualizarRestantes();
+    renderFolhas();
+    pintarCrono();
+    var marcas='';
+    for(var i=0;i<=8;i++) marcas+='<span>'+(i===0?'0':i+'/8')+'</span>';
+    $('marcas').innerHTML=marcas;
+    sortearDupla();
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
+  else boot();
+
+  window.KitFracoes={
+    montarBaralho:montarBaralho, parseConta:parseConta, soma:soma, subt:subt,
+    cmp:cmp, textoRevelar:textoRevelar, decBR:decBR, pctBR:pctBR, txt:txt
+  };
+})();
+{% endraw %}
+</script>
+</body>
+</html>
