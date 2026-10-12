@@ -3038,5 +3038,7 @@ window.__lab = {
 };
 iniciar();
 </script>
+<!-- Correção: o botão de voltar não deve sair na impressão -->
+<style>@media print { #btn-voltar, [id*="voltar"] { display: none !important; } }</style>
 </body>
 </html>
