@@ -1,0 +1,103 @@
+---
+titulo: "Trilha da Fronteira Noroeste"
+icone: "🗺️"
+descricao: "Trilha de tabuleiro pelos 45 municípios da Fronteira Noroeste, com mapa real, fotos dos atrativos e desafios de Geografia e Matemática para o 6º ano."
+---
+<!DOCTYPE html>
+<html lang="pt-BR">
+<!-- Desenvolvido por Mateus Goldschmidt -->
+<head>
+    {% include analytics.html %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trilha da Fronteira Noroeste — 6º ano | Laboratório de Matemática</title>
+    <meta name="description" content="Trilha de tabuleiro pelos 45 municípios da Fronteira Noroeste do RS: mapa em escala real, fotos dos atrativos de cada município e desafios de Geografia e Matemática do 6º ano. Para imprimir em 4 folhas A4.">
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body { background: #eef2f5; font-family: 'DejaVu Sans', Arial, sans-serif; color: #14532d; }
+      .app-bar { position: sticky; top: 0; z-index: 50; background: #14532d; color: #f0fdf4;
+                 padding: 12px 22px; display: flex; align-items: center; justify-content: space-between;
+                 gap: 18px; flex-wrap: wrap; box-shadow: 0 3px 14px rgba(0,0,0,.28); }
+      .app-bar h1 { font-size: 19px; letter-spacing: .3px; }
+      .app-bar p { font-size: 12.5px; color: #bbf7d0; margin-top: 3px; }
+      .app-bar .acoes { display: flex; gap: 9px; flex-wrap: wrap; align-items: center; }
+      .app-bar button, .app-bar a { font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+                 border: 1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.09);
+                 color: #f0fdf4; padding: 9px 15px; border-radius: 9px; text-decoration: none;
+                 display: inline-flex; align-items: center; gap: 7px; transition: .16s; }
+      .app-bar button:hover, .app-bar a:hover { background: #facc15; color: #14532d; border-color: #facc15; }
+      .dica { background: #fffbe8; border-bottom: 1px solid #f5e2a0; padding: 11px 22px;
+              font-size: 13px; line-height: 1.6; color: #6b5312; }
+      .dica b { color: #8a6d0b; }
+      .palco { padding: 24px 22px 44px; }
+      .prateleira { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
+      .paper { position: relative; width: 210mm; height: 297mm; overflow: hidden; background: #fff;
+               box-shadow: 0 4px 18px rgba(0,0,0,.22); flex: 0 0 auto; }
+      .paper img { width: 210mm; height: 297mm; display: block; }
+      @media screen { .prateleira { zoom: .92; } }
+      @media screen and (max-width: 1620px) { .prateleira { zoom: .8; } }
+      @media screen and (max-width: 1400px) { .prateleira { zoom: .64; } }
+      @media screen and (max-width: 1100px) { .prateleira { zoom: .48; } }
+      @media screen and (max-width: 800px)  { .prateleira { zoom: .36; } }
+      .voltar-flutuante { position: fixed; left: 18px; bottom: 18px; z-index: 60; background: #14532d;
+                 color: #f0fdf4; text-decoration: none; font-size: 13px; font-weight: 700;
+                 padding: 11px 16px; border-radius: 11px; box-shadow: 0 4px 16px rgba(0,0,0,.3);
+                 border: 1px solid rgba(255,255,255,.2); }
+      .voltar-flutuante:hover { background: #facc15; color: #14532d; }
+      .rodape-pagina { text-align: center; padding: 22px; font-size: 12.5px; color: #4d7c48; }
+
+      /* ================= IMPRESSÃO: 4 FOLHAS A4 ================= */
+      @page { size: A4 portrait; margin: 0; }
+      @media print {
+        .no-print { display: none !important; }
+        html, body { width: 210mm !important; margin: 0 !important; padding: 0 !important;
+                     background: #fff !important; }
+        .palco { padding: 0 !important; display: block !important; }
+        .prateleira { display: block !important; }
+        .paper { width: 210mm !important; height: 297mm !important; margin: 0 !important;
+                 box-shadow: none !important; break-after: page; page-break-after: always;
+                 break-inside: avoid; page-break-inside: avoid; }
+        .paper:last-child { break-after: auto; page-break-after: auto; }
+        .paper img { width: 210mm !important; height: 297mm !important; }
+        * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      }
+    </style>
+</head>
+<body>
+  <header class="app-bar no-print">
+    <div>
+      <h1>🗺️ A Grande Volta da Fronteira Noroeste</h1>
+      <p>Laboratório de Matemática · 6º ano · EF06GE08, EF06GE01, EF06MA01, EF06MA13 e EF06MA24</p>
+    </div>
+    <div class="acoes">
+      <button id="btn-imprimir" type="button">🖨️ Imprimir o tabuleiro</button>
+      <a href="../index.html">← Voltar ao portal</a>
+    </div>
+  </header>
+
+  <div class="dica no-print">
+    <b>Como imprimir:</b> são <b>4 folhas A4</b> que formam um tabuleiro de 42 × 59 cm. Na janela de
+    impressão escolha <b>A4</b>, <b>margens: nenhuma</b> e marque <b>“gráficos de plano de fundo”</b>.
+    As linhas vermelhas tracejadas mostram onde emendar: junte as quatro folhas com fita transparente
+    pela frente, encostando as bordas.
+  </div>
+
+  <div class="palco">
+    <div class="prateleira">
+      <div class="paper" data-sheet="trilha" data-folha="1"><img src="trilha_img/folha-1.jpg" alt="Folha 1 de 4 do tabuleiro" width="2481" height="3509" loading="lazy"></div>
+      <div class="paper" data-sheet="trilha" data-folha="2"><img src="trilha_img/folha-2.jpg" alt="Folha 2 de 4 do tabuleiro" width="2481" height="3509" loading="lazy"></div>
+      <div class="paper" data-sheet="trilha" data-folha="3"><img src="trilha_img/folha-3.jpg" alt="Folha 3 de 4 do tabuleiro" width="2481" height="3509" loading="lazy"></div>
+      <div class="paper" data-sheet="trilha" data-folha="4"><img src="trilha_img/folha-4.jpg" alt="Folha 4 de 4 do tabuleiro" width="2481" height="3509" loading="lazy"></div>
+    </div>
+  </div>
+
+  <a class="voltar-flutuante no-print" href="../index.html">← Portal</a>
+  <div class="rodape-pagina no-print">
+    Autores: Mateus Goldschmidt &amp; Lavínia M. Ferreira · Fronteira Noroeste do Rio Grande do Sul
+  </div>
+  <script>
+    document.getElementById('btn-imprimir').addEventListener('click', function(){ window.print(); });
+  </script>
+</body>
+</html>
