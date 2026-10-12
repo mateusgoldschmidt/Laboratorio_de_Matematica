@@ -1,7 +1,7 @@
 ---
 titulo: "Kit das Frações"
 icone: "🍕"
-descricao: "Material para imprimir e projetar: tiras de fração, baralho de cartas, painel de duelo e gabarito para o 6º ano."
+descricao: "Manual do professor, tiras de fração para recortar, baralho de 27 cartas, folha de registro e gabarito, com painel para projetar no quadro. Material do 6º ano."
 ---
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -221,24 +221,56 @@ descricao: "Material para imprimir e projetar: tiras de fração, baralho de car
       .nome-linha{font-size:8.4pt;margin-top:2.6mm;letter-spacing:.02em}
       .instr{font-size:7.8pt;color:#444;line-height:1.5;margin-bottom:4mm}
 
-      .tira-linha{margin-bottom:3.4mm;break-inside:avoid}
-      .tira-cap{font-size:6.4pt;font-weight:700;color:#666;letter-spacing:.08em;margin-bottom:.9mm}
-      .tira{display:flex;height:16mm;border:1.4pt solid #1b1b1b;border-radius:1.8mm;overflow:hidden}
+      /* ---- TIRAS: uma faixa por linha, encostadas uma na outra.
+         O recorte é só horizontal, numa linha reta que serve para as duas
+         tiras vizinhas ao mesmo tempo. ---- */
+      .tiras-bloco{width:100%;border:0.3mm solid #1e293b;break-inside:avoid}
+      .tira-linha{display:flex;height:22mm;border-bottom:0.3mm solid #1e293b}
+      .tira-linha:last-child{border-bottom:0}
+      .tira-rot{
+        width:19mm;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5mm;
+        border-right:0.3mm solid #1e293b;background:#f1f5f9;color:#1e293b;text-align:center;
+      }
+      .tira-rot b{font-size:9.5pt;font-weight:800;line-height:1}
+      .tira-rot span{font-size:5.6pt;letter-spacing:.04em;line-height:1}
+      .tira{flex:1;display:flex}
       .seg{flex:1;display:flex;align-items:center;justify-content:center;
-        font-size:8.6pt;font-weight:800;color:#fff;border-right:1pt solid rgba(255,255,255,.85)}
+        font-size:8.6pt;font-weight:800;color:#fff;border-right:0.3mm solid rgba(255,255,255,.9)}
       .seg:last-child{border-right:0}
-      .tira.compacta .seg{font-size:6.4pt}
+      .tira.compacta .seg{font-size:6.2pt}
 
-      .cartas-grid{display:grid;grid-template-columns:repeat(3,60mm);grid-template-rows:repeat(3,85mm);gap:4mm}
-      .carta{border:1pt dashed #a3a3a3;border-radius:2.6mm;display:flex;flex-direction:column;
-        align-items:center;justify-content:center;gap:5mm;padding:4mm;break-inside:avoid}
-      .carta-frac{display:flex;flex-direction:column;align-items:center;line-height:.95;font-weight:800;font-size:27pt}
+      /* ---- CARTAS: 63 x 91 mm, mesma medida do Super Trunfo, encostadas
+         (gap 0) para o recorte ser uma linha reta só. ---- */
+      .cartas-grid{
+        display:grid;grid-template-columns:repeat(3,63mm);grid-template-rows:repeat(3,91mm);
+        gap:0;width:189mm;margin:0 auto;break-inside:avoid;
+      }
+      .carta{border:0.3mm solid #94a3b8;box-sizing:border-box;overflow:hidden;
+        display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5mm}
+      .carta-frac{display:flex;flex-direction:column;align-items:center;line-height:.95;font-weight:800;font-size:29pt}
       .carta-frac .den{border-top:2.4pt solid #141414;padding-top:1.1mm;margin-top:.6mm}
-      .carta-barra{width:44mm;height:8mm;border:1pt solid #333;border-radius:1.4mm;display:flex;overflow:hidden}
-      .carta-barra i{display:block;border-right:1pt solid rgba(0,0,0,.4)}
+      .carta-barra{width:45mm;height:8mm;border:0.3mm solid #334155;display:flex;overflow:hidden}
+      .carta-barra i{display:block;border-right:0.3mm solid rgba(0,0,0,.35)}
       .carta-barra i:last-child{border-right:0}
-      .carta-pe{font-size:5.8pt;color:#9a9a9a;letter-spacing:.05em}
-      .carta.cor .carta-frac{color:#6d28d9}
+      .carta-pe{font-size:5.4pt;color:#94a3b8;letter-spacing:.04em}
+
+      /* ---- MANUAL DO PROFESSOR ---- */
+      .manual{font-size:8.9pt;line-height:1.45;color:#141414}
+      .manual h2{font-size:15pt;font-weight:800;border-bottom:2px solid #141414;padding-bottom:2.5mm;margin-bottom:1mm}
+      .manual .sub-cab{font-size:7.8pt;color:#64748b;margin-bottom:3.5mm}
+      .manual h3{font-size:10.4pt;font-weight:800;margin:3.6mm 0 1.6mm;color:#1e293b}
+      .manual h3:first-of-type{margin-top:0}
+      .manual p{margin-bottom:2mm}
+      .manual ul,.manual ol{margin:0 0 2.2mm 5mm;padding:0}
+      .manual li{margin-bottom:1.1mm}
+      .manual table{width:100%;border-collapse:collapse;font-size:8.2pt;margin-bottom:2.5mm}
+      .manual th,.manual td{border:0.3mm solid #cbd5e1;padding:1.5mm 2mm;text-align:left;vertical-align:top}
+      .manual th{background:#f1f5f9;font-size:7.2pt;text-transform:uppercase;letter-spacing:.04em}
+      .manual .caixa{border:0.3mm solid #94a3b8;background:#f8fafc;padding:2.6mm 3mm;margin:2.2mm 0;break-inside:avoid}
+      .manual .caixa b{color:#1e293b}
+      .manual .duas{display:grid;grid-template-columns:1fr 1fr;gap:5mm;align-items:start}
+      .manual .rodape-manual{margin-top:4mm;border-top:0.3mm solid #cbd5e1;padding-top:2.2mm;font-size:7.1pt;color:#64748b}
+      .manual .destaque{background:#f1f5f9;border-left:1mm solid #8b5cf6;padding:2.2mm 3mm;margin:2.2mm 0}
 
       .bloco{border-top:1.6pt dashed #b5b5b5;padding-top:4mm;margin-top:5mm}
       .bloco.curto{margin-top:4mm;padding-top:3mm}
@@ -277,6 +309,7 @@ descricao: "Material para imprimir e projetar: tiras de fração, baralho de car
         }
         .paper{break-after:page}
         .paper.ultima{break-after:auto}
+        body[data-print="manual"] .paper:not([data-sheet="manual"]),
         body[data-print="tiras"] .paper:not([data-sheet="tiras"]),
         body[data-print="cartas"] .paper:not([data-sheet="cartas"]),
         body[data-print="registro"] .paper:not([data-sheet="registro"]){display:none !important}
@@ -291,7 +324,7 @@ descricao: "Material para imprimir e projetar: tiras de fração, baralho de car
       <div class="brand-icon">🍕</div>
       <div>
         <h1>Kit das Frações</h1>
-        <p>Laboratório de Matemática · 6º ano · EF06MA07, 08, 09 e 10</p>
+        <p>Laboratório de Matemática · 6º ano · EF06MA07, 08, 10 e 13</p>
       </div>
     </div>
     <nav class="tabs">
@@ -451,6 +484,7 @@ descricao: "Material para imprimir e projetar: tiras de fração, baralho de car
     <!-- ============================ MATERIAL ============================ -->
     <section class="view" id="view-material">
       <div class="barra-impressao no-print">
+        <button class="btn" data-print="manual" type="button">🖨️ Imprimir manual do professor</button>
         <button class="btn" data-print="tiras" type="button">🖨️ Imprimir tiras de fração</button>
         <button class="btn" data-print="cartas" type="button">🖨️ Imprimir baralho (27 cartas)</button>
         <button class="btn" data-print="registro" type="button">🖨️ Imprimir registro e gabarito</button>
@@ -971,24 +1005,25 @@ descricao: "Material para imprimir e projetar: tiras de fração, baralho de car
 
   /* ================= MATERIAL IMPRESSO ================= */
   var TIRAS=[
-    {d:1,cap:'INTEIRO',cor:'#475569'},
-    {d:2,cap:'MEIOS · 1/2',cor:'#8b5cf6'},
-    {d:3,cap:'TERÇOS · 1/3',cor:'#ec4899'},
-    {d:4,cap:'QUARTOS · 1/4',cor:'#06b6d4'},
-    {d:5,cap:'QUINTOS · 1/5',cor:'#22c55e'},
-    {d:6,cap:'SEXTOS · 1/6',cor:'#f59e0b'},
-    {d:8,cap:'OITAVOS · 1/8',cor:'#a855f7'},
-    {d:10,cap:'DÉCIMOS · 1/10',cor:'#14b8a6'},
-    {d:12,cap:'DOZE AVOS · 1/12',cor:'#ef4444'}
+    {d:1,nome:'INTEIRO',cor:'#475569'},
+    {d:2,nome:'MEIOS',cor:'#8b5cf6'},
+    {d:3,nome:'TERÇOS',cor:'#ec4899'},
+    {d:4,nome:'QUARTOS',cor:'#06b6d4'},
+    {d:5,nome:'QUINTOS',cor:'#22c55e'},
+    {d:6,nome:'SEXTOS',cor:'#f59e0b'},
+    {d:8,nome:'OITAVOS',cor:'#a855f7'},
+    {d:10,nome:'DÉCIMOS',cor:'#14b8a6'},
+    {d:12,nome:'DOZE AVOS',cor:'#ef4444'}
   ];
 
   function folhaTiras(){
-    var tiras=TIRAS.map(function(t){
+    var linhas=TIRAS.map(function(t){
       var segs='';
       for(var i=0;i<t.d;i++){
-        segs+='<div class="seg" style="background:'+t.cor+'">'+(t.d===1?'1':(1+'/'+t.d))+'</div>';
+        segs+='<div class="seg" style="background:'+t.cor+'">'+(t.d===1?'1':('1/'+t.d))+'</div>';
       }
-      return '<div class="tira-linha"><div class="tira-cap">'+t.cap+'</div>'+
+      return '<div class="tira-linha">'+
+        '<div class="tira-rot"><b>'+(t.d===1?'1':('1/'+t.d))+'</b><span>'+t.nome+'</span></div>'+
         '<div class="tira'+(t.d>=10?' compacta':'')+'">'+segs+'</div></div>';
     }).join('');
 
@@ -997,34 +1032,34 @@ descricao: "Material para imprimir e projetar: tiras de fração, baralho de car
       '<p>Kit das Frações · 6º ano · Laboratório de Matemática</p>'+
       '<div class="nome-linha">Nome: ______________________________________&nbsp;&nbsp;Turma: ________&nbsp;&nbsp;Data: ____/____/______</div>'+
       '</div>'+
-      '<p class="instr">Recorte cada tira na linha pontilhada. <b>Todas as tiras têm o mesmo comprimento</b>, porque todas representam o mesmo inteiro. '+
-      'Sobreponha as tiras para comparar frações, descobrir quais são maiores e encontrar as equivalências: 1/2 encaixa exatamente sobre 2/4, 4/8 e 5/10.</p>'+
-      tiras+
+      '<p class="instr"><b>Corte só nas linhas horizontais</b> — as tiras já saem encostadas, então cada corte separa duas de uma vez. '+
+      'Todas as tiras têm o mesmo comprimento, porque todas representam o mesmo inteiro. '+
+      'Sobreponha as tiras para comparar frações e encontrar as equivalências: 1/2 encaixa exatamente sobre 2/4, 3/6 e 5/10.</p>'+
+      '<div class="tiras-bloco">'+linhas+'</div>'+
       '</div></div>';
   }
 
   function folhasCartas(){
     var comFigura=$('chk-fig-carta').checked;
-    var porFolha=9, total=baralho.length, folhas=[];
-    for(var p=0;p*porFolha<total;p++){
+    var porFolha=9, total=baralho.length, folhas=[], nFolhas=Math.ceil(total/porFolha);
+    for(var p=0;p<nFolhas;p++){
       var cartas='';
       for(var i=p*porFolha;i<Math.min(total,(p+1)*porFolha);i++){
         var f=baralho[i];
         var barra='';
         if(comFigura){
-          var cor=corDe(f.d);
-          var segs='';
+          var cor=corDe(f.d), segs='';
           for(var k=0;k<f.d;k++) segs+='<i style="flex:1;background:'+(k<f.n?cor:'#f3f4f6')+'"></i>';
           barra='<div class="carta-barra">'+segs+'</div>';
         }
         cartas+='<div class="carta"><div class="carta-frac"><span class="num">'+f.n+'</span>'+
           '<span class="den">'+f.d+'</span></div>'+barra+
-          '<div class="carta-pe">KIT DAS FRAÇÕES · 6º ANO</div></div>';
+          '<div class="carta-pe">KIT DAS FRAÇÕES · '+(comFigura?'':'DESAFIO · ')+
+          'FOLHA '+(p+1)+'/'+nFolhas+'</div></div>';
       }
+      /* 9 cartas por folha, encostadas: 3 x 63 mm por 3 x 91 mm = a página inteira */
       folhas.push('<div class="paper" data-sheet="cartas"><div class="sheet">'+
         '<div class="cartas-grid">'+cartas+'</div>'+
-        '<p class="instr" style="margin-top:3mm;margin-bottom:0;font-size:6.8pt">Folha '+(p+1)+' de '+Math.ceil(total/porFolha)+
-        ' · recorte nas linhas pontilhadas'+(comFigura?'':' · versão sem figura de apoio, para o desafio')+'.</p>'+
         '</div></div>');
     }
     return folhas.join('');
@@ -1065,10 +1100,117 @@ descricao: "Material para imprimir e projetar: tiras de fração, baralho de car
       '</div></div>';
   }
 
+  /* Manual do professor: duas páginas impressas, uma para preparar a aula e
+     outra com as regras dos jogos, a sequência sugerida e a BNCC. */
+  function folhasManual(){
+    var p1=
+      '<div class="paper" data-sheet="manual"><div class="sheet"><div class="manual">'+
+        '<h2>Kit das Frações — manual do professor</h2>'+
+        '<p class="sub-cab">6º ano do Ensino Fundamental · Laboratório de Matemática · PIBID</p>'+
+
+        '<div class="destaque"><b>Em uma frase:</b> as tiras e as cartas são o material da turma; o painel na tela é seu, '+
+        'para conduzir a aula. Nenhum aluno precisa de celular ou computador.</div>'+
+
+        '<h3>1. O que vem neste kit</h3>'+
+        '<table><thead><tr><th style="width:36mm">Peça</th><th>O que é</th><th style="width:26mm">Quantidade</th></tr></thead><tbody>'+
+          '<tr><td><b>Manual do professor</b></td><td>Estas duas páginas: como preparar o material e as regras dos três jogos.</td><td>1 por professor</td></tr>'+
+          '<tr><td><b>Tiras de fração</b></td><td>Nove tiras do mesmo comprimento: inteiro, 1/2, 1/3, 1/4, 1/5, 1/6, 1/8, 1/10 e 1/12.</td><td>1 jogo por dupla</td></tr>'+
+          '<tr><td><b>Baralho</b></td><td>27 cartas de 63 × 91 mm, em 3 folhas, com a fração e a figura de apoio.</td><td>1 baralho por dupla</td></tr>'+
+          '<tr><td><b>Folha de registro</b></td><td>Oito rodadas para o aluno anotar, com o gabarito do professor embaixo.</td><td>1 por aluno</td></tr>'+
+        '</tbody></table>'+
+
+        '<h3>2. Antes da aula</h3>'+
+        '<ol>'+
+          '<li>Imprima as tiras e o baralho em papel de 120 g ou mais. Se não tiver, cole em cartolina depois de recortar.</li>'+
+          '<li><b>Recorte só nas linhas retas horizontais</b> das tiras: as peças saem encostadas uma na outra, então cada corte separa duas tiras de uma vez. '+
+          'Nas cartas, os cortes são as linhas retas da malha, que também é contínua.</li>'+
+          '<li>Plastifique ou passe fita adesiva transparente nas tiras. Elas são usadas o ano inteiro e amassam fácil.</li>'+
+          '<li>Monte um jogo por dupla e confira se as nove tiras estão lá — a de 1/12 é a que mais se perde.</li>'+
+        '</ol>'+
+        '<div class="caixa"><b>Se a impressora não imprimir o fundo colorido:</b> ligue a opção de gráficos de fundo '+
+        '(no Chrome, em <i>Mais configurações</i>). As cores não são enfeite: depois de recortadas, são elas que permitem '+
+        'separar as tiras de cada jogo.</div>'+
+
+        '<h3>3. Jogo 1 — Duelo: quem é maior? <span style="font-weight:400;color:#64748b">(15 a 25 minutos)</span></h3>'+
+        '<p><b>Objetivo:</b> comparar duas frações e justificar a resposta com as tiras na mão, sem decorar regra.</p>'+
+        '<ol>'+
+          '<li>Divida a turma em dois times. Cada dupla recebe um jogo de tiras.</li>'+
+          '<li>No painel, abra <b>Duelo</b>, escolha a dificuldade (<b>Fácil</b> na primeira vez) e clique em <b>Sortear dupla de cartas</b>. '+
+          'As duas frações aparecem projetadas, sem a figura.</li>'+
+          '<li>Dê 30 segundos: cada dupla decide quem é maior usando as tiras e escreve como decidiu.</li>'+
+          '<li>Um representante de cada time responde e explica o caminho.</li>'+
+          '<li>Clique em <b>Revelar comparação</b>. O painel mostra as barras, o MMC e as duas frações convertidas para o mesmo denominador.</li>'+
+          '<li>Some o ponto do time que acertou e peça que todos copiem a conversão na folha de registro.</li>'+
+        '</ol>'+
+        '<div class="caixa"><b>Perguntas que fazem a aula render</b> (não entregue a resposta):'+
+          '<ul>'+
+            '<li>Dá para comparar só olhando os numeradores? Por quê?</li>'+
+            '<li>O que acontece com o tamanho de cada parte quando o denominador aumenta?</li>'+
+            '<li>Se eu multiplicar o numerador e o denominador pelo mesmo número, a quantidade muda?</li>'+
+          '</ul>'+
+          '<b>Os empates são o melhor momento da aula.</b> Quando sair 1/2 contra 2/4, não diga a resposta: pergunte por que '+
+          'duas escritas diferentes mostram a mesma quantidade.'+
+        '</div>'+
+      '</div></div></div>';
+
+    var p2=
+      '<div class="paper" data-sheet="manual"><div class="sheet"><div class="manual">'+
+        '<h2>Kit das Frações — manual do professor <span style="font-size:8pt;font-weight:400;color:#64748b">(continuação)</span></h2>'+
+
+        '<h3>4. Jogo 2 — Monte a meta <span style="font-weight:400;color:#64748b">(20 a 30 minutos)</span></h3>'+
+        '<p><b>Objetivo:</b> compor uma fração a partir de outras e descobrir que existe mais de um caminho para o mesmo resultado.</p>'+
+        '<ol>'+
+          '<li>No painel, abra <b>Monte a meta</b> e clique em <b>Sortear nova meta</b>. Comece com 3/4 ou 7/8.</li>'+
+          '<li>A meta aparece projetada. Cada dupla tenta alcançá-la empilhando as tiras na mesa, dentro do limite combinado.</li>'+
+          '<li>Quando uma dupla disser "consegui", o professor clica nos frascos do painel <b>nas doses que ela usou</b>.</li>'+
+          '<li>O painel responde na hora: <b>meta alcançada</b>, <b>faltam 1/8</b> ou <b>passou da meta</b>. Mostre o aviso para a turma.</li>'+
+          '<li>Antes de passar para a próxima meta, clique em <b>Mostrar todas as soluções</b>.</li>'+
+        '</ol>'+
+        '<div class="caixa"><b>Por que essa é a parte mais rica:</b> o painel lista <i>todas</i> as combinações de até cinco doses '+
+        'que chegam na meta — para 7/8 são 14. Vá escrevendo as soluções no quadro até esgotar. Ver caminhos diferentes darem o '+
+        'mesmo resultado é o que transforma equivalência de regra decorada em coisa percebida.</div>'+
+        '<div class="caixa"><b>Combine o limite antes de começar:</b> no máximo 4 doses, por exemplo. Com limite, a dupla planeja '+
+        'antes de empilhar; sem limite, ela empilha no chute até dar certo.</div>'+
+
+        '<h3>5. Jogo 3 — Conferir conta <span style="font-weight:400;color:#64748b">(10 minutos, no fim da aula)</span></h3>'+
+        '<p>Use quando a turma já escreveu a conta no caderno. Digite <b>exatamente o que eles escreveram</b> '+
+        '(por exemplo <span class="mono">5/6 - 1/3</span>) e clique em <b>Resolver passo a passo</b>. O painel mostra o MMC, '+
+        'a conversão, a soma dos numeradores e a simplificação — uma etapa por vez.</p>'+
+        '<p>Pare em cada etapa e pergunte o que vem depois. Se o resultado do painel for diferente do da turma, o erro está em uma '+
+        'das etapas anteriores: volte e refaça junto.</p>'+
+
+        '<h3>6. Folha de registro</h3>'+
+        '<p>Uma por aluno. Na última coluna ele precisa escrever <b>a conversão que usou</b>, não só quem é maior — é essa coluna que '+
+        'mostra se ele entendeu ou só chutou. O gabarito do professor fica na mesma folha, abaixo da linha tracejada: destaque antes de '+
+        'entregar, se quiser corrigir depois.</p>'+
+
+        '<h3>7. Sugestão de sequência</h3>'+
+        '<table><thead><tr><th style="width:20mm">Aula</th><th>O que fazer</th></tr></thead><tbody>'+
+          '<tr><td><b>1</b></td><td>Tiras na mão. Deixe a turma recortar, sobrepor e descobrir sozinha as equivalências. Depois jogue duas ou três rodadas do Duelo, só no modo Fácil.</td></tr>'+
+          '<tr><td><b>2</b></td><td>Duelo no modo Desafio (denominadores que não se encaixam) e, em seguida, Monte a meta com uma ou duas metas.</td></tr>'+
+          '<tr><td><b>3</b></td><td>Monte a meta com metas maiores, mostre todas as soluções e feche com Conferir conta e a folha de registro.</td></tr>'+
+        '</tbody></table>'+
+
+        '<h3>8. Habilidades da BNCC</h3>'+
+        '<table><thead><tr><th style="width:24mm">Código</th><th>Habilidade trabalhada</th></tr></thead><tbody>'+
+          '<tr><td><b>EF06MA07</b></td><td>Comparar e ordenar frações e localizá-las na reta numérica — é o Duelo e o gabarito com os decimais.</td></tr>'+
+          '<tr><td><b>EF06MA08</b></td><td>Reconhecer frações equivalentes e passar da escrita fracionária para a decimal — é o grupo de equivalentes do baralho e a tabela de equivalências.</td></tr>'+
+          '<tr><td><b>EF06MA10</b></td><td>Resolver problemas de adição e subtração com frações — é o Monte a meta e o Conferir conta.</td></tr>'+
+          '<tr><td><b>EF06MA13</b></td><td>Resolver problemas com porcentagens — é a coluna de porcentagem das cartas e do gabarito.</td></tr>'+
+        '</tbody></table>'+
+
+        '<div class="rodape-manual"><b>Kit das Frações</b> · Laboratório de Matemática · PIBID · '+
+        'Mateus Goldschmidt &amp; Lavínia M. Ferreira.<br>Material gratuito para uso em sala. '+
+        'As tiras são reutilizáveis: guarde os jogos para as turmas seguintes.</div>'+
+      '</div></div></div>';
+
+    return p1+p2;
+  }
+
   function renderFolhas(){
-    $('folhas').innerHTML=folhaTiras()+folhasCartas()+folhaRegistro();
-    $('info-baralho').textContent=baralho.length+' cartas · '+Math.ceil(baralho.length/9)+
-      ' folhas de cartas · tiras em 1 folha · registro e gabarito em 1 folha';
+    $('folhas').innerHTML=folhasManual()+folhaTiras()+folhasCartas()+folhaRegistro();
+    $('info-baralho').textContent='manual em 2 páginas · tiras em 1 folha · '+baralho.length+' cartas em '+
+      Math.ceil(baralho.length/9)+' folhas · registro e gabarito em 1 folha';
   }
 
   function imprimir(alvo){
