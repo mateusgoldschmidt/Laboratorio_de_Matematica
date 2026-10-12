@@ -229,7 +229,7 @@ descricao: "Material para imprimir e projetar: tiras de fração, baralho de car
       .seg:last-child{border-right:0}
       .tira.compacta .seg{font-size:6.4pt}
 
-      .cartas-grid{display:grid;grid-template-columns:repeat(3,60mm);grid-template-rows:repeat(3,88mm);gap:4mm}
+      .cartas-grid{display:grid;grid-template-columns:repeat(3,60mm);grid-template-rows:repeat(3,85mm);gap:4mm}
       .carta{border:1pt dashed #a3a3a3;border-radius:2.6mm;display:flex;flex-direction:column;
         align-items:center;justify-content:center;gap:5mm;padding:4mm;break-inside:avoid}
       .carta-frac{display:flex;flex-direction:column;align-items:center;line-height:.95;font-weight:800;font-size:27pt}
@@ -241,12 +241,13 @@ descricao: "Material para imprimir e projetar: tiras de fração, baralho de car
       .carta.cor .carta-frac{color:#6d28d9}
 
       .bloco{border-top:1.6pt dashed #b5b5b5;padding-top:4mm;margin-top:5mm}
+      .bloco.curto{margin-top:4mm;padding-top:3mm}
       .bloco h3{font-size:11pt;font-weight:800;margin-bottom:2.5mm}
       .bloco .sub{font-size:7.6pt;color:#666;margin-bottom:3mm}
       .reg-table{width:100%;border-collapse:collapse;font-size:8pt}
       .reg-table th,.reg-table td{border:1pt solid #bbb;padding:2.6mm 2mm;color:#141414;text-align:left}
       .reg-table th{background:#f1f1f1;font-size:7pt;letter-spacing:.05em;text-transform:uppercase}
-      .reg-table td{height:12mm}
+      .reg-table td{height:10mm;padding:1.6mm 2mm}
       .gab-grid{display:grid;grid-template-columns:1fr 1fr;gap:5mm}
       .gab-grid table{border-collapse:collapse;font-size:8pt}
       .gab-grid th,.gab-grid td{border:1pt solid #ccc;padding:1.9mm 2mm;color:#141414}
@@ -1053,7 +1054,7 @@ descricao: "Material para imprimir e projetar: tiras de fração, baralho de car
       '<th style="width:26mm">Quem é maior</th><th>Como eu descobri (a conversão que usei)</th></tr></thead>'+
       '<tbody>'+linhas+'</tbody></table>'+
 
-      '<div class="bloco">'+
+      '<div class="bloco curto">'+
         '<h3>Gabarito do professor — cartas do baralho em ordem crescente</h3>'+
         '<p class="sub">Confere com a tela do painel. Se você gerou um baralho novo, imprima este gabarito junto.</p>'+
         '<div class="gab-grid">'+
