@@ -612,5 +612,7 @@ document.querySelectorAll('input').forEach(i => i.addEventListener('input', upda
 <a id="btn-voltar" href="index.html">
   &#8592; Menu principal
 </a>
+<!-- Correção: o botão de voltar não deve sair na impressão -->
+<style>@media print { #btn-voltar, [id*="voltar"] { display: none !important; } }</style>
 </body>
 </html>
