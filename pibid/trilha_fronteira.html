@@ -1,7 +1,7 @@
 ---
 titulo: "Trilha da Fronteira Noroeste"
 icone: "🗺️"
-descricao: "Trilha de tabuleiro pelos 45 municípios da Fronteira Noroeste, com mapa real, fotos dos atrativos e desafios de Geografia e Matemática para o 6º ano."
+descricao: "Jogo de trilha para imprimir pelos 45 municípios da Fronteira Noroeste: tabuleiro com mapa real, 36 cartas de desafio, fichas, registro e manual do professor."
 ---
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -11,55 +11,134 @@ descricao: "Trilha de tabuleiro pelos 45 municípios da Fronteira Noroeste, com 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trilha da Fronteira Noroeste — 6º ano | Laboratório de Matemática</title>
-    <meta name="description" content="Trilha de tabuleiro pelos 45 municípios da Fronteira Noroeste do RS: mapa em escala real, fotos dos atrativos de cada município e desafios de Geografia e Matemática do 6º ano. Para imprimir em 4 folhas A4.">
+    <meta name="description" content="Jogo de trilha para imprimir pelos 45 municípios da Fronteira Noroeste do RS: tabuleiro de 42 x 59 cm em 4 folhas A4, 36 cartas de desafio de Geografia e Matemática do 6º ano, peões, fichas, folha de registro e manual do professor.">
     <style>
       * { box-sizing: border-box; margin: 0; padding: 0; }
       html { scroll-behavior: smooth; }
       body { background: #eef2f5; font-family: 'DejaVu Sans', Arial, sans-serif; color: #14532d; }
       .app-bar { position: sticky; top: 0; z-index: 50; background: #14532d; color: #f0fdf4;
                  padding: 12px 22px; display: flex; align-items: center; justify-content: space-between;
-                 gap: 18px; flex-wrap: wrap; box-shadow: 0 3px 14px rgba(0,0,0,.28); }
+                 gap: 16px; flex-wrap: wrap; box-shadow: 0 3px 14px rgba(0,0,0,.28); }
       .app-bar h1 { font-size: 19px; letter-spacing: .3px; }
       .app-bar p { font-size: 12.5px; color: #bbf7d0; margin-top: 3px; }
-      .app-bar .acoes { display: flex; gap: 9px; flex-wrap: wrap; align-items: center; }
-      .app-bar button, .app-bar a { font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
-                 border: 1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.09);
-                 color: #f0fdf4; padding: 9px 15px; border-radius: 9px; text-decoration: none;
-                 display: inline-flex; align-items: center; gap: 7px; transition: .16s; }
-      .app-bar button:hover, .app-bar a:hover { background: #facc15; color: #14532d; border-color: #facc15; }
+      .app-bar .acoes { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+      .app-bar button, .app-bar a, .btn-parte { font: inherit; font-size: 12.5px; font-weight: 700;
+                 cursor: pointer; border: 1px solid rgba(20,83,45,.3); background: #fff;
+                 color: #14532d; padding: 8px 13px; border-radius: 9px; text-decoration: none;
+                 display: inline-flex; align-items: center; gap: 6px; transition: .16s; }
+      .app-bar button, .app-bar a { background: rgba(255,255,255,.09); color: #f0fdf4;
+                 border-color: rgba(255,255,255,.28); }
+      .app-bar button:hover, .app-bar a:hover, .btn-parte:hover { background: #facc15;
+                 color: #14532d; border-color: #facc15; }
       .dica { background: #fffbe8; border-bottom: 1px solid #f5e2a0; padding: 11px 22px;
               font-size: 13px; line-height: 1.6; color: #6b5312; }
       .dica b { color: #8a6d0b; }
-      .palco { padding: 24px 22px 44px; }
+      .secao { padding: 26px 22px 8px; }
+      .cabecalho-secao { max-width: 900px; margin: 0 auto 16px; }
+      .cabecalho-secao h2 { font-size: 21px; color: #14532d; }
+      .cabecalho-secao p { font-size: 13.5px; color: #4d7c48; line-height: 1.6; margin: 6px 0 10px; }
       .prateleira { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
       .paper { position: relative; width: 210mm; height: 297mm; overflow: hidden; background: #fff;
                box-shadow: 0 4px 18px rgba(0,0,0,.22); flex: 0 0 auto; }
       .paper img { width: 210mm; height: 297mm; display: block; }
-      @media screen { .prateleira { zoom: .92; } }
-      @media screen and (max-width: 1620px) { .prateleira { zoom: .8; } }
-      @media screen and (max-width: 1400px) { .prateleira { zoom: .64; } }
-      @media screen and (max-width: 1100px) { .prateleira { zoom: .48; } }
-      @media screen and (max-width: 800px)  { .prateleira { zoom: .36; } }
+      @media screen { .prateleira { zoom: .88; } }
+      @media screen and (max-width: 1560px) { .prateleira { zoom: .76; } }
+      @media screen and (max-width: 1340px) { .prateleira { zoom: .6; } }
+      @media screen and (max-width: 1050px) { .prateleira { zoom: .45; } }
+      @media screen and (max-width: 760px)  { .prateleira { zoom: .33; } }
       .voltar-flutuante { position: fixed; left: 18px; bottom: 18px; z-index: 60; background: #14532d;
                  color: #f0fdf4; text-decoration: none; font-size: 13px; font-weight: 700;
                  padding: 11px 16px; border-radius: 11px; box-shadow: 0 4px 16px rgba(0,0,0,.3);
                  border: 1px solid rgba(255,255,255,.2); }
       .voltar-flutuante:hover { background: #facc15; color: #14532d; }
-      .rodape-pagina { text-align: center; padding: 22px; font-size: 12.5px; color: #4d7c48; }
+      .rodape-pagina { text-align: center; padding: 26px; font-size: 12.5px; color: #4d7c48; }
 
-      /* ================= IMPRESSÃO: 4 FOLHAS A4 ================= */
+      
+  .paper { width:210mm; height:297mm; background:#fff; position:relative; overflow:hidden; }
+  .grade-cartas { padding:6mm; display:grid; grid-template-columns:repeat(3,66mm);
+                  grid-template-rows:repeat(3,95mm); }
+  .carta { border:.45mm solid #14532d; background:#fff; display:flex; flex-direction:column;
+           overflow:hidden; }
+  .carta-topo { display:flex; justify-content:space-between; align-items:center; gap:2mm;
+                padding:1.9mm 2.6mm; color:#fff; }
+  .carta-topo .cat { font-size:3.2mm; font-weight:bold; letter-spacing:.25mm; }
+  .carta-topo .num { font-size:3.4mm; font-weight:bold; opacity:.92; }
+  .carta-corpo { flex:1; padding:2.6mm; display:flex; flex-direction:column; }
+  .carta-corpo .tipo { font-size:2.7mm; color:#64748b; letter-spacing:.2mm; margin-bottom:1.6mm; }
+  .carta-corpo .pergunta { font-size:3.5mm; line-height:1.42; color:#0f172a; }
+  .carta-corpo .pergunta b { color:#14532d; }
+  .alts { list-style:none; margin-top:auto; padding-top:2mm; }
+  .alts li { font-size:3.4mm; line-height:1.25; padding:1.5mm 2mm; margin-bottom:1.3mm;
+             border:.35mm solid #cbd5e1; border-radius:1.3mm; display:flex; gap:1.8mm;
+             color:#0f172a; }
+  .alts li:last-child { margin-bottom:0; }
+  .alts li b { color:#14532d; }
+  .carta-pe { border-top:.45mm solid #14532d; padding:1.7mm 2.6mm; text-align:center;
+              font-size:3.2mm; font-weight:bold; color:#14532d; background:#f0fdf4; }
+
+  .grade-fichas { padding:6mm; }
+  .grade-fichas h2 { font-size:5mm; color:#14532d; margin-bottom:1.5mm; }
+  .grade-fichas .ajuda { font-size:3.2mm; color:#4d7c48; margin-bottom:4mm; }
+  .peoes { display:flex; gap:7mm; margin-bottom:9mm; }
+  .peao { width:44mm; height:62mm; border:.5mm solid; border-radius:2mm; overflow:hidden;
+          display:flex; flex-direction:column; }
+  .peao .metade { flex:1; display:flex; flex-direction:column; align-items:center;
+                  justify-content:center; gap:1.5mm; }
+  .peao .metade.baixo { transform:rotate(180deg); border-top:.45mm dashed #94a3b8; }
+  .peao span { font-size:15mm; font-weight:bold; line-height:1; }
+  .peao small { font-size:3.3mm; font-weight:bold; color:#14532d; letter-spacing:.3mm; }
+  .fichas { display:grid; grid-template-columns:repeat(8,1fr); gap:0; }
+  .ficha { aspect-ratio:1; border:.45mm solid #15803d; border-radius:50%; background:#f0fdf4;
+           display:flex; align-items:center; justify-content:center; }
+  .ficha::after { content:"★"; color:#15803d; font-size:5mm; }
+
+  .grade-registro { padding:6mm; }
+  .grade-registro h2 { font-size:5.5mm; color:#14532d; margin-bottom:4mm; }
+  .campo-linha { display:flex; justify-content:space-between; gap:4mm; flex-wrap:wrap;
+                 font-size:3.3mm; color:#14532d; margin-bottom:3mm; }
+  table.reg { width:100%; border-collapse:collapse; }
+  table.reg th, table.reg td { border:.4mm solid #14532d; padding:2.4mm 1.5mm; font-size:3.2mm; }
+  table.reg th { background:#14532d; color:#fff; font-size:3.1mm; }
+  table.reg td { height:8.6mm; }
+
+  .manual .pagina { padding:14mm 16mm; height:100%; display:flex; flex-direction:column; }
+  .manual h1 { font-size:8mm; color:#14532d; line-height:1.1; }
+  .manual .linha-fina { font-size:3.6mm; color:#4d7c48; margin:2mm 0 6mm; }
+  .manual h2 { font-size:4.6mm; color:#14532d; margin:5mm 0 2mm; border-bottom:.4mm solid #86efac;
+               padding-bottom:1.2mm; }
+  .manual p, .manual li { font-size:3.5mm; line-height:1.55; color:#1e293b; }
+  .manual ol, .manual ul { padding-left:6mm; }
+  .manual li { margin-bottom:1.4mm; }
+  .manual table.tabela { width:100%; border-collapse:collapse; }
+  .manual table.tabela td { border:.35mm solid #bbf7d0; padding:1.8mm 2.2mm; font-size:3.4mm; }
+  .manual table.tabela td:first-child { width:32mm; color:#14532d; }
+  .manual table.gab { width:100%; border-collapse:collapse; margin-top:1mm; }
+  .manual table.gab th, .manual table.gab td { border:.35mm solid #bbf7d0; padding:1.1mm 2mm;
+               font-size:3.05mm; }
+  .manual table.gab th { background:#14532d; color:#fff; }
+  .manual table.gab td:nth-child(1) { width:12mm; text-align:center; }
+  .manual table.gab td:nth-child(2) { width:52mm; }
+  .manual .assinatura { margin-top:auto; font-size:3.1mm; color:#4d7c48; }
+
+
+      /* ================= IMPRESSÃO ================= */
       @page { size: A4 portrait; margin: 0; }
       @media print {
         .no-print { display: none !important; }
         html, body { width: 210mm !important; margin: 0 !important; padding: 0 !important;
                      background: #fff !important; }
-        .palco { padding: 0 !important; display: block !important; }
-        .prateleira { display: block !important; }
+        .secao { padding: 0 !important; }
+        .prateleira { display: block !important; zoom: 1 !important; gap: 0 !important; }
         .paper { width: 210mm !important; height: 297mm !important; margin: 0 !important;
                  box-shadow: none !important; break-after: page; page-break-after: always;
                  break-inside: avoid; page-break-inside: avoid; }
-        .paper:last-child { break-after: auto; page-break-after: auto; }
+        .paper.ultima { break-after: auto !important; page-break-after: auto !important; }
         .paper img { width: 210mm !important; height: 297mm !important; }
+        body[data-print="tabuleiro"] .paper:not([data-sheet="tabuleiro"]),
+        body[data-print="cartas"] .paper:not([data-sheet="cartas"]),
+        body[data-print="fichas"] .paper:not([data-sheet="fichas"]),
+        body[data-print="registro"] .paper:not([data-sheet="registro"]),
+        body[data-print="manual"] .paper:not([data-sheet="manual"]) { display: none !important; }
         * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
       }
     </style>
@@ -68,36 +147,204 @@ descricao: "Trilha de tabuleiro pelos 45 municípios da Fronteira Noroeste, com 
   <header class="app-bar no-print">
     <div>
       <h1>🗺️ A Grande Volta da Fronteira Noroeste</h1>
-      <p>Laboratório de Matemática · 6º ano · EF06GE08, EF06GE01, EF06MA01, EF06MA13 e EF06MA24</p>
+      <p>Laboratório de Matemática · 6º ano · Geografia e Matemática · 12 folhas A4 no total</p>
     </div>
     <div class="acoes">
-      <button id="btn-imprimir" type="button">🖨️ Imprimir o tabuleiro</button>
+      <button data-print="tudo" type="button">🖨️ Imprimir tudo</button>
       <a href="../index.html">← Voltar ao portal</a>
     </div>
   </header>
 
   <div class="dica no-print">
-    <b>Como imprimir:</b> são <b>4 folhas A4</b> que formam um tabuleiro de 42 × 59 cm. Na janela de
-    impressão escolha <b>A4</b>, <b>margens: nenhuma</b> e marque <b>“gráficos de plano de fundo”</b>.
-    As linhas vermelhas tracejadas mostram onde emendar: junte as quatro folhas com fita transparente
-    pela frente, encostando as bordas.
+    <b>Como imprimir:</b> escolha <b>A4</b>, <b>margens: nenhuma</b> e marque
+    <b>“gráficos de plano de fundo”</b>. O tabuleiro sai em 4 folhas que formam 42 × 59 cm —
+    junte pelas linhas vermelhas tracejadas com fita transparente. O baralho, as fichas, o
+    registro e o manual saem nas folhas seguintes. Use os botões de cada parte para imprimir
+    só o que precisa.
   </div>
 
-  <div class="palco">
-    <div class="prateleira">
-      <div class="paper" data-sheet="trilha" data-folha="1"><img src="trilha_img/folha-1.jpg" alt="Folha 1 de 4 do tabuleiro" width="2481" height="3509" loading="lazy"></div>
-      <div class="paper" data-sheet="trilha" data-folha="2"><img src="trilha_img/folha-2.jpg" alt="Folha 2 de 4 do tabuleiro" width="2481" height="3509" loading="lazy"></div>
-      <div class="paper" data-sheet="trilha" data-folha="3"><img src="trilha_img/folha-3.jpg" alt="Folha 3 de 4 do tabuleiro" width="2481" height="3509" loading="lazy"></div>
-      <div class="paper" data-sheet="trilha" data-folha="4"><img src="trilha_img/folha-4.jpg" alt="Folha 4 de 4 do tabuleiro" width="2481" height="3509" loading="lazy"></div>
+  <section class="secao" id="sec-tabuleiro">
+    <div class="cabecalho-secao no-print">
+      <h2>Tabuleiro</h2>
+      <p>4 folhas A4 que formam um tabuleiro de 42 × 59 cm. Imprima em A4, margens nenhuma, com gráficos de plano de fundo ligados. Junte pelas linhas vermelhas tracejadas, colando fita transparente pela frente.</p>
+      <button class="btn-parte" data-print="tabuleiro" type="button">🖨️ Imprimir só esta parte</button>
+    </div>
+    <div class="prateleira"><div class="paper" data-sheet="tabuleiro" data-folha="1"><img src="trilha_img/folha-1.jpg" alt="Folha 1 de 4 do tabuleiro" width="2481" height="3509" loading="lazy"></div>
+<div class="paper" data-sheet="tabuleiro" data-folha="2"><img src="trilha_img/folha-2.jpg" alt="Folha 2 de 4 do tabuleiro" width="2481" height="3509" loading="lazy"></div>
+<div class="paper" data-sheet="tabuleiro" data-folha="3"><img src="trilha_img/folha-3.jpg" alt="Folha 3 de 4 do tabuleiro" width="2481" height="3509" loading="lazy"></div>
+<div class="paper" data-sheet="tabuleiro" data-folha="4"><img src="trilha_img/folha-4.jpg" alt="Folha 4 de 4 do tabuleiro" width="2481" height="3509" loading="lazy"></div></div>
+  </section>
+  <section class="secao" id="sec-cartas">
+    <div class="cabecalho-secao no-print">
+      <h2>Baralho de desafios</h2>
+      <p>36 cartas em 4 folhas A4, separadas por categoria: escala e distância, números da região, porcentagem e caminho no mapa. As cartas estão encostadas umas nas outras para facilitar o recorte em linha reta.</p>
+      <button class="btn-parte" data-print="cartas" type="button">🖨️ Imprimir só esta parte</button>
+    </div>
+    <div class="prateleira"><div class="paper" data-sheet="cartas"><div class="grade-cartas"><div class="carta"><div class="carta-topo" style="background:#1d4ed8"><span class="cat">ESCALA E DISTÂNCIA</span><span class="num">01</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE08</div><div class="pergunta">No mapa, a distância em linha reta entre <b>Cerro Largo</b> e <b>Santo Ângelo</b> mede <b>91 mm</b> com a régua. Usando a escala 1:489.000, qual é a distância real aproximada?</div><ul class="alts"><li><b>a)</b><span>25 km</span></li><li><b>b)</b><span>45 km</span></li><li><b>c)</b><span>72 km</span></li></ul></div><div class="carta-pe">Acertou: avance 3 casas</div></div><div class="carta"><div class="carta-topo" style="background:#1d4ed8"><span class="cat">ESCALA E DISTÂNCIA</span><span class="num">02</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE08</div><div class="pergunta">No mapa, a distância em linha reta entre <b>Bossoroca</b> e <b>Salvador das Missões</b> mede <b>141 mm</b> com a régua. Usando a escala 1:489.000, qual é a distância real aproximada?</div><ul class="alts"><li><b>a)</b><span>111 km</span></li><li><b>b)</b><span>38 km</span></li><li><b>c)</b><span>69 km</span></li></ul></div><div class="carta-pe">Acertou: avance 3 casas</div></div><div class="carta"><div class="carta-topo" style="background:#1d4ed8"><span class="cat">ESCALA E DISTÂNCIA</span><span class="num">03</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE08</div><div class="pergunta">No mapa, a distância em linha reta entre <b>Porto Mauá</b> e <b>Nova Candelária</b> mede <b>108 mm</b> com a régua. Usando a escala 1:489.000, qual é a distância real aproximada?</div><ul class="alts"><li><b>a)</b><span>86 km</span></li><li><b>b)</b><span>29 km</span></li><li><b>c)</b><span>53 km</span></li></ul></div><div class="carta-pe">Acertou: avance 3 casas</div></div><div class="carta"><div class="carta-topo" style="background:#1d4ed8"><span class="cat">ESCALA E DISTÂNCIA</span><span class="num">04</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE08</div><div class="pergunta">No mapa, a distância em linha reta entre <b>Giruá</b> e <b>Tuparendi</b> mede <b>89 mm</b> com a régua. Usando a escala 1:489.000, qual é a distância real aproximada?</div><ul class="alts"><li><b>a)</b><span>24 km</span></li><li><b>b)</b><span>70 km</span></li><li><b>c)</b><span>43 km</span></li></ul></div><div class="carta-pe">Acertou: avance 3 casas</div></div><div class="carta"><div class="carta-topo" style="background:#1d4ed8"><span class="cat">ESCALA E DISTÂNCIA</span><span class="num">05</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE08</div><div class="pergunta">No mapa, a distância em linha reta entre <b>Dezesseis de Novembro</b> e <b>Três de Maio</b> mede <b>196 mm</b> com a régua. Usando a escala 1:489.000, qual é a distância real aproximada?</div><ul class="alts"><li><b>a)</b><span>155 km</span></li><li><b>b)</b><span>53 km</span></li><li><b>c)</b><span>96 km</span></li></ul></div><div class="carta-pe">Acertou: avance 3 casas</div></div><div class="carta"><div class="carta-topo" style="background:#1d4ed8"><span class="cat">ESCALA E DISTÂNCIA</span><span class="num">06</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE08</div><div class="pergunta">No mapa, a distância em linha reta entre <b>Vitória das Missões</b> e <b>Rolador</b> mede <b>76 mm</b> com a régua. Usando a escala 1:489.000, qual é a distância real aproximada?</div><ul class="alts"><li><b>a)</b><span>60 km</span></li><li><b>b)</b><span>20 km</span></li><li><b>c)</b><span>37 km</span></li></ul></div><div class="carta-pe">Acertou: avance 3 casas</div></div><div class="carta"><div class="carta-topo" style="background:#1d4ed8"><span class="cat">ESCALA E DISTÂNCIA</span><span class="num">07</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE08</div><div class="pergunta">No mapa, a distância em linha reta entre <b>Porto Lucena</b> e <b>Horizontina</b> mede <b>142 mm</b> com a régua. Usando a escala 1:489.000, qual é a distância real aproximada?</div><ul class="alts"><li><b>a)</b><span>38 km</span></li><li><b>b)</b><span>112 km</span></li><li><b>c)</b><span>69 km</span></li></ul></div><div class="carta-pe">Acertou: avance 3 casas</div></div><div class="carta"><div class="carta-topo" style="background:#1d4ed8"><span class="cat">ESCALA E DISTÂNCIA</span><span class="num">08</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE08</div><div class="pergunta">No mapa, a distância em linha reta entre <b>São José do Inhacorá</b> e <b>Senador Salgado Filho</b> mede <b>103 mm</b> com a régua. Usando a escala 1:489.000, qual é a distância real aproximada?</div><ul class="alts"><li><b>a)</b><span>28 km</span></li><li><b>b)</b><span>50 km</span></li><li><b>c)</b><span>81 km</span></li></ul></div><div class="carta-pe">Acertou: avance 3 casas</div></div><div class="carta"><div class="carta-topo" style="background:#1d4ed8"><span class="cat">ESCALA E DISTÂNCIA</span><span class="num">09</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE08</div><div class="pergunta">No mapa, a distância em linha reta entre <b>Cândido Godói</b> e <b>São Nicolau</b> mede <b>125 mm</b> com a régua. Usando a escala 1:489.000, qual é a distância real aproximada?</div><ul class="alts"><li><b>a)</b><span>99 km</span></li><li><b>b)</b><span>61 km</span></li><li><b>c)</b><span>33 km</span></li></ul></div><div class="carta-pe">Acertou: avance 3 casas</div></div></div></div>
+<div class="paper" data-sheet="cartas"><div class="grade-cartas"><div class="carta"><div class="carta-topo" style="background:#15803d"><span class="cat">NÚMEROS DA REGIÃO</span><span class="num">10</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA01</div><div class="pergunta">Qual destes três municípios tem a <b>maior população</b>? Consulte a tabela de dados no rodapé do tabuleiro.</div><ul class="alts"><li><b>a)</b><span>Entre-Ijuís</span></li><li><b>b)</b><span>São Luiz Gonzaga</span></li><li><b>c)</b><span>Santo Cristo</span></li></ul></div><div class="carta-pe">Acertou: avance 2 casas</div></div><div class="carta"><div class="carta-topo" style="background:#15803d"><span class="cat">NÚMEROS DA REGIÃO</span><span class="num">11</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA01</div><div class="pergunta">Qual destes três municípios tem a <b>maior área territorial</b>? Confira na tabela do rodapé do tabuleiro.</div><ul class="alts"><li><b>a)</b><span>Tuparendi</span></li><li><b>b)</b><span>Campina das Missões</span></li><li><b>c)</b><span>Tucunduva</span></li></ul></div><div class="carta-pe">Acertou: avance 2 casas</div></div><div class="carta"><div class="carta-topo" style="background:#15803d"><span class="cat">NÚMEROS DA REGIÃO</span><span class="num">12</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA01</div><div class="pergunta"><b>Porto Mauá</b> tem 2.142 habitantes e <b>Mato Queimado</b> tem 1.795. Quantos habitantes Porto Mauá tem a mais?</div><ul class="alts"><li><b>a)</b><span>208 habitantes</span></li><li><b>b)</b><span>347 habitantes</span></li><li><b>c)</b><span>520 habitantes</span></li></ul></div><div class="carta-pe">Acertou: avance 3 casas</div></div><div class="carta"><div class="carta-topo" style="background:#15803d"><span class="cat">NÚMEROS DA REGIÃO</span><span class="num">13</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA01</div><div class="pergunta">Qual destes três municípios tem a <b>maior população</b>? Consulte a tabela de dados no rodapé do tabuleiro.</div><ul class="alts"><li><b>a)</b><span>Santa Rosa</span></li><li><b>b)</b><span>Garruchos</span></li><li><b>c)</b><span>Dezesseis de Novembro</span></li></ul></div><div class="carta-pe">Acertou: avance 2 casas</div></div><div class="carta"><div class="carta-topo" style="background:#15803d"><span class="cat">NÚMEROS DA REGIÃO</span><span class="num">14</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA01</div><div class="pergunta">Qual destes três municípios tem a <b>maior área territorial</b>? Confira na tabela do rodapé do tabuleiro.</div><ul class="alts"><li><b>a)</b><span>Sete de Setembro</span></li><li><b>b)</b><span>Eugênio de Castro</span></li><li><b>c)</b><span>São José do Inhacorá</span></li></ul></div><div class="carta-pe">Acertou: avance 2 casas</div></div><div class="carta"><div class="carta-topo" style="background:#15803d"><span class="cat">NÚMEROS DA REGIÃO</span><span class="num">15</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA01</div><div class="pergunta"><b>Boa Vista do Buricá</b> tem 6.966 habitantes e <b>Salvador das Missões</b> tem 2.877. Quantos habitantes Boa Vista do Buricá tem a mais?</div><ul class="alts"><li><b>a)</b><span>2.453 habitantes</span></li><li><b>b)</b><span>4.089 habitantes</span></li><li><b>c)</b><span>6.134 habitantes</span></li></ul></div><div class="carta-pe">Acertou: avance 3 casas</div></div><div class="carta"><div class="carta-topo" style="background:#15803d"><span class="cat">NÚMEROS DA REGIÃO</span><span class="num">16</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA01</div><div class="pergunta">Qual destes três municípios tem a <b>maior população</b>? Consulte a tabela de dados no rodapé do tabuleiro.</div><ul class="alts"><li><b>a)</b><span>São Pedro do Butiá</span></li><li><b>b)</b><span>São Paulo das Missões</span></li><li><b>c)</b><span>Doutor Maurício Cardoso</span></li></ul></div><div class="carta-pe">Acertou: avance 2 casas</div></div><div class="carta"><div class="carta-topo" style="background:#15803d"><span class="cat">NÚMEROS DA REGIÃO</span><span class="num">17</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA01</div><div class="pergunta">Qual destes três municípios tem a <b>maior área territorial</b>? Confira na tabela do rodapé do tabuleiro.</div><ul class="alts"><li><b>a)</b><span>Rolador</span></li><li><b>b)</b><span>Roque Gonzales</span></li><li><b>c)</b><span>Bossoroca</span></li></ul></div><div class="carta-pe">Acertou: avance 2 casas</div></div><div class="carta"><div class="carta-topo" style="background:#15803d"><span class="cat">NÚMEROS DA REGIÃO</span><span class="num">18</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA01</div><div class="pergunta"><b>Giruá</b> tem 16.013 habitantes e <b>Senador Salgado Filho</b> tem 2.673. Quantos habitantes Giruá tem a mais?</div><ul class="alts"><li><b>a)</b><span>8.004 habitantes</span></li><li><b>b)</b><span>20.010 habitantes</span></li><li><b>c)</b><span>13.340 habitantes</span></li></ul></div><div class="carta-pe">Acertou: avance 3 casas</div></div></div></div>
+<div class="paper" data-sheet="cartas"><div class="grade-cartas"><div class="carta"><div class="carta-topo" style="background:#c2410c"><span class="cat">PORCENTAGEM</span><span class="num">19</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA13</div><div class="pergunta">Em <b>Giruá</b>, 95,5% da população de 16.013 habitantes é alfabetizada. Aproximadamente quantas pessoas são alfabetizadas?</div><ul class="alts"><li><b>a)</b><span>8.411 pessoas</span></li><li><b>b)</b><span>15.292 pessoas</span></li><li><b>c)</b><span>22.173 pessoas</span></li></ul></div><div class="carta-pe">Acertou: avance 4 casas</div></div><div class="carta"><div class="carta-topo" style="background:#c2410c"><span class="cat">PORCENTAGEM</span><span class="num">20</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA13</div><div class="pergunta"><b>Independência</b> tem 358 km² de área e 71,3 km² de vegetação nativa. Que porcentagem da área do município isso representa?</div><ul class="alts"><li><b>a)</b><span>11%</span></li><li><b>b)</b><span>30%</span></li><li><b>c)</b><span>20%</span></li></ul></div><div class="carta-pe">Acertou: avance 4 casas</div></div><div class="carta"><div class="carta-topo" style="background:#c2410c"><span class="cat">PORCENTAGEM</span><span class="num">21</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA13</div><div class="pergunta">Em <b>São Paulo das Missões</b>, 65,2% dos 5.846 habitantes têm esgoto sanitizado. Quantos habitantes <b>não</b> têm?</div><ul class="alts"><li><b>a)</b><span>1.220 habitantes</span></li><li><b>b)</b><span>2.848 habitantes</span></li><li><b>c)</b><span>2.034 habitantes</span></li></ul></div><div class="carta-pe">Acertou: avance 4 casas</div></div><div class="carta"><div class="carta-topo" style="background:#c2410c"><span class="cat">PORCENTAGEM</span><span class="num">22</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA13</div><div class="pergunta">Em <b>Ubiretama</b>, 96,7% da população de 1.994 habitantes é alfabetizada. Aproximadamente quantas pessoas são alfabetizadas?</div><ul class="alts"><li><b>a)</b><span>1.060 pessoas</span></li><li><b>b)</b><span>2.796 pessoas</span></li><li><b>c)</b><span>1.928 pessoas</span></li></ul></div><div class="carta-pe">Acertou: avance 4 casas</div></div><div class="carta"><div class="carta-topo" style="background:#c2410c"><span class="cat">PORCENTAGEM</span><span class="num">23</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA13</div><div class="pergunta"><b>São Miguel das Missões</b> tem 1.228 km² de área e 410,0 km² de vegetação nativa. Que porcentagem da área do município isso representa?</div><ul class="alts"><li><b>a)</b><span>50%</span></li><li><b>b)</b><span>18%</span></li><li><b>c)</b><span>33%</span></li></ul></div><div class="carta-pe">Acertou: avance 4 casas</div></div><div class="carta"><div class="carta-topo" style="background:#c2410c"><span class="cat">PORCENTAGEM</span><span class="num">24</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA13</div><div class="pergunta">Em <b>Salvador das Missões</b>, 88,6% dos 2.877 habitantes têm esgoto sanitizado. Quantos habitantes <b>não</b> têm?</div><ul class="alts"><li><b>a)</b><span>459 habitantes</span></li><li><b>b)</b><span>197 habitantes</span></li><li><b>c)</b><span>328 habitantes</span></li></ul></div><div class="carta-pe">Acertou: avance 4 casas</div></div><div class="carta"><div class="carta-topo" style="background:#c2410c"><span class="cat">PORCENTAGEM</span><span class="num">25</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA13</div><div class="pergunta">Em <b>São José do Inhacorá</b>, 97,2% da população de 2.406 habitantes é alfabetizada. Aproximadamente quantas pessoas são alfabetizadas?</div><ul class="alts"><li><b>a)</b><span>1.286 pessoas</span></li><li><b>b)</b><span>3.392 pessoas</span></li><li><b>c)</b><span>2.339 pessoas</span></li></ul></div><div class="carta-pe">Acertou: avance 4 casas</div></div><div class="carta"><div class="carta-topo" style="background:#c2410c"><span class="cat">PORCENTAGEM</span><span class="num">26</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA13</div><div class="pergunta"><b>São Nicolau</b> tem 486 km² de área e 235,5 km² de vegetação nativa. Que porcentagem da área do município isso representa?</div><ul class="alts"><li><b>a)</b><span>48%</span></li><li><b>b)</b><span>27%</span></li><li><b>c)</b><span>73%</span></li></ul></div><div class="carta-pe">Acertou: avance 4 casas</div></div><div class="carta"><div class="carta-topo" style="background:#c2410c"><span class="cat">PORCENTAGEM</span><span class="num">27</span></div><div class="carta-corpo"><div class="tipo">Matemática · EF06MA13</div><div class="pergunta">Em <b>Santo Antônio das Missões</b>, 60,3% dos 10.300 habitantes têm esgoto sanitizado. Quantos habitantes <b>não</b> têm?</div><ul class="alts"><li><b>a)</b><span>2.453 habitantes</span></li><li><b>b)</b><span>5.725 habitantes</span></li><li><b>c)</b><span>4.089 habitantes</span></li></ul></div><div class="carta-pe">Acertou: avance 4 casas</div></div></div></div>
+<div class="paper" data-sheet="cartas"><div class="grade-cartas"><div class="carta"><div class="carta-topo" style="background:#6d28d9"><span class="cat">CAMINHO E MAPA</span><span class="num">28</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE01</div><div class="pergunta">No tabuleiro, saindo de <b>Pirapó</b> em direção a <b>Santa Rosa</b>, para que ponto cardeal você caminha? Use a rosa dos ventos.</div><ul class="alts"><li><b>a)</b><span>Noroeste</span></li><li><b>b)</b><span>Sul</span></li><li><b>c)</b><span>Leste</span></li></ul></div><div class="carta-pe">Acertou: avance 2 casas</div></div><div class="carta"><div class="carta-topo" style="background:#6d28d9"><span class="cat">CAMINHO E MAPA</span><span class="num">29</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE01</div><div class="pergunta">Qual destes três municípios fica mais ao <b>norte</b>?</div><ul class="alts"><li><b>a)</b><span>São José do Inhacorá</span></li><li><b>b)</b><span>Roque Gonzales</span></li><li><b>c)</b><span>São Pedro do Butiá</span></li></ul></div><div class="carta-pe">Acertou: avance 2 casas</div></div><div class="carta"><div class="carta-topo" style="background:#6d28d9"><span class="cat">CAMINHO E MAPA</span><span class="num">30</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE01</div><div class="pergunta">Qual destes três municípios fica mais a <b>oeste</b>?</div><ul class="alts"><li><b>a)</b><span>Cândido Godói</span></li><li><b>b)</b><span>Independência</span></li><li><b>c)</b><span>Boa Vista do Buricá</span></li></ul></div><div class="carta-pe">Acertou: avance 2 casas</div></div><div class="carta"><div class="carta-topo" style="background:#6d28d9"><span class="cat">CAMINHO E MAPA</span><span class="num">31</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE01</div><div class="pergunta">No tabuleiro, saindo de <b>Nova Candelária</b> em direção a <b>Guarani das Missões</b>, para que ponto cardeal você caminha? Use a rosa dos ventos.</div><ul class="alts"><li><b>a)</b><span>Sudeste</span></li><li><b>b)</b><span>Sudoeste</span></li><li><b>c)</b><span>Noroeste</span></li></ul></div><div class="carta-pe">Acertou: avance 2 casas</div></div><div class="carta"><div class="carta-topo" style="background:#6d28d9"><span class="cat">CAMINHO E MAPA</span><span class="num">32</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE01</div><div class="pergunta">Qual destes três municípios fica mais ao <b>norte</b>?</div><ul class="alts"><li><b>a)</b><span>Vitória das Missões</span></li><li><b>b)</b><span>Rolador</span></li><li><b>c)</b><span>Nova Candelária</span></li></ul></div><div class="carta-pe">Acertou: avance 2 casas</div></div><div class="carta"><div class="carta-topo" style="background:#6d28d9"><span class="cat">CAMINHO E MAPA</span><span class="num">33</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE01</div><div class="pergunta">Qual destes três municípios fica mais a <b>oeste</b>?</div><ul class="alts"><li><b>a)</b><span>Cerro Largo</span></li><li><b>b)</b><span>Bossoroca</span></li><li><b>c)</b><span>Caibaté</span></li></ul></div><div class="carta-pe">Acertou: avance 2 casas</div></div><div class="carta"><div class="carta-topo" style="background:#6d28d9"><span class="cat">CAMINHO E MAPA</span><span class="num">34</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE01</div><div class="pergunta">No tabuleiro, saindo de <b>Pirapó</b> em direção a <b>Independência</b>, para que ponto cardeal você caminha? Use a rosa dos ventos.</div><ul class="alts"><li><b>a)</b><span>Sudeste</span></li><li><b>b)</b><span>Leste</span></li><li><b>c)</b><span>Sul</span></li></ul></div><div class="carta-pe">Acertou: avance 2 casas</div></div><div class="carta"><div class="carta-topo" style="background:#6d28d9"><span class="cat">CAMINHO E MAPA</span><span class="num">35</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE01</div><div class="pergunta">Qual destes três municípios fica mais ao <b>norte</b>?</div><ul class="alts"><li><b>a)</b><span>Cerro Largo</span></li><li><b>b)</b><span>Horizontina</span></li><li><b>c)</b><span>Boa Vista do Buricá</span></li></ul></div><div class="carta-pe">Acertou: avance 2 casas</div></div><div class="carta"><div class="carta-topo" style="background:#6d28d9"><span class="cat">CAMINHO E MAPA</span><span class="num">36</span></div><div class="carta-corpo"><div class="tipo">Geografia · EF06GE01</div><div class="pergunta">Qual destes três municípios fica mais a <b>oeste</b>?</div><ul class="alts"><li><b>a)</b><span>Três de Maio</span></li><li><b>b)</b><span>Mato Queimado</span></li><li><b>c)</b><span>Alegria</span></li></ul></div><div class="carta-pe">Acertou: avance 2 casas</div></div></div></div></div>
+  </section>
+  <section class="secao" id="sec-fichas">
+    <div class="cabecalho-secao no-print">
+      <h2>Peões e fichas de ponto</h2>
+      <p>Uma folha A4 com os 4 peões das equipes e 32 fichas de ponto. Dobre os peões ao meio pela linha pontilhada para que fiquem em pé.</p>
+      <button class="btn-parte" data-print="fichas" type="button">🖨️ Imprimir só esta parte</button>
+    </div>
+    <div class="prateleira"><div class="paper" data-sheet="fichas">
+  <div class="grade-fichas">
+    <h2>Peões das equipes</h2>
+    <p class="ajuda">Recorte os quatro peões pela borda e dobre ao meio pela linha pontilhada.
+    De pé, eles ficam como uma barraca: o número aparece dos dois lados.</p>
+    <div class="peoes"><div class="peao" style="border-color:#1d4ed8"><div class="metade"><span style="color:#1d4ed8">1</span><small>EQUIPE 1</small></div><div class="metade baixo"><span style="color:#1d4ed8">1</span><small>EQUIPE 1</small></div></div><div class="peao" style="border-color:#15803d"><div class="metade"><span style="color:#15803d">2</span><small>EQUIPE 2</small></div><div class="metade baixo"><span style="color:#15803d">2</span><small>EQUIPE 2</small></div></div><div class="peao" style="border-color:#c2410c"><div class="metade"><span style="color:#c2410c">3</span><small>EQUIPE 3</small></div><div class="metade baixo"><span style="color:#c2410c">3</span><small>EQUIPE 3</small></div></div><div class="peao" style="border-color:#6d28d9"><div class="metade"><span style="color:#6d28d9">4</span><small>EQUIPE 4</small></div><div class="metade baixo"><span style="color:#6d28d9">4</span><small>EQUIPE 4</small></div></div></div>
+    <h2>Fichas de ponto</h2>
+    <p class="ajuda">Cada resposta certa vale uma ficha. Guarde as suas ao lado do tabuleiro.</p>
+    <div class="fichas"><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div><div class="ficha"></div></div>
+  </div>
+</div></div>
+  </section>
+  <section class="secao" id="sec-registro">
+    <div class="cabecalho-secao no-print">
+      <h2>Folha de registro</h2>
+      <p>Uma folha A4 para a turma acompanhar as rodadas, as casas andadas e as fichas de cada equipe.</p>
+      <button class="btn-parte" data-print="registro" type="button">🖨️ Imprimir só esta parte</button>
+    </div>
+    <div class="prateleira"><div class="paper" data-sheet="registro">
+  <div class="grade-registro">
+    <h2>Folha de registro da partida</h2>
+    <div class="campo-linha">
+      <span>Escola: ______________________________________</span>
+      <span>Turma: ____________</span>
+      <span>Data: ____ / ____ / ______</span>
+    </div>
+    <table class="reg">
+      <thead><tr>
+        <th>Rodada</th><th>Equipe</th><th>Carta nº</th><th>Acertou?</th>
+        <th>Casas andadas</th><th>Casa atual</th><th>Fichas</th>
+      </tr></thead>
+      <tbody><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tbody>
+    </table>
+    <div class="campo-linha" style="margin-top:6mm">
+      <span>Equipe vencedora: ____________________</span>
+      <span>Fichas: __________</span>
     </div>
   </div>
+</div></div>
+  </section>
+  <section class="secao" id="sec-manual">
+    <div class="cabecalho-secao no-print">
+      <h2>Manual do professor</h2>
+      <p>Duas folhas A4 com o objetivo, a montagem, as regras completas, as habilidades da BNCC, o gabarito das 36 cartas e sugestões de adaptação.</p>
+      <button class="btn-parte" data-print="manual" type="button">🖨️ Imprimir só esta parte</button>
+    </div>
+    <div class="prateleira"><div class="paper manual" data-sheet="manual">
+  <div class="pagina">
+    <h1>A Grande Volta da Fronteira Noroeste</h1>
+    <p class="linha-fina">Manual do professor · trilha de Geografia e Matemática · 6º ano</p>
+
+    <h2>O que é</h2>
+    <p>Um jogo de trilha para imprimir em que as equipes percorrem os <b>45 municípios da
+    Fronteira Noroeste do Rio Grande do Sul</b>, do início em Cerro Largo até a chegada em
+    Três de Maio. Cada casa é um município, com a foto do atrativo, a população e a área.
+    Para avançar, a equipe resolve desafios de <b>escala, leitura de números, porcentagem e
+    orientação no mapa</b>.</p>
+
+    <h2>O que vem no material</h2>
+    <table class="tabela">
+      <tr><td><b>Tabuleiro</b></td><td>4 folhas A4 que formam um tabuleiro de 42 × 59 cm</td></tr>
+      <tr><td><b>Baralho</b></td><td>36 cartas de desafio em 4 folhas A4</td></tr>
+      <tr><td><b>Fichas</b></td><td>4 peões e 32 fichas de ponto em 1 folha A4</td></tr>
+      <tr><td><b>Registro</b></td><td>1 folha A4 para acompanhar a partida</td></tr>
+    </table>
+
+    <h2>Como montar</h2>
+    <ol>
+      <li>Imprima o tabuleiro em <b>A4, margens nenhuma</b> e com <b>gráficos de plano de fundo</b> ligados.</li>
+      <li>Junte as 4 folhas do tabuleiro pelas linhas vermelhas tracejadas, encostando as bordas
+          e colando fita transparente pela frente.</li>
+      <li>Imprima o baralho, as fichas e o registro. Recorte as cartas pelas linhas retas:
+          elas foram desenhadas encostadas umas nas outras justamente para facilitar o corte.</li>
+      <li>Dobre os peões ao meio pela linha pontilhada para que fiquem em pé.</li>
+    </ol>
+
+    <h2>Regras</h2>
+    <ol>
+      <li>Formem de 2 a 4 equipes. Cada uma recebe um peão e começa na casa 1, <b>Cerro Largo</b>.</li>
+      <li>Na sua vez, a equipe tira a carta de cima do baralho e resolve o desafio em voz alta,
+          junto com a turma.</li>
+      <li><b>Acertou:</b> avança o número de casas indicado no rodapé da carta e guarda 1 ficha.</li>
+      <li><b>Errou:</b> fica onde está e a carta volta para o fim do baralho.</li>
+      <li>Ao parar em uma casa, leia o nome do município em voz alta e diga se a população dele é
+          <b>maior ou menor</b> que a do município da casa anterior. Acertou: ganha mais 1 ficha.</li>
+      <li>A primeira equipe a chegar na casa 45, <b>Três de Maio</b>, encerra a corrida e ganha
+          3 fichas extras.</li>
+      <li>Vence quem tiver <b>mais fichas</b> no fim. Em caso de empate, vence quem chegou mais longe.</li>
+    </ol>
+
+    <h2>Duração e organização</h2>
+    <p>Uma partida completa leva de <b>30 a 40 minutos</b>. Para uma aula de 50 minutos, use o
+    baralho inteiro e peça que cada equipe anote as rodadas na folha de registro. Se quiser uma
+    versão mais curta, retire do baralho as cartas de porcentagem (categoria C) ou combine que a
+    corrida termina na casa 25.</p>
+  </div>
+</div>
+<div class="paper manual" data-sheet="manual">
+  <div class="pagina">
+    <h2>Habilidades da BNCC trabalhadas</h2>
+    <table class="tabela">
+      <tr><td><b>EF06GE08</b></td><td>Medir distâncias na superfície pelas escalas gráfica e numérica</td></tr>
+      <tr><td><b>EF06GE01</b></td><td>Comparar as paisagens e os usos dos lugares de vivência</td></tr>
+      <tr><td><b>EF06MA01</b></td><td>Comparar, ordenar, ler e escrever números naturais e decimais</td></tr>
+      <tr><td><b>EF06MA13</b></td><td>Resolver e elaborar problemas com porcentagem</td></tr>
+      <tr><td><b>EF06MA24</b></td><td>Resolver problemas com grandezas: comprimento e área</td></tr>
+    </table>
+
+    <h2>Gabarito das 36 cartas</h2>
+    <table class="gab">
+      <thead><tr><th>Nº</th><th>Categoria</th><th>Resposta correta</th></tr></thead>
+      <tbody><tr><td>01</td><td>Escala E Distância</td><td><b>b)</b> 45 km</td></tr><tr><td>02</td><td>Escala E Distância</td><td><b>c)</b> 69 km</td></tr><tr><td>03</td><td>Escala E Distância</td><td><b>c)</b> 53 km</td></tr><tr><td>04</td><td>Escala E Distância</td><td><b>c)</b> 43 km</td></tr><tr><td>05</td><td>Escala E Distância</td><td><b>c)</b> 96 km</td></tr><tr><td>06</td><td>Escala E Distância</td><td><b>c)</b> 37 km</td></tr><tr><td>07</td><td>Escala E Distância</td><td><b>c)</b> 69 km</td></tr><tr><td>08</td><td>Escala E Distância</td><td><b>b)</b> 50 km</td></tr><tr><td>09</td><td>Escala E Distância</td><td><b>b)</b> 61 km</td></tr><tr><td>10</td><td>Números Da Região</td><td><b>b)</b> São Luiz Gonzaga</td></tr><tr><td>11</td><td>Números Da Região</td><td><b>a)</b> Tuparendi</td></tr><tr><td>12</td><td>Números Da Região</td><td><b>b)</b> 347 habitantes</td></tr><tr><td>13</td><td>Números Da Região</td><td><b>a)</b> Santa Rosa</td></tr><tr><td>14</td><td>Números Da Região</td><td><b>b)</b> Eugênio de Castro</td></tr><tr><td>15</td><td>Números Da Região</td><td><b>b)</b> 4.089 habitantes</td></tr><tr><td>16</td><td>Números Da Região</td><td><b>b)</b> São Paulo das Missões</td></tr><tr><td>17</td><td>Números Da Região</td><td><b>c)</b> Bossoroca</td></tr><tr><td>18</td><td>Números Da Região</td><td><b>c)</b> 13.340 habitantes</td></tr><tr><td>19</td><td>Porcentagem</td><td><b>b)</b> 15.292 pessoas</td></tr><tr><td>20</td><td>Porcentagem</td><td><b>c)</b> 20%</td></tr><tr><td>21</td><td>Porcentagem</td><td><b>c)</b> 2.034 habitantes</td></tr><tr><td>22</td><td>Porcentagem</td><td><b>c)</b> 1.928 pessoas</td></tr><tr><td>23</td><td>Porcentagem</td><td><b>c)</b> 33%</td></tr><tr><td>24</td><td>Porcentagem</td><td><b>c)</b> 328 habitantes</td></tr><tr><td>25</td><td>Porcentagem</td><td><b>c)</b> 2.339 pessoas</td></tr><tr><td>26</td><td>Porcentagem</td><td><b>a)</b> 48%</td></tr><tr><td>27</td><td>Porcentagem</td><td><b>c)</b> 4.089 habitantes</td></tr><tr><td>28</td><td>Caminho E Mapa</td><td><b>c)</b> Leste</td></tr><tr><td>29</td><td>Caminho E Mapa</td><td><b>a)</b> São José do Inhacorá</td></tr><tr><td>30</td><td>Caminho E Mapa</td><td><b>a)</b> Cândido Godói</td></tr><tr><td>31</td><td>Caminho E Mapa</td><td><b>b)</b> Sudoeste</td></tr><tr><td>32</td><td>Caminho E Mapa</td><td><b>c)</b> Nova Candelária</td></tr><tr><td>33</td><td>Caminho E Mapa</td><td><b>b)</b> Bossoroca</td></tr><tr><td>34</td><td>Caminho E Mapa</td><td><b>b)</b> Leste</td></tr><tr><td>35</td><td>Caminho E Mapa</td><td><b>b)</b> Horizontina</td></tr><tr><td>36</td><td>Caminho E Mapa</td><td><b>b)</b> Mato Queimado</td></tr></tbody>
+    </table>
+
+    <h2>Adaptações</h2>
+    <ul>
+      <li><b>Sem baralho:</b> use só o tabuleiro. Cada equipe joga o dado e, ao parar em uma casa,
+          compara os dados do município com o da casa anterior.</li>
+      <li><b>Sem impressora colorida:</b> o tabuleiro funciona bem em escala de cinza; as
+          informações estão também na tabela de dados do rodapé.</li>
+      <li><b>Projeção:</b> projete o tabuleiro no quadro e use as cartas impressas em uma única
+          cópia para a turma inteira.</li>
+      <li><b>Ampliação:</b> peça que cada equipe calcule a distância real entre duas casas
+          vizinhas usando a barra de escala e confira com a régua.</li>
+    </ul>
+
+    <h2>Fonte dos dados</h2>
+    <p>População e área: Censo 2022 e malhas territoriais do <b>IBGE</b>. Vegetação nativa,
+    saneamento, alfabetização e PIB per capita: indicadores municipais do <b>IBGE Cidades</b>.
+    Os contornos do mapa vêm das malhas oficiais do IBGE, desenhados na escala de 1:489.000.</p>
+    <p class="assinatura">Laboratório de Matemática · Mateus Goldschmidt &amp; Lavínia M. Ferreira</p>
+  </div>
+</div></div>
+  </section>
 
   <a class="voltar-flutuante no-print" href="../index.html">← Portal</a>
   <div class="rodape-pagina no-print">
     Autores: Mateus Goldschmidt &amp; Lavínia M. Ferreira · Fronteira Noroeste do Rio Grande do Sul
   </div>
   <script>
-    document.getElementById('btn-imprimir').addEventListener('click', function(){ window.print(); });
+    function imprimir(alvo) {
+      document.body.dataset.print = alvo;
+      var papers = Array.prototype.slice.call(document.querySelectorAll('.paper'));
+      papers.forEach(function (p) { p.classList.remove('ultima'); });
+      var visiveis = papers.filter(function (p) {
+        return alvo === 'tudo' || p.dataset.sheet === alvo;
+      });
+      if (visiveis.length) visiveis[visiveis.length - 1].classList.add('ultima');
+      window.print();
+    }
+    Array.prototype.forEach.call(document.querySelectorAll('[data-print]'), function (b) {
+      b.addEventListener('click', function () { imprimir(b.dataset.print); });
+    });
+    window.addEventListener('afterprint', function () { delete document.body.dataset.print; });
   </script>
 </body>
 </html>
