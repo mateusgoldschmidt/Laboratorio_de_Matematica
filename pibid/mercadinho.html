@@ -184,6 +184,271 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
         .fraction-explainer { background: rgba(0,0,0,0.3); border: 1px solid #333; padding: 15px; border-radius: 6px; margin-bottom: 15px; }
         .fraction-explainer p { margin-top: 5px; line-height: 1.6; }
 
+        
+        /* ================= TABLOIDE / FOLHETO DE OFERTAS ================= */
+        .flyer-sheets-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+        .flyer-sheet {
+            width: 194mm;
+            max-width: 100%;
+            background: #ffffff;
+            color: #111827;
+            border: 2px solid #dc2626;
+            border-radius: 6px;
+            padding: 3.5mm;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .flyer-banner {
+            background: linear-gradient(135deg, #b91c1c 0%, #dc2626 55%, #ea580c 100%);
+            color: #ffffff;
+            border-radius: 5px;
+            padding: 2.2mm 4mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1mm solid #facc15;
+            margin-bottom: 2mm;
+        }
+        .flyer-banner-left {
+            display: flex;
+            align-items: center;
+            gap: 3mm;
+        }
+        .flyer-banner-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13.5pt;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            text-shadow: 1px 1px 0 #000;
+            line-height: 1.05;
+        }
+        .flyer-banner-sub {
+            font-size: 8.5pt;
+            color: #fef08a;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .flyer-round-pill {
+            background: #facc15;
+            color: #7f1d1d;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10.5pt;
+            font-weight: 900;
+            padding: 1.2mm 3.5mm;
+            border-radius: 4px;
+            border: 0.5mm solid #000;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+            text-align: center;
+            line-height: 1.1;
+        }
+        .flyer-info-strip {
+            background: #fef9c3;
+            border: 0.35mm solid #eab308;
+            border-left: 1.5mm solid #d97706;
+            border-radius: 4px;
+            padding: 1.4mm 3mm;
+            margin-bottom: 2mm;
+            font-size: 8pt;
+            line-height: 1.25;
+            color: #1f2937;
+            font-weight: 600;
+        }
+        .flyer-cat-section {
+            margin-bottom: 1.8mm;
+        }
+        .flyer-cat-header {
+            background: #1e293b;
+            color: #ffffff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 8pt;
+            font-weight: 800;
+            padding: 0.8mm 2.5mm;
+            border-left: 1.5mm solid #facc15;
+            border-radius: 3px;
+            margin-bottom: 1.2mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-transform: uppercase;
+        }
+        .flyer-cat-header span.cat-rule {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 7.5pt;
+            color: #fde047;
+            font-weight: 700;
+            text-transform: none;
+        }
+        .flyer-items-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2mm;
+        }
+        .flyer-card {
+            border: 0.35mm solid #cbd5e1;
+            border-radius: 4px;
+            background: #ffffff;
+            padding: 1.4mm 1.8mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            height: 41.5mm;
+            box-sizing: border-box;
+        }
+        .flyer-card.has-promo {
+            border-color: #f59e0b;
+            background: linear-gradient(180deg, #ffffff 0%, #fffbeb 100%);
+        }
+        .flyer-card-top {
+            display: flex;
+            align-items: center;
+            gap: 1.5mm;
+            height: 17.5mm;
+        }
+        .flyer-img-box {
+            width: 15mm;
+            height: 16.5mm;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            border-radius: 3px;
+            border: 0.2mm solid #e2e8f0;
+            padding: 0.5mm;
+        }
+        .flyer-img-box img {
+            max-width: 100%;
+            max-height: 15.5mm;
+            object-fit: contain;
+        }
+        .flyer-prod-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .flyer-prod-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 7.2pt;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.1;
+        }
+        .flyer-prod-name {
+            font-size: 6.8pt;
+            font-weight: 600;
+            color: #475569;
+            line-height: 1.1;
+            margin-top: 0.4mm;
+        }
+        .flyer-prod-code {
+            font-size: 6pt;
+            font-weight: 700;
+            color: #64748b;
+            margin-top: 0.4mm;
+        }
+        .flyer-price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 0.25mm dashed #cbd5e1;
+            padding-top: 1mm;
+            margin-top: 0.5mm;
+        }
+        .flyer-base-price-box {
+            line-height: 1.05;
+        }
+        .flyer-base-label {
+            font-size: 5.8pt;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            display: block;
+        }
+        .flyer-base-val {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 9pt;
+            font-weight: 900;
+            color: #111827;
+        }
+        .flyer-promo-tag {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 6.8pt;
+            font-weight: 900;
+            padding: 0.8mm 1.6mm;
+            border-radius: 3px;
+            text-align: center;
+            line-height: 1.05;
+            border: 0.35mm solid #000;
+        }
+        .flyer-promo-tag.discount {
+            background: #dc2626;
+            color: #ffffff;
+            box-shadow: 1px 1px 0 #000;
+        }
+        .flyer-promo-tag.special {
+            background: #facc15;
+            color: #7f1d1d;
+            font-size: 5.8pt;
+            box-shadow: 1px 1px 0 #000;
+        }
+        .flyer-promo-tag.none {
+            background: #e2e8f0;
+            color: #334155;
+            border-color: #94a3b8;
+            font-size: 5.8pt;
+            font-weight: 700;
+        }
+        .flyer-calc-box {
+            background: #f8fafc;
+            border: 0.3mm solid #94a3b8;
+            border-radius: 3px;
+            padding: 0.8mm 1.5mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 6.5pt;
+            font-weight: 700;
+            color: #1e293b;
+            margin-top: 0.6mm;
+        }
+        .flyer-calc-line {
+            display: inline-block;
+            width: 15mm;
+            border-bottom: 0.35mm solid #0f172a;
+            text-align: center;
+        }
+        .flyer-calc-solved {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 7.2pt;
+            font-weight: 900;
+            color: #15803d;
+        }
+        .flyer-footer {
+            margin-top: 2mm;
+            border-top: 0.5mm solid #1e293b;
+            padding-top: 1.5mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 7.5pt;
+            font-weight: 700;
+            color: #0f172a;
+            background: #f1f5f9;
+            padding: 1.5mm 3mm;
+            border-radius: 4px;
+        }
+
         /* ================= IMPRESSÃO ================= */
         @media print {
             body { background-color: #ffffff !important; color: #000000 !important; margin: 0 !important; padding: 0 !important; font-size: 12pt; }
@@ -224,6 +489,29 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
             .lousa { background: #f9f9f9 !important; border: 2px solid #000 !important; color: #000 !important; }
             .rules-container h3 { background: #eee !important; color: #000 !important; border: 1px solid #ccc !important; page-break-after: avoid; }
             .rules-container { page-break-inside: auto; color: #000 !important; }
+            
+            .flyer-sheets-wrapper { display: block !important; padding: 0 !important; margin: 0 !important; }
+            .flyer-sheet {
+                width: 194mm !important;
+                max-width: 194mm !important;
+                margin: 0 auto !important;
+                padding: 2.5mm !important;
+                box-shadow: none !important;
+                border: 1.5px solid #dc2626 !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            .flyer-sheet:last-child {
+                page-break-after: auto !important;
+                break-after: auto !important;
+            }
+            .flyer-card {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
     </style>
@@ -241,9 +529,10 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
         <button class="tab-btn active" onclick="switchTab('intro')">🏫 Introdução à Aula</button>
         <button class="tab-btn" onclick="switchTab('regras')">📜 Manual de Regras</button>
         <button class="tab-btn" onclick="switchTab('caixa')">🛒 Caixa e Grupos</button>
+        <button class="tab-btn" onclick="switchTab('tabloide')">📰 Tabloide de Ofertas</button>
+        <button class="tab-btn" onclick="switchTab('embalagens')">📦 Imprimir Produtos</button>
         <button class="tab-btn" onclick="switchTab('etiquetas')">🏷️ Imprimir Preços</button>
         <button class="tab-btn" onclick="switchTab('promos')">💥 Imprimir Promos</button>
-        <button class="tab-btn" onclick="switchTab('embalagens')">📦 Imprimir Produtos</button>
         <button class="tab-btn" onclick="switchTab('guia')">📚 Gabarito das Rodadas</button>
     </div>
 
@@ -319,22 +608,19 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
                 <div class="rules-container" style="line-height: 1.6;">
                     <h2 style="color: #000; border-bottom: 2px solid #000; text-align: center; margin-bottom: 20px;">🛒 Manual de Regras: Mercadinho da Padre Traezel</h2>
                     
-                    <p style="margin-bottom: 15px;">Vocês têm um desafio de matemática e economia nas mãos! O objetivo deste jogo é agir como consumidores inteligentes: não basta colocar os produtos no carrinho, é preciso calcular os descontos para descobrir qual marca é realmente a mais barata.</p>
+                    <p style="margin-bottom: 15px;">Vocês têm uma missão de matemática e economia nas mãos! A <strong>nutricionista da escola</strong> está planejando o cardápio da merenda da semana e precisa da ajuda das equipes para abastecer a despensa do refeitório economizando ao máximo os recursos da escola.</p>
 
                     <h3 style="color: var(--electric-cyan); background: #1f2833; padding: 10px; border-radius: 4px; margin-top: 20px;">🎯 O Objetivo</h3>
-                    <p style="margin-bottom: 15px; margin-top: 10px;">Comprar todos os itens da lista obrigatória gastando o mínimo de dinheiro possível. O grupo que fechar a compra com o <strong>maior troco</strong> vence a rodada.</p>
+                    <p style="margin-bottom: 15px; margin-top: 10px;">Comprar todos os itens solicitados pela nutricionista gastando o <strong>menor valor total possível</strong>. Não basta escolher pelo maior percentual de desconto: é preciso calcular o preço final de cada marca. O grupo que fechar a compra com o <strong>menor gasto total</strong> vence a rodada!</p>
 
-                    <h3 style="color: var(--electric-cyan); background: #1f2833; padding: 10px; border-radius: 4px; margin-top: 20px;">💰 O Orçamento</h3>
-                    <p style="margin-bottom: 15px; margin-top: 10px;">Cada grupo possui exatamente <strong>R$ 100,00</strong> para fazer as compras. Se a soma dos produtos passar desse valor, o dinheiro não será suficiente para pagar a conta no caixa!</p>
-
-                    <h3 style="color: var(--electric-cyan); background: #1f2833; padding: 10px; border-radius: 4px; margin-top: 20px;">📝 A Lista de Compras Obrigatória</h3>
-                    <p style="margin-top: 10px;">O grupo deve levar exatamente:</p>
+                    <h3 style="color: var(--electric-cyan); background: #1f2833; padding: 10px; border-radius: 4px; margin-top: 20px;">👩‍🍳 O Pedido da Nutricionista (Lista Obrigatória)</h3>
+                    <p style="margin-top: 10px;">Para preparar os almoços e os lanches da semana no refeitório da escola, a nutricionista solicitou a compra exata de:</p>
                     <ul style="margin-top: 10px; margin-bottom: 15px; margin-left: 20px;">
-                        <li>1 pacote de Arroz (5kg)</li>
-                        <li>1 pacote de Feijão (1kg)</li>
-                        <li>1 pacote de Farinha de Trigo (1kg)</li>
-                        <li>1 pacote de Café (500g)</li>
-                        <li><strong>2 caixas</strong> de Leite</li>
+                        <li><strong>1 pacote de Arroz (5kg)</strong> — base para o almoço da semana;</li>
+                        <li><strong>1 pacote de Feijão (1kg)</strong> — acompanhamento rico em ferro;</li>
+                        <li><strong>1 pacote de Farinha de Trigo (1kg)</strong> — para preparar os pães e bolos do lanche;</li>
+                        <li><strong>1 pacote de Café (500g)</strong> — para o café da manhã;</li>
+                        <li><strong>2 caixas de Leite (1L)</strong> — para as vitaminas, achocolatados e receitas da merenda.</li>
                     </ul>
 
                     <h3 style="color: var(--electric-cyan); background: #1f2833; padding: 10px; border-radius: 4px; margin-top: 20px;">🕹️ Modos de Jogo (Atenção ao Estoque!)</h3>
@@ -344,8 +630,8 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
                         <li><strong>Modo 2: Estoque Suficiente (Análise Calma)</strong> - Há produtos suficientes para todos os grupos. A velocidade não importa. O foco é calcular com atenção, trabalhar em equipe e ter certeza de que escolheram os produtos certos antes de ir para o caixa.</li>
                     </ul>
 
-                    <h3 style="color: var(--electric-cyan); background: #1f2833; padding: 10px; border-radius: 4px; margin-top: 20px;">🧠 Como Calcular os Descontos</h3>
-                    <p style="margin-top: 10px; margin-bottom: 10px;">Para descobrir o verdadeiro preço de um produto, olhe o "Preço Normal" na etiqueta e o "Selo de Promoção". Em seguida, faça o cálculo!</p>
+                    <h3 style="color: var(--electric-cyan); background: #1f2833; padding: 10px; border-radius: 4px; margin-top: 20px;">📰 Usando o Tabloide de Ofertas na Carteira</h3>
+                    <p style="margin-top: 10px; margin-bottom: 10px;">Cada grupo receberá o <strong>Tabloide de Ofertas da Rodada</strong>! Nele estão todos os 20 produtos do mercado (com o Preço Normal e o Selo de Desconto ou Sem Promoção). Vocês podem calcular o valor final de cada marca diretamente nas suas classes e anotar no próprio folheto antes de ir buscar as embalagens na prateleira!</p>
                     <p style="margin-bottom: 15px; font-weight: bold; color: #d32f2f;">👉 Não se esqueçam: O valor do desconto deve ser subtraído do preço normal para vocês saberem quanto vão pagar de verdade!</p>
 
                     <h3 style="color: var(--electric-cyan); background: #1f2833; padding: 10px; border-radius: 4px; margin-top: 20px;">🥛 A Regra Especial do Leite</h3>
@@ -356,7 +642,7 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
                         <li>Assim que o grupo pegar todas as embalagens, dirija-se ao "Caixa do Supermercado" (mesa do professor).</li>
                         <li>O professor vai escanear o código de barras de cada produto do grupo.</li>
                         <li>O sistema fará a conta final automaticamente e mostrará o cupom na tela.</li>
-                        <li>Ao final da rodada, o Placar Geral mostrará qual grupo tomou as melhores decisões e conseguiu o <strong>maior troco</strong>!</li>
+                        <li>Ao final da rodada, o Placar Geral mostrará qual grupo tomou as melhores decisões e conseguiu o <strong>menor gasto total</strong>!</li>
                     </ol>
                 </div>
             </div>
@@ -395,16 +681,8 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
                             <!-- Itens escaneados entram aqui -->
                         </div>
                         <div class="receipt-total">
-                            <span>TOTAL:</span>
+                            <span>TOTAL GASTO:</span>
                             <span id="receipt-total-val">R$ 0,00</span>
-                        </div>
-                        <div id="receipt-change-area" style="display:none; margin-top: 10px; border-top: 1px solid #ccc; padding-top:10px;">
-                            <div style="display:flex; justify-content:space-between; font-size: 1.2rem;">
-                                <span>DINHEIRO RECEBIDO:</span><span>R$ 100,00</span>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; font-size: 1.5rem; color: #d35400; font-weight:bold; margin-top:5px;">
-                                <span>TROCO:</span><span id="receipt-change-val">R$ 0,00</span>
-                            </div>
                         </div>
                     </div>
                     
@@ -437,10 +715,10 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
                 <table class="ranking-table" id="ranking-table">
                     <thead>
                         <tr>
+                            <th>Posição</th>
                             <th>Grupo</th>
                             <th>Rodada</th>
                             <th>Total Gasto</th>
-                            <th>Troco Recebido</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -448,6 +726,36 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
                         <!-- Rankings injetados via JS -->
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+                <!-- ABA NOVA: TABLOIDE / FOLHETO DE OFERTAS -->
+        <div id="tab-tabloide" class="tab-content">
+            <div class="panel">
+                <div class="print-controls print-hidden">
+                    <div>
+                        <span style="font-family: 'Orbitron'; font-size: 1.2rem; color: var(--electric-cyan);">📰 Tabloide / Folheto de Ofertas (Imprimir para os Grupos)</span><br>
+                        <span style="font-size: 0.9rem;">Entregue uma folha por grupo na carteira para que calculem os descontos sem precisar ir à mesa do professor anotar preços.</span>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <select id="flyer-round-select" class="select-field" style="width: auto; font-size: 0.95rem; padding: 8px 12px;" onchange="renderFlyer()">
+                            <option value="1">Rodada 1 (1 folha A4)</option>
+                            <option value="2">Rodada 2 (1 folha A4)</option>
+                            <option value="3">Rodada 3 (1 folha A4)</option>
+                            <option value="4">Rodada 4 (1 folha A4)</option>
+                            <option value="all">Todas as 4 Rodadas (4 folhas A4)</option>
+                        </select>
+                        <select id="flyer-mode-select" class="select-field" style="width: auto; font-size: 0.95rem; padding: 8px 12px;" onchange="renderFlyer()">
+                            <option value="student">📝 Modo Aluno (Com lacuna R$ ___)</option>
+                            <option value="teacher">👨‍🏫 Modo Gabarito (Com valor final)</option>
+                        </select>
+                        <button class="btn btn-success" onclick="window.print()">🖨️ Imprimir Tabloide</button>
+                    </div>
+                </div>
+
+                <div class="flyer-sheets-wrapper" id="flyer-container">
+                    <!-- Tabloides gerados via JS -->
+                </div>
             </div>
         </div>
 
@@ -532,12 +840,8 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
             </div>
             <div id="modal-items" style="min-height: 150px; margin-bottom: 15px;"></div>
             <div class="receipt-total" style="border-top: 2px dashed #000; padding-top: 10px; margin-top: 10px; font-size: 1.3rem; font-weight: bold; display: flex; justify-content: space-between;">
-                <span>TOTAL:</span>
+                <span>TOTAL GASTO:</span>
                 <span id="modal-total-val"></span>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size: 1.3rem; color: #d35400; font-weight:bold; margin-top:5px;">
-                <span>TROCO:</span>
-                <span id="modal-change-val"></span>
             </div>
         </div>
     </div>
@@ -670,7 +974,7 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
         }
 
         function saveRanking() {
-            rankingData.sort((a,b) => b.troco - a.troco);
+            rankingData.sort((a,b) => a.total - b.total);
             localStorage.setItem('pibid_supermercado_ranking', JSON.stringify(rankingData));
         }
 
@@ -700,7 +1004,6 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
         function processBarcode(code) {
             if(!code || code.length < 3) return;
             
-            document.getElementById('receipt-change-area').style.display = 'none';
             
             const productId = parseInt(code);
             const currentRound = parseInt(document.getElementById('pos-round-selector').value);
@@ -762,22 +1065,11 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
             let round = document.getElementById('pos-round-selector').value;
             
             let total = cart.reduce((sum, item) => sum + item.price, 0);
-            let troco = 100 - total;
-            
-            document.getElementById('receipt-change-area').style.display = 'block';
-            document.getElementById('receipt-change-val').innerText = formatMoney(troco);
-            
-            if(troco < 0) {
-                document.getElementById('receipt-change-val').style.color = "red";
-            } else {
-                document.getElementById('receipt-change-val').style.color = "#d35400";
-            }
             
             rankingData.push({ 
                 group: groupName, 
                 round: round, 
                 total: total, 
-                troco: troco, 
                 items: [...cart]
             });
             
@@ -796,7 +1088,6 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
         function resetPOS() {
             cart = [];
             renderCart();
-            document.getElementById('receipt-change-area').style.display = 'none';
             document.getElementById('big-total').innerText = formatMoney(0);
             barcodeInput.focus();
         }
@@ -805,13 +1096,15 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
             const tbody = document.getElementById('ranking-body');
             tbody.innerHTML = '';
             
+            rankingData.sort((a,b) => a.total - b.total);
             rankingData.forEach((r, index) => {
+                const medal = index === 0 ? '🥇 1º' : (index === 1 ? '🥈 2º' : (index === 2 ? '🥉 3º' : `${index + 1}º`));
                 tbody.innerHTML += `
                     <tr>
+                        <td><strong>${medal}</strong></td>
                         <td><strong>${r.group}</strong></td>
                         <td>R${r.round}</td>
-                        <td>${formatMoney(r.total)}</td>
-                        <td style="color: ${r.troco < 0 ? 'var(--danger)' : 'var(--success)'}; font-weight: bold;">${formatMoney(r.troco)}</td>
+                        <td style="color: var(--success); font-weight: bold;">${formatMoney(r.total)}</td>
                         <td>
                             <button class="action-btn" style="color: var(--electric-cyan);" onclick="viewReceipt(${index})" title="Ver Cupom">👁️</button>
                             <button class="action-btn" style="color: var(--danger);" onclick="deleteRanking(${index})" title="Apagar Registro">🗑️</button>
@@ -857,15 +1150,151 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
             });
             
             document.getElementById('modal-total-val').innerText = formatMoney(data.total);
-            const trocoEl = document.getElementById('modal-change-val');
-            trocoEl.innerText = formatMoney(data.troco);
-            trocoEl.style.color = data.troco < 0 ? "#d32f2f" : "#d35400";
-
             document.getElementById('receipt-modal').style.display = 'flex';
         }
 
         function closeReceiptModal() {
             document.getElementById('receipt-modal').style.display = 'none';
+        }
+
+        
+        // ==========================================
+        // GERADOR DO TABLOIDE / FOLHETO DE OFERTAS
+        // ==========================================
+        function renderFlyer() {
+            const container = document.getElementById('flyer-container');
+            if (!container) return;
+
+            const roundSel = document.getElementById('flyer-round-select')?.value || '1';
+            const modeSel = document.getElementById('flyer-mode-select')?.value || 'student';
+            const isTeacher = (modeSel === 'teacher');
+
+            const roundsToRender = (roundSel === 'all') ? [1, 2, 3, 4] : [parseInt(roundSel, 10)];
+
+            const categoriesConfig = [
+                { key: "Arroz", title: "🍚 Mercearia — Arroz (Pacote 5kg)", rule: "Levar 1 pacote de 5kg" },
+                { key: "Feijão", title: "🫘 Mercearia — Feijão (Pacote 1kg)", rule: "Levar 1 pacote de 1kg" },
+                { key: "Farinha", title: "🌾 Padaria & Confeitaria — Farinha de Trigo (1kg)", rule: "Levar 1 pacote de 1kg" },
+                { key: "Café", title: "☕ Matinais — Café Torrado e Moído (500g)", rule: "Levar 1 pacote de 500g" },
+                { key: "Leite", title: "🥛 Laticínios — Leite Integral (Caixa 1L)", rule: "⚠️ REGRA ESPECIAL: Levar 2 caixas (calcule o valor de 2 un.)" }
+            ];
+
+            let allSheetsHtml = '';
+
+            roundsToRender.forEach(r => {
+                // Find best price per category for teacher highlight
+                let bestPrices = {};
+                PRODUCTS.forEach(p => {
+                    if (!bestPrices[p.category] || p.rounds[r].val < bestPrices[p.category]) {
+                        bestPrices[p.category] = p.rounds[r].val;
+                    }
+                });
+
+                let categoriesHtml = '';
+                categoriesConfig.forEach(cat => {
+                    const catProducts = PRODUCTS.filter(p => p.category === cat.key);
+                    let cardsHtml = '';
+
+                    catProducts.forEach(prod => {
+                        const rData = prod.rounds[r];
+                        const isPromo = rData.promo !== "Sem Promoção";
+                        const isSecondUnit = rData.promo.includes("2ª UNID");
+                        const isBest = isTeacher && (rData.val === bestPrices[prod.category]);
+
+                        let badgeClass = "none";
+                        let badgeText = "PREÇO<br>NORMAL";
+                        if (isSecondUnit) {
+                            badgeClass = "special";
+                            badgeText = "50% OFF<br>NA 2ª UNID";
+                        } else if (isPromo) {
+                            badgeClass = "discount";
+                            badgeText = "💥 " + rData.promo;
+                        }
+
+                        const baseLabel = prod.category === "Leite" ? "Preço Normal (1 cx):" : "Preço Normal:";
+                        const calcLabel = prod.category === "Leite" ? "2 cx c/ desc.:" : "Valor Final:";
+
+                        const calcValueHtml = isTeacher
+                            ? `<span class="flyer-calc-solved">${formatMoney(rData.val)}${isBest ? ' ⭐' : ''}</span>`
+                            : `<span>R$ <span class="flyer-calc-line">&nbsp;</span></span>`;
+
+                        cardsHtml += `
+                            <div class="flyer-card ${isPromo ? 'has-promo' : ''}" style="${isBest ? 'border: 0.6mm solid #16a34a; background: #f0fdf4;' : ''}">
+                                <div class="flyer-card-top">
+                                    <div class="flyer-img-box">
+                                        <img src="${prod.img}" alt="${prod.brand}">
+                                    </div>
+                                    <div class="flyer-prod-info">
+                                        <div class="flyer-prod-brand">${prod.brand}</div>
+                                        <div class="flyer-prod-name">${prod.name}</div>
+                                        <div class="flyer-prod-code">Cód. #${prod.id}</div>
+                                    </div>
+                                </div>
+                                <div class="flyer-price-row">
+                                    <div class="flyer-base-price-box">
+                                        <span class="flyer-base-label">${baseLabel}</span>
+                                        <span class="flyer-base-val">${formatMoney(prod.base)}</span>
+                                    </div>
+                                    <div class="flyer-promo-tag ${badgeClass}">
+                                        ${badgeText}
+                                    </div>
+                                </div>
+                                <div class="flyer-calc-box">
+                                    <span>${calcLabel}</span>
+                                    ${calcValueHtml}
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    categoriesHtml += `
+                        <div class="flyer-cat-section">
+                            <div class="flyer-cat-header">
+                                <span>${cat.title}</span>
+                                <span class="cat-rule">${cat.rule}</span>
+                            </div>
+                            <div class="flyer-items-grid">
+                                ${cardsHtml}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const totalIdeal = Object.values(bestPrices).reduce((a, b) => a + b, 0);
+                const footerContentHtml = isTeacher
+                    ? `<span>📋 <strong>Gabarito Oficial do Professor — Rodada ${r}</strong></span>
+                       <span style="color:#15803d; font-size:8.5pt;">🏆 <strong>Menor Gasto Possível (Compra Perfeita): ${formatMoney(totalIdeal)}</strong></span>`
+                    : `<span><strong>Grupo:</strong> __________________________________________________</span>
+                       <span><strong>Total Gasto na Compra:</strong> R$ __________________</span>`;
+
+                allSheetsHtml += `
+                    <section class="flyer-sheet">
+                        <div class="flyer-banner">
+                            <div class="flyer-banner-left">
+                                <div>
+                                    <div class="flyer-banner-title">🛒 MERCADINHO DA PADRE TRAEZEL</div>
+                                    <div class="flyer-banner-sub">Tabloide Oficial de Ofertas • Educação Financeira e Porcentagem (PIBID)</div>
+                                </div>
+                            </div>
+                            <div class="flyer-round-pill">
+                                RODADA ${r}${isTeacher ? '<br><span style="font-size:6.5pt;">GABARITO</span>' : ''}
+                            </div>
+                        </div>
+
+                        <div class="flyer-info-strip">
+                            👩‍🍳 <strong>Pedido da Nutricionista da Escola:</strong> Para preparar o almoço e os lanches da semana economizando a verba escolar, comprem exatamente: <strong>1 pacote de Arroz (5kg)</strong>, <strong>1 pacote de Feijão (1kg)</strong>, <strong>1 pacote de Farinha de Trigo (1kg)</strong>, <strong>1 pacote de Café (500g)</strong> e <strong>2 caixas de Leite (1L)</strong>. Vence a equipe que <strong>gastar menos</strong>!
+                        </div>
+
+                        ${categoriesHtml}
+
+                        <div class="flyer-footer">
+                            ${footerContentHtml}
+                        </div>
+                    </section>
+                `;
+            });
+
+            container.innerHTML = allSheetsHtml;
         }
 
         // ==========================================
@@ -994,8 +1423,8 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
                 
                 tableHtml += `
                         <tr style="background:#d4edda; font-weight:bold; font-size:1.1rem; color:#155724;">
-                            <td colspan="4" style="text-align:right;">🏆 COMPRA PERFEITA DA RODADA:</td>
-                            <td>${formatMoney(totalIdeal)} (Troco: ${formatMoney(100 - totalIdeal)})</td>
+                            <td colspan="4" style="text-align:right;">🏆 MENOR GASTO POSSÍVEL (COMPRA PERFEITA):</td>
+                            <td>${formatMoney(totalIdeal)}</td>
                         </tr>
                     </tbody>
                     </table>
@@ -1009,6 +1438,7 @@ descricao: "Simulador de PDV com foco em educação financeira, porcentagens e o
         // ==========================================
         window.onload = () => {
             loadRanking();
+            renderFlyer();
             renderLabels();
             renderPromos();
             renderPackages();
