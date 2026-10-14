@@ -1,7 +1,7 @@
 ---
 titulo: "Super Trunfo Matemático"
 icone: "🃏"
-descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, com desafios de frações, porcentagens e potenciação."
+descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, com baralhos adaptados para o 6º e 7º ano."
 ---
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -200,6 +200,37 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
     .search-box:focus { outline: none; border-color: var(--electric-cyan); }
 
     .action-buttons { display: grid; gap: 10px; margin-top: 10px; }
+
+    .control-label {
+      display: block;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.78rem;
+      color: var(--electric-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 12px 0 6px;
+      font-weight: 700;
+    }
+    .print-group-box {
+      background: rgba(18, 18, 28, 0.65);
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 10px;
+      margin-top: 10px;
+      display: grid;
+      gap: 8px;
+    }
+    .print-group-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: var(--white);
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 4px;
+      margin-bottom: 2px;
+    }
+
 
     .status-bar {
       display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 10px 15px;
@@ -556,7 +587,8 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       <div style="display:flex;gap:10px;align-items:center"><select id="manual-copies"><option value="1" selected>1 cópia — 1 folha</option><option value="2">2 cópias — 2 folhas</option><option value="4">4 cópias — 4 folhas</option></select><button type="button" class="btn btn-warning" style="width:auto" onclick="printManuals()">Imprimir manual</button></div></div>
       <div class="manual-box" id="manual-content">
 <h2>Super Trunfo Matemático</h2>
-<p><strong>2 a 6 jogadores · 45 cartas · indicado para o 6º ano.</strong></p>
+<p><strong>2 a 6 jogadores · 45 cartas · versões para o 6º ano e 7º ano.</strong></p>
+<p><strong>Conteúdos matemáticos:</strong> no baralho do <strong>6º ano</strong>, os desafios envolvem adição e subtração de números decimais, potenciação de números naturais e frações de quantidades. No baralho do <strong>7º ano</strong>, os desafios abordam operações com números inteiros e racionais positivos e negativos (regra de sinais), potenciação com base negativa (expoentes pares e ímpares) e multiplicação de frações em ℚ.</p>
 <h3>Como jogar</h3>
 <ol>
 <li>Embaralhem e distribuam o mesmo número de cartas a cada participante. As excedentes ficam fora da partida, sem serem escolhidas. Olhem apenas a carta do topo.</li>
@@ -590,6 +622,13 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
         <aside class="panel controls print-hidden">
           <h2 style="color: var(--electric-cyan);">Painel de Controle</h2>
 
+          <span class="control-label">Ano Escolar (Baralho)</span>
+          <div class="mode-selector">
+            <button class="mode-btn active" id="btnGrade6" type="button">📘 6º Ano</button>
+            <button class="mode-btn" id="btnGrade7" type="button">📗 7º Ano</button>
+          </div>
+
+          <span class="control-label">Modo de Visualização</span>
           <div class="mode-selector">
             <button class="mode-btn active" id="btnModeStudent" type="button">📝 Modo Aluno</button>
             <button class="mode-btn" id="btnModeTeacher" type="button">👨‍🏫 Gabarito</button>
@@ -597,9 +636,16 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
 
           <input type="search" class="search-box" id="searchInput" placeholder="Buscar município ou atrativo...">
 
-          <div class="action-buttons">
-            <button class="btn btn-student" id="btnPrintStudents" type="button">🖨️ Imprimir Cartas (Alunos)</button>
-            <button class="btn btn-success" id="btnPrintKey" type="button">🖨️ Imprimir Gabarito (Prof)</button>
+          <div class="print-group-box">
+            <div class="print-group-title" style="color: var(--electric-cyan);">📘 Impressão — 6º Ano</div>
+            <button class="btn btn-student" id="btnPrintStudents6" type="button">🖨️ Cartas 6º Ano (Alunos)</button>
+            <button class="btn btn-success" id="btnPrintKey6" type="button">🖨️ Gabarito 6º Ano (Prof)</button>
+          </div>
+
+          <div class="print-group-box">
+            <div class="print-group-title" style="color: var(--warning);">📗 Impressão — 7º Ano</div>
+            <button class="btn btn-warning" id="btnPrintStudents7" type="button">🖨️ Cartas 7º Ano (Alunos)</button>
+            <button class="btn btn-success" id="btnPrintKey7" type="button">🖨️ Gabarito 7º Ano (Prof)</button>
           </div>
         </aside>
 
@@ -671,7 +717,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 21,
       "alf_pct": 5
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "960,9 + (−9,0)",
+      "unit": "km²",
+      "result_str": "951,9 km²",
+      "expression": "960.9+(-9.0)",
+      "mental_steps": 2,
+      "type": "Racionais em ℚ"
+    }
   },
   {
     "id": 4303301,
@@ -709,7 +763,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 15,
       "alf_pct": 26
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "(−1)³ + 96,9",
+      "unit": "%",
+      "result_str": "95,9%",
+      "expression": "(-1)**3+96.9",
+      "mental_steps": 2,
+      "type": "Potência em ℤ"
+    }
   },
   {
     "id": 4305207,
@@ -747,7 +809,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 33,
       "alf_pct": 32
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "<span class=\"frac\"><span class=\"top\">−1</span><span class=\"bottom\">2</span></span> × (−100) + 8,9",
+      "unit": "mil R$",
+      "result_str": "R$ 58,9 mil",
+      "expression": "(-1/2)*(-100)+8.9",
+      "mental_steps": 2,
+      "type": "Fração em ℚ"
+    }
   },
   {
     "id": 4306353,
@@ -785,7 +855,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 0,
       "alf_pct": 2
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "164,7 − (−10,0)",
+      "unit": "km²",
+      "result_str": "174,7 km²",
+      "expression": "164.7-(-10.0)",
+      "mental_steps": 2,
+      "type": "Racionais em ℚ"
+    }
   },
   {
     "id": 4306932,
@@ -823,7 +901,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 31,
       "alf_pct": 23
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "(−20,0) + 148,6",
+      "unit": "km²",
+      "result_str": "128,6 km²",
+      "expression": "(-20.0)+148.6",
+      "mental_steps": 2,
+      "type": "Racionais em ℚ"
+    }
   },
   {
     "id": 4307831,
@@ -861,7 +947,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 42,
       "alf_pct": 20
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "(−9)² + 4,4",
+      "unit": "mil R$",
+      "result_str": "R$ 85,4 mil",
+      "expression": "(-9)**2+4.4",
+      "mental_steps": 2,
+      "type": "Potência em ℤ"
+    }
   },
   {
     "id": 4308656,
@@ -899,7 +993,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 28,
       "alf_pct": 3
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "428,7 − (−20,0)",
+      "unit": "km²",
+      "result_str": "448,7 km²",
+      "expression": "428.7-(-20.0)",
+      "mental_steps": 2,
+      "type": "Racionais em ℚ"
+    }
   },
   {
     "id": 4309001,
@@ -937,7 +1039,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 38,
       "alf_pct": 19
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "<span class=\"frac\"><span class=\"top\">−3</span><span class=\"bottom\">5</span></span> × (−100) + 3,5",
+      "unit": "mil R$",
+      "result_str": "R$ 63,5 mil",
+      "expression": "(-3/5)*(-100)+3.5",
+      "mental_steps": 2,
+      "type": "Fração em ℚ"
+    }
   },
   {
     "id": 4309506,
@@ -975,7 +1085,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 16,
       "alf_pct": 20
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "96,6 + (−1)³",
+      "unit": "%",
+      "result_str": "95,6%",
+      "expression": "96.6+(-1)**3",
+      "mental_steps": 2,
+      "type": "Potência em ℤ"
+    }
   },
   {
     "id": 4312179,
@@ -1013,7 +1131,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 7,
       "alf_pct": 30
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "<span class=\"frac\"><span class=\"top\">−7</span><span class=\"bottom\">10</span></span> × (−100) + 3,5",
+      "unit": "%",
+      "result_str": "73,5%",
+      "expression": "(-7/10)*(-100)+3.5",
+      "mental_steps": 2,
+      "type": "Fração em ℚ"
+    }
   },
   {
     "id": 4314555,
@@ -1051,7 +1177,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 6,
       "alf_pct": 1
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "90,7 + (−5,0)",
+      "unit": "%",
+      "result_str": "85,7%",
+      "expression": "90.7+(-5.0)",
+      "mental_steps": 2,
+      "type": "Racionais em ℚ"
+    }
   },
   {
     "id": 4315107,
@@ -1089,7 +1223,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 1,
       "alf_pct": 9
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "177,7 − (−10,0)",
+      "unit": "km²",
+      "result_str": "187,7 km²",
+      "expression": "177.7-(-10.0)",
+      "mental_steps": 2,
+      "type": "Racionais em ℚ"
+    }
   },
   {
     "id": 4315958,
@@ -1127,7 +1269,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 16,
       "alf_pct": 10
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "72,8 − (−1)³",
+      "unit": "%",
+      "result_str": "73,8%",
+      "expression": "72.8-(-1)**3",
+      "mental_steps": 2,
+      "type": "Potência em ℤ"
+    }
   },
   {
     "id": 4316303,
@@ -1165,7 +1315,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 36,
       "alf_pct": 13
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "<span class=\"frac\"><span class=\"top\">−3</span><span class=\"bottom\">5</span></span> × (−100) + 0,3",
+      "unit": "mil R$",
+      "result_str": "R$ 60,3 mil",
+      "expression": "(-3/5)*(-100)+0.3",
+      "mental_steps": 2,
+      "type": "Fração em ℚ"
+    }
   },
   {
     "id": 4316477,
@@ -1203,7 +1361,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 32,
       "alf_pct": 44
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "97,7 − (−1)³",
+      "unit": "%",
+      "result_str": "98,7%",
+      "expression": "97.7-(-1)**3",
+      "mental_steps": 2,
+      "type": "Potência em ℤ"
+    }
   },
   {
     "id": 4317707,
@@ -1241,7 +1407,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 19,
       "alf_pct": 6
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "870,4 + (−20,0)",
+      "unit": "km²",
+      "result_str": "850,4 km²",
+      "expression": "870.4+(-20.0)",
+      "mental_steps": 2,
+      "type": "Racionais em ℚ"
+    }
   },
   {
     "id": 4317509,
@@ -1279,7 +1453,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 22,
       "alf_pct": 32
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "136,0 − (−10,1)",
+      "unit": "km²",
+      "result_str": "146,1 km²",
+      "expression": "136.0-(-10.1)",
+      "mental_steps": 2,
+      "type": "Racionais em ℚ"
+    }
   },
   {
     "id": 4320578,
@@ -1317,7 +1499,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 20,
       "alf_pct": 23
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "<span class=\"frac\"><span class=\"top\">−9</span><span class=\"bottom\">10</span></span> × (−100) + 5,7",
+      "unit": "%",
+      "result_str": "95,7%",
+      "expression": "(-9/10)*(-100)+5.7",
+      "mental_steps": 2,
+      "type": "Fração em ℚ"
+    }
   },
   {
     "id": 4318903,
@@ -1355,7 +1545,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 26,
       "alf_pct": 23
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "(−10,0) + 451,7",
+      "unit": "km²",
+      "result_str": "441,7 km²",
+      "expression": "(-10.0)+451.7",
+      "mental_steps": 2,
+      "type": "Racionais em ℚ"
+    }
   },
   {
     "id": 4319158,
@@ -1393,7 +1591,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 40,
       "alf_pct": 14
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "(−9)² + 6,2",
+      "unit": "%",
+      "result_str": "87,2%",
+      "expression": "(-9)**2+6.2",
+      "mental_steps": 2,
+      "type": "Potência em ℤ"
+    }
   },
   {
     "id": 4319208,
@@ -1431,7 +1637,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 9,
       "alf_pct": 0
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "225,5 − (−10,0)",
+      "unit": "km²",
+      "result_str": "235,5 km²",
+      "expression": "225.5-(-10.0)",
+      "mental_steps": 2,
+      "type": "Racionais em ℚ"
+    }
   },
   {
     "id": 4319307,
@@ -1469,7 +1683,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 11,
       "alf_pct": 16
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "<span class=\"frac\"><span class=\"top\">−3</span><span class=\"bottom\">5</span></span> × (−100) + 5,2",
+      "unit": "%",
+      "result_str": "65,2%",
+      "expression": "(-3/5)*(-100)+5.2",
+      "mental_steps": 2,
+      "type": "Fração em ℚ"
+    }
   },
   {
     "id": 4319372,
@@ -1507,7 +1729,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 25,
       "alf_pct": 42
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "107,5 + (−10,5)",
+      "unit": "%",
+      "result_str": "97,0%",
+      "expression": "107.5+(-10.5)",
+      "mental_steps": 2,
+      "type": "Racionais em ℚ"
+    }
   },
   {
     "id": 4322343,
@@ -1545,7 +1775,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 12,
       "alf_pct": 29
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "97,7 + (−1)³",
+      "unit": "%",
+      "result_str": "96,7%",
+      "expression": "97.7+(-1)**3",
+      "mental_steps": 2,
+      "type": "Potência em ℤ"
+    }
   },
   {
     "id": 4323754,
@@ -1583,7 +1821,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 3,
       "alf_pct": 8
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "<span class=\"frac\"><span class=\"top\">−3</span><span class=\"bottom\">5</span></span> × (−100) + 6,4",
+      "unit": "%",
+      "result_str": "66,4%",
+      "expression": "(-3/5)*(-100)+6.4",
+      "mental_steps": 2,
+      "type": "Fração em ℚ"
+    }
   },
   {
     "id": 4317202,
@@ -1621,7 +1867,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 33,
       "alf_pct": 38
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "(−2)² + 93,6",
+      "unit": "%",
+      "result_str": "97,6%",
+      "expression": "(-2)**2+93.6",
+      "mental_steps": 2,
+      "type": "Potência em ℤ"
+    }
   },
   {
     "id": 4321808,
@@ -1659,7 +1913,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 37,
       "alf_pct": 32
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "<span class=\"frac\"><span class=\"top\">−3</span><span class=\"bottom\">5</span></span> × (−100) + 1,2",
+      "unit": "mil R$",
+      "result_str": "R$ 61,2 mil",
+      "expression": "(-3/5)*(-100)+1.2",
+      "mental_steps": 2,
+      "type": "Fração em ℚ"
+    }
   },
   {
     "id": 4309605,
@@ -1697,7 +1959,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 44,
       "alf_pct": 39
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "(−10)² − 3,0",
+      "unit": "mil R$",
+      "result_str": "R$ 97,0 mil",
+      "expression": "(-10)**2-3.0",
+      "mental_steps": 2,
+      "type": "Potência em ℤ"
+    }
   },
   {
     "id": 4317905,
@@ -1735,7 +2005,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 27,
       "alf_pct": 37
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "<span class=\"frac\"><span class=\"top\">−9</span><span class=\"bottom\">10</span></span> × (−100) + 7,5",
+      "unit": "%",
+      "result_str": "97,5%",
+      "expression": "(-9/10)*(-100)+7.5",
+      "mental_steps": 2,
+      "type": "Fração em ℚ"
+    }
   },
   {
     "id": 4322301,
@@ -1773,7 +2051,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 24,
       "alf_pct": 30
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "86,9 − (−10,0)",
+      "unit": "%",
+      "result_str": "96,9%",
+      "expression": "86.9-(-10.0)",
+      "mental_steps": 2,
+      "type": "Racionais em ℚ"
+    }
   },
   {
     "id": 4302204,
@@ -1811,7 +2097,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 29,
       "alf_pct": 43
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "(−3)² + 89,2",
+      "unit": "%",
+      "result_str": "98,2%",
+      "expression": "(-3)**2+89.2",
+      "mental_steps": 2,
+      "type": "Potência em ℤ"
+    }
   },
   {
     "id": 4310405,
@@ -1849,7 +2143,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 39,
       "alf_pct": 20
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "<span class=\"frac\"><span class=\"top\">−7</span><span class=\"bottom\">10</span></span> × (−100) − 1,0",
+      "unit": "mil R$",
+      "result_str": "R$ 69,0 mil",
+      "expression": "(-7/10)*(-100)-1.0",
+      "mental_steps": 2,
+      "type": "Fração em ℚ"
+    }
   },
   {
     "id": 4304309,
@@ -1887,7 +2189,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 35,
       "alf_pct": 32
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "(−7)² + 10,6",
+      "unit": "mil R$",
+      "result_str": "R$ 59,6 mil",
+      "expression": "(-7)**2+10.6",
+      "mental_steps": 2,
+      "type": "Potência em ℤ"
+    }
   },
   {
     "id": 4300307,
@@ -1925,7 +2235,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 2,
       "alf_pct": 12
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "131,3 + (−10,0)",
+      "unit": "km²",
+      "result_str": "121,3 km²",
+      "expression": "131.3+(-10.0)",
+      "mental_steps": 2,
+      "type": "Racionais em ℚ"
+    }
   },
   {
     "id": 4303707,
@@ -1963,7 +2281,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 8,
       "alf_pct": 40
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "<span class=\"frac\"><span class=\"top\">−9</span><span class=\"bottom\">10</span></span> × (−100) + 7,9",
+      "unit": "%",
+      "result_str": "97,9%",
+      "expression": "(-9/10)*(-100)+7.9",
+      "mental_steps": 2,
+      "type": "Fração em ℚ"
+    }
   },
   {
     "id": 4322103,
@@ -2001,7 +2327,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 18,
       "alf_pct": 27
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "(−4)² + 80,2",
+      "unit": "%",
+      "result_str": "96,2%",
+      "expression": "(-4)**2+80.2",
+      "mental_steps": 2,
+      "type": "Potência em ℤ"
+    }
   },
   {
     "id": 4306734,
@@ -2039,7 +2373,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 30,
       "alf_pct": 28
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "<span class=\"frac\"><span class=\"top\">−1</span><span class=\"bottom\">2</span></span> × (−100) + 1,1",
+      "unit": "mil R$",
+      "result_str": "R$ 51,1 mil",
+      "expression": "(-1/2)*(-100)+1.1",
+      "mental_steps": 2,
+      "type": "Fração em ℚ"
+    }
   },
   {
     "id": 4315008,
@@ -2077,7 +2419,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 4,
       "alf_pct": 7
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "75,0 − (−10,0)",
+      "unit": "km²",
+      "result_str": "85,0 km²",
+      "expression": "75.0-(-10.0)",
+      "mental_steps": 2,
+      "type": "Racionais em ℚ"
+    }
   },
   {
     "id": 4300455,
@@ -2115,7 +2465,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 14,
       "alf_pct": 11
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "(−6)² + 5,5",
+      "unit": "km²",
+      "result_str": "41,5 km²",
+      "expression": "(-6)**2+5.5",
+      "mental_steps": 2,
+      "type": "Potência em ℤ"
+    }
   },
   {
     "id": 4313425,
@@ -2153,7 +2511,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 23,
       "alf_pct": 17
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "<span class=\"frac\"><span class=\"top\">−2</span><span class=\"bottom\">5</span></span> × (−100) + 4,1",
+      "unit": "mil R$",
+      "result_str": "R$ 44,1 mil",
+      "expression": "(-2/5)*(-100)+4.1",
+      "mental_steps": 2,
+      "type": "Fração em ℚ"
+    }
   },
   {
     "id": 4313011,
@@ -2191,7 +2557,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 41,
       "alf_pct": 40
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "74,8 + (−1)³",
+      "unit": "mil R$",
+      "result_str": "R$ 73,8 mil",
+      "expression": "74.8+(-1)**3",
+      "mental_steps": 2,
+      "type": "Potência em ℤ"
+    }
   },
   {
     "id": 4320321,
@@ -2229,7 +2603,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 9,
       "alf_pct": 18
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "<span class=\"frac\"><span class=\"top\">−7</span><span class=\"bottom\">10</span></span> × (−100) + 5,2",
+      "unit": "%",
+      "result_str": "75,2%",
+      "expression": "(-7/10)*(-100)+5.2",
+      "mental_steps": 2,
+      "type": "Fração em ℚ"
+    }
   },
   {
     "id": 4318499,
@@ -2267,7 +2649,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 43,
       "alf_pct": 36
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "(−9)² + 8,0",
+      "unit": "mil R$",
+      "result_str": "R$ 89,0 mil",
+      "expression": "(-9)**2+8.0",
+      "mental_steps": 2,
+      "type": "Potência em ℤ"
+    }
   },
   {
     "id": 4315057,
@@ -2305,7 +2695,15 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 13,
       "alf_pct": 15
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "<span class=\"frac\"><span class=\"top\">−9</span><span class=\"bottom\">10</span></span> × (−100) + 4,9",
+      "unit": "%",
+      "result_str": "94,9%",
+      "expression": "(-9/10)*(-100)+4.9",
+      "mental_steps": 2,
+      "type": "Fração em ℚ"
+    }
   },
   {
     "id": 4315073,
@@ -2343,12 +2741,21 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       "pib_mil": 5,
       "alf_pct": 4
     },
-    "fonte_verificada_em": "2026-10-07"
+    "fonte_verificada_em": "2026-10-07",
+    "challenge_7ano": {
+      "formula": "(−10,0) + 57,2",
+      "unit": "km²",
+      "result_str": "47,2 km²",
+      "expression": "(-10.0)+57.2",
+      "mental_steps": 2,
+      "type": "Racionais em ℚ"
+    }
   }
 ];
 
     const nfInt = new Intl.NumberFormat('pt-BR');
 
+    let currentGrade = '6ano';
     let isTeacherKey = false;
     let isInitialized = false;
 
@@ -2407,10 +2814,13 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       const areaStr = (typeof d.area === 'number') ? nfInt.format(Math.round(d.area)) : (d.area || '');
       const fallbackUrl = makeFallbackSvg(d.nome, d.atrativo);
 
+      const activeChallenge = (currentGrade === '7ano' && d.challenge_7ano) ? d.challenge_7ano : d.challenge;
+      const gradeBadge = currentGrade === '7ano' ? '7º' : '6º';
+
       const attrBoxesHtml = ATTR_CONFIG.map(attr => {
         const isTrunfo = (d.hidden_attr === attr.key);
-        if (isTrunfo && d.challenge) {
-          const challenge = d.challenge;
+        if (isTrunfo && activeChallenge) {
+          const challenge = activeChallenge;
           const formulaHtml = isTeacherKey 
             ? `${challenge.formula} = <span class="solved-val">${challenge.result_str}</span>`
             : `${challenge.formula} = <span class="blank-box">&nbsp;</span> <span class="unit-text">${challenge.unit}</span>`;
@@ -2448,7 +2858,7 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
             onerror="this.onerror=null; this.src='${fallbackUrl}';"
           >
           <div class="photo-town-name">${d.nome || ''}</div>
-          <div class="overlay-id">#${String(d.card_no || index + 1).padStart(2, '0')}</div>
+          <div class="overlay-id">#${String(d.card_no || index + 1).padStart(2, '0')} · ${gradeBadge}</div>
           <div class="photo-caption">📍 ${d.atrativo || ''}</div>
         </div>
 
@@ -2485,17 +2895,27 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
 
       cardsGrid.innerHTML = pagesHtml;
 
+      const gradeName = currentGrade === '7ano' ? '7º Ano' : '6º Ano';
       const cardsStatus = document.getElementById('cardsStatus');
       if (cardsStatus) {
         const totalPages = Math.ceil(chosen.length / 9);
-        cardsStatus.textContent = `Exibindo ${chosen.length} cartas (${totalPages} folha${totalPages === 1 ? '' : 's'} A4)`;
+        cardsStatus.textContent = `Exibindo ${chosen.length} cartas — Baralho ${gradeName} (${totalPages} folha${totalPages === 1 ? '' : 's'} A4)`;
       }
 
       const modeLabel = document.getElementById('currentModeLabel');
       if (modeLabel) {
-        modeLabel.textContent = isTeacherKey ? 'Modo: Gabarito (Resolvido)' : 'Modo: Aluno (Com lacunas)';
+        modeLabel.textContent = `Baralho ${gradeName} • ` + (isTeacherKey ? 'Modo: Gabarito (Resolvido)' : 'Modo: Aluno (Com lacunas)');
         modeLabel.style.color = isTeacherKey ? 'var(--warning)' : 'var(--electric-cyan)';
       }
+    }
+
+    function setGradeMode(grade) {
+      currentGrade = grade;
+      const bG6 = document.getElementById('btnGrade6');
+      const bG7 = document.getElementById('btnGrade7');
+      if (bG6) bG6.classList.toggle('active', grade === '6ano');
+      if (bG7) bG7.classList.toggle('active', grade === '7ano');
+      renderCards();
     }
 
     function setViewMode(teacherMode) {
@@ -2507,8 +2927,13 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
       renderCards();
     }
 
-    function executePrint(forTeacher) {
+    function executePrint(grade, forTeacher) {
+      currentGrade = grade;
       isTeacherKey = forTeacher;
+      const bG6 = document.getElementById('btnGrade6');
+      const bG7 = document.getElementById('btnGrade7');
+      if (bG6) bG6.classList.toggle('active', grade === '6ano');
+      if (bG7) bG7.classList.toggle('active', grade === '7ano');
       setViewMode(forTeacher);
 
       document.body.classList.add('print-mode-pieces');
@@ -2524,20 +2949,36 @@ descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, 
         });
       }
 
+      const btnGrade6 = document.getElementById('btnGrade6');
+      if (btnGrade6) btnGrade6.addEventListener('click', () => setGradeMode('6ano'));
+
+      const btnGrade7 = document.getElementById('btnGrade7');
+      if (btnGrade7) btnGrade7.addEventListener('click', () => setGradeMode('7ano'));
+
       const btnModeStudent = document.getElementById('btnModeStudent');
       if (btnModeStudent) btnModeStudent.addEventListener('click', () => setViewMode(false));
 
       const btnModeTeacher = document.getElementById('btnModeTeacher');
       if (btnModeTeacher) btnModeTeacher.addEventListener('click', () => setViewMode(true));
 
-      const btnPrintStudents = document.getElementById('btnPrintStudents');
-      if (btnPrintStudents) {
-        btnPrintStudents.addEventListener('click', () => executePrint(false));
+      const btnPrintStudents6 = document.getElementById('btnPrintStudents6');
+      if (btnPrintStudents6) {
+        btnPrintStudents6.addEventListener('click', () => executePrint('6ano', false));
       }
 
-      const btnPrintKey = document.getElementById('btnPrintKey');
-      if (btnPrintKey) {
-        btnPrintKey.addEventListener('click', () => executePrint(true));
+      const btnPrintKey6 = document.getElementById('btnPrintKey6');
+      if (btnPrintKey6) {
+        btnPrintKey6.addEventListener('click', () => executePrint('6ano', true));
+      }
+
+      const btnPrintStudents7 = document.getElementById('btnPrintStudents7');
+      if (btnPrintStudents7) {
+        btnPrintStudents7.addEventListener('click', () => executePrint('7ano', false));
+      }
+
+      const btnPrintKey7 = document.getElementById('btnPrintKey7');
+      if (btnPrintKey7) {
+        btnPrintKey7.addEventListener('click', () => executePrint('7ano', true));
       }
 
       window.addEventListener('afterprint', () => {
