@@ -18,6 +18,12 @@ descricao: "Gerador de peças de dominó matemático para impressão. Relaciona 
             --electric-cyan: #00f0ff;
             --text-light: #c5c6c7;
             --white: #ffffff;
+            --success: #00ff88;
+            --warning: #ffcc00;
+            --area-color: #d97706;
+            --area-bg: #fef3c7;
+            --perim-color: #0284c7;
+            --perim-bg: #e0f2fe;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,7 +49,7 @@ descricao: "Gerador de peças de dominó matemático para impressão. Relaciona 
         header p { font-size: 1.1rem; color: var(--electric-cyan); text-transform: uppercase; margin-top: 5px;}
         header .authors { font-size: 0.95rem; color: var(--text-light); margin-top: 10px; }
 
-        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+        .container { max-width: 1100px; margin: 20px auto; padding: 0 15px 60px; }
 
         /* ====== CONTROLES E MANUAL NA TELA ====== */
         .manual-box {
@@ -55,9 +61,11 @@ descricao: "Gerador de peças de dominó matemático para impressão. Relaciona 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .manual-box h2 { font-family: 'Orbitron', sans-serif; color: var(--white); margin-bottom: 10px; font-size: 1.4rem;}
-        .manual-box ul { margin-left: 20px; margin-bottom: 15px; font-size: 1.1rem; }
-        .manual-box li { margin-bottom: 5px; }
+        .manual-box ul { margin-left: 20px; margin-bottom: 15px; font-size: 1.1rem; line-height: 1.5; }
+        .manual-box li { margin-bottom: 6px; }
         .highlight { color: var(--electric-cyan); font-weight: bold; }
+        .badge-inline-p { background: var(--perim-bg); color: var(--perim-color); border: 1px solid var(--perim-color); padding: 1px 6px; border-radius: 4px; font-weight: bold; font-size: 0.95rem; }
+        .badge-inline-a { background: var(--area-bg); color: var(--area-color); border: 1px solid var(--area-color); padding: 1px 6px; border-radius: 4px; font-weight: bold; font-size: 0.95rem; }
         
         .example-area {
             background: rgba(0, 0, 0, 0.4);
@@ -76,17 +84,19 @@ descricao: "Gerador de peças de dominó matemático para impressão. Relaciona 
             background: #12121c; border: 1px solid var(--electric-cyan); border-radius: 8px; 
             padding: 20px; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; gap: 20px;
         }
-        .print-actions { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; width: 100%;}
-        .print-panel { background: rgba(255,255,255,0.02); border: 1px solid #333; padding: 15px; border-radius: 6px; display: flex; flex-direction: column; align-items: center; gap: 15px; flex: 1; min-width: 300px; text-align: center;}
+        .print-actions { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; width: 100%;}
+        .print-panel { background: rgba(255,255,255,0.02); border: 1px solid #333; padding: 15px; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 12px; flex: 1; min-width: 260px; text-align: center;}
         
-        .select-box { padding: 8px; font-size: 1.1rem; font-family: 'Rajdhani', sans-serif; font-weight: bold; border-radius: 4px;}
+        .select-box { padding: 8px 12px; font-size: 1.05rem; font-family: 'Rajdhani', sans-serif; font-weight: bold; border-radius: 4px; width: 100%; background: #1f2833; color: #fff; border: 1px solid #555; }
         .btn {
             background: transparent; border: 2px solid var(--electric-cyan); color: var(--electric-cyan);
-            font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 1.1rem;
-            padding: 12px 20px; cursor: pointer; border-radius: 4px; transition: 0.2s; width: 100%;
+            font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 0.95rem;
+            padding: 12px 16px; cursor: pointer; border-radius: 4px; transition: 0.2s; width: 100%;
         }
         .btn:hover { background: var(--electric-cyan); color: var(--bg-dark); box-shadow: 0 0 15px var(--electric-cyan); }
         .btn-pieces { background: var(--electric-cyan); color: var(--bg-dark); }
+        .btn-key { border-color: var(--success); color: var(--success); }
+        .btn-key:hover { background: var(--success); color: var(--bg-dark); box-shadow: 0 0 15px var(--success); }
 
         /* ====== PEÇAS DE DOMINÓ (TELA E JOGO) ====== */
         .domino-grid {
@@ -116,6 +126,7 @@ descricao: "Gerador de peças de dominó matemático para impressão. Relaciona 
             width: 50%;
             height: 100%;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             position: relative;
@@ -128,12 +139,63 @@ descricao: "Gerador de peças de dominó matemático para impressão. Relaciona 
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
+            z-index: 5;
         }
+
+        .piece-num-tag {
+            position: absolute;
+            bottom: 1mm;
+            left: 1.5mm;
+            font-size: 6.5pt;
+            font-weight: bold;
+            color: #64748b;
+            font-family: 'Rajdhani', sans-serif;
+            z-index: 4;
+        }
+
+        /* Etiquetas de Comando na Figura e no Texto */
+        .cmd-badge {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            border-radius: 3px;
+            letter-spacing: 0.3px;
+            text-align: center;
+            line-height: 1.1;
+        }
+        .cmd-badge.mode-P {
+            background-color: var(--perim-bg);
+            color: #0369a1;
+            border: 1px solid #0284c7;
+        }
+        .cmd-badge.mode-A {
+            background-color: var(--area-bg);
+            color: #b45309;
+            border: 1px solid #d97706;
+        }
+
+        .text-side-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5mm;
+            width: 100%;
+            height: 100%;
+            padding: 2mm;
+        }
+        .text-side-val {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            line-height: 1;
+        }
+        .text-side-val.mode-P { color: #0369a1; }
+        .text-side-val.mode-A { color: #b45309; }
 
         /* ====== MINI-PEÇAS (MANUAL IMPRESSO E TELA) ====== */
         .mini-domino {
-            width: 48mm;
-            height: 20mm;
+            width: 52mm;
+            height: 22mm;
             background-color: #ffffff;
             border: 1.5px solid #000000;
             border-radius: 0;
@@ -162,44 +224,78 @@ descricao: "Gerador de peças de dominó matemático para impressão. Relaciona 
             transform: translateX(-50%);
         }
         .print-example {
-            display: flex; align-items: center; justify-content: center; gap: 3mm; margin-top: 3mm;
+            display: flex; align-items: center; justify-content: center; gap: 3mm; margin-top: 2mm;
         }
 
-        /* Oculto na tela normal */
+        /* Ocultos na tela normal */
         #print-manual-container { display: none; }
+        #print-key-container { display: none; }
+
+        /* Tabela de Gabarito do Professor */
+        .key-sheet {
+            background: #fff;
+            color: #000;
+            padding: 5mm;
+            font-family: Arial, sans-serif;
+        }
+        .key-sheet h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13pt;
+            border-bottom: 2px solid #000;
+            padding-bottom: 4px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .key-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9pt;
+        }
+        .key-table th, .key-table td {
+            border: 1px solid #333;
+            padding: 4px 6px;
+            text-align: center;
+        }
+        .key-table th {
+            background: #e2e8f0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 8.5pt;
+        }
 
         /* =========================================================
            CONFIGURAÇÕES DE IMPRESSÃO INDIVIDUAIS
            ========================================================= */
         @media print {
-            @page { margin: 8mm; } 
+            @page { size: A4 portrait; margin: 8mm; } 
             
             body { background: #fff !important; margin: 0 !important; padding: 0 !important; color: #000 !important; }
-            header, .manual-box, .print-controls { display: none !important; }
+            header, .manual-box, .print-controls, #btn-voltar { display: none !important; }
             .container { max-width: none !important; margin: 0 !important; padding: 0 !important; border: none !important; }
             
-            #print-manual-container, #domino-container { display: none !important; }
+            #print-manual-container, #domino-container, #print-key-container { display: none !important; }
 
             /* === MODO 1: IMPRESSÃO DE MANUAIS === */
             body.print-mode-manuals #print-manual-container {
                 display: grid !important;
                 grid-template-columns: 1fr 1fr; 
-                gap: 5mm;
+                gap: 4mm;
                 align-content: start;
             }
             .print-manual-item {
                 border: 1px dashed #666;
-                padding: 4mm;
+                padding: 3.5mm;
                 border-radius: 0;
                 page-break-inside: avoid;
+                break-inside: avoid;
                 font-family: Arial, sans-serif;
-                font-size: 10.5pt;
-                line-height: 1.3;
+                font-size: 9.5pt;
+                line-height: 1.28;
                 background: #fafafa;
             }
-            .print-manual-item h2 { font-size: 12pt; margin: 0 0 5px 0; border-bottom: 2px solid #ccc; padding-bottom: 3px; font-family: 'Orbitron', sans-serif;}
-            .print-manual-item ul { margin: 0 0 6px 18px; padding: 0; }
-            .print-manual-item p { margin: 0 0 6px 0; font-size: 9.5pt;}
+            .print-manual-item h2 { font-size: 11pt; margin: 0 0 4px 0; border-bottom: 1.5px solid #ccc; padding-bottom: 2px; font-family: 'Orbitron', sans-serif;}
+            .print-manual-item ul { margin: 0 0 5px 16px; padding: 0; }
+            .print-manual-item li { margin-bottom: 2px; }
+            .print-manual-item p { margin: 0 0 4px 0; font-size: 8.8pt;}
 
             /* === MODO 2: IMPRESSÃO DE PEÇAS === */
             body.print-mode-pieces #domino-container {
@@ -221,6 +317,16 @@ descricao: "Gerador de peças de dominó matemático para impressão. Relaciona 
             }
             .domino-piece:nth-child(14n) {
                 page-break-after: always !important;
+                break-after: page !important;
+            }
+            .domino-piece:last-child {
+                page-break-after: auto !important;
+                break-after: auto !important;
+            }
+
+            /* === MODO 3: IMPRESSÃO DO GABARITO DO PROFESSOR === */
+            body.print-mode-key #print-key-container {
+                display: block !important;
             }
 
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -240,15 +346,19 @@ descricao: "Gerador de peças de dominó matemático para impressão. Relaciona 
         
         <!-- MANUAL DE REGRAS NA TELA -->
         <div class="manual-box">
-            <h2>📜 Regras do Jogo</h2>
+            <h2>📜 Regras e Melhorias Dinâmicas do Jogo</h2>
             <ul>
-                <li><strong>Jogadores:</strong> 2 a 5 pessoas.</li>
-                <li><strong>A Peça:</strong> Os dois lados de uma mesma peça são totalmente independentes! Eles servem para se conectar com OUTRAS peças na mesa.</li>
-                <li><span class="highlight">A Regra de Ouro:</span> O jogo intercala <strong>TEXTOS</strong> e <strong>FIGURAS</strong>. Você NUNCA pode conectar um Texto a outro Texto, ou uma Figura a outra Figura.</li>
-                <li><strong>A Matemática:</strong> O Texto (ex: "P: 16") conecta SOMENTE na figura da outra peça que possuir 16 de Perímetro.</li>
-                <li><strong>Comprar:</strong> Se não tiver a peça, compre do cemitério até encontrar. Ganha quem zerar a mão primeiro.</li>
+                <li><strong>Jogadores:</strong> 2 a 4 jogadores (ou duplas). São <strong>28 peças balanceadas</strong> (4 peças para cada um dos 7 valores-chave).</li>
+                <li><span class="highlight">Comando Direto na Figura (Sem Ambiguidade):</span> Cada figura traz no topo o comando <span class="badge-inline-p">📏 CALCULAR P</span> (Perímetro, em azul) ou <span class="badge-inline-a">⬛ CALCULAR A</span> (Área, em laranja). Assim o aluno sabe na hora qual cálculo fazer e qual cor/tipo de peça procurar na mão!</li>
+                <li><span class="highlight">Malha Quadriculada Interna:</span> As figuras de lados inteiros possuem malha quadriculada proporcional ($1	imes 1$), permitindo conferir a Área contando quadradinhos ou multiplicando, e as figuras com frações usam metades e terços de cancelamento mental imediato.</li>
+                <li><strong>Lembrete de Fórmulas:</strong>
+                    <strong>Perímetro (P)</strong> = Soma de todos os lados contornando a figura &nbsp;|&nbsp;
+                    <strong>Área do Retângulo (A)</strong> = $\text{Base} \times \text{Altura}$ &nbsp;|&nbsp;
+                    <strong>Área do Triângulo (A)</strong> = $\frac{\text{Base} \times \text{Altura}}{2}$.
+                </li>
+                <li><strong>Regra de Desbloqueio (Jogo nunca trava sem vencedor):</strong> O jogo intercala <strong>TEXTO $\leftrightarrow$ FIGURA</strong>. Se a partida fechar nas duas pontas, vence quem tiver menos peças na mão!</li>
             </ul>
-            <p style="margin-top: 15px;"><strong>Exemplo de Jogada:</strong> A Peça A está na mesa exibindo o <strong>Retângulo 4x3</strong> livre. Você conecta o texto <strong>A: 12</strong> da sua Peça B nela (pois a Área da figura da mesa é 12).</p>
+            <p style="margin-top: 12px;"><strong>Exemplo de Jogada:</strong> A Peça A na mesa exibe um <strong>Retângulo 4×3</strong> com a etiqueta <span class="badge-inline-a">⬛ CALCULAR A</span>. Você calcula a Área ($4 \times 3 = 12$) e encosta o lado <span class="badge-inline-a">A: 12</span> da sua Peça B nela!</p>
             <div class="example-area" id="example-screen">
                 <!-- Injetado via JS -->
             </div>
@@ -256,25 +366,30 @@ descricao: "Gerador de peças de dominó matemático para impressão. Relaciona 
 
         <!-- PAINEL DE IMPRESSÃO ISOLADO -->
         <div class="print-controls">
-            <h3 style="color: var(--white); font-family: 'Orbitron';">Controles de Impressão Isolada</h3>
+            <h3 style="color: var(--white); font-family: 'Orbitron';">Painel de Impressão (Folhas A4)</h3>
             <div class="print-actions">
                 
                 <div class="print-panel">
-                    <label style="color: var(--text-light);">Quantidade de Manuais a Imprimir:</label>
+                    <label style="color: var(--text-light); font-weight: bold;">1. Manuais de Regras e Fórmulas (Alunos):</label>
                     <select id="manual-copies" class="select-box">
-                        <option value="2">2 cópias (1 Folha)</option>
-                        <option value="4">4 cópias (1 Folha)</option>
-                        <option value="6" selected>6 cópias (1 Folha)</option>
-                        <option value="8">8 cópias (2 Folhas)</option>
+                        <option value="2">2 cópias (1 Folha A4)</option>
+                        <option value="4">4 cópias (1 Folha A4)</option>
+                        <option value="6" selected>6 cópias (1 Folha A4)</option>
+                        <option value="8">8 cópias (2 Folhas A4)</option>
                     </select>
-                    <button class="btn" onclick="printManuals()">🖨️ 1. IMPRIMIR MANUAIS</button>
+                    <button class="btn" onclick="printManuals()">🖨️ IMPRIMIR MANUAIS</button>
                 </div>
 
                 <div class="print-panel">
-                    <label style="color: var(--text-light);">As peças serão impressas coladas para corte rápido.</label>
-                    <div style="flex-grow: 1; display:flex; align-items:flex-end; width: 100%;">
-                        <button class="btn btn-pieces" onclick="printPieces()">🖨️ 2. IMPRIMIR PEÇAS DO JOGO</button>
-                    </div>
+                    <label style="color: var(--text-light); font-weight: bold;">2. Baralho Completo (28 Peças — 2 Folhas A4):</label>
+                    <span style="font-size: 0.95rem; color: #94a3b8;">Peças alinhadas (88mm × 38mm) com malha quadriculada e etiqueta de comando para corte rápido.</span>
+                    <button class="btn btn-pieces" onclick="printPieces()">🖨️ IMPRIMIR 28 PEÇAS</button>
+                </div>
+
+                <div class="print-panel">
+                    <label style="color: var(--text-light); font-weight: bold;">3. Gabarito Rápido do Professor (1 Folha A4):</label>
+                    <span style="font-size: 0.95rem; color: #94a3b8;">Tabela com as 28 peças numeradas (#01 a #28) e todas as contas resolvidas para consulta imediata.</span>
+                    <button class="btn btn-key" onclick="printTeacherKey()">🖨️ IMPRIMIR GABARITO</button>
                 </div>
 
             </div>
@@ -283,107 +398,175 @@ descricao: "Gerador de peças de dominó matemático para impressão. Relaciona 
         <!-- CONTAINER PARA IMPRESSÃO DO MANUAL -->
         <div id="print-manual-container"></div>
 
+        <!-- CONTAINER PARA IMPRESSÃO DO GABARITO DO PROFESSOR -->
+        <div id="print-key-container"></div>
+
         <!-- CONTAINER DAS PEÇAS -->
         <div class="domino-grid" id="domino-container"></div>
     </div>
 
     <script>
-        const CHAVES = ['P: 12', 'A: 12', 'P: 16', 'A: 16', 'P: 20', 'A: 20', 'P: 24'];
+        const CHAVES = [
+            { label: 'P: 12', mode: 'P', sub: 'Perímetro = 12' },
+            { label: 'A: 12', mode: 'A', sub: 'Área = 12' },
+            { label: 'P: 16', mode: 'P', sub: 'Perímetro = 16' },
+            { label: 'A: 16', mode: 'A', sub: 'Área = 16' },
+            { label: 'P: 20', mode: 'P', sub: 'Perímetro = 20' },
+            { label: 'A: 20', mode: 'A', sub: 'Área = 20' },
+            { label: 'P: 24', mode: 'P', sub: 'Perímetro = 24' }
+        ];
 
-        // REPOSITÓRIO EXATAMENTE IGUAL AO PDF APROVADO:
-        // Contendo as frações originais exigidas e a dupla possibilidade de algumas figuras.
-        const REPOSITORIO = {
-            0: [ // P=12
-                { type: 'rect', w: 4, h: 2, lblW: '4', lblH: '2' }, 
-                { type: 'tri', style: 'right', b: 3, h: 4, hyp: 5, lblB: '3', lblH: '4', lblHyp: '5' }, 
-                { type: 'rect', w: 3.5, h: 2.5, lblW: '7/2', lblH: '5/2' }, 
-                { type: 'rect', w: 3, h: 3, lblW: '3', lblH: '3' } 
-            ],
-            1: [ // A=12
-                { type: 'rect', w: 4, h: 3, lblW: '4', lblH: '3' }, 
-                { type: 'rect', w: 6, h: 2, lblW: '6', lblH: '2' }, 
-                { type: 'rect', w: 10, h: 1.2, lblW: '10', lblH: '6/5' }, 
-                { type: 'rect', w: 8, h: 1.5, lblW: '8', lblH: '3/2' } 
-            ],
-            2: [ // P=16
-                { type: 'rect', w: 5, h: 3, lblW: '5', lblH: '3' }, 
-                { type: 'tri', style: 'right', b: 4, h: 5.33, hyp: 6.66, lblB: '4', lblH: '16/3', lblHyp: '20/3' }, 
-                { type: 'rect', w: 4.5, h: 3.5, lblW: '9/2', lblH: '7/2' }, 
-                { type: 'tri', style: 'right', b: 6, h: 3.2, hyp: 6.8, lblB: '6', lblH: '16/5', lblHyp: '34/5' } 
-            ],
-            3: [ // A=16
-                { type: 'rect', w: 5, h: 3.2, lblW: '5', lblH: '16/5' }, 
-                { type: 'rect', w: 6, h: 2.666, lblW: '6', lblH: '8/3' }, 
-                { type: 'rect', w: 12, h: 1.333, lblW: '12', lblH: '4/3' }, 
-                { type: 'rect', w: 8, h: 2, lblW: '8', lblH: '2' } 
-            ],
-            4: [ // P=20
-                { type: 'rect', w: 6, h: 4, lblW: '6', lblH: '4' }, 
-                { type: 'tri', style: 'right', b: 5, h: 6.666, hyp: 8.333, lblB: '5', lblH: '20/3', lblHyp: '25/3' }, 
-                { type: 'rect', w: 7, h: 3, lblW: '7', lblH: '3' }, 
-                { type: 'tri', style: 'right', b: 4, h: 7.5, hyp: 8.5, lblB: '4', lblH: '15/2', lblHyp: '17/2' } 
-            ],
-            5: [ // A=20
-                { type: 'rect', w: 5, h: 4, lblW: '5', lblH: '4' }, 
-                { type: 'rect', w: 8, h: 2.5, lblW: '8', lblH: '5/2' }, 
-                { type: 'rect', w: 6, h: 3.333, lblW: '6', lblH: '10/3' }, 
-                { type: 'rect', w: 7.5, h: 2.666, lblW: '15/2', lblH: '8/3' } 
-            ],
-            6: [ // P=24
-                { type: 'rect', w: 8, h: 4, lblW: '8', lblH: '4' }, 
-                { type: 'tri', style: 'right', b: 6, h: 8, hyp: 10, lblB: '6', lblH: '8', lblHyp: '10' }, 
-                { type: 'rect', w: 7, h: 5, lblW: '7', lblH: '5' }, 
-                { type: 'tri', style: 'right', b: 4, h: 9.6, hyp: 10.4, lblB: '4', lblH: '48/5', lblHyp: '52/5' } 
-            ]
-        };
+        // REPOSITÓRIO BALANCEADO (28 FIGURAS):
+        // - Comando explícito (mode: 'P' ou 'A') eliminando ambiguidade e reduzindo pela metade o tempo de cálculo por peça.
+        // - Malha quadriculada interna nas figuras inteiras.
+        // - Triângulos presentes tanto em Perímetro quanto em Área!
+        // - Frações mentais rápidas (metades e terços que cancelam de cabeça).
+        function getRepositorioPadrao() {
+            return {
+                0: [ // P: 12 (Calcular Perímetro = 12)
+                    { type: 'rect', mode: 'P', w: 4, h: 2, lblW: '4', lblH: '2', grid: true, desc: 'Retângulo 4 × 2', calc: '4 + 4 + 2 + 2 = 12' },
+                    { type: 'rect', mode: 'P', w: 3, h: 3, lblW: '3', lblH: '3', grid: true, desc: 'Quadrado 3 × 3', calc: '3 + 3 + 3 + 3 = 12' },
+                    { type: 'tri',  mode: 'P', b: 4, h: 3, hyp: 5, lblB: '4', lblH: '3', lblHyp: '5', grid: true, desc: 'Triângulo Retângulo (3, 4, 5)', calc: '3 + 4 + 5 = 12' },
+                    { type: 'rect', mode: 'P', w: 3.5, h: 2.5, lblW: '7/2', lblH: '5/2', grid: false, desc: 'Retângulo 7/2 × 5/2', calc: '7/2 + 7/2 + 5/2 + 5/2 = 24/2 = 12' }
+                ],
+                1: [ // A: 12 (Calcular Área = 12)
+                    { type: 'rect', mode: 'A', w: 4, h: 3, lblW: '4', lblH: '3', grid: true, desc: 'Retângulo 4 × 3', calc: '4 × 3 = 12' },
+                    { type: 'rect', mode: 'A', w: 6, h: 2, lblW: '6', lblH: '2', grid: true, desc: 'Retângulo 6 × 2', calc: '6 × 2 = 12' },
+                    { type: 'tri',  mode: 'A', b: 6, h: 4, lblB: '6', lblH: '4', grid: true, desc: 'Triângulo (base 6, altura 4)', calc: '(6 × 4) ÷ 2 = 12' },
+                    { type: 'rect', mode: 'A', w: 8, h: 1.5, lblW: '8', lblH: '3/2', grid: false, desc: 'Retângulo 8 × 3/2', calc: '8 × 3/2 = 24 ÷ 2 = 12' }
+                ],
+                2: [ // P: 16 (Calcular Perímetro = 16)
+                    { type: 'rect', mode: 'P', w: 5, h: 3, lblW: '5', lblH: '3', grid: true, desc: 'Retângulo 5 × 3', calc: '5 + 5 + 3 + 3 = 16' },
+                    { type: 'rect', mode: 'P', w: 4, h: 4, lblW: '4', lblH: '4', grid: true, desc: 'Quadrado 4 × 4', calc: '4 + 4 + 4 + 4 = 16' },
+                    { type: 'rect', mode: 'P', w: 6, h: 2, lblW: '6', lblH: '2', grid: true, desc: 'Retângulo 6 × 2', calc: '6 + 6 + 2 + 2 = 16' },
+                    { type: 'rect', mode: 'P', w: 4.5, h: 3.5, lblW: '9/2', lblH: '7/2', grid: false, desc: 'Retângulo 9/2 × 7/2', calc: '9/2 + 9/2 + 7/2 + 7/2 = 32/2 = 16' }
+                ],
+                3: [ // A: 16 (Calcular Área = 16)
+                    { type: 'rect', mode: 'A', w: 4, h: 4, lblW: '4', lblH: '4', grid: true, desc: 'Quadrado 4 × 4', calc: '4 × 4 = 16' },
+                    { type: 'rect', mode: 'A', w: 8, h: 2, lblW: '8', lblH: '2', grid: true, desc: 'Retângulo 8 × 2', calc: '8 × 2 = 16' },
+                    { type: 'tri',  mode: 'A', b: 8, h: 4, lblB: '8', lblH: '4', grid: true, desc: 'Triângulo (base 8, altura 4)', calc: '(8 × 4) ÷ 2 = 16' },
+                    { type: 'rect', mode: 'A', w: 6, h: 2.666, lblW: '6', lblH: '8/3', grid: false, desc: 'Retângulo 6 × 8/3', calc: '6 × 8/3 = 48 ÷ 3 = 16' }
+                ],
+                4: [ // P: 20 (Calcular Perímetro = 20)
+                    { type: 'rect', mode: 'P', w: 6, h: 4, lblW: '6', lblH: '4', grid: true, desc: 'Retângulo 6 × 4', calc: '6 + 6 + 4 + 4 = 20' },
+                    { type: 'rect', mode: 'P', w: 7, h: 3, lblW: '7', lblH: '3', grid: true, desc: 'Retângulo 7 × 3', calc: '7 + 7 + 3 + 3 = 20' },
+                    { type: 'rect', mode: 'P', w: 5, h: 5, lblW: '5', lblH: '5', grid: true, desc: 'Quadrado 5 × 5', calc: '5 + 5 + 5 + 5 = 20' },
+                    { type: 'rect', mode: 'P', w: 6.5, h: 3.5, lblW: '13/2', lblH: '7/2', grid: false, desc: 'Retângulo 13/2 × 7/2', calc: '13/2 + 13/2 + 7/2 + 7/2 = 40/2 = 20' }
+                ],
+                5: [ // A: 20 (Calcular Área = 20)
+                    { type: 'rect', mode: 'A', w: 5, h: 4, lblW: '5', lblH: '4', grid: true, desc: 'Retângulo 5 × 4', calc: '5 × 4 = 20' },
+                    { type: 'tri',  mode: 'A', b: 8, h: 5, lblB: '8', lblH: '5', grid: true, desc: 'Triângulo (base 8, altura 5)', calc: '(8 × 5) ÷ 2 = 20' },
+                    { type: 'tri',  mode: 'A', b: 10, h: 4, lblB: '10', lblH: '4', grid: true, desc: 'Triângulo (base 10, altura 4)', calc: '(10 × 4) ÷ 2 = 20' },
+                    { type: 'rect', mode: 'A', w: 8, h: 2.5, lblW: '8', lblH: '5/2', grid: false, desc: 'Retângulo 8 × 5/2', calc: '8 × 5/2 = 40 ÷ 2 = 20' }
+                ],
+                6: [ // P: 24 (Calcular Perímetro = 24)
+                    { type: 'rect', mode: 'P', w: 8, h: 4, lblW: '8', lblH: '4', grid: true, desc: 'Retângulo 8 × 4', calc: '8 + 8 + 4 + 4 = 24' },
+                    { type: 'rect', mode: 'P', w: 7, h: 5, lblW: '7', lblH: '5', grid: true, desc: 'Retângulo 7 × 5', calc: '7 + 7 + 5 + 5 = 24' },
+                    { type: 'tri',  mode: 'P', b: 8, h: 6, hyp: 10, lblB: '8', lblH: '6', lblHyp: '10', grid: true, desc: 'Triângulo Retângulo (6, 8, 10)', calc: '6 + 8 + 10 = 24' },
+                    { type: 'rect', mode: 'P', w: 7.5, h: 4.5, lblW: '15/2', lblH: '9/2', grid: false, desc: 'Retângulo 15/2 × 9/2', calc: '15/2 + 15/2 + 9/2 + 9/2 = 48/2 = 24' }
+                ]
+            };
+        }
 
-        // ViewBox alargado (140x100) para garantir que frações não cortem na linha.
+        let GLOBAL_PIECES_LIST = [];
+
         function buildSVG(fig, isMini = false) {
             if (fig.type === 'text') {
-                let fs = isMini ? '16px' : '32px';
-                return `<div style="font-size: ${fs}; font-weight: 900; font-family: 'Orbitron', sans-serif;">${fig.val}</div>`;
+                const fsVal = isMini ? '13pt' : '22pt';
+                const fsBadge = isMini ? '5pt' : '6.5pt';
+                const padBadge = isMini ? '1px 3px' : '2px 6px';
+                const badgeTitle = fig.mode === 'P' ? '📏 PERÍMETRO' : '⬛ ÁREA';
+                return `
+                    <div class="text-side-wrapper">
+                        <span class="cmd-badge mode-${fig.mode}" style="font-size: ${fsBadge}; padding: ${padBadge};">${badgeTitle}</span>
+                        <div class="text-side-val mode-${fig.mode}" style="font-size: ${fsVal};">${fig.val}</div>
+                    </div>
+                `;
             }
 
-            let svg = `<svg viewBox="0 0 140 100" width="100%" height="100%">`;
+            const badgeText = fig.mode === 'P' ? '📏 CALCULAR P' : '⬛ CALCULAR A';
+            const fsBadge = isMini ? '4.8pt' : '6.2pt';
+            const padBadge = isMini ? '0.5px 3px' : '1.5px 5px';
+            const fillColor = fig.mode === 'P' ? '#e0f2fe' : '#fef3c7';
+            const gridStroke = fig.mode === 'P' ? '#7dd3fc' : '#fcd34d';
+
             let maxFigDim = Math.max(fig.w || fig.b, fig.h);
-            let escala = 55 / maxFigDim; 
-            
-            let fontSize = isMini ? "22" : "14";
-            let strokeW = isMini ? "3.5" : "2.5";
-            let yOffset = isMini ? "8" : "6";
+            let maxPx = isMini ? 44 : 52;
+            let escala = maxPx / maxFigDim;
+
+            let fontSize = isMini ? "18" : "13.5";
+            let strokeW = isMini ? "2.8" : "2.2";
+            let yOffset = isMini ? "6" : "5";
+
+            let svg = `<div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding: ${isMini ? '1mm' : '1.4mm'} 1mm 0.5mm;">`;
+            svg += `<div class="cmd-badge mode-${fig.mode}" style="font-size:${fsBadge}; padding:${padBadge};">${badgeText}</div>`;
+            svg += `<svg viewBox="0 0 140 86" width="100%" height="100%" style="overflow:visible;">`;
 
             if (fig.type === 'rect') {
                 let vw = fig.w * escala;
                 let vh = fig.h * escala;
                 let x = (140 - vw) / 2;
-                let y = (100 - vh) / 2;
-                
-                svg += `<rect x="${x}" y="${y}" width="${vw}" height="${vh}" fill="#e8eaed" stroke="#000" stroke-width="${strokeW}"/>`;
+                let y = (86 - vh) / 2 + 3;
+
+                svg += `<rect x="${x}" y="${y}" width="${vw}" height="${vh}" fill="${fillColor}" stroke="none"/>`;
+
+                // Malha quadriculada interna para dimensões inteiras
+                if (fig.grid && Number.isInteger(fig.w) && Number.isInteger(fig.h)) {
+                    for (let i = 1; i < fig.w; i++) {
+                        let gx = x + i * escala;
+                        svg += `<line x1="${gx}" y1="${y}" x2="${gx}" y2="${y + vh}" stroke="${gridStroke}" stroke-width="1" stroke-dasharray="2,1.5"/>`;
+                    }
+                    for (let j = 1; j < fig.h; j++) {
+                        let gy = y + j * escala;
+                        svg += `<line x1="${x}" y1="${gy}" x2="${x + vw}" y2="${gy}" stroke="${gridStroke}" stroke-width="1" stroke-dasharray="2,1.5"/>`;
+                    }
+                }
+
+                svg += `<rect x="${x}" y="${y}" width="${vw}" height="${vh}" fill="none" stroke="#000" stroke-width="${strokeW}"/>`;
                 svg += `<text x="70" y="${y - yOffset}" font-size="${fontSize}" text-anchor="middle" font-family="Arial" font-weight="bold" fill="#000">${fig.lblW}</text>`;
-                svg += `<text x="${x - yOffset}" y="50" font-size="${fontSize}" text-anchor="end" dominant-baseline="central" font-family="Arial" font-weight="bold" fill="#000">${fig.lblH}</text>`;
+                svg += `<text x="${x - yOffset}" y="${y + vh/2}" font-size="${fontSize}" text-anchor="end" dominant-baseline="central" font-family="Arial" font-weight="bold" fill="#000">${fig.lblH}</text>`;
             } 
-            else if (fig.style === 'right') {
+            else if (fig.type === 'tri') {
                 let vw = fig.b * escala;
                 let vh = fig.h * escala;
-                let x = (140 - vw) / 2;
-                let y = (100 - vh) / 2;
-                
-                svg += `<polygon points="${x},${y+vh} ${x+vw},${y+vh} ${x},${y}" fill="#e8eaed" stroke="#000" stroke-width="${strokeW}"/>`;
-                svg += `<rect x="${x}" y="${y+vh-8}" width="8" height="8" fill="none" stroke="#000" stroke-width="${strokeW/1.5}"/>`;
-                
-                svg += `<text x="${x + vw/2}" y="${y + vh + (isMini?18:14)}" font-size="${fontSize}" text-anchor="middle" font-family="Arial" font-weight="bold" fill="#000">${fig.lblB}</text>`;
+                let x = (140 - vw) / 2 + 4;
+                let y = (86 - vh) / 2 - 2;
+
+                let clipId = 'clip_' + Math.random().toString(36).substring(2, 9);
+                svg += `<defs><clipPath id="${clipId}"><polygon points="${x},${y+vh} ${x+vw},${y+vh} ${x},${y}"/></clipPath></defs>`;
+                svg += `<polygon points="${x},${y+vh} ${x+vw},${y+vh} ${x},${y}" fill="${fillColor}" stroke="none"/>`;
+
+                if (fig.grid && Number.isInteger(fig.b) && Number.isInteger(fig.h)) {
+                    svg += `<g clip-path="url(#${clipId})">`;
+                    for (let i = 1; i < fig.b; i++) {
+                        let gx = x + i * escala;
+                        svg += `<line x1="${gx}" y1="${y}" x2="${gx}" y2="${y + vh}" stroke="${gridStroke}" stroke-width="1" stroke-dasharray="2,1.5"/>`;
+                    }
+                    for (let j = 1; j < fig.h; j++) {
+                        let gy = y + j * escala;
+                        svg += `<line x1="${x}" y1="${gy}" x2="${x + vw}" y2="${gy}" stroke="${gridStroke}" stroke-width="1" stroke-dasharray="2,1.5"/>`;
+                    }
+                    svg += `</g>`;
+                }
+
+                svg += `<polygon points="${x},${y+vh} ${x+vw},${y+vh} ${x},${y}" fill="none" stroke="#000" stroke-width="${strokeW}"/>`;
+                svg += `<rect x="${x}" y="${y+vh-7}" width="7" height="7" fill="none" stroke="#000" stroke-width="${strokeW/1.6}"/>`;
+
+                svg += `<text x="${x + vw/2}" y="${y + vh + (isMini ? 16 : 13)}" font-size="${fontSize}" text-anchor="middle" font-family="Arial" font-weight="bold" fill="#000">${fig.lblB}</text>`;
                 svg += `<text x="${x - yOffset}" y="${y + vh/2}" font-size="${fontSize}" text-anchor="end" dominant-baseline="central" font-family="Arial" font-weight="bold" fill="#000">${fig.lblH}</text>`;
                 if (fig.hyp) {
-                    svg += `<text x="${x + vw/2 + (isMini?10:6)}" y="${y + vh/2 - (isMini?6:2)}" font-size="${fontSize}" text-anchor="start" font-family="Arial" font-weight="bold" fill="#000">${fig.lblHyp}</text>`;
+                    svg += `<text x="${x + vw/2 + (isMini ? 8 : 5)}" y="${y + vh/2 - 2}" font-size="${fontSize}" text-anchor="start" font-family="Arial" font-weight="bold" fill="#000">${fig.lblHyp}</text>`;
                 }
             }
-            svg += `</svg>`;
+            svg += `</svg></div>`;
             return svg;
         }
 
-        function makePieceHTML(sideA, sideB) {
+        function makePieceHTML(sideA, sideB, indexNo = null) {
+            const numTag = indexNo ? `<span class="piece-num-tag">#${String(indexNo).padStart(2, '0')}</span>` : '';
             return `
                 <div class="domino-piece">
+                    ${numTag}
                     <div class="domino-half">${buildSVG(sideA, false)}</div>
                     <div class="domino-divider"></div>
                     <div class="domino-half">${buildSVG(sideB, false)}</div>
@@ -401,10 +584,10 @@ descricao: "Gerador de peças de dominó matemático para impressão. Relaciona 
             `;
         }
 
-        const pieceA_L = { type: 'text', val: 'P: 16' };
-        const pieceA_R = { type: 'rect', w: 4, h: 3, lblW: '4', lblH: '3' };
-        const pieceB_L = { type: 'text', val: 'A: 12' };
-        const pieceB_R = { type: 'rect', w: 5, h: 3, lblW: '5', lblH: '3' };
+        const pieceA_L = { type: 'text', val: 'P: 16', mode: 'P' };
+        const pieceA_R = { type: 'rect', mode: 'A', w: 4, h: 3, lblW: '4', lblH: '3', grid: true };
+        const pieceB_L = { type: 'text', val: 'A: 12', mode: 'A' };
+        const pieceB_R = { type: 'rect', mode: 'P', w: 5, h: 3, lblW: '5', lblH: '3', grid: true };
 
         function printManuals() {
             const count = parseInt(document.getElementById('manual-copies').value);
@@ -413,12 +596,12 @@ descricao: "Gerador de peças de dominó matemático para impressão. Relaciona 
 
             const examplePiecesHTMLPrint = `
                 <div style="display:flex; flex-direction:column; align-items:center;">
-                    <span style="font-size:9pt; font-weight:bold; margin-bottom:2px;">PEÇA A (Mesa)</span>
+                    <span style="font-size:8pt; font-weight:bold; margin-bottom:2px;">PEÇA A (Na Mesa)</span>
                     ${makeMiniPieceHTML(pieceA_L, pieceA_R)}
                 </div>
-                <span style="font-size: 20pt; font-weight: bold;">🤝</span>
+                <span style="font-size: 16pt; font-weight: bold;">🤝</span>
                 <div style="display:flex; flex-direction:column; align-items:center;">
-                    <span style="font-size:9pt; font-weight:bold; margin-bottom:2px; color:var(--electric-cyan);">PEÇA B (Sua mão)</span>
+                    <span style="font-size:8pt; font-weight:bold; margin-bottom:2px;">PEÇA B (Sua Mão)</span>
                     ${makeMiniPieceHTML(pieceB_L, pieceB_R)}
                 </div>
             `;
@@ -428,13 +611,15 @@ descricao: "Gerador de peças de dominó matemático para impressão. Relaciona 
                     <div class="print-manual-item">
                         <h2>📜 Dominó: Área e Perímetro</h2>
                         <ul>
-                            <li><strong>Jogadores:</strong> 2 a 5 pessoas.</li>
-                            <li><strong>A Peça:</strong> Os dois lados de uma mesma peça são totalmente independentes! Eles servem para se conectar com OUTRAS peças.</li>
-                            <li><strong>A Conexão:</strong> O jogo intercala <strong>TEXTOS</strong> e <strong>FIGURAS</strong> unindo peças na mesa.</li>
-                            <li><strong>A Matemática:</strong> O Texto (ex: "P: 16") conecta SOMENTE na figura de outra peça que possuir 16 de Perímetro.</li>
-                            <li><strong>Comprar:</strong> Se não tiver peça para jogar, compre do cemitério.</li>
+                            <li><strong>Objetivo:</strong> Ser o primeiro a colocar todas as suas peças na mesa (ou ter menos peças caso o jogo feche nas pontas).</li>
+                            <li><strong>Conexão:</strong> Una sempre <strong>TEXTO $\leftrightarrow$ FIGURA</strong> da mesma categoria: <strong style="color:#0369a1;">[CALCULAR P]</strong> conecta com <strong style="color:#0369a1;">P: valor</strong> e <strong style="color:#b45309;">[CALCULAR A]</strong> conecta com <strong style="color:#b45309;">A: valor</strong>.</li>
+                            <li><strong>Fórmulas Rápidas:</strong>
+                                <br>• <strong>Perímetro (P):</strong> Soma de todos os lados da figura.
+                                <br>• <strong>Área do Retângulo (A):</strong> $\text{Base} \times \text{Altura}$.
+                                <br>• <strong>Área do Triângulo (A):</strong> $(\text{Base} \times \text{Altura}) \div 2$.
+                            </li>
                         </ul>
-                        <p><strong>Exemplo:</strong> A Peça A tem o <strong>Retângulo 4x3</strong> livre. Você joga a Peça B nela encostando o lado <strong>A: 12</strong> (pois a Área daquela figura é 12).</p>
+                        <p><strong>Exemplo:</strong> A figura da Peça A pede <strong>CALCULAR A</strong> ($4 \times 3 = 12$). Conecte o lado <strong>A: 12</strong> da Peça B!</p>
                         <div class="print-example">${examplePiecesHTMLPrint}</div>
                     </div>
                 `;
@@ -451,14 +636,59 @@ descricao: "Gerador de peças de dominó matemático para impressão. Relaciona 
             document.body.classList.remove('print-mode-pieces');
         }
 
+        function printTeacherKey() {
+            const keyContainer = document.getElementById('print-key-container');
+            let rowsHtml = GLOBAL_PIECES_LIST.map(item => `
+                <tr>
+                    <td><strong>#${String(item.no).padStart(2, '0')}</strong></td>
+                    <td style="font-weight:bold; color:${item.sideA.mode === 'P' ? '#0369a1' : '#b45309'};">${item.sideA.val}</td>
+                    <td><strong>${item.sideB.mode === 'P' ? '📏 CALCULAR P' : '⬛ CALCULAR A'}</strong></td>
+                    <td>${item.sideB.desc}</td>
+                    <td><code>${item.sideB.calc}</code></td>
+                    <td style="font-weight:bold; color:${item.sideB.mode === 'P' ? '#0369a1' : '#b45309'};">${item.targetKey}</td>
+                </tr>
+            `).join('');
+
+            keyContainer.innerHTML = `
+                <div class="key-sheet">
+                    <h2>👨‍🏫 Gabarito Rápido do Professor — Dominó Área e Perímetro (28 Peças)</h2>
+                    <p style="font-size:9pt; margin-bottom:8px; text-align:center;">
+                        Grafo Euleriano Balanceado ($K_7$ direcionado com 7 buchas): cada uma das 7 chaves possui exatamente 4 lados de Texto e 4 Figuras correspondentes.
+                    </p>
+                    <table class="key-table">
+                        <thead>
+                            <tr>
+                                <th>Peça</th>
+                                <th>Lado Esquerdo (Texto)</th>
+                                <th>Comando na Figura</th>
+                                <th>Figura Geométrica (Lado Direito)</th>
+                                <th>Cálculo Mental</th>
+                                <th>Conecta com</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rowsHtml}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            document.body.classList.add('print-mode-key');
+            window.print();
+            document.body.classList.remove('print-mode-key');
+        }
+
         window.onload = () => {
             const container = document.getElementById('domino-container');
+            const repo = getRepositorioPadrao();
             const piecesData = [];
 
+            // 7 peças "buchas" (mesma chave de texto e figura)
             for (let i = 0; i < 7; i++) {
                 piecesData.push({ textIdx: i, figIdx: i });
             }
 
+            // 21 peças cruzadas formando torneio euleriano balanceado em K_7
             for (let i = 0; i < 7; i++) {
                 for (let d = 1; d <= 3; d++) {
                     let j = (i + d) % 7;
@@ -466,10 +696,19 @@ descricao: "Gerador de peças de dominó matemático para impressão. Relaciona 
                 }
             }
 
-            piecesData.forEach(piece => {
-                let sideA = { type: 'text', val: CHAVES[piece.textIdx] };
-                let sideB = REPOSITORIO[piece.figIdx].shift();
-                container.innerHTML += makePieceHTML(sideA, sideB);
+            GLOBAL_PIECES_LIST = [];
+            piecesData.forEach((piece, idx) => {
+                let keyObj = CHAVES[piece.textIdx];
+                let targetKeyObj = CHAVES[piece.figIdx];
+                let sideA = { type: 'text', val: keyObj.label, mode: keyObj.mode };
+                let sideB = repo[piece.figIdx].shift();
+                GLOBAL_PIECES_LIST.push({
+                    no: idx + 1,
+                    sideA: sideA,
+                    sideB: sideB,
+                    targetKey: targetKeyObj.label
+                });
+                container.innerHTML += makePieceHTML(sideA, sideB, idx + 1);
             });
 
             document.getElementById('example-screen').innerHTML = `
