@@ -168,13 +168,108 @@ descricao: "Ferramenta geradora de cartelas de Bingo e Baralhos (Pôquer e UNO) 
         .center .combo-digits .center-value-img { width: 12mm; height: 22mm; margin-bottom: 0; }
         .center .combo-digits { margin-bottom: 0; }
 
-        .uno-action-small { display: flex; align-items: center; font-weight: bold; font-size: 16px; gap: 2px; margin-bottom: 1mm;}
+        /* ESTILO CLÁSSICO UNO (FUNDO COLORIDO + ELIPSE CENTRAL INCLINADA) */
+        .uno-card {
+            background-color: #ffffff;
+            padding: 0;
+        }
+        .uno-card-bg {
+            position: absolute;
+            top: 3.2mm;
+            left: 3.2mm;
+            right: 3.2mm;
+            bottom: 3.2mm;
+            border-radius: 3mm;
+            border: 1.5px solid #000;
+            overflow: hidden;
+        }
+        .uno-ellipse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 43mm;
+            height: 64mm;
+            background-color: #ffffff;
+            border-radius: 50%;
+            border: 2px solid #000000;
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+            transform: translate(-50%, -50%) rotate(26deg);
+            z-index: 1;
+        }
+        .uno-card .top-left,
+        .uno-card .bottom-right {
+            z-index: 3;
+        }
+        .uno-card .top-left { top: 5.2mm; left: 5.2mm; }
+        .uno-card .bottom-right { bottom: 5.2mm; right: 5.2mm; }
+        .uno-card .center {
+            z-index: 2;
+            gap: 2mm;
+        }
+        .uno-card .top-left .value-img,
+        .uno-card .bottom-right .value-img {
+            width: 9.5mm;
+            height: 9.5mm;
+            background-color: #ffffff;
+            padding: 0.7mm;
+            border-radius: 2mm;
+            border: 1.5px solid #000000;
+            box-shadow: 1.5px 1.5px 0 #000000;
+            margin-bottom: 0;
+        }
+        .uno-card .center .center-value-img {
+            width: 23mm;
+            height: 23mm;
+        }
+        .uno-action-small {
+            display: flex;
+            align-items: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 16px;
+            gap: 2px;
+            color: #ffffff;
+            text-shadow: -1.2px -1.2px 0 #000, 1.2px -1.2px 0 #000, -1.2px 1.2px 0 #000, 1.2px 1.2px 0 #000, 2px 2px 0 #000;
+        }
         .uno-action-small .value-img, .uno-action-small .combo-digits { margin-bottom: 0; }
-        .uno-action-center { display: flex; align-items: center; font-weight: bold; font-size: 40px; gap: 5px; }
-        .uno-symbol { font-size: 18px; font-weight: bold; margin-bottom: 1mm; }
-        .uno-symbol-center { font-size: 50px; font-weight: bold; }
-        .wild-icon { width: 20mm; height: 20mm; border-radius: 50%; background: conic-gradient(#E73E32 0 90deg, #1976D2 90deg 180deg, #F7D002 180deg 270deg, #388E3C 270deg 360deg); }
-        .wild-icon-small { width: 8mm; height: 8mm; border-radius: 50%; background: conic-gradient(#E73E32 0 90deg, #1976D2 90deg 180deg, #F7D002 180deg 270deg, #388E3C 270deg 360deg); margin-bottom: 1mm; }
+        .uno-action-center {
+            display: flex;
+            align-items: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 38px;
+            gap: 4px;
+            text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 2.5px 2.5px 0 #000;
+        }
+        .uno-symbol {
+            font-size: 21px;
+            font-weight: 900;
+            line-height: 1;
+            color: #ffffff;
+            text-shadow: -1.2px -1.2px 0 #000, 1.2px -1.2px 0 #000, -1.2px 1.2px 0 #000, 1.2px 1.2px 0 #000, 2px 2px 0 #000;
+        }
+        .uno-symbol-center {
+            font-size: 54px;
+            font-weight: 900;
+            line-height: 1;
+            text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 3px 3px 0 #000;
+        }
+        .wild-icon {
+            width: 24mm;
+            height: 24mm;
+            border-radius: 50%;
+            border: 2px solid #000000;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+            background: conic-gradient(#E73E32 0 90deg, #1976D2 90deg 180deg, #F7D002 180deg 270deg, #388E3C 270deg 360deg);
+        }
+        .wild-icon-small {
+            width: 8.5mm;
+            height: 8.5mm;
+            border-radius: 50%;
+            border: 1.5px solid #ffffff;
+            box-shadow: 1.5px 1.5px 0 #000000;
+            background: conic-gradient(#E73E32 0 90deg, #1976D2 90deg 180deg, #F7D002 180deg 270deg, #388E3C 270deg 360deg);
+        }
 
 
         /* =========================================================
@@ -666,25 +761,26 @@ descricao: "Ferramenta geradora de cartelas de Bingo e Baralhos (Pôquer e UNO) 
                 centerHTML = getLibrasImages(type, true);
             } else if (type === '+2' || type === '+4') {
                 const num = type.replace('+', '');
-                topHTML = `<div class="uno-action-small" style="color: ${colorHex}">+ ${getLibrasImages(num, false)}</div>`;
-                centerHTML = `<div class="uno-action-center" style="color: ${colorHex}">+ ${getLibrasImages(num, true)}</div>`;
+                topHTML = `<div class="uno-action-small">+${getLibrasImages(num, false)}</div>`;
+                centerHTML = `<div class="uno-action-center" style="color: ${colorHex}">+${getLibrasImages(num, true)}</div>`;
             } else if (type === 'block') {
-                topHTML = `<span class="uno-symbol" style="color: ${colorHex}">⊘</span>`;
+                topHTML = `<span class="uno-symbol">⊘</span>`;
                 centerHTML = `<span class="uno-symbol-center" style="color: ${colorHex}">⊘</span>`;
             } else if (type === 'reverse') {
-                topHTML = `<span class="uno-symbol" style="color: ${colorHex}">⇄</span>`;
+                topHTML = `<span class="uno-symbol">⇄</span>`;
                 centerHTML = `<span class="uno-symbol-center" style="color: ${colorHex}">⇄</span>`;
             } else if (type === 'wild') {
                 topHTML = `<div class="wild-icon-small"></div>`;
                 centerHTML = `<div class="wild-icon"></div>`;
             }
 
-            const wildAddon = (isWild && type === '+4') ? '<div class="wild-icon-small" style="margin-top: 5mm;"></div>' : '';
+            const wildAddon = (isWild && type === '+4') ? '<div class="wild-icon-small" style="margin-top: 2mm; border-color: #000;"></div>' : '';
             
             const cardHTML = `
-                <div class="card-item">
-                    <div class="card-inner-border" style="border-width: 4px; border-color: #fff;"></div>
-                    <div class="card-inner-border" style="border-width: 8px; border-color: ${colorHex}; top: 4px; left: 4px; right: 4px; bottom: 4px;"></div>
+                <div class="card-item uno-card">
+                    <div class="uno-card-bg" style="background-color: ${colorHex};">
+                        <div class="uno-ellipse"></div>
+                    </div>
                     <div class="top-left">${topHTML}</div>
                     <div class="center">${centerHTML} ${wildAddon}</div>
                     <div class="bottom-right">${topHTML}</div>
