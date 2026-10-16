@@ -1,0 +1,809 @@
+---
+titulo: "Trilha Sistema Solar: Desafios da Matemática"
+icone: "🪐"
+descricao: "Material completo para impressão (Tabuleiro em 4 folhas A4 com fundo econômico + 48 Cartas Desafio por cor + Cartas Bônus/Ônus Planetárias + Guia e Gabarito) com o Sol no centro e os 8 planetas em ordem de distância."
+---
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trilha Sistema Solar — Material para Impressão (PIBID Matemática)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-dark: #0a0a0c;
+      --bg-panel: rgba(20, 22, 32, 0.92);
+      --border-glass: rgba(255, 255, 255, 0.14);
+      --electric: #00f0ff;
+      --indigo: #6366f1;
+      --cyan: #06b6d4;
+      --amber: #f59e0b;
+      --green: #10b981;
+      --blue-cat: #2563eb;
+      --purple-cat: #9333ea;
+      --green-cat: #059669;
+      --orange-cat: #ea580c;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #f8fafc;
+      background-color: var(--bg-dark);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      padding-bottom: 90px;
+    }
+
+    #app-shell {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.16), transparent 35%),
+        radial-gradient(circle at 85% 20%, rgba(6, 182, 212, 0.14), transparent 38%),
+        #0a0a0c;
+    }
+
+    .top-header {
+      background: rgba(14, 16, 24, 0.94);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-glass);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 14px 20px;
+    }
+
+    .header-inner {
+      max-width: 1380px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #f59e0b, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.4);
+    }
+
+    .brand-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #fde047, #00f0ff, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-subtitle {
+      font-size: 0.78rem;
+      color: #94a3b8;
+    }
+
+    .nav-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      background: rgba(30, 34, 48, 0.9);
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-btn:hover {
+      border-color: var(--electric);
+      color: #fff;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #4f46e5, #0891b2);
+      color: #fff;
+      border-color: var(--electric);
+      box-shadow: 0 0 14px rgba(0, 240, 255, 0.3);
+    }
+
+    .action-bar {
+      max-width: 1380px;
+      margin: 16px auto 0;
+      padding: 12px 18px;
+      background: rgba(20, 24, 36, 0.9);
+      border: 1px solid var(--border-glass);
+      border-radius: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .legend-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .cat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .pill-num { background: rgba(37, 99, 235, 0.22); border: 1px solid #3b82f6; color: #93c5fd; }
+    .pill-fra { background: rgba(147, 51, 234, 0.22); border: 1px solid #a855f7; color: #d8b4fe; }
+    .pill-pct { background: rgba(5, 150, 105, 0.22); border: 1px solid #10b981; color: #6ee7b7; }
+    .pill-geo { background: rgba(234, 88, 12, 0.22); border: 1px solid #f97316; color: #fdba74; }
+    .pill-pla { background: rgba(245, 158, 11, 0.22); border: 1px solid #f59e0b; color: #fde68a; }
+
+    .print-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn-print {
+      border: none;
+      border-radius: 9px;
+      padding: 9px 14px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.83rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-print-main {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-print-alt {
+      background: rgba(51, 65, 85, 0.9);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-print:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+    }
+
+    .main-container {
+      max-width: 1380px;
+      margin: 18px auto;
+      padding: 0 18px;
+    }
+
+    .view-section {
+      display: none;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    .info-banner {
+      background: rgba(15, 23, 42, 0.85);
+      border-left: 4px solid var(--electric);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      font-size: 0.86rem;
+      color: #cbd5e1;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    /* ==========================================================
+       TABULEIRO COMPLETO E PÁGINAS DE IMPRESSÃO (ECO-TINTA)
+       ========================================================== */
+    .board-preview-scroll {
+      width: 100%;
+      overflow-x: auto;
+      background: rgba(15, 18, 28, 0.85);
+      border: 1px solid var(--border-glass);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55);
+    }
+
+    .solar-board-canvas {
+      position: relative;
+      width: 1108px;
+      height: 760px;
+      margin: 0 auto;
+      border-radius: 12px;
+      overflow: hidden;
+      background-color: #fbfaf5;
+      background-image: url("img_planetas/fundo_espaco.png");
+      background-size: cover;
+      background-position: center;
+      border: 2px dashed #cbd5e1;
+    }
+
+    /* Divisor de corte A4 (2x2) */
+    .grid-cut-h {
+      position: absolute;
+      top: 380px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      border-top: 2px dashed rgba(100, 116, 139, 0.4);
+      z-index: 10;
+    }
+    .grid-cut-v {
+      position: absolute;
+      top: 0;
+      left: 554px;
+      width: 2px;
+      height: 100%;
+      border-left: 2px dashed rgba(100, 116, 139, 0.4);
+      z-index: 10;
+    }
+    .sheet-label {
+      position: absolute;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #64748b;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      z-index: 12;
+    }
+    .sl-1 { top: 12px; left: 12px; }
+    .sl-2 { top: 12px; right: 12px; }
+    .sl-3 { bottom: 12px; left: 12px; }
+    .sl-4 { bottom: 12px; right: 12px; }
+
+    /* Sol no Centro exato (554px, 380px) */
+    .sun-center {
+      position: absolute;
+      left: 502px;
+      top: 328px;
+      width: 104px;
+      height: 104px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fde047 0%, #f59e0b 70%, #d97706 100%);
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      border: 3px solid #fff;
+    }
+    .sun-center img {
+      width: 65px;
+      height: 65px;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+    .sun-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 900;
+      color: #78350f;
+      text-transform: uppercase;
+      margin-top: -2px;
+    }
+
+    /* Casas da Trilha */
+    .board-tile {
+      position: absolute;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.75rem;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+      z-index: 15;
+      transform: translate(-50%, -50%);
+      border: 2px solid #fff;
+    }
+
+    .tile-num { background: var(--blue-cat); }
+    .tile-fra { background: var(--purple-cat); }
+    .tile-pct { background: var(--green-cat); }
+    .tile-geo { background: var(--orange-cat); }
+
+    /* Casas de Planetas com Imagem PNG e Coerência de Tamanho */
+    .planet-tile {
+      position: absolute;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 18;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.9);
+      border: 3px solid #0f172a;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      padding: 2px;
+    }
+    .planet-tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+    .planet-name {
+      position: absolute;
+      bottom: -18px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: #0f172a;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 1px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      border: 1px solid #cbd5e1;
+    }
+
+    /* Tamanhos proporcionais dos Planetas na Trilha */
+    .p-mercurio { width: 36px; height: 36px; }
+    .p-venus { width: 44px; height: 44px; }
+    .p-terra { width: 48px; height: 48px; }
+    .p-marte { width: 40px; height: 40px; }
+    .p-jupiter { width: 68px; height: 68px; }
+    .p-saturno { width: 84px; height: 62px; border-radius: 30%; } /* Saturno maior devido aos anéis */
+    .p-urano { width: 54px; height: 54px; }
+    .p-netuno { width: 52px; height: 52px; }
+
+    /* SEÇÃO DE CARTAS E GUIA */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .card-category-box {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-glass);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .cat-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .card-item {
+      background: rgba(30, 34, 48, 0.7);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+
+    .card-q {
+      font-weight: 600;
+      color: #f1f5f9;
+      margin-bottom: 6px;
+    }
+
+    .card-a {
+      font-size: 0.82rem;
+      color: #38bdf8;
+      font-weight: 700;
+    }
+
+    /* ESTILOS DE IMPRESSÃO A4 rigorosos (Eco-tinta) */
+    @media print {
+      body {
+        background: #fff !important;
+        color: #000 !important;
+      }
+      .top-header, .action-bar, .nav-tabs, .info-banner, #btn-voltar {
+        display: none !important;
+      }
+      .main-container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .view-section {
+        display: none !important;
+      }
+      .view-section.active {
+        display: block !important;
+      }
+      .solar-board-canvas {
+        page-break-after: always;
+        break-after: page;
+        width: 100vw;
+        height: 100vh;
+        border: none;
+        background-color: #fff !important;
+      }
+      .print-page-break {
+        page-break-after: always;
+        break-after: page;
+      }
+      .card-category-box {
+        background: #fff !important;
+        color: #000 !important;
+        border: 1px solid #000 !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      .card-item {
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #000 !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      .card-q { color: #000 !important; }
+      .card-a { color: #1e3a8a !important; }
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="app-shell">
+    <!-- BARRA SUPERIOR -->
+    <header class="top-header">
+      <div class="header-inner">
+        <div class="brand-block">
+          <div class="brand-icon">🪐</div>
+          <div>
+            <div class="brand-title">Trilha Sistema Solar — PIBID Matemática</div>
+            <div class="brand-subtitle">Mateus Goldschmidt • UFFS Cerro Largo</div>
+          </div>
+        </div>
+        <nav class="nav-tabs">
+          <button class="tab-btn active" onclick="switchTab('tab-board', this)">🗺️ Tabuleiro (4 A4)</button>
+          <button class="tab-btn" onclick="switchTab('tab-cards', this)">🃏 Cartas Desafio (6º Ano)</button>
+          <button class="tab-btn" onclick="switchTab('tab-events', this)">☄️ Eventos Planetários</button>
+          <button class="tab-btn" onclick="switchTab('tab-guide', this)">📜 Guia & Regras</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- BARRA DE AÇÃO E LEGENDA -->
+    <div class="action-bar">
+      <div class="legend-pills">
+        <span class="cat-pill pill-num">🔵 Operações e Números</span>
+        <span class="cat-pill pill-fra">🟣 Frações</span>
+        <span class="cat-pill pill-pct">🟢 Porcentagem e Decimais</span>
+        <span class="cat-pill pill-geo">🟠 Geometria e Medidas</span>
+        <span class="cat-pill pill-pla">🟡 Planetas (Bônus/Ônus)</span>
+      </div>
+      <div class="print-buttons">
+        <button class="btn-print btn-print-main" onclick="window.print()">🖨️ Imprimir Material Completo</button>
+      </div>
+    </div>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main-container">
+      
+      <!-- ABA 1: TABULEIRO -->
+      <section id="tab-board" class="view-section active">
+        <div class="info-banner">
+          <span>💡 <strong>Dica de Montagem:</strong> O tabuleiro foi projetado para ser impresso em 4 folhas A4 (modo paisagem). Cole as 4 folhas unindo os cantos para formar um painel de 55cm x 38cm com o Sol no centro e os 8 planetas em órbita!</span>
+          <span>Fundo Eco-tinta otimizado para economizar cartucho.</span>
+        </div>
+
+        <div class="board-preview-scroll">
+          <div class="solar-board-canvas" id="boardCanvas">
+            <!-- Linhas de corte A4 -->
+            <div class="grid-cut-h"></div>
+            <div class="grid-cut-v"></div>
+            <span class="sheet-label sl-1">Folha A4 (Sup. Esquerda)</span>
+            <span class="sheet-label sl-2">Folha A4 (Sup. Direita)</span>
+            <span class="sheet-label sl-3">Folha A4 (Inf. Esquerda)</span>
+            <span class="sheet-label sl-4">Folha A4 (Inf. Direita)</span>
+
+            <!-- Sol no Centro (Casa 0) -->
+            <div class="sun-center">
+              <img src="img_planetas/sol.png" alt="Sol" />
+              <div class="sun-title">SOL (Início)</div>
+            </div>
+
+            <!-- As casas e planetas serão injetadas via JavaScript em espiral/órbita perfeita -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ABA 2: CARTAS DESAFIO (6º ANO - CÁLCULO MENTAL) -->
+      <section id="tab-cards" class="view-section">
+        <div class="info-banner">
+          <span>🃏 <strong>Cartas Revisadas:</strong> Todas as 48 perguntas foram elaboradas para que alunos do 6º ano resolvam mentalmente de forma rápida e dinâmica. Imprima frente e verso.</span>
+        </div>
+
+        <div class="cards-grid">
+          <!-- Categoria Números -->
+          <div class="card-category-box">
+            <div class="cat-header" style="color: #93c5fd;">🔵 Operações e Números</div>
+            <div id="cards-num"></div>
+          </div>
+          <!-- Categoria Frações -->
+          <div class="card-category-box">
+            <div class="cat-header" style="color: #d8b4fe;">🟣 Frações</div>
+            <div id="cards-fra"></div>
+          </div>
+          <!-- Categoria Porcentagem -->
+          <div class="card-category-box">
+            <div class="cat-header" style="color: #6ee7b7;">🟢 Porcentagem e Decimais</div>
+            <div id="cards-pct"></div>
+          </div>
+          <!-- Categoria Geometria -->
+          <div class="card-category-box">
+            <div class="cat-header" style="color: #fdba74;">🟠 Geometria e Medidas</div>
+            <div id="cards-geo"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABA 3: EVENTOS PLANETÁRIOS -->
+      <section id="tab-events" class="view-section">
+        <div class="info-banner">
+          <span>☄️ Quando o aluno cai exatamente em uma casa de Planeta, ele compra uma carta de Evento Espacial (Bônus ou Ônus).</span>
+        </div>
+        <div class="cards-grid" id="cards-planets"></div>
+      </section>
+
+      <!-- ABA 4: GUIA E REGRAS -->
+      <section id="tab-guide" class="view-section">
+        <div class="card-category-box" style="max-width: 900px; margin: 0 auto; line-height: 1.6;">
+          <h2 style="font-family: 'Orbitron', sans-serif; color: #38bdf8; margin-bottom: 14px;">📜 Manual do Professor & Regras do Jogo</h2>
+          <p style="margin-bottom: 12px;"><strong>Objetivo:</strong> Partir do Sol no centro do tabuleiro, navegar pelo Sistema Solar superando desafios matemáticos de cálculo mental do 6º ano, e chegar ao planeta Netuno!</p>
+          <p style="margin-bottom: 12px;"><strong>Dinâmica:</strong> Cada jogador lança um dado. Na casa em que parar, responde à carta correspondente à cor da casa. Se acertar, permanece; se errar, recua 1 casa. Ao parar em um Planeta, compra uma carta Bônus/Ônus baseada na astronomia do astro.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- BOTÃO VOLTAR AO PORTFÓLIO -->
+  <style>
+    #btn-voltar {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 9999;
+      background: linear-gradient(135deg, #1a237e, #1565c0);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.88rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    #btn-voltar:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.45); }
+    @media print { #btn-voltar { display: none !important; } }
+  </style>
+  <a id="btn-voltar" href="index.html">&#8592; Voltar ao Portfólio</a>
+
+  <script>
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    // Dados dos Planetas e Ordem na Trilha (Espiral a partir do Sol no centro)
+    const planetsData = [
+      { id: 'mercurio', name: 'Mercúrio', file: 'img_planetas/mercurio.png', class: 'p-mercurio', tileIdx: 7 },
+      { id: 'venus', name: 'Vênus', file: 'img_planetas/venus.png', class: 'p-venus', tileIdx: 14 },
+      { id: 'terra', name: 'Terra', file: 'img_planetas/terra.png', class: 'p-terra', tileIdx: 21 },
+      { id: 'marte', name: 'Marte', file: 'img_planetas/marte.png', class: 'p-marte', tileIdx: 28 },
+      { id: 'jupiter', name: 'Júpiter', file: 'img_planetas/jupiter.png', class: 'p-jupiter', tileIdx: 35 },
+      { id: 'saturno', name: 'Saturno', file: 'img_planetas/saturno.png', class: 'p-saturno', tileIdx: 42 },
+      { id: 'urano', name: 'Urano', file: 'img_planetas/urano.png', class: 'p-urano', tileIdx: 49 },
+      { id: 'netuno', name: 'Netuno', file: 'img_planetas/netuno.png', class: 'p-netuno', tileIdx: 56 }
+    ];
+
+    // Gerador de coordenadas em espiral harmoniosa ao redor do Sol (554, 380)
+    function generateBoardTiles() {
+      const canvas = document.getElementById('boardCanvas');
+      const cx = 554;
+      const cy = 380;
+      const totalTiles = 57; // 0 (Sol) até 56 (Netuno), com 6 casas entre cada planeta
+
+      let angle = 0;
+      let radius = 60;
+
+      for (let i = 1; i <= totalTiles; i++) {
+        // Espiral expansiva
+        angle += 0.23;
+        radius += 5.5;
+
+        const x = cx + radius * Math.cos(angle);
+        const y = cy + radius * Math.sin(angle);
+
+        // Verificar se a casa i é um planeta
+        const planet = planetsData.find(p => p.tileIdx === i);
+
+        if (planet) {
+          const div = document.createElement('div');
+          div.className = `planet-tile ${planet.class}`;
+          div.style.left = `${x}px`;
+          div.style.top = `${y}px`;
+          div.innerHTML = `<img src="${planet.file}" alt="${planet.name}" /><span class="planet-name">${planet.name}</span>`;
+          canvas.appendChild(div);
+        } else {
+          // Casa de desafio normal (ciclo de 4 cores)
+          const colors = ['num', 'fra', 'pct', 'geo'];
+          const colorClass = `tile-${colors[(i - 1) % 4]}`;
+
+          const div = document.createElement('div');
+          div.className = `board-tile ${colorClass}`;
+          div.style.left = `${x}px`;
+          div.style.top = `${y}px`;
+          div.textContent = i;
+          canvas.appendChild(div);
+        }
+      }
+    }
+
+    // Banco de Cartas Desafio 6º Ano (Cálculo Mental Rápido)
+    const cardsNum = [
+      { q: "Quanto é 125 + 375?", a: "500" },
+      { q: "Qual o resultado de 1000 - 435?", a: "565" },
+      { q: "Quanto é 24 x 5?", a: "120" },
+      { q: "Divida 360 por 4.", a: "90" },
+      { q: "Qual o dobro de 145?", a: "290" },
+      { q: "Quanto é 15 x 6?", a: "90" },
+      { q: "Qual o resto da divisão de 45 por 7?", a: "3 (7x6=42)" },
+      { q: "Calcule 508 + 292.", a: "800" },
+      { q: "Quanto é 88 dividido por 8?", a: "11" },
+      { q: "Qual o triplo de 75?", a: "225" },
+      { q: "Quanto é 450 - 170?", a: "280" },
+      { q: "Multiplique 13 por 4.", a: "52" }
+    ];
+
+    const cardsFra = [
+      { q: "Quanto é 1/2 de 80?", a: "40" },
+      { q: "Qual fração é maior: 1/2 ou 1/4?", a: "1/2" },
+      { q: "Quanto é 3/4 de 100?", a: "75" },
+      { q: "Some 1/5 + 2/5.", a: "3/5" },
+      { q: "Quanto é 1/3 de 90?", a: "30" },
+      { q: "Subtraia 5/6 - 2/6.", a: "3/6 (ou 1/2)" },
+      { q: "Qual o equivalente decimal de 1/2?", a: "0,5" },
+      { q: "Quanto é 2/10 em número decimal?", a: "0,2" },
+      { q: "Quanto é 1/4 de 200?", a: "50" },
+      { q: "Simplifique a fração 4/8.", a: "1/2" },
+      { q: "Quanto é 3/10 de 50?", a: "15" },
+      { q: "Quanto vale 2 inteiros em meios (x/2)?", a: "4 meios (4/2)" }
+    ];
+
+    const cardsPct = [
+      { q: "Quanto é 50% de 300?", a: "150" },
+      { q: "Quanto é 25% de 80?", a: "20" },
+      { q: "Qual o valor de 10% de 450?", a: "45" },
+      { q: "Quanto é 75% de 200?", a: "150" },
+      { q: "Escreva 0,75 em porcentagem.", a: "75%" },
+      { q: "Quanto é 20% de 150?", a: "30" },
+      { q: "Qual é 100% de 87?", a: "87" },
+      { q: "Quanto é 5% de 200?", a: "10" },
+      { q: "Escreva 20% em forma de fração irredutível.", a: "1/5" },
+      { q: "Quanto é 10% de 1250?", a: "125" },
+      { q: "Quanto é 50% de 98?", a: "49" },
+      { q: "Transforme 0,25 em fração.", a: "1/4" }
+    ];
+
+    const cardsGeo = [
+      { q: "Quantos graus tem a soma dos ângulos internos de um triângulo?", a: "180°" },
+      { q: "Quantos lados tem um hexágono?", a: "6 lados" },
+      { q: "Qual o perímetro de um quadrado de lado 7 cm?", a: "28 cm" },
+      { q: "Quantos centímetros há em 2 metros?", a: "200 cm" },
+      { q: "Qual a área de um retângulo de base 5 e altura 4?", a: "20" },
+      { q: "Quantos metros tem 1 quilômetro?", a: "1000 metros" },
+      { q: "Quantas horas tem 1 dia e meio?", a: "36 horas" },
+      { q: "Quantos mililitros há em 2 litros?", a: "2000 mL" },
+      { q: "Qual o perímetro de um triângulo equilátero de lado 9 cm?", a: "27 cm" },
+      { q: "Quantos minutos há em 3 horas?", a: "180 minutos" },
+      { q: "Quantos vértices tem um cubo?", a: "8 vértices" },
+      { q: "Qual o suplemento de um ângulo de 70°?", a: "110°" }
+    ];
+
+    const cardsPlanetsList = [
+      { q: "MERCÚRIO: O planeta mais próximo do Sol. (BÔNUS)", a: "Avance 2 casas!" },
+      { q: "VÊNUS: Nuvens densas de gás carbônico causam efeito estufa extremo. (ÔNUS)", a: "Recue 1 casa." },
+      { q: "TERRA: Nosso planeta d'água. (BÔNUS)", a: "Jogue o dado novamente!" },
+      { q: "MARTE: O Planeta Vermelho. (ÔNUS)", a: "Fique 1 rodada sem jogar preso na poeira marciana." },
+      { q: "JÚPITER: O maior gigante gasoso. (BÔNUS)", a: "Pegue impulso gravitacional e avance 3 casas!" },
+      { q: "SATURNO: Esplêndidos anéis de gelo. (BÔNUS)", a: "Troque de lugar com o colega de trás se houver." },
+      { q: "URANO: Roda deitado em sua órbita. (ÔNUS)", a: "Recue 2 casas devido ao eixo inclinado." },
+      { q: "NETUNO: Ventos supersônicos gelados. (BÔNUS)", a: "Avance direto para a próxima casa de planeta!" }
+    ];
+
+    function renderCards(containerId, list) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = list.map((item, idx) => `
+        <div class="card-item">
+          <div class="card-q">Carta ${idx+1}: ${item.q}</div>
+          <div class="card-a">Resposta: ${item.a}</div>
+        </div>
+      `).join('');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      generateBoardTiles();
+      renderCards('cards-num', cardsNum);
+      renderCards('cards-fra', cardsFra);
+      renderCards('cards-pct', cardsPct);
+      renderCards('cards-geo', cardsGeo);
+      renderCards('cards-planets', cardsPlanetsList);
+    });
+  </script>
+</body>
+</html>
