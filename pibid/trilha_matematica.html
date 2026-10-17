@@ -836,29 +836,22 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
           <div class="brand-icon">🪐</div>
           <div>
             <div class="brand-title">Trilha Sistema Solar — PIBID Matemática</div>
-            <div class="brand-subtitle">Material para Impressão • 6º Ano (Cálculo Mental)</div>
+            <div class="brand-subtitle">Material para Impressão • 6º Ano</div>
           </div>
         </div>
         <nav class="nav-tabs">
-          <button class="tab-btn active" onclick="switchTab('tab-board', this, 'landscape')">🗺️ Tabuleiro (4 Folhas A4)</button>
-          <button class="tab-btn" onclick="switchTab('tab-cards', this, 'portrait')">🃏 64 Cartas Desafio + 8 Cartas Bônus</button>
-          <button class="tab-btn" onclick="switchTab('tab-guide', this, 'portrait')">📜 Regras & Gabarito do Professor</button>
+          <button class="tab-btn active" onclick="switchTab('tab-board', this, 'landscape')">Tabuleiro (4 Folhas A4)</button>
+          <button class="tab-btn" onclick="switchTab('tab-cards', this, 'portrait')">64 Cartas Desafio + 8 Cartas Bônus</button>
+          <button class="tab-btn" onclick="switchTab('tab-guide', this, 'portrait')">Regras & Gabarito do Professor</button>
         </nav>
       </div>
     </header>
 
     <!-- BARRA DE AÇÃO E LEGENDA -->
     <div class="action-bar">
-      <div class="legend-pills">
-        <span class="cat-pill pill-num">🔵 Potências e Operações (16)</span>
-        <span class="cat-pill pill-fra">🟣 Frações (16)</span>
-        <span class="cat-pill pill-pct">🟢 Porcentagem e Decimais (16)</span>
-        <span class="cat-pill pill-geo">🟠 Geometria e Medidas (16)</span>
-        <span class="cat-pill pill-pla">🟡 Bônus dos 8 Planetas (8)</span>
-      </div>
       <div class="print-buttons">
         <label class="fundo-label">
-          🎨 Fundo do tabuleiro:
+          Fundo do tabuleiro:
           <select id="seletor-fundo" onchange="aplicarFundo(this.value)">
             <option value="claro">Claro (economiza tinta)</option>
             <option value="pastel">Pastel colorido</option>
@@ -866,19 +859,13 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
             <option value="original">Estrelado original</option>
           </select>
         </label>
-        <button class="btn-print btn-print-main" onclick="printCurrentSection()">🖨️ Imprimir Aba Atual (A4)</button>
+        <button class="btn-print btn-print-main" onclick="printCurrentSection()">🖨️ Imprimir Aba Atual</button>
       </div>
     </div>
 
     <main class="main-container">
       <!-- ABA 1: TABULEIRO -->
       <section id="tab-board" class="view-section active">
-        <div class="info-banner">
-          <span>📐 <strong>Impressão em 4 Folhas A4 Limpas:</strong> Sem textos de quadrante! O Sol e Saturno foram ampliados para manter a proporção visual entre as esferas dos planetas.</span>
-          <span>✨ Distância uniforme entre todas as casas (72px).</span>
-          <span>🔄 As folhas saem em A4 em pé, com o tabuleiro girado, para a impressão ocupar a folha inteira também no celular. Depois de imprimir, gire as 4 folhas no sentido anti-horário e monte na ordem 1-2 / 3-4. As folhas saem direto do tabuleiro, então acompanham qualquer mudança feita aqui.</span>
-        </div>
-
         <!-- Pré-visualização em tela do Tabuleiro Completo Montado -->
         <div class="board-preview-scroll">
           <div class="solar-board-canvas" id="boardCanvasMain">
@@ -936,10 +923,6 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
 
       <!-- ABA 2: 64 CARTAS DE DESAFIO (16 POR COR) + 8 CARTAS BÔNUS DOS PLANETAS JUNTAS -->
       <section id="tab-cards" class="view-section">
-        <div class="info-banner">
-          <span>✂️ <strong>Cartas 100% Coladas com Linha Preta Tracejada:</strong> Agora cabem <strong>18 cartas por folha A4</strong>! Criamos <strong>16 cartas para cada cor (64 desafios) + 8 cartas Bônus dos Planetas = 72 cartas</strong> distribuídas perfeitamente em 4 folhas A4!</span>
-          <span>🔥 Azul agora foca em <strong>Potências e Operações</strong>.</span>
-        </div>
         <div id="all-cards-sheets-container"></div>
       </section>
 
@@ -1196,13 +1179,13 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
 
     // EXATAMENTE 8 CARTAS BÔNUS (UMA PARA CADA PLANETA, SEM CARTA DE PENALIZAÇÃO!)
     const planetBonusCards = [
-      { planet: "MERCÚRIO", img: "img_planetas/mercurio.png", desc: "O planeta mais próximo e veloz ao redor do Sol! Você pegou carona na sua órbita rápida.", effect: "🌟 BÔNUS: AVANCE 2 CASAS!" },
-      { planet: "VÊNUS", img: "img_planetas/venus.png", desc: "A Estrela d'Alva brilha intensamente no céu e ilumina a rota da sua espaçonave!", effect: "🌟 BÔNUS: AVANCE 2 CASAS!" },
-      { planet: "TERRA", img: "img_planetas/terra.png", desc: "Parada na base orbital do nosso planeta azul! Combustível e energia recarregados.", effect: "🌟 BÔNUS: JOGUE O DADO NOVAMENTE!" },
-      { planet: "MARTE", img: "img_planetas/marte.png", desc: "Os robôs exploradores de Marte encontraram um atalho seguro pelos cânions vermelhos!", effect: "🌟 BÔNUS: AVANCE 2 CASAS!" },
-      { planet: "JÚPITER", img: "img_planetas/jupiter.png", desc: "Manobra de estilingue gravitacional perfeita no maior planeta do Sistema Solar!", effect: "🌟 BÔNUS: AVANCE 3 CASAS!" },
-      { planet: "SATURNO", img: "img_planetas/saturno.png", desc: "Sua nave deslumbrou a tripulação ao cruzar os gigantescos anéis brilhantes de Saturno!", effect: "🌟 BÔNUS: AVANCE 3 CASAS!" },
-      { planet: "URANO", img: "img_planetas/urano.png", desc: "O gigante de gelo azul-celeste impulsionou sua sonda com seu campo magnético!", effect: "🌟 BÔNUS: AVANCE 2 CASAS!" },
+      { planet: "MERCÚRIO", img: "img_planetas/mercurio.png", desc: "O planeta mais próximo e veloz ao redor do Sol! Você pegou carona na sua órbita rápida.", effect: "BÔNUS: AVANCE 2 CASAS!" },
+      { planet: "VÊNUS", img: "img_planetas/venus.png", desc: "A Estrela d'Alva brilha intensamente no céu e ilumina a rota da sua espaçonave!", effect: "BÔNUS: AVANCE 2 CASAS!" },
+      { planet: "TERRA", img: "img_planetas/terra.png", desc: "Parada na base orbital do nosso planeta azul! Combustível e energia recarregados.", effect: "BÔNUS: JOGUE O DADO NOVAMENTE!" },
+      { planet: "MARTE", img: "img_planetas/marte.png", desc: "Os robôs exploradores de Marte encontraram um atalho seguro pelos cânions vermelhos!", effect: "BÔNUS: AVANCE 2 CASAS!" },
+      { planet: "JÚPITER", img: "img_planetas/jupiter.png", desc: "Manobra de estilingue gravitacional perfeita no maior planeta do Sistema Solar!", effect: "BÔNUS: AVANCE 3 CASAS!" },
+      { planet: "SATURNO", img: "img_planetas/saturno.png", desc: "Sua nave deslumbrou a tripulação ao cruzar os gigantescos anéis brilhantes de Saturno!", effect: "BÔNUS: AVANCE 3 CASAS!" },
+      { planet: "URANO", img: "img_planetas/urano.png", desc: "O gigante de gelo azul-celeste impulsionou sua sonda com seu campo magnético!", effect: "BÔNUS: AVANCE 2 CASAS!" },
       { planet: "NETUNO", img: "img_planetas/netuno.png", desc: "Os ventos supersônicos de Netuno deram o empurrão final para a vitória espacial!", effect: "🏆 BÔNUS: VITÓRIA ESPACIAL!" }
     ];
 
@@ -1269,10 +1252,6 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
         const sheetNum = Math.floor(s / cardsPerSheet) + 1;
         sheetsHTML.push(`
           <div class="a4-cards-sheet">
-            <div class="sheet-title-bar">
-              <span>✂️ Folha A4 #0${sheetNum} (18 Cartas Coladas — Linha Preta Tracejada para Corte Único)</span>
-              <span>Cartas ${s + 1} a ${Math.min(s + cardsPerSheet, allCardsHTML.length)} de ${allCardsHTML.length}</span>
-            </div>
             <div class="cards-cut-grid">
               ${chunk}
             </div>
