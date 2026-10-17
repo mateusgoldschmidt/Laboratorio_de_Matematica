@@ -472,34 +472,57 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
     .astro-netuno { width: 62px; height: 62px; }
 
     /* Folhas do tabuleiro para impressão.
-       Cada página A4 é a imagem de um quadrante, já girada 90°, para o
-       tabuleiro ocupar a folha inteira em qualquer aparelho — inclusive nos
-       aplicativos de impressão de celular, que ignoram a orientação declarada
-       no CSS. As imagens ficam em pibid/trilha_img/ e são geradas a partir do
-       próprio tabuleiro. */
+       Cada página A4 recebe uma cópia do próprio tabuleiro, deslocada para
+       mostrar um quadrante, e girada 90° dentro da folha. Assim a impressão
+       acompanha qualquer mudança feita no tabuleiro, sem imagens prontas, e
+       ocupa a folha inteira inclusive nos aplicativos de impressão de
+       celular, que ignoram a orientação declarada no CSS. */
     .board-quadrants-wrapper {
       display: none;
     }
 
     .sheet-page {
       width: 210mm;
-      height: 296mm;
+      height: 297mm;
       display: flex;
       align-items: center;
       justify-content: center;
       background: #ffffff;
-      overflow: hidden;
       page-break-after: always;
       break-after: page;
       page-break-inside: avoid;
       break-inside: avoid;
     }
 
-    .sheet-img {
-      height: 296mm;
-      width: auto;
-      display: block;
+    .sheet-window {
+      width: 190mm;
+      height: 277mm;
+      position: relative;
+      overflow: hidden;
+      flex: 0 0 auto;
+      /* contain evita que a cópia maior do tabuleiro, guardada aqui dentro,
+         aumente a largura do documento e faça o navegador reduzir a impressão */
+      contain: strict;
     }
+
+    .sheet-rot {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 277mm;
+      height: 190mm;
+      transform-origin: top left;
+      transform: translateX(190mm) rotate(90deg);
+    }
+
+    .sheet-board {
+      width: 277mm;
+      height: 190mm;
+      position: relative;
+      overflow: hidden;
+      contain: strict;
+    }
+
 
 
     /* ==========================================================
@@ -852,7 +875,7 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
         <div class="info-banner">
           <span>📐 <strong>Impressão em 4 Folhas A4 Limpas:</strong> Sem textos de quadrante! O Sol e Saturno foram ampliados para manter a proporção visual entre as esferas dos planetas.</span>
           <span>✨ Distância uniforme entre todas as casas (72px).</span>
-          <span>🔄 As folhas saem em A4 em pé, com o tabuleiro girado, para a impressão ocupar a folha inteira também no celular. Depois de imprimir, gire as 4 folhas no sentido anti-horário e monte na ordem 1-2 / 3-4. As folhas impressas usam sempre o fundo claro.</span>
+          <span>🔄 As folhas saem em A4 em pé, com o tabuleiro girado, para a impressão ocupar a folha inteira também no celular. Depois de imprimir, gire as 4 folhas no sentido anti-horário e monte na ordem 1-2 / 3-4. As folhas saem direto do tabuleiro, então acompanham qualquer mudança feita aqui.</span>
         </div>
 
         <!-- Pré-visualização em tela do Tabuleiro Completo Montado -->
@@ -879,10 +902,34 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
 
         <!-- 4 Páginas A4 Fatiadas (Ativadas automaticamente na Impressão) -->
         <div class="board-quadrants-wrapper" id="quadrantsPrintContainer">
-          <div class="sheet-page"><img class="sheet-img" src="trilha_img/folha-1.jpg" alt="Folha 1 do tabuleiro"></div>
-          <div class="sheet-page"><img class="sheet-img" src="trilha_img/folha-2.jpg" alt="Folha 2 do tabuleiro"></div>
-          <div class="sheet-page"><img class="sheet-img" src="trilha_img/folha-3.jpg" alt="Folha 3 do tabuleiro"></div>
-          <div class="sheet-page"><img class="sheet-img" src="trilha_img/folha-4.jpg" alt="Folha 4 do tabuleiro"></div>
+          <div class="sheet-page">
+            <div class="sheet-window">
+              <div class="sheet-rot">
+                <div class="sheet-board" data-quadrante="0"></div>
+              </div>
+            </div>
+          </div>
+          <div class="sheet-page">
+            <div class="sheet-window">
+              <div class="sheet-rot">
+                <div class="sheet-board" data-quadrante="1"></div>
+              </div>
+            </div>
+          </div>
+          <div class="sheet-page">
+            <div class="sheet-window">
+              <div class="sheet-rot">
+                <div class="sheet-board" data-quadrante="2"></div>
+              </div>
+            </div>
+          </div>
+          <div class="sheet-page">
+            <div class="sheet-window">
+              <div class="sheet-rot">
+                <div class="sheet-board" data-quadrante="3"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1027,7 +1074,23 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
         }
       });
 
-;
+      // Monta as 4 folhas de impressão a partir do próprio tabuleiro: cada
+      // folha é uma cópia deslocada para mostrar um quadrante. Se o tabuleiro
+      // mudar, a impressão acompanha, sem precisar refazer imagens.
+      // A folha mostra um quarto do tabuleiro: a cópia fica com 554 mm de
+      // largura (o dobro da folha) e o deslocamento escolhe o quadrante.
+      const larguraCopia = 554 * 96 / 25.4;      // 554 mm em pixels do CSS
+      const escalaFolha = larguraCopia / 1108;   // o tabuleiro tem 1108 px de largura
+      const deslocamentos = [[0, 0], [554, 0], [0, 380], [554, 380]];
+      document.querySelectorAll('.sheet-board').forEach((destino, i) => {
+        const copia = mainBoard.cloneNode(true);
+        copia.removeAttribute('id');
+        copia.style.border = 'none';
+        copia.style.borderRadius = '0';
+        copia.style.transformOrigin = 'top left';
+        copia.style.transform = `scale(${escalaFolha}) translate(${-deslocamentos[i][0]}px, ${-deslocamentos[i][1]}px)`;
+        destino.appendChild(copia);
+      });
     }
 
     // BANCO EXPANDIDO: 16 CARTAS POR COR (64 CARTAS DE DESAFIO) + 8 CARTAS BÔNUS DOS PLANETAS = 72 CARTAS (4 FOLHAS A4 DE 18 CARTAS)
