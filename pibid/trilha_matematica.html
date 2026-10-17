@@ -471,57 +471,36 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
     .astro-urano { width: 64px; height: 64px; }
     .astro-netuno { width: 62px; height: 62px; }
 
-    /* Contêiner das 4 Folhas A4 Fatiadas para Impressão Exata do Tabuleiro */
+    /* Folhas do tabuleiro para impressão.
+       Cada página A4 é a imagem de um quadrante, já girada 90°, para o
+       tabuleiro ocupar a folha inteira em qualquer aparelho — inclusive nos
+       aplicativos de impressão de celular, que ignoram a orientação declarada
+       no CSS. As imagens ficam em pibid/trilha_img/ e são geradas a partir do
+       próprio tabuleiro. */
     .board-quadrants-wrapper {
       display: none;
     }
 
-    .quadrant-page {
-      /* Folha A4 em pé (retrato). O conteúdo do quadrante é girado 90° dentro
-         dela, porque muitos aplicativos de impressão (principalmente no
-         celular) ignoram o "@page landscape" e imprimem em retrato. Assim o
-         tabuleiro ocupa a folha inteira em qualquer aparelho. */
-      width: 190mm;
-      height: 277mm;
-      position: relative;
+    .sheet-page {
+      width: 210mm;
+      height: 296mm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
       overflow: hidden;
-      border: 1px dashed #000000;
-      background: #f8f7f2;
-      margin: 0 auto;
       page-break-after: always;
       break-after: page;
       page-break-inside: avoid;
       break-inside: avoid;
     }
 
-    /* Bloco girado: 277 x 190 mm viram 190 x 277 mm depois da rotação */
-    .quad-rot {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 277mm;
-      height: 190mm;
-      transform: translateX(190mm) rotate(90deg);
-      transform-origin: top left;
+    .sheet-img {
+      height: 296mm;
+      width: auto;
+      display: block;
     }
 
-    .quadrant-inner {
-      position: absolute;
-      width: 554mm;
-      height: 380mm;
-    }
-
-    .quad-tl .quadrant-inner { top: 0; left: 0; }
-    .quad-tr .quadrant-inner { top: 0; left: -277mm; }
-    .quad-bl .quadrant-inner { top: -190mm; left: 0; }
-    .quad-br .quadrant-inner { top: -190mm; left: -277mm; }
-
-    .quad-scaled-board {
-      width: 1108px;
-      height: 760px;
-      transform: scale(1.88976378);
-      transform-origin: top left;
-    }
 
     /* ==========================================================
        CARTAS 100% COLADAS COM LINHA PRETA TRACEJADA (18 POR FOLHA A4)
@@ -821,7 +800,7 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
     }
   </style>
   <style id="dynamic-page-style">
-    @page { size: A4 portrait; margin: 10mm; }
+    @page { size: A4 portrait; margin: 0; }
   </style>
 </head>
 <body>
@@ -873,7 +852,7 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
         <div class="info-banner">
           <span>📐 <strong>Impressão em 4 Folhas A4 Limpas:</strong> Sem textos de quadrante! O Sol e Saturno foram ampliados para manter a proporção visual entre as esferas dos planetas.</span>
           <span>✨ Distância uniforme entre todas as casas (72px).</span>
-          <span>🔄 As folhas saem em A4 em pé, com o tabuleiro girado, para a impressão ocupar a folha inteira também no celular. Depois de imprimir, gire as 4 folhas no sentido anti-horário e monte na ordem 1-2 / 3-4.</span>
+          <span>🔄 As folhas saem em A4 em pé, com o tabuleiro girado, para a impressão ocupar a folha inteira também no celular. Depois de imprimir, gire as 4 folhas no sentido anti-horário e monte na ordem 1-2 / 3-4. As folhas impressas usam sempre o fundo claro.</span>
         </div>
 
         <!-- Pré-visualização em tela do Tabuleiro Completo Montado -->
@@ -900,18 +879,10 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
 
         <!-- 4 Páginas A4 Fatiadas (Ativadas automaticamente na Impressão) -->
         <div class="board-quadrants-wrapper" id="quadrantsPrintContainer">
-          <div class="quadrant-page quad-tl">
-            <div class="quad-rot"><div class="quadrant-inner"><div class="quad-scaled-board" id="quadBoard1"></div></div></div>
-          </div>
-          <div class="quadrant-page quad-tr">
-            <div class="quad-rot"><div class="quadrant-inner"><div class="quad-scaled-board" id="quadBoard2"></div></div></div>
-          </div>
-          <div class="quadrant-page quad-bl">
-            <div class="quad-rot"><div class="quadrant-inner"><div class="quad-scaled-board" id="quadBoard3"></div></div></div>
-          </div>
-          <div class="quadrant-page quad-br">
-            <div class="quad-rot"><div class="quadrant-inner"><div class="quad-scaled-board" id="quadBoard4"></div></div></div>
-          </div>
+          <div class="sheet-page"><img class="sheet-img" src="trilha_img/folha-1.jpg" alt="Folha 1 do tabuleiro"></div>
+          <div class="sheet-page"><img class="sheet-img" src="trilha_img/folha-2.jpg" alt="Folha 2 do tabuleiro"></div>
+          <div class="sheet-page"><img class="sheet-img" src="trilha_img/folha-3.jpg" alt="Folha 3 do tabuleiro"></div>
+          <div class="sheet-page"><img class="sheet-img" src="trilha_img/folha-4.jpg" alt="Folha 4 do tabuleiro"></div>
         </div>
       </section>
 
@@ -981,10 +952,10 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
       btn.classList.add('active');
       const styleTag = document.getElementById('dynamic-page-style');
       if (pageOrientation === 'landscape') {
-        // O tabuleiro sai em folhas A4 em pé, com o conteúdo girado 90°:
-        // assim a impressão fica certa também nos aplicativos que ignoram a
-        // orientação definida aqui (caso do "Salvar como PDF" no celular).
-        styleTag.innerHTML = '@page { size: A4 portrait; margin: 10mm; }';
+        // O tabuleiro sai em folhas A4 em pé, já giradas e sem margem: as
+        // imagens em pibid/trilha_img/ preenchem a folha inteira, inclusive
+        // nos aplicativos de impressão de celular.
+        styleTag.innerHTML = '@page { size: A4 portrait; margin: 0; }';
       } else {
         styleTag.innerHTML = '@page { size: A4 portrait; margin: 8mm; }';
       }
@@ -1056,15 +1027,7 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
         }
       });
 
-      // Clonar o tabuleiro completo para os 4 quadrantes de impressão A4 (sem marcas d'água de quadrante)
-      ['quadBoard1', 'quadBoard2', 'quadBoard3', 'quadBoard4'].forEach(qId => {
-        const qContainer = document.getElementById(qId);
-        const clone = mainBoard.cloneNode(true);
-        clone.removeAttribute('id');
-        clone.style.border = 'none';
-        clone.style.borderRadius = '0';
-        qContainer.appendChild(clone);
-      });
+;
     }
 
     // BANCO EXPANDIDO: 16 CARTAS POR COR (64 CARTAS DE DESAFIO) + 8 CARTAS BÔNUS DOS PLANETAS = 72 CARTAS (4 FOLHAS A4 DE 18 CARTAS)
