@@ -305,47 +305,48 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
       background: rgba(255, 255, 255, 0.88);
       border: 1.5px solid rgba(100, 116, 139, 0.45);
       border-radius: 10px;
-      padding: 6px 12px;
+      padding: 4px 9px;
     }
     .board-title {
-      top: 12px;
-      left: 14px;
+      top: 8px;
+      left: 10px;
     }
     .board-title .bt-name {
       display: block;
       font-family: 'Orbitron', sans-serif;
-      font-size: 1.02rem;
+      font-size: 0.9rem;
       font-weight: 800;
       color: #0f172a;
-      letter-spacing: 0.5px;
-      line-height: 1.2;
+      letter-spacing: 0.3px;
+      line-height: 1.15;
     }
     .board-title .bt-sub {
       display: block;
-      font-size: 0.7rem;
+      font-size: 0.6rem;
       color: #475569;
       font-weight: 600;
+      line-height: 1.15;
     }
     .bt-legend {
       display: flex;
       flex-direction: column;
-      gap: 1px;
-      margin-top: 5px;
-      padding-top: 5px;
+      gap: 0;
+      margin-top: 3px;
+      padding-top: 3px;
       border-top: 1px solid rgba(100, 116, 139, 0.35);
     }
     .bt-legend span {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.68rem;
+      gap: 5px;
+      font-size: 0.57rem;
       color: #334155;
       font-weight: 600;
-      line-height: 1.3;
+      line-height: 1.12;
     }
     .bt-legend i {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       display: inline-block;
       flex: none;
@@ -476,8 +477,12 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
     }
 
     .quadrant-page {
-      width: 277mm;
-      height: 190mm;
+      /* Folha A4 em pé (retrato). O conteúdo do quadrante é girado 90° dentro
+         dela, porque muitos aplicativos de impressão (principalmente no
+         celular) ignoram o "@page landscape" e imprimem em retrato. Assim o
+         tabuleiro ocupa a folha inteira em qualquer aparelho. */
+      width: 190mm;
+      height: 277mm;
       position: relative;
       overflow: hidden;
       border: 1px dashed #000000;
@@ -487,6 +492,17 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
       break-after: page;
       page-break-inside: avoid;
       break-inside: avoid;
+    }
+
+    /* Bloco girado: 277 x 190 mm viram 190 x 277 mm depois da rotação */
+    .quad-rot {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 277mm;
+      height: 190mm;
+      transform: translateX(190mm) rotate(90deg);
+      transform-origin: top left;
     }
 
     .quadrant-inner {
@@ -805,7 +821,7 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
     }
   </style>
   <style id="dynamic-page-style">
-    @page { size: A4 landscape; margin: 10mm; }
+    @page { size: A4 portrait; margin: 10mm; }
   </style>
 </head>
 <body>
@@ -857,6 +873,7 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
         <div class="info-banner">
           <span>📐 <strong>Impressão em 4 Folhas A4 Limpas:</strong> Sem textos de quadrante! O Sol e Saturno foram ampliados para manter a proporção visual entre as esferas dos planetas.</span>
           <span>✨ Distância uniforme entre todas as casas (72px).</span>
+          <span>🔄 As folhas saem em A4 em pé, com o tabuleiro girado, para a impressão ocupar a folha inteira também no celular. Depois de imprimir, gire as 4 folhas no sentido anti-horário e monte na ordem 1-2 / 3-4.</span>
         </div>
 
         <!-- Pré-visualização em tela do Tabuleiro Completo Montado -->
@@ -884,16 +901,16 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
         <!-- 4 Páginas A4 Fatiadas (Ativadas automaticamente na Impressão) -->
         <div class="board-quadrants-wrapper" id="quadrantsPrintContainer">
           <div class="quadrant-page quad-tl">
-            <div class="quadrant-inner"><div class="quad-scaled-board" id="quadBoard1"></div></div>
+            <div class="quad-rot"><div class="quadrant-inner"><div class="quad-scaled-board" id="quadBoard1"></div></div></div>
           </div>
           <div class="quadrant-page quad-tr">
-            <div class="quadrant-inner"><div class="quad-scaled-board" id="quadBoard2"></div></div>
+            <div class="quad-rot"><div class="quadrant-inner"><div class="quad-scaled-board" id="quadBoard2"></div></div></div>
           </div>
           <div class="quadrant-page quad-bl">
-            <div class="quadrant-inner"><div class="quad-scaled-board" id="quadBoard3"></div></div>
+            <div class="quad-rot"><div class="quadrant-inner"><div class="quad-scaled-board" id="quadBoard3"></div></div></div>
           </div>
           <div class="quadrant-page quad-br">
-            <div class="quadrant-inner"><div class="quad-scaled-board" id="quadBoard4"></div></div>
+            <div class="quad-rot"><div class="quadrant-inner"><div class="quad-scaled-board" id="quadBoard4"></div></div></div>
           </div>
         </div>
       </section>
@@ -964,7 +981,10 @@ descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância un
       btn.classList.add('active');
       const styleTag = document.getElementById('dynamic-page-style');
       if (pageOrientation === 'landscape') {
-        styleTag.innerHTML = '@page { size: A4 landscape; margin: 10mm; }';
+        // O tabuleiro sai em folhas A4 em pé, com o conteúdo girado 90°:
+        // assim a impressão fica certa também nos aplicativos que ignoram a
+        // orientação definida aqui (caso do "Salvar como PDF" no celular).
+        styleTag.innerHTML = '@page { size: A4 portrait; margin: 10mm; }';
       } else {
         styleTag.innerHTML = '@page { size: A4 portrait; margin: 8mm; }';
       }
