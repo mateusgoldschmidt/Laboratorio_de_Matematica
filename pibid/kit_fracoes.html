@@ -381,13 +381,29 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
   'use strict';
 
   var DOCE = 12;                 // o prato tem 12 fatias
-  var PECAS = [                  // cada disco vale tantos doze avos e tem o seu recheio
-    {n:1, d:2,  doze:6, cor:'#d92b2b', nome:'1/2',  recheio:'calabresa', escuro:'#8e1b1b'},
-    {n:1, d:3,  doze:4, cor:'#f7b731', nome:'1/3',  recheio:'mussarela', escuro:'#c98f14'},
-    {n:1, d:4,  doze:3, cor:'#2f9e44', nome:'1/4',  recheio:'brócolis',  escuro:'#1c6b2c'},
-    {n:1, d:6,  doze:2, cor:'#7048e8', nome:'1/6',  recheio:'cebola',    escuro:'#4a2cae'},
-    {n:1, d:12, doze:1, cor:'#e64980', nome:'1/12', recheio:'azeitona',  escuro:'#a82f5b'}
+  /* O recheio é o mesmo em todos os discos: a pizza pedida é de um sabor só.
+     Se cada disco tivesse um recheio, juntar 1/2 com 1/6 serviria meia pizza
+     de um sabor e um sexto de outro, e o pedido deixaria de fazer sentido.
+     Os recheios abaixo ficam para a variante de pizza mista, em que o pedido
+     é justamente combinar sabores. */
+  var RECHEIOS = {
+    calabresa: {cor:'#d92b2b', escuro:'#8e1b1b'},
+    mussarela: {cor:'#f7b731', escuro:'#c98f14'},
+    brócolis:  {cor:'#2f9e44', escuro:'#1c6b2c'},
+    cebola:    {cor:'#7048e8', escuro:'#4a2cae'},
+    azeitona:  {cor:'#e64980', escuro:'#a82f5b'}
+  };
+  var RECHEIO_DA_VEZ = 'calabresa';
+
+  var PECAS = [                  // cada disco vale tantos doze avos
+    {n:1, d:2,  doze:6, nome:'1/2'},
+    {n:1, d:3,  doze:4, nome:'1/3'},
+    {n:1, d:4,  doze:3, nome:'1/4'},
+    {n:1, d:6,  doze:2, nome:'1/6'},
+    {n:1, d:12, doze:1, nome:'1/12'}
   ];
+  function corDoRecheio(){ return RECHEIOS[RECHEIO_DA_VEZ].cor; }
+  function escuroDoRecheio(){ return RECHEIOS[RECHEIO_DA_VEZ].escuro; }
   var RAIO = 53;                 // mm: raio da massa, contando a beirada da pizza
   var RAIO_DISCO = RAIO - 8.5;   // mm: raio dos discos de recheio, que cobrem o molho
   var ABA = 11;                  // mm: altura da aba de giro de cada disco
@@ -437,13 +453,9 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     for (var i = 0; i < PECAS.length; i++) if (PECAS[i].doze === doze) return PECAS[i].nome;
     return doze + '/12';
   }
-  function corDaPeca(doze){
-    for (var i = 0; i < PECAS.length; i++) if (PECAS[i].doze === doze) return PECAS[i].cor;
-    return '#8b5cf6';
-  }
+  function corDaPeca(doze){ return corDoRecheio(); }
   function fichaDaPeca(doze){
-    for (var i = 0; i < PECAS.length; i++) if (PECAS[i].doze === doze) return PECAS[i];
-    return {cor:'#8b5cf6', escuro:'#5b21b6', recheio:'queijo'};
+    return {cor:corDoRecheio(), escuro:escuroDoRecheio(), recheio:RECHEIO_DA_VEZ};
   }
 
   /* ---------- desenho das pizzas ---------- */
@@ -532,6 +544,13 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     var s = '<path d="M 0 0 L ' + x0.toFixed(2) + ' ' + y0.toFixed(2) +
       ' A ' + RAIO_DISCO + ' ' + RAIO_DISCO + ' 0 ' + grande + ' 1 ' + x1.toFixed(2) + ' ' + y1.toFixed(2) +
       ' Z" fill="' + cor + '" stroke="#3b2417" stroke-width="0.7"/>';
+    // a beirada da pizza no arco: é o que faz a peça ler como pedaço de pizza
+    s += '<path d="M ' + x0.toFixed(2) + ' ' + y0.toFixed(2) + ' A ' + RAIO_DISCO + ' ' + RAIO_DISCO +
+      ' 0 ' + grande + ' 1 ' + x1.toFixed(2) + ' ' + y1.toFixed(2) +
+      '" fill="none" stroke="#e8c98d" stroke-width="2.6"/>' +
+      '<path d="M ' + x0.toFixed(2) + ' ' + y0.toFixed(2) + ' A ' + RAIO_DISCO + ' ' + RAIO_DISCO +
+      ' 0 ' + grande + ' 1 ' + x1.toFixed(2) + ' ' + y1.toFixed(2) +
+      '" fill="none" stroke="#3b2417" stroke-width="0.7"/>';
     s += recheioSVG(doze, fichaDaPeca(doze).escuro);
     // as linhas de doze avos deixam a turma contar quanto já foi coberto
     for (var i = 1; i < doze; i++) {
@@ -848,9 +867,10 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     return '<div class="paper">' +
       cabecalho('Os discos de fração', 'uma folha por equipe') +
       '<p class="instrucao" style="text-align:left;max-width:none;margin-bottom:6px">' +
-      'Cinco discos de recheio, um de cada fração, já no tamanho final: calabresa (1/2), mussarela (1/3), ' +
-      'brócolis (1/4), cebola (1/6) e azeitona (1/12). Corte pelo contorno, fure o centro e empilhe sobre a massa. ' +
-      'As peças ficam encostadas de propósito, sem espaço entre as bordas, para o corte render.</p>' +
+      'Cinco discos, um de cada fração, já no tamanho final e todos com o mesmo recheio: a pizza pedida é de um ' +
+      'sabor só, então o que muda de um disco para o outro é só o tamanho do pedaço. Corte pelo contorno, ' +
+      'fure o centro e empilhe sobre a massa. As peças ficam encostadas de propósito, sem espaço entre as bordas, ' +
+      'para o corte render.</p>' +
       '<div class="discos-bloco">' + html + '</div>' +
       rodape('Discos · 1 jogo por equipe') +
     '</div>';
@@ -957,7 +977,7 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
         '<h3>O que é o jogo</h3>' +
         '<p>A turma é uma pizzaria que recebe pedidos em fração. Cada equipe monta uma ' +
         '<b>máquina de pizza</b>: a massa aberta, com beirada e molho, dividida em doze fatias, e cinco ' +
-        'discos de recheio por cima, um de cada fração, todos presos no centro por um percevejo. ' +
+        'discos por cima, um de cada fração, todos presos no centro por um percevejo. ' +
         'Girando os discos, cada recheio cobre uma faixa da massa, e o que ficou coberto é a fração servida.</p>' +
         '<div class="caixa"><b>Por que funciona.</b> A fração deixa de ser um número solto e passa a ser ' +
         'uma faixa que se gira e se vê. Quando a equipe encosta o disco de 1/2 no de 1/6 e cobre 2/3 da massa, ' +
@@ -966,8 +986,8 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
         '<h3>Material</h3>' +
         '<ul>' +
           '<li><b>A massa da pizza</b> — um disco de doze fatias por equipe, com o passo a passo da montagem.</li>' +
-          '<li><b>Os discos de recheio</b> — cinco discos por equipe, um de cada fração, com aba de giro: ' +
-        '1/2 calabresa, 1/3 mussarela, 1/4 brócolis, 1/6 cebola e 1/12 azeitona.</li>' +
+          '<li><b>Os discos</b> — cinco discos por equipe, um de cada fração (1/2, 1/3, 1/4, 1/6 e 1/12), ' +
+        'com aba de giro e o mesmo recheio em todos.</li>' +
           '<li><b>Cartelas de pedido</b> — 24 cartelas em três níveis, para jogar sem projetor.</li>' +
           '<li><b>Placar</b> — uma folha por mesa.</li>' +
           '<li><b>Painel do balcão</b> — a parte projetada, que sorteia os pedidos, conta o tempo e abre a conferência.</li>' +
