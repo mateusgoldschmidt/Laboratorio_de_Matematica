@@ -172,19 +172,11 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
         .paper .rodape-folha{margin-top:auto; padding-top:8px; border-top:2px dashed var(--massa-esc);
             font-size:.72rem; color:var(--marrom-claro); display:flex; justify-content:space-between}
 
-        .prato-base{display:flex; flex-direction:column; align-items:center; gap:10px; padding:6mm 0}
-        .prato-base svg{width:130mm; height:130mm}
-        .prato-base .rotulo-equipe{font-size:1rem; font-weight:900; letter-spacing:.5px;
-            border:3px solid var(--marrom); border-radius:999px; padding:6px 22px}
+        .massa-area{display:flex; flex-direction:column; align-items:center; padding:6mm 0 4mm}
+        .massa-area svg{display:block}
+        .discos-bloco{display:flex; flex-direction:column; align-items:flex-start}
+        .discos-linha{display:flex; align-items:flex-end; gap:0}
         .instrucao{font-size:.82rem; color:var(--marrom-claro); text-align:center; max-width:152mm; line-height:1.6}
-
-        .grade-fatias{display:grid; grid-template-columns:repeat(5,1fr); border:2px solid var(--marrom)}
-        .fatia-celula{position:relative; border-right:2px solid var(--marrom); border-bottom:2px solid var(--marrom);
-            aspect-ratio:1; display:flex; align-items:center; justify-content:center; background:#fff}
-        .grade-fatias .fatia-celula:nth-child(5n){border-right:none}
-        .fatia-celula svg{width:100%; height:100%; display:block}
-        .fatia-celula .nome{position:absolute; bottom:5px; left:50%; transform:translateX(-50%);
-            font-weight:900; font-size:.85rem; background:rgba(255,255,255,.88); border-radius:8px; padding:1px 8px}
 
         .grade-cartelas{display:grid; grid-template-columns:repeat(3,1fr); border:2px solid var(--marrom)}
         .cartela{border-right:2px solid var(--marrom); border-bottom:2px solid var(--marrom);
@@ -214,14 +206,14 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
         .linha-rodada .n{font-weight:800; width:52px}
         .linha-rodada .traco{flex:1; border-bottom:1.5px dotted var(--massa-esc); height:14px}
 
-        .manual h3{color:var(--tomate); font-size:1rem; margin:12px 0 6px}
+        .manual h3{color:var(--tomate); font-size:.92rem; margin:9px 0 5px}
         .manual h3:first-child{margin-top:0}
-        .manual p, .manual li{font-size:.79rem; line-height:1.55; color:#4a3524}
-        .manual ol, .manual ul{padding-left:20px; margin:5px 0}
+        .manual p, .manual li{font-size:.71rem; line-height:1.42; color:#4a3524}
+        .manual ol, .manual ul{padding-left:18px; margin:4px 0}
         .manual .caixa{background:var(--creme); border-left:5px solid var(--queijo);
-            border-radius:0 10px 10px 0; padding:9px 13px; margin:9px 0; font-size:.79rem}
-        .manual table{width:100%; border-collapse:collapse; font-size:.74rem; margin-top:8px}
-        .manual th, .manual td{border:1.5px solid var(--massa-esc); padding:5px 7px; text-align:left}
+            border-radius:0 10px 10px 0; padding:7px 11px; margin:7px 0; font-size:.71rem}
+        .manual table{width:100%; border-collapse:collapse; font-size:.68rem; margin-top:6px}
+        .manual th, .manual td{border:1.5px solid var(--massa-esc); padding:4px 6px; text-align:left}
         .manual th{background:var(--creme-2); font-size:.7rem; text-transform:uppercase; letter-spacing:.3px}
         .gabarito-grade{display:grid; grid-template-columns:repeat(2,1fr); gap:3px 14px; font-size:.72rem}
         .gabarito-grade div{border-bottom:1px dotted var(--massa-esc); padding:3px 0}
@@ -237,10 +229,21 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
             main{max-width:none; margin:0; padding:0}
             .painel-aba{display:none !important; box-shadow:none; padding:0; border-radius:0}
             .painel-aba#aba-material{display:block !important}
-            .folhas{gap:0}
-            .paper{width:190mm; min-height:277mm; box-shadow:none; border-radius:0;
-                page-break-after:always; break-after:page; page-break-inside:avoid; margin:0 auto}
+            .folhas{display:block; gap:0}
+            .paper{width:190mm; min-height:240mm; box-shadow:none; border-radius:0;
+                page-break-after:always; break-after:page; page-break-inside:avoid;
+                margin:0 auto; display:block}
             .paper:last-child{page-break-after:auto; break-after:auto}
+            .cartela{min-height:38mm; padding:4px 6px 6px; gap:3px}
+            .cartela svg{width:19mm; height:19mm}
+            .cartela .texto-cartela{font-size:.68rem; line-height:1.25}
+            .cartela .texto-cartela b{font-size:.98rem}
+            .cartela .resposta{font-size:.54rem; padding-top:2px}
+            .coluna-equipe{padding:7px}
+            .coluna-equipe h4{font-size:.82rem; margin-bottom:6px}
+            .linhas-rodada{gap:3px}
+            .linha-rodada{font-size:.68rem}
+            .linha-rodada .traco{height:10px}
         }
 
         @media (max-width:760px){
@@ -253,9 +256,8 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
             .dados-pedido .fracao{font-size:2.4rem}
             .grade-cartelas{grid-template-columns:1fr}
             .cartela{border-right:none}
-            .grade-fatias{grid-template-columns:repeat(3,1fr)}
-            .grade-fatias .fatia-celula:nth-child(5n){border-right:2px solid var(--marrom)}
-            .grade-fatias .fatia-celula:nth-child(3n){border-right:none}
+            .discos-linha{flex-wrap:wrap}
+            .discos-bloco svg{max-width:100%; height:auto}
             .paper .cabecalho-folha span{display:none}
         }
     </style>
@@ -346,7 +348,7 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
         </div>
 
         <p class="dica-painel">
-            Cada equipe monta o pedido no prato, encaixando as fatias recortadas. Quem entrega primeiro e certo leva 2 pontos;
+            Cada equipe gira os discos sobre a massa até cobrir o pedido. Quem entrega primeiro e certo leva 2 pontos;
             quem entrega depois e certo leva 1; uma combinação que ainda não apareceu na partida vale 1 ponto extra.
             Os botões <b>−1</b> e <b>+1</b> de cada equipe servem para corrigir um ponto lançado por engano.
         </p>
@@ -354,9 +356,10 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
 
     <section class="painel-aba" id="aba-material">
         <div class="intro-material">
-            <b>Como imprimir.</b> São cinco folhas A4. O prato-base e a folha de fatias vão uma por equipe,
-            então imprima em quantidade. As fatias saem encostadas, sem espaço entre as bordas, para o corte render:
-            os cortes retos são compartilhados entre as peças vizinhas. As cartelas podem ir em papel comum ou mais firme.
+            <b>Como imprimir.</b> São sete folhas A4. A massa e a folha dos discos formam uma máquina,
+            então imprima uma de cada por equipe. Os discos saem encostados, sem espaço entre as bordas, para o corte render.
+            Depois de cortar, fure o centro de todas as peças e prenda com um percevejo de latão. As cartelas e o placar
+            podem ir em papel comum ou mais firme.
         </div>
         <div class="folhas" id="folhas"></div>
     </section>
@@ -378,14 +381,17 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
   'use strict';
 
   var DOCE = 12;                 // o prato tem 12 fatias
-  var PECAS = [                  // cada peça vale tantos doze avos
-    {n:1, d:2,  doze:6, cor:'#d92b2b', nome:'1/2'},
-    {n:1, d:3,  doze:4, cor:'#f7b731', nome:'1/3'},
-    {n:1, d:4,  doze:3, cor:'#2f9e44', nome:'1/4'},
-    {n:1, d:6,  doze:2, cor:'#7048e8', nome:'1/6'},
-    {n:1, d:12, doze:1, cor:'#e64980', nome:'1/12'}
+  var PECAS = [                  // cada disco vale tantos doze avos e tem o seu recheio
+    {n:1, d:2,  doze:6, cor:'#d92b2b', nome:'1/2',  recheio:'calabresa', escuro:'#8e1b1b'},
+    {n:1, d:3,  doze:4, cor:'#f7b731', nome:'1/3',  recheio:'mussarela', escuro:'#c98f14'},
+    {n:1, d:4,  doze:3, cor:'#2f9e44', nome:'1/4',  recheio:'brócolis',  escuro:'#1c6b2c'},
+    {n:1, d:6,  doze:2, cor:'#7048e8', nome:'1/6',  recheio:'cebola',    escuro:'#4a2cae'},
+    {n:1, d:12, doze:1, cor:'#e64980', nome:'1/12', recheio:'azeitona',  escuro:'#a82f5b'}
   ];
-  var ESTOQUE = {6:2, 4:4, 3:4, 2:6, 1:8};   // quantas peças cada equipe recebe
+  var RAIO = 53;                 // mm: raio da massa, contando a beirada da pizza
+  var RAIO_DISCO = RAIO - 8.5;   // mm: raio dos discos de recheio, que cobrem o molho
+  var ABA = 11;                  // mm: altura da aba de giro de cada disco
+  var FOLGA = 2;                 // mm: respiro do desenho
 
   var SABORES = ['calabresa', 'mussarela', 'brócolis', 'quatro queijos', 'margherita', 'atum', 'frango com catupiry'];
   var NOMES_EQUIPE = ['Equipe 1', 'Equipe 2', 'Equipe 3', 'Equipe 4'];
@@ -405,28 +411,26 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
   function textoFracao(n, d){ return n + '/' + d; }
   function fracaoEmDoze(n, d){ return Math.round(n * DOCE / d); }
 
-  /* Todas as combinações de fatias que somam o pedido, dentro do estoque
-     de cada equipe. Devolve as mais curtas primeiro. */
-  function combinacoes(alvoDoze, limite){
+  /* Cada equipe tem um disco de cada fração. Como cada disco entra no máximo
+     uma vez, as combinações são os subconjuntos de {1/2, 1/3, 1/4, 1/6, 1/12}
+     que somam o pedido. Devolve as mais curtas primeiro. */
+  function combinacoes(alvoDoze){
     var achadas = [];
-    var ordem = [6, 4, 3, 2, 1];
-    function rec(indice, restante, atual){
-      if (achadas.length >= (limite || 8)) return;
+    var discos = [6, 4, 3, 2, 1];
+    (function rec(i, restante, atual){
       if (restante === 0) { achadas.push(atual.slice()); return; }
-      if (indice >= ordem.length) return;
-      var doze = ordem[indice];
-      var maximo = Math.min(Math.floor(restante / doze), ESTOQUE[doze]);
-      // usa a peça atual de 0 até o máximo, e só depois passa para a próxima
-      for (var qtd = maximo; qtd >= 0; qtd--) {
-        var novas = atual.slice();
-        for (var i = 0; i < qtd; i++) novas.push(doze);
-        rec(indice + 1, restante - qtd * doze, novas);
-        if (achadas.length >= (limite || 8)) return;
-      }
-    }
-    rec(0, alvoDoze, []);
+      if (i >= discos.length || restante < 0) return;
+      atual.push(discos[i]);
+      rec(i + 1, restante - discos[i], atual);
+      atual.pop();
+      rec(i + 1, restante, atual);
+    })(0, alvoDoze, []);
     achadas.sort(function(a, b){ return a.length - b.length; });
     return achadas;
+  }
+  function quantosDiscos(doze){
+    var c = combinacoes(doze);
+    return c.length ? c[0].length : 0;
   }
 
   function nomeDaPeca(doze){
@@ -436,6 +440,10 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
   function corDaPeca(doze){
     for (var i = 0; i < PECAS.length; i++) if (PECAS[i].doze === doze) return PECAS[i].cor;
     return '#8b5cf6';
+  }
+  function fichaDaPeca(doze){
+    for (var i = 0; i < PECAS.length; i++) if (PECAS[i].doze === doze) return PECAS[i];
+    return {cor:'#8b5cf6', escuro:'#5b21b6', recheio:'queijo'};
   }
 
   /* ---------- desenho das pizzas ---------- */
@@ -459,15 +467,122 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     }
     return s;
   }
-  function pecaSVG(doze){
-    // desenha só o pedaço da pizza, sem o prato em volta: é o que a equipe recorta
+  /* ---------- a máquina de pizza: massa + discos giratórios ----------
+     A massa é um disco de doze fatias. Sobre ela ficam cinco discos, um de
+     cada fração, presos no centro. Girando cada disco, a parte colorida dele
+     cobre uma faixa da massa, e o que fica coberto é a soma dos discos. */
+  function rad(graus){ return graus * Math.PI / 180; }
+
+  function geomDisco(doze){
     var meio = (doze * 30) / 2;
-    var inicio = -90 - meio;
+    var a0 = -90 - meio, a1 = -90 + meio;
+    var xs = [0, RAIO_DISCO * Math.cos(rad(a0)), RAIO_DISCO * Math.cos(rad(a1))];
+    var ys = [0, RAIO_DISCO * Math.sin(rad(a0)), RAIO_DISCO * Math.sin(rad(a1))];
+    if (a0 <= -90 && a1 >= -90) ys.push(-RAIO_DISCO);   // o arco passa pelo topo
+    var minX = Math.min.apply(null, xs) - FOLGA;
+    var maxX = Math.max.apply(null, xs) + FOLGA;
+    var minY = Math.min.apply(null, ys) - FOLGA - ABA;
+    var maxY = Math.max.apply(null, ys) + FOLGA;
+    return {a0:a0, a1:a1, minX:minX, minY:minY,
+            largura:(maxX - minX), altura:(maxY - minY)};
+  }
+
+  /* Cada disco traz o desenho do seu recheio, espalhado pelo gomo.
+     Assim a pizza montada fica com cara de pizza de verdade. */
+  function recheioSVG(doze, escuro){
+    var f = fichaDaPeca(doze);
+    var meio = (doze * 30) / 2;
+    var passos = Math.max(2, Math.min(doze + 1, 5));
     var s = '';
-    for (var i = 0; i < doze; i++) {
-      s += setorAng(100, 100, 92, inicio + i * 30, inicio + (i + 1) * 30, corDaPeca(doze), 1);
+    for (var i = 0; i < passos; i++) {
+      var rr = RAIO_DISCO * (0.38 + 0.48 * i / Math.max(1, passos - 1));
+      var tam = Math.max(1.4, Math.min(4, rr * 0.12));
+      var desvios = doze >= 4 ? [-0.52, 0.52] : (doze >= 2 ? [-0.4, 0.4] : [0]);
+      for (var k = 0; k < desvios.length; k++) {
+        var a = rad(-90 + desvios[k] * meio);
+        var cx = rr * Math.cos(a), cy = rr * Math.sin(a);
+        var X = cx.toFixed(2), Y = cy.toFixed(2);
+        if (f.recheio === 'calabresa') {
+          s += '<circle cx="' + X + '" cy="' + Y + '" r="' + tam.toFixed(2) + '" fill="' + escuro + '"/>' +
+            '<circle cx="' + X + '" cy="' + Y + '" r="' + (tam * 0.42).toFixed(2) + '" fill="' + f.cor + '"/>';
+        } else if (f.recheio === 'mussarela') {
+          s += '<circle cx="' + X + '" cy="' + Y + '" r="' + (tam * 0.78).toFixed(2) +
+            '" fill="#fff8ec" stroke="' + escuro + '" stroke-width="0.35"/>';
+        } else if (f.recheio === 'brócolis') {
+          s += '<circle cx="' + X + '" cy="' + Y + '" r="' + tam.toFixed(2) + '" fill="' + escuro + '"/>' +
+            '<circle cx="' + (cx + tam * 0.45).toFixed(2) + '" cy="' + Y + '" r="' + (tam * 0.55).toFixed(2) +
+            '" fill="' + f.cor + '"/>';
+        } else if (f.recheio === 'cebola') {
+          s += '<circle cx="' + X + '" cy="' + Y + '" r="' + tam.toFixed(2) +
+            '" fill="none" stroke="' + escuro + '" stroke-width="0.7"/>';
+        } else {
+          s += '<circle cx="' + X + '" cy="' + Y + '" r="' + (tam * 0.8).toFixed(2) + '" fill="' + escuro + '"/>';
+        }
+      }
     }
     return s;
+  }
+
+  function discoSVG(doze){
+    var g = geomDisco(doze);
+    var cor = corDaPeca(doze);
+    var x0 = RAIO_DISCO * Math.cos(rad(g.a0)), y0 = RAIO_DISCO * Math.sin(rad(g.a0));
+    var x1 = RAIO_DISCO * Math.cos(rad(g.a1)), y1 = RAIO_DISCO * Math.sin(rad(g.a1));
+    var grande = (g.a1 - g.a0) > 180 ? 1 : 0;
+    var s = '<path d="M 0 0 L ' + x0.toFixed(2) + ' ' + y0.toFixed(2) +
+      ' A ' + RAIO_DISCO + ' ' + RAIO_DISCO + ' 0 ' + grande + ' 1 ' + x1.toFixed(2) + ' ' + y1.toFixed(2) +
+      ' Z" fill="' + cor + '" stroke="#3b2417" stroke-width="0.7"/>';
+    s += recheioSVG(doze, fichaDaPeca(doze).escuro);
+    // as linhas de doze avos deixam a turma contar quanto já foi coberto
+    for (var i = 1; i < doze; i++) {
+      var a = g.a0 + i * 30;
+      s += '<line x1="0" y1="0" x2="' + (RAIO_DISCO * Math.cos(rad(a))).toFixed(2) +
+        '" y2="' + (RAIO_DISCO * Math.sin(rad(a))).toFixed(2) + '" stroke="#3b2417" stroke-width="0.35"/>';
+    }
+    // aba de giro, com o nome da fração
+    s += '<rect x="-12" y="' + (-RAIO_DISCO - ABA).toFixed(2) + '" width="24" height="' + ABA +
+      '" rx="3" fill="' + cor + '" stroke="#3b2417" stroke-width="0.7"/>';
+    s += '<text x="0" y="' + (-RAIO_DISCO - 4).toFixed(2) + '" text-anchor="middle" font-size="7.5" ' +
+      'font-weight="900" fill="#3b2417" font-family="Outfit, Segoe UI, sans-serif">' + nomeDaPeca(doze) + '</text>';
+    // miolo e marca do furo do percevejo
+    s += '<circle cx="0" cy="0" r="6" fill="' + cor + '" stroke="#3b2417" stroke-width="0.7"/>';
+    s += '<circle cx="0" cy="0" r="1.7" fill="#fff" stroke="#3b2417" stroke-width="0.5"/>';
+    return s;
+  }
+
+  function massaSVG(){
+    var molho = RAIO - 8.5;
+    // a beirada da pizza, com as bolhinhas da massa assada
+    var s = '<circle cx="0" cy="0" r="' + RAIO + '" fill="#e8c98d" stroke="#3b2417" stroke-width="1"/>';
+    for (var b = 0; b < 30; b++) {
+      var ab = b * 12;
+      s += '<circle cx="' + ((RAIO - 4) * Math.cos(rad(ab))).toFixed(2) + '" cy="' +
+        ((RAIO - 4) * Math.sin(rad(ab))).toFixed(2) + '" r="1.1" fill="#cba36a"/>';
+    }
+    // o molho de tomate, que é a área que os discos de recheio vão cobrir
+    s += '<circle cx="0" cy="0" r="' + molho + '" fill="#f3c39c" stroke="#c98f14" stroke-width="0.6"/>';
+    for (var i = 0; i < DOCE; i++) {
+      var a = -90 + i * 30;
+      s += '<line x1="0" y1="0" x2="' + (molho * Math.cos(rad(a))).toFixed(2) +
+        '" y2="' + (molho * Math.sin(rad(a))).toFixed(2) + '" stroke="#b9834a" stroke-width="0.4" stroke-dasharray="2 1.6"/>';
+    }
+    s += '<circle cx="0" cy="0" r="1.7" fill="#fff" stroke="#3b2417" stroke-width="0.5"/>';
+    s += '<text x="0" y="' + (-RAIO + 14) + '" text-anchor="middle" font-size="6.2" font-weight="800" ' +
+      'fill="#7a5230" font-family="Outfit, Segoe UI, sans-serif">MASSA · 12 FATIAS DE 1/12</text>';
+    return s;
+  }
+
+  function svgDisco(doze){
+    var g = geomDisco(doze);
+    return '<svg viewBox="' + g.minX.toFixed(2) + ' ' + g.minY.toFixed(2) + ' ' +
+      g.largura.toFixed(2) + ' ' + g.altura.toFixed(2) + '" width="' + g.largura.toFixed(2) +
+      'mm" height="' + g.altura.toFixed(2) + 'mm">' + discoSVG(doze) + '</svg>';
+  }
+
+  function svgMassa(){
+    var lado = (RAIO + FOLGA) * 2;
+    return '<svg viewBox="' + (-(RAIO + FOLGA)) + ' ' + (-(RAIO + FOLGA)) + ' ' + lado + ' ' + lado +
+      '" width="' + lado + 'mm" height="' + lado + 'mm">' + massaSVG() + '</svg>';
   }
 
   /* ---------- painel ---------- */
@@ -522,7 +637,7 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     pedido.n = fr.n;
     pedido.d = fr.d;
     pedido.sabor = SABORES[Math.floor(Math.random() * SABORES.length)];
-    pedido.combinacoes = combinacoes(alvo, 6);
+    pedido.combinacoes = combinacoes(alvo);
     return pedido;
   }
 
@@ -601,7 +716,7 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     } else {
       $('rotulo-pedido').textContent = 'A equipe precisa servir';
       $('fracao-pedido').innerHTML = textoFracao(p.n, p.d);
-      $('texto-pedido').innerHTML = 'da pizza de <b>' + p.sabor + '</b>, usando as fatias do prato. ' +
+      $('texto-pedido').innerHTML = 'da pizza de <b>' + p.sabor + '</b>, girando os discos sobre a massa. ' +
         'Vale mais de uma combinação, e a que ainda não apareceu vale ponto extra.';
       $('prato-pedido').innerHTML = svgInterrogacao();
     }
@@ -658,15 +773,14 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
         textoFracao(p.n, p.d) + ' equivale a ' + p.alvoDoze + ' fatias de doze avos.</div>';
       return;
     }
-    var html = '<h4>Conferência · ' + textoFracao(p.n, p.d) + ' = ' + p.alvoDoze + ' fatias de doze avos</h4><div class="lista-combinacoes">';
+    var html = '<h4>Conferência · ' + textoFracao(p.n, p.d) + ' = ' + p.alvoDoze + ' das 12 fatias da massa</h4><div class="lista-combinacoes">';
     combos.slice(0, 6).forEach(function(c, indice){
       var chave = c.slice().sort().join('-');
       var inedita = estado.usadas.indexOf(chave) === -1;
       if (inedita) estado.usadas.push(chave);
       var tags = c.map(function(doze){ return '<span class="peca-tag">' + nomeDaPeca(doze) + '</span>'; }).join('');
-      var legenda = inedita
-        ? 'combinação nova nesta partida, vale o ponto extra'
-        : 'já tinha aparecido na partida';
+      var legenda = (inedita ? 'combinação nova nesta partida, vale o ponto extra' : 'já tinha aparecido na partida') +
+        '  ·  ' + c.map(function(doze){ return 'disco de ' + nomeDaPeca(doze); }).join(' + ');
       html += '<div class="comb"><span class="pecas">' + tags + '</span>' +
         '<span class="legenda">' + legenda + '</span></div>';
     });
@@ -704,48 +818,52 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     return '<div class="rodape-folha"><span>' + texto + '</span><span>Pizzaria das Frações · PIBID Matemática</span></div>';
   }
 
-  function folhaPrato(){
+  function folhaMassa(){
     return '<div class="paper">' +
-      cabecalho('Prato da equipe', 'imprima uma folha por equipe') +
-      '<div class="prato-base">' +
-        '<svg viewBox="0 0 200 200">' + pratoSVG([], '#fff8ec', 1) + '</svg>' +
-        '<div class="rotulo-equipe">EQUIPE ____</div>' +
+      cabecalho('A massa da pizza', 'imprima uma folha por equipe') +
+      '<div class="massa-area">' + svgMassa() + '</div>' +
+      '<p class="instrucao">A massa é a pizza aberta, com a beirada e o molho, dividida em doze fatias. ' +
+      'Cada fatia vale 1/12. Repare que a beirada é maior que os discos de recheio: ela fica aparecendo em volta ' +
+      'e é a referência para contar quanto da pizza já foi coberto.</p>' +
+      '<div class="manual" style="margin-top:8px">' +
+        '<h3>Como montar a máquina</h3>' +
+        '<ol>' +
+          '<li>Corte esta massa e os cinco discos da folha seguinte pelo contorno.</li>' +
+          '<li>Fure o centro de todas as peças no pontinho marcado.</li>' +
+          '<li>Empilhe os discos de recheio sobre a massa, do maior para o menor: 1/2, 1/3, 1/4, 1/6 e 1/12. ' +
+          'Eles cobrem o molho e deixam a beirada à vista.</li>' +
+          '<li>Prenda tudo com um percevejo de latão ou um pino de papelaria no centro.</li>' +
+        '</ol>' +
       '</div>' +
-      '<p class="instrucao">Este é o prato onde a equipe monta o pedido. As doze fatias marcadas são a pizza inteira: ' +
-      'cada fatia vale 1/12. Encaixe as peças recortadas até completar a fração pedida, ' +
-      'e confira contando as fatias pintadas.</p>' +
-      rodape('Prato-base · 1 por equipe') +
+      rodape('A massa · 1 por equipe') +
     '</div>';
   }
 
-  function folhaFatias(){
-    var celulas = [];
-    [6, 4, 3, 2, 1].forEach(function(doze){
-      var qtd = ESTOQUE[doze];
-      for (var i = 0; i < qtd; i++) {
-        celulas.push('<div class="fatia-celula"><svg viewBox="0 0 200 200">' + pecaSVG(doze) + '</svg>' +
-          '<span class="nome">' + nomeDaPeca(doze) + '</span></div>');
-      }
-    });
-    // completa a grade para o recorte ficar em linhas retas
-    while (celulas.length % 4 !== 0) celulas.push('<div class="fatia-celula"></div>');
+  function folhaDiscos(){
+    // as linhas seguem a largura de cada disco, encostados para o corte render
+    var linhas = [[6, 1], [4], [3, 2]];
+    var html = linhas.map(function(linha){
+      return '<div class="discos-linha">' + linha.map(svgDisco).join('') + '</div>';
+    }).join('');
     return '<div class="paper">' +
-      cabecalho('Fatias para recortar', 'uma folha por equipe') +
-      '<p class="instrucao" style="margin-bottom:8px">Corte nas linhas retas. As peças ficam encostadas de propósito: ' +
-      'cada corte reto serve para as duas peças vizinhas, e só os arcos precisam de tesoura.</p>' +
-      '<div class="grade-fatias">' + celulas.join('') + '</div>' +
-      '<p class="instrucao" style="margin-top:10px">Cada equipe recebe 2 metades, 4 terços, 4 quartos, 6 sextos e 8 doze avos.</p>' +
-      rodape('Fatias · 1 por equipe') +
+      cabecalho('Os discos de fração', 'uma folha por equipe') +
+      '<p class="instrucao" style="text-align:left;max-width:none;margin-bottom:6px">' +
+      'Cinco discos de recheio, um de cada fração, já no tamanho final: calabresa (1/2), mussarela (1/3), ' +
+      'brócolis (1/4), cebola (1/6) e azeitona (1/12). Corte pelo contorno, fure o centro e empilhe sobre a massa. ' +
+      'As peças ficam encostadas de propósito, sem espaço entre as bordas, para o corte render.</p>' +
+      '<div class="discos-bloco">' + html + '</div>' +
+      rodape('Discos · 1 jogo por equipe') +
     '</div>';
   }
 
   function pedidosFixos(){
-    // 24 cartelas: 8 de cada nível, com alvos que as fatias conseguem montar
+    // 24 cartelas: 8 de cada nível
     var lista = [];
-    var n1 = [3, 4, 6, 8, 9, 10, 2, 5];
-    n1.forEach(function(doze){ lista.push({nivel:1, alvoDoze:doze}); });
-    var n2 = [7, 5, 8, 11, 9, 4, 10, 6];
-    n2.forEach(function(doze){ lista.push({nivel:2, alvoDoze:doze}); });
+    // nível 1: pedidos que se resolvem com um ou dois discos
+    [1, 2, 3, 4, 5, 6, 7, 8].forEach(function(doze){ lista.push({nivel:1, alvoDoze:doze}); });
+    // nível 2: pedidos que exigem três discos ou mais
+    [8, 9, 10, 11, 12, 9, 10, 11].forEach(function(doze){ lista.push({nivel:2, alvoDoze:doze}); });
+    // nível 3: comparação entre duas frações
     var n3 = [[1,2,2,3],[2,3,3,5],[1,2,3,4],[2,5,1,3],[3,4,5,6],[1,3,2,5],[5,6,3,4],[2,3,5,8]];
     n3.forEach(function(q){ lista.push({nivel:3, a:{n:q[0], d:q[1]}, b:{n:q[2], d:q[3]}}); });
     return lista;
@@ -762,17 +880,17 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
         var alvo, texto, nivel = p.nivel;
         if (nivel === 3) {
           alvo = textoFracao(p.a.n, p.a.d) + ' ou ' + textoFracao(p.b.n, p.b.d);
-          texto = 'Qual dos dois pratos tem <b>mais pizza</b>?';
+          texto = 'Qual dos dois pedidos é <b>maior</b>?';
         } else {
           var fr = F(p.alvoDoze, DOCE);
           alvo = textoFracao(fr.n, fr.d);
-          texto = 'Sirva <b>' + textoFracao(fr.n, fr.d) + '</b> de pizza de ' + sabor + '.';
+          texto = 'Cubra <b>' + textoFracao(fr.n, fr.d) + '</b> da pizza de ' + sabor + ' girando os discos.';
         }
         return '<div class="cartela">' +
           '<div class="topo-cartela"><span>' + textoNivel(nivel).split(' · ')[0] + '</span>' +
           '<span>PIZZARIA DAS FRAÇÕES</span></div>' +
           '<div class="corpo-cartela">' +
-            '<svg viewBox="0 0 200 200">' + pratoSVG([], '#fff8ec', 1) + '</svg>' +
+            '<svg viewBox="0 0 200 200">' + pratoSVG([], '#f3c39c', 1) + '</svg>' +
             '<div class="texto-cartela"><b>' + alvo + '</b>' + texto +
             '<span class="nivel-tag ' + classeNivel(nivel) + '">' + textoNivel(nivel) + '</span></div>' +
           '</div>' +
@@ -802,11 +920,15 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     return '<div class="paper">' +
       cabecalho('Placar da partida', 'uma folha por mesa') +
       '<p class="instrucao" style="text-align:left;max-width:none;margin-bottom:10px">' +
-      'Marque 2 para quem entregou certo primeiro, 1 para as outras equipes que acertaram e ' +
-      '+1 para a equipe que achou uma combinação que ainda não tinha aparecido.</p>' +
+      'Marque 2 para quem cobriu o pedido certo primeiro, 1 para as outras equipes que acertaram e ' +
+      '+1 para quem girou os discos numa combinação que ainda não tinha aparecido.</p>' +
       '<div class="placar-impresso">' + colunas + '</div>' +
       rodape('Placar · 10 rodadas') +
     '</div>';
+  }
+
+  function nomesDaCombinacao(c){
+    return c.map(function(doze){ return 'disco de ' + nomeDaPeca(doze); }).join(' + ');
   }
 
   function folhasManual(){
@@ -820,17 +942,12 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
           ' (' + Math.max(a, b) + ' contra ' + Math.min(a, b) + ' de 12)</div>';
       } else {
         var fr = F(p.alvoDoze, DOCE);
-        var combos = combinacoes(p.alvoDoze, 4);
+        var combos = combinacoes(p.alvoDoze);
         var textos = combos.map(function(c){
-          var contagem = {};
-          c.forEach(function(d){ contagem[d] = (contagem[d] || 0) + 1; });
-          return Object.keys(contagem).map(function(d){
-            var qtd = contagem[d];
-            return (qtd > 1 ? qtd + '× ' : '') + nomeDaPeca(parseInt(d, 10));
-          }).join(' + ');
+          return c.map(function(d){ return nomeDaPeca(d); }).join(' + ');
         });
         gabarito += '<div><b>' + (i + 1) + '.</b> ' + textoFracao(fr.n, fr.d) + ' (' + p.alvoDoze +
-          '/12) → ' + textos.slice(0, 3).join('  |  ') + '</div>';
+          '/12) → ' + textos.slice(0, 2).join('  |  ') + '</div>';
       }
     });
 
@@ -838,37 +955,39 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
       cabecalho('Manual do professor', 'página 1 de 2') +
       '<div class="manual">' +
         '<h3>O que é o jogo</h3>' +
-        '<p>A turma é uma pizzaria que recebe pedidos em fração. Cada equipe tem um prato dividido em doze fatias ' +
-        'e um conjunto de peças recortadas: metades, terços, quartos, sextos e doze avos. ' +
-        'A cada rodada o painel sorteia um pedido e as equipes precisam montar a pizza com as peças, ' +
-        'encaixando-as no prato até completar a fração pedida.</p>' +
+        '<p>A turma é uma pizzaria que recebe pedidos em fração. Cada equipe monta uma ' +
+        '<b>máquina de pizza</b>: a massa aberta, com beirada e molho, dividida em doze fatias, e cinco ' +
+        'discos de recheio por cima, um de cada fração, todos presos no centro por um percevejo. ' +
+        'Girando os discos, cada recheio cobre uma faixa da massa, e o que ficou coberto é a fração servida.</p>' +
         '<div class="caixa"><b>Por que funciona.</b> A fração deixa de ser um número solto e passa a ser ' +
-        'um pedaço que se encaixa. Quando a equipe soma 1/2 com 1/6 e vê o prato completar 2/3, ' +
-        'a equivalência aparece na frente dela.</div>' +
+        'uma faixa que se gira e se vê. Quando a equipe encosta o disco de 1/2 no de 1/6 e cobre 2/3 da massa, ' +
+        'a soma aparece na frente dela. E se dois discos se sobrepõem, a área coberta fica menor do que a soma: ' +
+        'o erro é visível, sem o professor precisar apontar.</div>' +
         '<h3>Material</h3>' +
         '<ul>' +
-          '<li><b>Prato da equipe</b> — uma folha por equipe.</li>' +
-          '<li><b>Fatias para recortar</b> — uma folha por equipe, com as peças encostadas para facilitar o corte.</li>' +
+          '<li><b>A massa da pizza</b> — um disco de doze fatias por equipe, com o passo a passo da montagem.</li>' +
+          '<li><b>Os discos de recheio</b> — cinco discos por equipe, um de cada fração, com aba de giro: ' +
+        '1/2 calabresa, 1/3 mussarela, 1/4 brócolis, 1/6 cebola e 1/12 azeitona.</li>' +
           '<li><b>Cartelas de pedido</b> — 24 cartelas em três níveis, para jogar sem projetor.</li>' +
           '<li><b>Placar</b> — uma folha por mesa.</li>' +
           '<li><b>Painel do balcão</b> — a parte projetada, que sorteia os pedidos, conta o tempo e abre a conferência.</li>' +
         '</ul>' +
         '<h3>Como jogar em equipes</h3>' +
         '<ol>' +
-          '<li>Separe a turma em 3 ou 4 equipes e entregue a cada uma um prato e uma folha de fatias.</li>' +
+          '<li>Monte uma máquina por equipe: massa, cinco discos e um percevejo no centro.</li>' +
           '<li>Escolha o nível e o tempo no painel e clique em <b>Sortear pedido</b>.</li>' +
-          '<li>As equipes montam o pedido no prato. Quem terminar primeiro levanta a pizza.</li>' +
+          '<li>As equipes giram os discos até cobrir exatamente a fração pedida. Quem terminar primeiro levanta a máquina.</li>' +
           '<li>Quando o tempo acabar, o painel abre a conferência com as combinações possíveis. ' +
-              'Confira a pizza de cada equipe e lance os pontos.</li>' +
+              'Confira contando as fatias cobertas e lance os pontos.</li>' +
           '<li>Depois de 8 a 12 rodadas, ganha a equipe com mais pontos.</li>' +
         '</ol>' +
         '<div class="caixa"><b>Jogando sozinho.</b> Escolha <b>1 · jogando sozinho</b> em equipes. ' +
-        'O aluno monta o pedido no prato contra o relógio e usa a conferência do painel para se corrigir. ' +
+        'O aluno gira os discos contra o relógio e usa a conferência do painel para se corrigir. ' +
         'Serve para recuperação e para quem termina antes.</div>' +
         '<h3>Os três níveis</h3>' +
         '<table><tr><th>Nível</th><th>O que pede</th><th>O que o aluno treina</th></tr>' +
-        '<tr><td>1</td><td>Montar uma fração com peças do mesmo tamanho</td><td>Fração como parte do todo e leitura de frações</td></tr>' +
-        '<tr><td>2</td><td>Montar uma fração juntando peças de tamanhos diferentes</td><td>Soma de frações com denominadores diferentes</td></tr>' +
+        '<tr><td>1</td><td>Cobrir o pedido com um ou dois discos</td><td>Fração como parte do todo e leitura de frações</td></tr>' +
+        '<tr><td>2</td><td>Cobrir o pedido com três discos ou mais</td><td>Soma de frações com denominadores diferentes</td></tr>' +
         '<tr><td>3</td><td>Comparar duas frações e decidir qual é maior</td><td>Equivalência e comparação com o mesmo denominador</td></tr>' +
         '</table>' +
         '<h3>Habilidades da BNCC</h3>' +
@@ -887,15 +1006,17 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
       cabecalho('Gabarito das cartelas', 'página 2 de 2') +
       '<div class="manual">' +
         '<h3>Combinações possíveis</h3>' +
-        '<p>As três primeiras combinações de cada cartela, sempre com as peças que a equipe recebe. ' +
-        'Se a turma achar outra, vale igual: o importante é a soma fechar.</p>' +
+        '<p>Cada disco entra uma vez só, então as respostas são subconjuntos dos cinco discos. ' +
+        'As duas primeiras combinações de cada cartela estão abaixo. Se a turma achar outra, vale igual: ' +
+        'o importante é a área coberta fechar.</p>' +
         '<div class="gabarito-grade">' + gabarito + '</div>' +
         '<h3>Para variar a partida</h3>' +
         '<ul>' +
-          '<li><b>Menos peças:</b> retire as peças de 1/12 do jogo e as respostas passam a exigir mais raciocínio.</li>' +
+          '<li><b>Sem o disco de 1/12:</b> retire-o da máquina e as respostas passam a exigir mais raciocínio.</li>' +
           '<li><b>Contra o relógio:</b> diminua o tempo para 20 segundos no painel.</li>' +
           '<li><b>Sem projetor:</b> use as cartelas de pedido e o gabarito desta página.</li>' +
-          '<li><b>Desafio de escrita:</b> peça que cada equipe registre a soma que fez, na forma 1/2 + 1/6 = 2/3.</li>' +
+          '<li><b>Desafio de escrita:</b> peça que cada equipe registre a soma que girou, na forma 1/2 + 1/6 = 2/3.</li>' +
+          '<li><b>Desafio do erro:</b> sobreponha dois discos de propósito e pergunte por que a área coberta ficou menor.</li>' +
         '</ul>' +
       '</div>' +
       rodape('Gabarito · página 2 de 2') +
@@ -903,7 +1024,7 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
   }
 
   function montarFolhas(){
-    $('folhas').innerHTML = folhaPrato() + folhaFatias() + folhasCartelas() + folhaPlacar() + folhasManual();
+    $('folhas').innerHTML = folhaMassa() + folhaDiscos() + folhasCartelas() + folhaPlacar() + folhasManual();
   }
 
   /* ---------- abas e inicialização ---------- */
