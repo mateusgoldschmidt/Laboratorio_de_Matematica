@@ -290,6 +290,13 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     <section class="painel-aba on" id="aba-painel">
         <div class="controles">
             <div>
+                <label for="modo">Modelo do jogo</label>
+                <select id="modo">
+                  <option value="simples">Um sabor</option>
+                  <option value="mista">Pizza mista</option>
+                </select>
+              </div>
+              <div class="campo">
                 <label for="nivel">Nível dos pedidos</label>
                 <select id="nivel">
                     <option value="1">1 · mesmo denominador</option>
@@ -394,6 +401,8 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     azeitona:  {cor:'#e64980', escuro:'#a82f5b'}
   };
   var RECHEIO_DA_VEZ = 'calabresa';
+  /* Na folha da pizza mista cada disco leva um recheio diferente. */
+  var RECHEIO_POR_DOZE = null;
 
   var PECAS = [                  // cada disco vale tantos doze avos
     {n:1, d:2,  doze:6, nome:'1/2'},
@@ -402,6 +411,9 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     {n:1, d:6,  doze:2, nome:'1/6'},
     {n:1, d:12, doze:1, nome:'1/12'}
   ];
+  function recheioDe(doze){
+    return (RECHEIO_POR_DOZE && RECHEIO_POR_DOZE[doze]) || RECHEIO_DA_VEZ;
+  }
   function corDoRecheio(){ return RECHEIOS[RECHEIO_DA_VEZ].cor; }
   function escuroDoRecheio(){ return RECHEIOS[RECHEIO_DA_VEZ].escuro; }
   var RAIO = 53;                 // mm: raio da massa, contando a beirada da pizza
@@ -413,7 +425,7 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
   var NOMES_EQUIPE = ['Equipe 1', 'Equipe 2', 'Equipe 3', 'Equipe 4'];
 
   var estado = {
-    nivel: 2, tempo: 40, equipes: 4,
+    nivel: 2, modo: 'simples', tempo: 40, equipes: 4,
     pontos: [0, 0, 0, 0],
     pedido: null, revelado: false,
     usadas: [],                  // combinações já mostradas na partida
@@ -453,9 +465,11 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     for (var i = 0; i < PECAS.length; i++) if (PECAS[i].doze === doze) return PECAS[i].nome;
     return doze + '/12';
   }
-  function corDaPeca(doze){ return corDoRecheio(); }
+  function corDaPeca(doze){ return RECHEIOS[recheioDe(doze)].cor; }
   function fichaDaPeca(doze){
-    return {cor:corDoRecheio(), escuro:escuroDoRecheio(), recheio:RECHEIO_DA_VEZ};
+    var nome = recheioDe(doze);
+    var r = RECHEIOS[nome];
+    return {cor:r.cor, escuro:r.escuro, recheio:nome};
   }
 
   /* ---------- desenho das pizzas ---------- */
@@ -470,6 +484,20 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
   function setor(cx, cy, r, i0, i1, cor, opacidade){
     return setorAng(cx, cy, r, i0 * 30 - 90, i1 * 30 - 90, cor, opacidade);
   }
+  function pratoPartesSVG(partesPintadas){
+    var r = 92, c = 100;
+    var s = '<circle cx="' + c + '" cy="' + c + '" r="' + r + '" fill="#f3d9a4" stroke="#3b2417" stroke-width="3"/>';
+    var marcados = {};
+    partesPintadas.forEach(function(x){
+      marcados[x.indice] = true;
+      s += setor(c, c, r * 0.955, x.indice, x.indice + 1, x.cor, 1);
+    });
+    for (var i = 0; i < DOCE; i++) {
+      if (!marcados[i]) s += setor(c, c, r * 0.955, i, i + 1, '#fff8ec', 0.5);
+    }
+    return s;
+  }
+
   function pratoSVG(pintadas, cor, escala){
     var r = 92 * (escala || 1), c = 100 * (escala || 1), traco = 3 * (escala || 1);
     var s = '<circle cx="' + c + '" cy="' + c + '" r="' + r + '" fill="#f3d9a4" stroke="#3b2417" stroke-width="' + traco + '"/>';
@@ -666,7 +694,41 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     return 1 + Math.floor(Math.random() * 3);
   }
 
+  /* No modelo misto o cliente escolhe dois ou três sabores e deixa o resto
+     por conta da equipe. A sobra é sempre um dos discos, para a conta fechar. */
+  function sorteiaPedidoMisto(){
+    var validos = [6, 4, 3, 2, 1];
+    var opcoes = [];
+    function testa(comb){
+      var soma = 0;
+      for (var i = 0; i < comb.length; i++) soma += comb[i];
+      if (soma >= DOCE) return;
+      if (validos.indexOf(DOCE - soma) === -1) return;
+      opcoes.push(comb.slice());
+    }
+    for (var i = 0; i < validos.length; i++) {
+      for (var j = i + 1; j < validos.length; j++) {
+        testa([validos[i], validos[j]]);
+        for (var k = j + 1; k < validos.length; k++) testa([validos[i], validos[j], validos[k]]);
+      }
+    }
+    var comb = opcoes[Math.floor(Math.random() * opcoes.length)];
+    var sabores = ['calabresa', 'mussarela', 'brócolis', 'cebola', 'azeitona'];
+    for (var t = sabores.length - 1; t > 0; t--) {
+      var u = Math.floor(Math.random() * (t + 1));
+      var aux = sabores[t]; sabores[t] = sabores[u]; sabores[u] = aux;
+    }
+    var soma = 0;
+    var partes = comb.map(function(d, indice){ soma += d; return {doze:d, recheio:sabores[indice]}; });
+    return {
+      nivel: 2, misto: true, partes: partes,
+      sobra: {doze: DOCE - soma, recheio: sabores[comb.length]},
+      somaDoze: soma
+    };
+  }
+
   function sorteiaPedido(){
+    if (estado.modo === 'mista') return sorteiaPedidoMisto();
     var nivel = nivelDoPedido();
     var pedido = { nivel: nivel };
     if (nivel === 3) {
@@ -780,6 +842,20 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     $('etiqueta-nivel').textContent = textoNivel(p.nivel);
     $('etiqueta-nivel').className = 'etiqueta-nivel ' + classeNivel(p.nivel);
 
+    if (p.misto) {
+      $('etiqueta-nivel').textContent = 'PIZZA MISTA · o resto por nossa conta';
+      $('etiqueta-nivel').className = 'etiqueta-nivel n2';
+      $('rotulo-pedido').textContent = 'O cliente pediu';
+      $('fracao-pedido').innerHTML = p.partes.map(function(x){
+        return nomeDaPeca(x.doze);
+      }).join(' <small>+</small> ');
+      $('texto-pedido').innerHTML = p.partes.map(function(x){
+        return '<b>' + nomeDaPeca(x.doze) + '</b> de ' + x.recheio;
+      }).join(' + ') + '. O resto da pizza ela deixou por nossa conta: ' +
+      '<b>quanto falta e de qual recheio?</b>';
+      $('prato-pedido').innerHTML = svgInterrogacao();
+      return;
+    }
     if (p.nivel === 3) {
       $('rotulo-pedido').textContent = 'Qual prato tem mais pizza?';
       $('fracao-pedido').innerHTML = textoFracao(p.a.n, p.a.d) + ' <small>ou</small> ' + textoFracao(p.b.n, p.b.d);
@@ -810,6 +886,28 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     $('btn-conferir').disabled = true;
     var caixa = $('conferencia');
 
+    if (p.misto) {
+      var partesPintadas = [];
+      var inicio = 0;
+      p.partes.forEach(function(x){
+        for (var i = 0; i < x.doze; i++) {
+          partesPintadas.push({indice:(inicio + i) % DOCE, cor:RECHEIOS[x.recheio].cor});
+        }
+        inicio += x.doze;
+      });
+      $('prato-pedido').innerHTML = '<svg viewBox="0 0 200 200">' + pratoPartesSVG(partesPintadas) + '</svg>';
+      var conta = p.partes.map(function(x){ return nomeDaPeca(x.doze); }).join(' + ') + ' = ' +
+        textoFracao(p.somaDoze, DOCE);
+      var falta = DOCE - p.somaDoze;
+      caixa.innerHTML = '<h4>Conferência · a pizza inteira é ' + textoFracao(DOCE, DOCE) + '</h4>' +
+        '<div class="resultado-comparacao">' +
+        conta + ', ou seja ' + p.somaDoze + ' das 12 fatias. ' +
+        'Para fechar a pizza faltam ' + falta + ' fatias de doze avos: ' +
+        '<b>' + nomeDaPeca(falta) + ' de ' + p.sobra.recheio + '</b>. ' +
+        'Com o mesmo denominador, a conta fica ' + textoFracao(p.somaDoze, DOCE) + ' + ' +
+        textoFracao(falta, DOCE) + ' = ' + textoFracao(DOCE, DOCE) + '.</div>';
+      return;
+    }
     if (p.nivel === 3) {
       var maior = p.maior === 'a' ? p.a : p.b;
       var menor = p.maior === 'a' ? p.b : p.a;
@@ -935,6 +1033,26 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     '</div>';
   }
 
+  function folhaDiscosMistos(){
+    var guarda = RECHEIO_POR_DOZE;
+    RECHEIO_POR_DOZE = {6:'calabresa', 4:'mussarela', 3:'brócolis', 2:'cebola', 1:'azeitona'};
+    var linhas = [[6, 1], [4], [3, 2]];
+    var html = linhas.map(function(linha){
+      return '<div class="discos-linha">' + linha.map(svgDisco).join('') + '</div>';
+    }).join('');
+    RECHEIO_POR_DOZE = guarda;
+    return '<div class="paper">' +
+      cabecalho('Os discos de recheio', 'uma folha por equipe') +
+      '<p class="instrucao" style="text-align:left;max-width:none;margin-bottom:6px">' +
+      'Esta folha é do modelo <b>pizza mista</b>, em que o cliente combina sabores. Aqui cada disco tem o seu ' +
+      'recheio: 1/2 calabresa, 1/3 mussarela, 1/4 brócolis, 1/6 cebola e 1/12 azeitona. No modelo de um sabor só ' +
+      'use a folha anterior, em que todos os discos são iguais. Monte sempre com o maior em cima e o menor ' +
+      'embaixo, e as peças encostadas para o corte render.</p>' +
+      '<div class="discos-bloco">' + html + '</div>' +
+      rodape('Discos da pizza mista · 1 jogo por equipe') +
+    '</div>';
+  }
+
   function pedidosFixos(){
     // 24 cartelas: 8 de cada nível
     var lista = [];
@@ -1034,6 +1152,11 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
       cabecalho('Manual do professor', 'página 1 de 2') +
       '<div class="manual">' +
         '<h3>O que é o jogo</h3>' +
+        '<p><b>Dois modelos na mesma máquina.</b> No modelo <b>um sabor</b>, o pedido é uma fração de uma ' +
+        'pizza só, e todos os discos têm o mesmo recheio. No modelo <b>pizza mista</b>, o cliente escolhe ' +
+        'dois ou três sabores e deixa o resto por conta da equipe: para responder, o aluno soma as partes ' +
+        'e descobre quanto falta para fechar a pizza. A máquina é a mesma; muda só a folha de discos e o ' +
+        'tipo de pedido sorteado no painel.</p>' +
         '<p>A turma é uma pizzaria que recebe pedidos em fração. Cada equipe monta uma ' +
         '<b>máquina de pizza</b>: a massa aberta, com beirada e molho, dividida em doze fatias, e cinco ' +
         'discos por cima, um de cada fração, todos presos no centro por um percevejo. ' +
@@ -1103,7 +1226,8 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
   }
 
   function montarFolhas(){
-    $('folhas').innerHTML = folhaMassa() + folhaDiscos() + folhasCartelas() + folhaPlacar() + folhasManual();
+    $('folhas').innerHTML = folhaMassa() + folhaDiscos() + folhaDiscosMistos() +
+      folhasCartelas() + folhaPlacar() + folhasManual();
   }
 
   /* ---------- abas e inicialização ---------- */
@@ -1120,6 +1244,10 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
   $('btn-sortear').addEventListener('click', sortear);
   $('btn-conferir').addEventListener('click', abrirConferencia);
   $('btn-zerar').addEventListener('click', zerar);
+  $('modo').addEventListener('change', function(){
+    estado.modo = this.value;
+    $('nivel').disabled = (estado.modo === 'mista');
+  });
   $('nivel').addEventListener('change', function(){ estado.nivel = parseInt(this.value, 10); });
   $('tempo').addEventListener('change', function(){ estado.tempo = parseInt(this.value, 10); mostraTempo(); });
   $('equipes').addEventListener('change', function(){
