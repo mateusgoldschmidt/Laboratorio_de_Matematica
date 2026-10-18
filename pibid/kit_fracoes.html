@@ -501,35 +501,80 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
 
   /* Cada disco traz o desenho do seu recheio, espalhado pelo gomo.
      Assim a pizza montada fica com cara de pizza de verdade. */
+  /* Sorteio estável: o mesmo disco sai sempre igual no papel, mas as peças
+     ficam espalhadas como numa pizza de verdade, sem fila indiana. */
+  function sorteio(i, semente){
+    var x = Math.sin(i * 12.9898 + semente * 78.233) * 43758.5453;
+    return x - Math.floor(x);
+  }
+
+  /* Cada recheio é desenhado com as peças espalhadas pelo gomo. */
   function recheioSVG(doze, escuro){
     var f = fichaDaPeca(doze);
     var meio = (doze * 30) / 2;
-    var passos = Math.max(2, Math.min(doze + 1, 5));
     var s = '';
-    for (var i = 0; i < passos; i++) {
-      var rr = RAIO_DISCO * (0.38 + 0.48 * i / Math.max(1, passos - 1));
-      var tam = Math.max(1.4, Math.min(4, rr * 0.12));
-      var desvios = doze >= 4 ? [-0.52, 0.52] : (doze >= 2 ? [-0.4, 0.4] : [0]);
-      for (var k = 0; k < desvios.length; k++) {
-        var a = rad(-90 + desvios[k] * meio);
-        var cx = rr * Math.cos(a), cy = rr * Math.sin(a);
-        var X = cx.toFixed(2), Y = cy.toFixed(2);
-        if (f.recheio === 'calabresa') {
-          s += '<circle cx="' + X + '" cy="' + Y + '" r="' + tam.toFixed(2) + '" fill="' + escuro + '"/>' +
-            '<circle cx="' + X + '" cy="' + Y + '" r="' + (tam * 0.42).toFixed(2) + '" fill="' + f.cor + '"/>';
-        } else if (f.recheio === 'mussarela') {
-          s += '<circle cx="' + X + '" cy="' + Y + '" r="' + (tam * 0.78).toFixed(2) +
-            '" fill="#fff8ec" stroke="' + escuro + '" stroke-width="0.35"/>';
-        } else if (f.recheio === 'brócolis') {
-          s += '<circle cx="' + X + '" cy="' + Y + '" r="' + tam.toFixed(2) + '" fill="' + escuro + '"/>' +
-            '<circle cx="' + (cx + tam * 0.45).toFixed(2) + '" cy="' + Y + '" r="' + (tam * 0.55).toFixed(2) +
-            '" fill="' + f.cor + '"/>';
-        } else if (f.recheio === 'cebola') {
-          s += '<circle cx="' + X + '" cy="' + Y + '" r="' + tam.toFixed(2) +
-            '" fill="none" stroke="' + escuro + '" stroke-width="0.7"/>';
-        } else {
-          s += '<circle cx="' + X + '" cy="' + Y + '" r="' + (tam * 0.8).toFixed(2) + '" fill="' + escuro + '"/>';
+    var quantos = Math.max(1, Math.round(doze * 1.35));
+    for (var i = 0; i < quantos; i++) {
+      var ang = rad(-90 - meio * 0.84 + sorteio(i, doze) * meio * 1.68);
+      var rr = RAIO_DISCO * (0.22 + 0.68 * sorteio(i + 41, doze));
+      var cx = rr * Math.cos(ang), cy = rr * Math.sin(ang);
+      var X = cx.toFixed(2), Y = cy.toFixed(2);
+      var tam = 2.5 + 0.8 * sorteio(i + 17, doze);
+      var giro = (sorteio(i + 7, doze) * 360).toFixed(0);
+
+      if (f.recheio === 'calabresa') {
+        // rodela de linguiça: borda escura, miolo rosado e os pontinhos de gordura
+        s += '<g transform="rotate(' + giro + ' ' + X + ' ' + Y + ')">' +
+          '<circle cx="' + X + '" cy="' + Y + '" r="' + tam.toFixed(2) + '" fill="#7d1f16" stroke="#5c140e" stroke-width="0.45"/>' +
+          '<circle cx="' + X + '" cy="' + Y + '" r="' + (tam * 0.74).toFixed(2) + '" fill="#c4472f"/>';
+        for (var k = 0; k < 3; k++) {
+          var ka = rad(k * 120 + sorteio(i + k, doze) * 60);
+          s += '<circle cx="' + (cx + tam * 0.42 * Math.cos(ka)).toFixed(2) + '" cy="' +
+            (cy + tam * 0.42 * Math.sin(ka)).toFixed(2) + '" r="' + (tam * 0.17).toFixed(2) + '" fill="#f0cbb0"/>';
         }
+        s += '</g>';
+        // e a pizza ainda leva cebola e orégano
+        for (var o = 0; o < Math.max(1, Math.round(doze * 0.7)); o++) {
+          var oa = rad(-90 - meio * 0.7 + sorteio(o + 61, doze) * meio * 1.4);
+          var orr = RAIO_DISCO * (0.24 + 0.62 * sorteio(o + 71, doze));
+          var ox = orr * Math.cos(oa), oy = orr * Math.sin(oa);
+          var ot = 1.5 + 0.9 * sorteio(o + 83, doze);
+          s += '<ellipse cx="' + ox.toFixed(2) + '" cy="' + oy.toFixed(2) + '" rx="' + ot.toFixed(2) +
+            '" ry="' + (ot * 0.6).toFixed(2) + '" transform="rotate(' + (sorteio(o + 91, doze) * 180).toFixed(0) +
+            ' ' + ox.toFixed(2) + ' ' + oy.toFixed(2) + ')" fill="none" stroke="#efe0ff" stroke-width="' +
+            (ot * 0.42).toFixed(2) + '"/>';
+        }
+        for (var g = 0; g < Math.max(3, Math.round(doze * 1.4)); g++) {
+          var ga = rad(-90 - meio * 0.88 + sorteio(g + 31, doze) * meio * 1.76);
+          var grr = RAIO_DISCO * (0.18 + 0.74 * sorteio(g + 53, doze));
+          s += '<circle cx="' + (grr * Math.cos(ga)).toFixed(2) + '" cy="' + (grr * Math.sin(ga)).toFixed(2) +
+            '" r="' + (0.5 + 0.5 * sorteio(g + 67, doze)).toFixed(2) + '" fill="#3f6b2a" opacity="0.85"/>';
+        }
+      } else if (f.recheio === 'mussarela') {
+        // bolhas de queijo derretido
+        s += '<ellipse cx="' + X + '" cy="' + Y + '" rx="' + (tam * 1.5).toFixed(2) + '" ry="' +
+          (tam * 1.1).toFixed(2) + '" fill="#fbeec4" stroke="#d8b56a" stroke-width="0.4" opacity="0.95"/>' +
+          '<circle cx="' + (cx + tam * 0.3).toFixed(2) + '" cy="' + cy.toFixed(2) + '" r="' +
+          (tam * 0.35).toFixed(2) + '" fill="#f7dfa4"/>';
+      } else if (f.recheio === 'brócolis') {
+        // buquê de brócolis: três bolinhas verdes com o cabinho
+        s += '<circle cx="' + X + '" cy="' + Y + '" r="' + tam.toFixed(2) + '" fill="#2f7d32"/>' +
+          '<circle cx="' + (cx - tam * 0.5).toFixed(2) + '" cy="' + (cy - tam * 0.3).toFixed(2) + '" r="' +
+          (tam * 0.7).toFixed(2) + '" fill="#3d9e42"/>' +
+          '<circle cx="' + (cx + tam * 0.55).toFixed(2) + '" cy="' + (cy + tam * 0.25).toFixed(2) + '" r="' +
+          (tam * 0.62).toFixed(2) + '" fill="#57b45c"/>';
+      } else if (f.recheio === 'cebola') {
+        // anéis de cebola
+        s += '<ellipse cx="' + X + '" cy="' + Y + '" rx="' + (tam * 1.35).toFixed(2) + '" ry="' +
+          (tam * 0.85).toFixed(2) + '" transform="rotate(' + giro + ' ' + X + ' ' + Y + ')" ' +
+          'fill="none" stroke="#c9b6f2" stroke-width="' + (tam * 0.42).toFixed(2) + '"/>' +
+          '<ellipse cx="' + X + '" cy="' + Y + '" rx="' + (tam * 0.75).toFixed(2) + '" ry="' +
+          (tam * 0.45).toFixed(2) + '" transform="rotate(' + giro + ' ' + X + ' ' + Y + ')" ' +
+          'fill="none" stroke="#e3d8fb" stroke-width="' + (tam * 0.32).toFixed(2) + '"/>';
+      } else {
+        // azeitona preta em rodela
+        s += '<circle cx="' + X + '" cy="' + Y + '" r="' + tam.toFixed(2) + '" fill="#3d2b2b"/>' +
+          '<circle cx="' + X + '" cy="' + Y + '" r="' + (tam * 0.45).toFixed(2) + '" fill="#8a6a4f"/>';
       }
     }
     return s;
@@ -537,13 +582,22 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
 
   function discoSVG(doze){
     var g = geomDisco(doze);
+    var meio = (doze * 30) / 2;
     var cor = corDaPeca(doze);
     var x0 = RAIO_DISCO * Math.cos(rad(g.a0)), y0 = RAIO_DISCO * Math.sin(rad(g.a0));
     var x1 = RAIO_DISCO * Math.cos(rad(g.a1)), y1 = RAIO_DISCO * Math.sin(rad(g.a1));
     var grande = (g.a1 - g.a0) > 180 ? 1 : 0;
     var s = '<path d="M 0 0 L ' + x0.toFixed(2) + ' ' + y0.toFixed(2) +
       ' A ' + RAIO_DISCO + ' ' + RAIO_DISCO + ' 0 ' + grande + ' 1 ' + x1.toFixed(2) + ' ' + y1.toFixed(2) +
-      ' Z" fill="' + cor + '" stroke="#3b2417" stroke-width="0.7"/>';
+      ' Z" fill="#efd9a5" stroke="#3b2417" stroke-width="0.7"/>';
+    // manchas de queijo derretido, para o gomo não ficar chapado
+    for (var m = 0; m < Math.max(2, doze); m++) {
+      var ma = rad(-90 - meio * 0.7 + sorteio(m + 3, doze) * meio * 1.4);
+      var mr = RAIO_DISCO * (0.3 + 0.6 * sorteio(m + 23, doze));
+      s += '<ellipse cx="' + (mr * Math.cos(ma)).toFixed(2) + '" cy="' + (mr * Math.sin(ma)).toFixed(2) +
+        '" rx="' + (3.2 + 2.4 * sorteio(m + 5, doze)).toFixed(2) + '" ry="' +
+        (2.2 + 1.6 * sorteio(m + 13, doze)).toFixed(2) + '" fill="#f7e7bb" opacity="0.75"/>';
+    }
     // a beirada da pizza no arco: é o que faz a peça ler como pedaço de pizza
     s += '<path d="M ' + x0.toFixed(2) + ' ' + y0.toFixed(2) + ' A ' + RAIO_DISCO + ' ' + RAIO_DISCO +
       ' 0 ' + grande + ' 1 ' + x1.toFixed(2) + ' ' + y1.toFixed(2) +
@@ -849,9 +903,14 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
         '<ol>' +
           '<li>Corte esta massa e os cinco discos da folha seguinte pelo contorno.</li>' +
           '<li>Fure o centro de todas as peças no pontinho marcado.</li>' +
-          '<li>Empilhe os discos de recheio sobre a massa, do maior para o menor: 1/2, 1/3, 1/4, 1/6 e 1/12. ' +
-          'Eles cobrem o molho e deixam a beirada à vista.</li>' +
-          '<li>Prenda tudo com um percevejo de latão ou um pino de papelaria no centro.</li>' +
+          '<li>Empilhe os <b>discos</b> com o maior em cima e o menor embaixo: 1/2, 1/3, 1/4, 1/6 e 1/12. ' +
+          'A ordem não é enfeite: um disco que fica embaixo de um maior não tapa nada, e é isso que faz o ' +
+          'aluno pensar antes de girar.</li>' +
+          '<li>Prenda os discos com um percevejo de latão no centro e ponha a <b>massa por cima</b> da pilha, ' +
+          'com o corte radial para fora. Ela é a tampa da máquina.</li>' +
+          '<li>Para servir, puxe a aba do disco pelo corte e gire até cobrir a parte pedida. ' +
+          'Comece sempre pelo disco de cima, o 1/2.</li>' +
+          '<li>Para conferir, levante a massa pela aba ABRIR e veja quanto da pizza ficou coberto.</li>' +
         '</ol>' +
       '</div>' +
       rodape('A massa · 1 por equipe') +
