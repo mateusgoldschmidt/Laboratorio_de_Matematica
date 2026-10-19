@@ -403,6 +403,11 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
   var RECHEIO_DA_VEZ = 'calabresa';
   /* Na folha da pizza mista cada disco leva um recheio diferente. */
   var RECHEIO_POR_DOZE = null;
+  /* Cada recheio é a foto de uma pizza redonda inteira. O código recorta a
+     fração: o disco é sempre o mesmo desenho, muda só o quanto dele aparece. */
+  var ARTE = 'kit_img/pizza-';
+  var ARTES = ['calabresa', 'mussarela', 'azeitona'];
+  var artesProntas = 0;
 
   var PECAS = [                  // cada disco vale tantos doze avos
     {n:1, d:2,  doze:6, nome:'1/2'},
@@ -537,6 +542,43 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
   }
 
   /* Cada recheio é desenhado com as peças espalhadas pelo gomo. */
+  function discoSVG(doze){
+    var g = geomDisco(doze);
+    var cor = corDaPeca(doze);
+    var x0 = RAIO_DISCO * Math.cos(rad(g.a0)), y0 = RAIO_DISCO * Math.sin(rad(g.a0));
+    var x1 = RAIO_DISCO * Math.cos(rad(g.a1)), y1 = RAIO_DISCO * Math.sin(rad(g.a1));
+    var grande = (g.a1 - g.a0) > 180 ? 1 : 0;
+    var arco = 'A ' + RAIO_DISCO + ' ' + RAIO_DISCO + ' 0 ' + grande + ' 1 ' +
+      x1.toFixed(2) + ' ' + y1.toFixed(2);
+    var gomo = 'M 0 0 L ' + x0.toFixed(2) + ' ' + y0.toFixed(2) + ' ' + arco + ' Z';
+    var s = '';
+    // a pizza redonda inteira, recortada no gomo da fração
+    s += '<defs><clipPath id="gomo-' + doze + '"><path d="' + gomo + '"/></clipPath></defs>';
+    s += '<image x="' + (-RAIO_DISCO).toFixed(2) + '" y="' + (-RAIO_DISCO).toFixed(2) +
+      '" width="' + (RAIO_DISCO * 2).toFixed(2) + '" height="' + (RAIO_DISCO * 2).toFixed(2) +
+      '" preserveAspectRatio="xMidYMid slice" clip-path="url(#gomo-' + doze + ')" ' +
+      'href="' + ARTE + recheioDe(doze) + '.jpg"/>';
+    // contorno do gomo, por cima da arte
+    s += '<path d="' + gomo + '" fill="none" stroke="#3b2417" stroke-width="0.8"/>';
+    // as linhas de doze avos deixam a turma contar quanto já foi coberto
+    for (var i = 1; i < doze; i++) {
+      var a = g.a0 + i * 30;
+      s += '<line x1="0" y1="0" x2="' + (RAIO_DISCO * Math.cos(rad(a))).toFixed(2) +
+        '" y2="' + (RAIO_DISCO * Math.sin(rad(a))).toFixed(2) +
+        '" stroke="#3b2417" stroke-width="0.35" opacity="0.55"/>';
+    }
+    // aba de giro, com o nome da fração
+    s += '<rect x="-12" y="' + (-RAIO_DISCO - ABA).toFixed(2) + '" width="24" height="' + ABA +
+      '" rx="3" fill="' + cor + '" stroke="#3b2417" stroke-width="0.7"/>';
+    s += '<text x="0" y="' + (-RAIO_DISCO - 4).toFixed(2) + '" text-anchor="middle" font-size="7.5" ' +
+      'font-weight="900" fill="#3b2417" font-family="Outfit, Segoe UI, sans-serif">' + nomeDaPeca(doze) + '</text>';
+    // miolo e marca do furo do percevejo
+    s += '<circle cx="0" cy="0" r="6" fill="' + cor + '" stroke="#3b2417" stroke-width="0.7"/>';
+    s += '<circle cx="0" cy="0" r="1.7" fill="#fff" stroke="#3b2417" stroke-width="0.5"/>';
+    return s;
+  }
+
+
   function recheioSVG(doze, escuro){
     var f = fichaDaPeca(doze);
     var meio = (doze * 30) / 2;
@@ -608,49 +650,6 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
     return s;
   }
 
-  function discoSVG(doze){
-    var g = geomDisco(doze);
-    var meio = (doze * 30) / 2;
-    var cor = corDaPeca(doze);
-    var x0 = RAIO_DISCO * Math.cos(rad(g.a0)), y0 = RAIO_DISCO * Math.sin(rad(g.a0));
-    var x1 = RAIO_DISCO * Math.cos(rad(g.a1)), y1 = RAIO_DISCO * Math.sin(rad(g.a1));
-    var grande = (g.a1 - g.a0) > 180 ? 1 : 0;
-    var s = '<path d="M 0 0 L ' + x0.toFixed(2) + ' ' + y0.toFixed(2) +
-      ' A ' + RAIO_DISCO + ' ' + RAIO_DISCO + ' 0 ' + grande + ' 1 ' + x1.toFixed(2) + ' ' + y1.toFixed(2) +
-      ' Z" fill="#efd9a5" stroke="#3b2417" stroke-width="0.7"/>';
-    // manchas de queijo derretido, para o gomo não ficar chapado
-    for (var m = 0; m < Math.max(2, doze); m++) {
-      var ma = rad(-90 - meio * 0.7 + sorteio(m + 3, doze) * meio * 1.4);
-      var mr = RAIO_DISCO * (0.3 + 0.6 * sorteio(m + 23, doze));
-      s += '<ellipse cx="' + (mr * Math.cos(ma)).toFixed(2) + '" cy="' + (mr * Math.sin(ma)).toFixed(2) +
-        '" rx="' + (3.2 + 2.4 * sorteio(m + 5, doze)).toFixed(2) + '" ry="' +
-        (2.2 + 1.6 * sorteio(m + 13, doze)).toFixed(2) + '" fill="#f7e7bb" opacity="0.75"/>';
-    }
-    // a beirada da pizza no arco: é o que faz a peça ler como pedaço de pizza
-    s += '<path d="M ' + x0.toFixed(2) + ' ' + y0.toFixed(2) + ' A ' + RAIO_DISCO + ' ' + RAIO_DISCO +
-      ' 0 ' + grande + ' 1 ' + x1.toFixed(2) + ' ' + y1.toFixed(2) +
-      '" fill="none" stroke="#e8c98d" stroke-width="2.6"/>' +
-      '<path d="M ' + x0.toFixed(2) + ' ' + y0.toFixed(2) + ' A ' + RAIO_DISCO + ' ' + RAIO_DISCO +
-      ' 0 ' + grande + ' 1 ' + x1.toFixed(2) + ' ' + y1.toFixed(2) +
-      '" fill="none" stroke="#3b2417" stroke-width="0.7"/>';
-    s += recheioSVG(doze, fichaDaPeca(doze).escuro);
-    // as linhas de doze avos deixam a turma contar quanto já foi coberto
-    for (var i = 1; i < doze; i++) {
-      var a = g.a0 + i * 30;
-      s += '<line x1="0" y1="0" x2="' + (RAIO_DISCO * Math.cos(rad(a))).toFixed(2) +
-        '" y2="' + (RAIO_DISCO * Math.sin(rad(a))).toFixed(2) + '" stroke="#3b2417" stroke-width="0.35"/>';
-    }
-    // aba de giro, com o nome da fração
-    s += '<rect x="-12" y="' + (-RAIO_DISCO - ABA).toFixed(2) + '" width="24" height="' + ABA +
-      '" rx="3" fill="' + cor + '" stroke="#3b2417" stroke-width="0.7"/>';
-    s += '<text x="0" y="' + (-RAIO_DISCO - 4).toFixed(2) + '" text-anchor="middle" font-size="7.5" ' +
-      'font-weight="900" fill="#3b2417" font-family="Outfit, Segoe UI, sans-serif">' + nomeDaPeca(doze) + '</text>';
-    // miolo e marca do furo do percevejo
-    s += '<circle cx="0" cy="0" r="6" fill="' + cor + '" stroke="#3b2417" stroke-width="0.7"/>';
-    s += '<circle cx="0" cy="0" r="1.7" fill="#fff" stroke="#3b2417" stroke-width="0.5"/>';
-    return s;
-  }
-
   function massaSVG(){
     var molho = RAIO - 8.5;
     // a beirada da pizza, com as bolhinhas da massa assada
@@ -713,16 +712,19 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
       }
     }
     var comb = opcoes[Math.floor(Math.random() * opcoes.length)];
-    var sabores = ['calabresa', 'mussarela', 'brócolis', 'cebola', 'azeitona'];
+    var sabores = ['calabresa', 'mussarela', 'azeitona'];
     for (var t = sabores.length - 1; t > 0; t--) {
       var u = Math.floor(Math.random() * (t + 1));
       var aux = sabores[t]; sabores[t] = sabores[u]; sabores[u] = aux;
     }
     var soma = 0;
-    var partes = comb.map(function(d, indice){ soma += d; return {doze:d, recheio:sabores[indice]}; });
+    var partes = comb.map(function(d, indice){
+      soma += d;
+      return {doze:d, recheio:sabores[indice % sabores.length]};
+    });
     return {
       nivel: 2, misto: true, partes: partes,
-      sobra: {doze: DOCE - soma, recheio: sabores[comb.length]},
+      sobra: {doze: DOCE - soma, recheio:sabores[(comb.length + 1) % sabores.length]},
       somaDoze: soma
     };
   }
@@ -1035,7 +1037,7 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
 
   function folhaDiscosMistos(){
     var guarda = RECHEIO_POR_DOZE;
-    RECHEIO_POR_DOZE = {6:'calabresa', 4:'mussarela', 3:'brócolis', 2:'cebola', 1:'azeitona'};
+    RECHEIO_POR_DOZE = {6:'calabresa', 4:'mussarela', 3:'azeitona', 2:'calabresa', 1:'mussarela'};
     var linhas = [[6, 1], [4], [3, 2]];
     var html = linhas.map(function(linha){
       return '<div class="discos-linha">' + linha.map(svgDisco).join('') + '</div>';
@@ -1244,6 +1246,12 @@ descricao: "Jogo de frações do 6º ano: cada equipe recebe pedidos em fração
   $('btn-sortear').addEventListener('click', sortear);
   $('btn-conferir').addEventListener('click', abrirConferencia);
   $('btn-zerar').addEventListener('click', zerar);
+  ARTES.forEach(function(nome){
+    var im = new Image();
+    im.onload = im.onerror = function(){ artesProntas++; };
+    im.src = ARTE + nome + '.jpg';
+  });
+
   $('modo').addEventListener('change', function(){
     estado.modo = this.value;
     $('nivel').disabled = (estado.modo === 'mista');
