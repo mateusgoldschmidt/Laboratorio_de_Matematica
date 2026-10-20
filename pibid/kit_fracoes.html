@@ -130,6 +130,9 @@ h2{font-size:19px;margin:26px 0 10px}
     padding: 4mm 5mm; margin: 4mm 0; }
   .manual .pedido-ex { font-weight: bold; }
   .manual .regra { font-size: 4mm; font-weight: bold; color: #8a6a3c; }
+
+  .tabela-pedidos tr.cab td { background: #f3ece0; font-weight: bold; font-size: 2.8mm;
+    color: #5b5449; }
 </style>
 </head>
 <body>
@@ -457,7 +460,8 @@ function bolinhas(p) {
 }
 
 function montarCartelas() {
-  var linhas = '';
+  var linhas = '<tr class="cab"><td></td><td>Pedido</td>' +
+    '<td>Peças que o grupo pretende usar</td><td>Conferido</td></tr>';
   for (var i = 0; i < PEDIDOS.length; i++) {
     linhas += '<tr><td class="n">' + (i + 1) + '</td><td class="e">' + fracHTML(PEDIDOS[i].t) +
       '</td><td class="c"></td><td class="c"></td></tr>';
