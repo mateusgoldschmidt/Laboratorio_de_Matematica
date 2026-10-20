@@ -572,7 +572,7 @@ function mostraPedido() {
     return;
   }
   var p = PEDIDOS[estado.pedido], alvo = [];
-  for (var i = 0; i < p.i.length; i++) alvo.push(FRAC[p.i[i][1]] + ' de ' + LONGO[p.i[i][0]]);
+  for (var i = 0; i < p.i.length; i++) alvo.push(fracDe(p.i[i][1]) + ' de ' + LONGO[p.i[i][0]]);
   cx.innerHTML = '<div class="numero">PEDIDO ' + (estado.pedido + 1) +
     ' <span>· a pizza inteira vale 12/12 avos</span></div>' +
     '<div class="conteudo"><div class="texto">' + p.t + '</div>' +
@@ -584,7 +584,7 @@ function mostraConferencia() {
   var el = document.getElementById('conf');
   if (estado.pedido < 0) { el.innerHTML = ''; return; }
   var p = PEDIDOS[estado.pedido], alvo = [], i;
-  for (i = 0; i < p.i.length; i++) alvo.push(FRAC[p.i[i][1]] + ' de ' + LONGO[p.i[i][0]]);
+  for (i = 0; i < p.i.length; i++) alvo.push(fracDe(p.i[i][1]) + ' de ' + LONGO[p.i[i][0]]);
   el.innerHTML = '<h3>Conferência do pedido ' + (estado.pedido + 1) + '</h3>' +
     '<p>Como se chega nas quantidades:</p><p class="deducao">' + fracHTML(p.d) + '</p>' +
     '<p>O alvo é <b>' + fracHTML(alvo.join(' + ')) + '</b>. Existem v\u00e1rias montagens v\u00e1lidas: ' +
