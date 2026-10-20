@@ -118,6 +118,10 @@
       border-color:rgba(255,255,255,0.18);
       box-shadow: 0 18px 30px rgba(0,0,0,0.45);
     }
+  .skills { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }
+  .skill { font-size: 11px; font-weight: 700; letter-spacing: .3px; padding: 4px 9px; border-radius: 999px;
+           background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.18); color: inherit; opacity: .85; }
+
 
     .card-icon{ font-size:3rem; margin-bottom:18px; }
 
@@ -172,7 +176,7 @@
     <h1>PROJETO PIBID</h1>
 
     <p class="subtitulo">
-      Mateiriais e recursos lúdicos desenvolvidos no PIBID.
+      Jogos e materiais lúdicos impressos e projetáveis desenvolvidos no PIBID — dominós, Super Trunfo, Mercadinho, Pizzaria das Frações e Trilha Sistema Solar — todos com manual do professor e gabarito.
     </p>
 
     <div class="cards">
@@ -190,6 +194,11 @@
             
             <h2>{{ pagina.titulo }}</h2>
             <p>{{ pagina.descricao }}</p>
+            {% if pagina.habilidades %}
+              <div class="skills">
+                {% for h in pagina.habilidades %}<span class="skill">{{ h }}</span>{% endfor %}
+              </div>
+            {% endif %}
             
             <div class="btn">Acessar Material →</div>
           </a>

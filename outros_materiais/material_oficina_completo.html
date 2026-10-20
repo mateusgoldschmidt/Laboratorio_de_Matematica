@@ -2,6 +2,12 @@
 titulo: Material Completo da Oficina Pedagógica
 descricao: Guia da turma, cartões de situação, ficha de resposta e cruzadinha sobre ensino, aprendizagem e desenvolvimento humano.
 icone: 📚
+habilidades:
+  - EF06MA07
+  - EF06MA13
+  - EF04CI01
+  - EF04CI03
+  - EF04CI04
 ---
 <!DOCTYPE html>
 
@@ -229,6 +235,7 @@ li { margin-bottom: 1.5mm; }
     body[data-print-target="sec-fichas"] .print-area:not(#sec-fichas),
     body[data-print-target="sec-cruzadinha-atividade"] .print-area:not(#sec-cruzadinha-atividade),
     body[data-print-target="sec-cruzadinha-gabarito"] .print-area:not(#sec-cruzadinha-gabarito),
+    body[data-print-target="atividades"] #sec-cruzadinha-gabarito,
     body[data-print-target="sec-artigo"] .print-area:not(#sec-artigo) {
         display: none !important;
     }
@@ -606,7 +613,8 @@ function printSection(sectionId) {
 }
 
 function printAll() {
-    delete document.body.dataset.printTarget;
+    // imprime as atividades do aluno, sem o gabarito da cruzadinha
+    document.body.dataset.printTarget = 'atividades';
     window.print();
 }
 
