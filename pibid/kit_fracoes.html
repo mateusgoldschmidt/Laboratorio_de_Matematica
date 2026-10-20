@@ -1,12 +1,12 @@
 ---
 titulo: "Pizzaria das Frações"
 icone: "🍕"
-descricao: "Jogo de frações do 6º ano: monte de 12 pizzas em peças de 1/2, 1/3, 1/4, 1/6 e 1/12 para imprimir, com painel projetado que sorteia os pedidos, abre cinco minutos de rodada e confere a montagem."
+descricao: "Jogo de frações do 6º ano para imprimir: o grupo recebe doze pedidos de uma vez, planeja e monta as pizzas com um monte exato de peças de 1/2, 1/3, 1/4, 1/6 e 1/12, sobre massas de 12 avos. Traz painel projetado com a dedução de cada pedido."
 ---
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  {% include analytics.html %}
+{% include analytics.html %}
   <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pizzaria das Frações — Laboratório de Matemática</title>
@@ -88,11 +88,23 @@ h2{font-size:19px;margin:26px 0 10px}
   body.print-pecas #sec-pecas,body.print-massas #sec-massas,
   body.print-cartelas #sec-cartelas,body.print-gabarito #sec-gabarito{display:block}
   .folha{margin:0;box-shadow:none;break-after:page}
+  .material,.material>section{margin:0!important;padding:0!important;border:0!important}
+  .folha:last-of-type{break-after:auto!important}
   .folha:last-child{break-after:auto}
   .cartelas{grid-template-columns:repeat(3,70mm);grid-template-rows:repeat(4,68mm);display:grid}
   .carta svg{width:70mm;height:56mm}
   .gabarito{padding:14mm 12mm 0;font-size:3.6mm}
 }
+
+  .tabela-pedidos { width: 100%; border-collapse: collapse; margin-top: 3mm; }
+  .tabela-pedidos td { border: 0.4mm solid #c9c2b4; padding: 2mm 1.6mm; vertical-align: top;
+    font-family: Verdana, sans-serif; font-size: 3.4mm; color: #3d3a34; }
+  .tabela-pedidos td.n { width: 7mm; text-align: center; font-weight: bold; }
+  .tabela-pedidos td.c { width: 26mm; }
+  .folha.pedidos .intro, .folha.gabarito .intro { font-family: Verdana, sans-serif;
+    font-size: 3.2mm; color: #6b6357; margin: 2mm 0 3mm; }
+  .deducao { font-family: Verdana, sans-serif; font-weight: bold; color: #20303a; }
+  .alvo { font-family: Verdana, sans-serif; font-size: 4mm; color: #6b6357; margin-top: 2mm; }
 </style>
 </head>
 <body>
@@ -132,31 +144,30 @@ h2{font-size:19px;margin:26px 0 10px}
 
 <section class="sobre">
   <h3>Sobre o jogo</h3>
-  <p>A turma é o pessoal da cozinha de uma pizzaria. Cada rodada o painel abre um pedido e a equipe
-  precisa montar a pizza com as peças do monte: cada peça é uma fatia de um sabor e de uma fração,
-  e o pedido só fecha quando a soma dá 12/12 avos. As peças usadas saem do jogo, então a turma
-  precisa pensar antes de gastar — uma peça de 1/3 usada onde cabia 1/6 pode custar o pedido seguinte.</p>
+  <p>A turma é o pessoal da cozinha de uma pizzaria. O grupo recebe os doze pedidos de uma vez,
+  planeja e monta as doze pizzas sobre as massas: cada peça é uma fatia de um sabor e de uma fração,
+  e o pedido só fecha quando a soma dá 12/12 avos. O monte tem as peças exatas para os doze pedidos,
+  então cada peça escolhida faz falta mais adiante — vale planejar antes de montar.</p>
   <ul>
     <li><b>Frações em uso:</b> 1/2, 1/3, 1/4, 1/6 e 1/12 — todas equivalentes entre si dentro de uma pizza de 12 avos.</li>
-    <li><b>O que se aprecia na mesa:</b> a beirada colorida diz o sabor, a etiqueta sobre o raio diz a fração e a massa por baixo mostra o que ainda falta cobrir.</li>
-    <li><b>Conferência:</b> a qualquer momento, sem esperar o tempo acabar. A própria massa denuncia se a conta não fechou.</li>
-    <li><b>Sem notebook:</b> as cartelas impressas fazem o papel do painel e o gabarito orienta o professor.</li>
+    <li><b>Peça grande não é obrigatória:</b> metade de calabresa pode ser uma peça de 1/2, duas de 1/4 ou três de 1/6. O que tem de bater é a área de cada sabor sobre a massa.</li>
+    <li><b>Combinações forçadas:</b> não existe peça de 5/12, de 2/3 nem de 3/4, então alguns pedidos só fecham juntando peças menores.</li>
+    <li><b>Conferência:</b> a qualquer momento. O painel mostra a dedução de cada pedido e a pizza alvo; a própria massa denuncia se a conta não fechou.</li>
+    <li><b>Sem notebook:</b> a folha dos doze pedidos faz o papel do painel e o gabarito orienta o professor.</li>
   </ul>
   <p><b>Habilidades da BNCC:</b> EF06MA01 — números racionais na forma fracionária: leitura, escrita,
   comparação, equivalência e representação, além da resolução de problemas com números racionais
   do 6º ano. O jogo também exercita a leitura de instruções escritas e o trabalho em equipe.</p>
-  <p><b>Impressão:</b> quatro folhas de peças (3 pizzas por folha, 46 peças), uma folha de massas
-  (duas por folha) e uma folha de cartelas, mais o gabarito. As cartelas saem encostadas, sem espaço
-  entre as bordas de recorte.</p>
+  <p><b>Impressão:</b> quatro folhas de peças (3 pizzas por folha, 51 peças), seis folhas de massas (duas por folha, 12 massas), uma folha com os doze pedidos e o gabarito. As peças saem encostadas, sem espaço entre as bordas de recorte.</p>
 </section>
 
 <section class="barra">
   <h2 style="margin-top:0">Imprimir</h2>
   <div class="botoes">
-    <button class="botao destaque" type="button" data-print="tudo">Tudo (7 páginas)</button>
+    <button class="botao destaque" type="button" data-print="tudo">Tudo (12 páginas)</button>
     <button class="botao" type="button" data-print="pecas">As 4 folhas de peças</button>
-    <button class="botao" type="button" data-print="massas">As massas de montagem</button>
-    <button class="botao" type="button" data-print="cartelas">As cartelas de pedido</button>
+    <button class="botao" type="button" data-print="massas">As 12 massas de montagem</button>
+    <button class="botao" type="button" data-print="cartelas">A folha dos doze pedidos</button>
     <button class="botao" type="button" data-print="gabarito">O gabarito</button>
   </div>
 </section>
@@ -164,10 +175,10 @@ h2{font-size:19px;margin:26px 0 10px}
 <h2 class="titulo-material">As quatro folhas de peças</h2>
 <section class="material" id="sec-pecas"></section>
 
-<h2 class="titulo-material">As massas de montagem</h2>
+<h2 class="titulo-material">As 12 massas de montagem</h2>
 <section class="material" id="sec-massas"></section>
 
-<h2 class="titulo-material">As cartelas de pedido</h2>
+<h2 class="titulo-material">A folha dos doze pedidos</h2>
 <section class="material" id="sec-cartelas"></section>
 
 <h2 class="titulo-material">O gabarito do professor</h2>
@@ -189,35 +200,59 @@ var FRAC = { 6: '1/2', 4: '1/3', 3: '1/4', 2: '1/6', 1: '1/12' };
 var R = 70, W = 210, H = 297;
 
 var PEDIDOS = [
-  [['C', 6], ['M', 6]],
-  [['C', 6], ['M', 4], ['A', 2]],
-  [['C', 4], ['M', 4], ['A', 4]],
-  [['M', 6], ['A', 3], ['C', 3]],
-  [['C', 3], ['M', 3], ['A', 3], ['C', 3]],
-  [['A', 6], ['M', 4], ['C', 2]],
-  [['C', 4], ['M', 3], ['A', 2], ['A', 3]],
-  [['C', 2], ['M', 2], ['A', 2], ['C', 3], ['M', 3]],
-  [['M', 3], ['A', 3], ['C', 3], ['C', 1], ['M', 1], ['A', 1]],
-  [['C', 6], ['M', 2], ['A', 2], ['M', 2]],
-  [['M', 4], ['A', 4], ['C', 2], ['A', 2]],
-  [['A', 2], ['C', 2], ['M', 3], ['A', 3], ['M', 2]]
+  { t: 'Metade da pizza é de calabresa e a outra metade é de mussarela.',
+    i: [['C', 6], ['M', 6]],
+    d: '12 \u00f7 2 = 6 \u2192 1/2 de calabresa e 1/2 de mussarela' },
+  { t: 'Metade da pizza \u00e9 de calabresa, um quarto \u00e9 de mussarela e o resto \u00e9 de azeitona.',
+    i: [['C', 6], ['M', 3], ['A', 3]],
+    d: '1/2 = 6/12 e 1/4 = 3/12; o resto \u00e9 12 \u2212 6 \u2212 3 = 3/12 = 1/4' },
+  { t: 'Um ter\u00e7o da pizza \u00e9 de calabresa e o restante \u00e9 de mussarela.',
+    i: [['C', 4], ['M', 8]],
+    d: '1/3 = 4/12; o restante \u00e9 12 \u2212 4 = 8/12 = 2/3' },
+  { t: 'A pizza tem um ter\u00e7o de calabresa, um ter\u00e7o de mussarela e o resto \u00e9 azeitona.',
+    i: [['C', 4], ['M', 4], ['A', 4]],
+    d: '4 + 4 = 8; o resto \u00e9 12 \u2212 8 = 4/12 = 1/3' },
+  { t: 'Metade da pizza \u00e9 de mussarela e a outra metade \u00e9 dividida em duas partes iguais, calabresa e azeitona.',
+    i: [['M', 6], ['C', 3], ['A', 3]],
+    d: 'a outra metade vale 6/12; 6 \u00f7 2 = 3 \u2192 3/12 = 1/4 cada' },
+  { t: 'A pizza tem um quarto de calabresa, um quarto de mussarela e o resto \u00e9 azeitona.',
+    i: [['C', 3], ['M', 3], ['A', 6]],
+    d: '3 + 3 = 6; o resto \u00e9 12 \u2212 6 = 6/12 = 1/2' },
+  { t: 'Dois ter\u00e7os da pizza s\u00e3o de mussarela e o restante \u00e9 dividido igualmente entre calabresa e azeitona.',
+    i: [['M', 8], ['C', 2], ['A', 2]],
+    d: '2/3 = 8/12; o restante \u00e9 4/12; 4 \u00f7 2 = 2 \u2192 2/12 = 1/6 cada' },
+  { t: 'Metade da pizza \u00e9 de mussarela e a outra metade \u00e9 dividida em tr\u00eas partes iguais: azeitona, calabresa e azeitona.',
+    i: [['M', 6], ['A', 2], ['C', 2], ['A', 2]],
+    d: 'a outra metade vale 6/12; 6 \u00f7 3 = 2 \u2192 2/12 = 1/6 cada' },
+  { t: 'Metade da pizza \u00e9 de azeitona e a outra metade \u00e9 dividida em tr\u00eas partes iguais: calabresa, mussarela e azeitona.',
+    i: [['A', 6], ['C', 2], ['M', 2], ['A', 2]],
+    d: 'a outra metade vale 6/12; 6 \u00f7 3 = 2 \u2192 2/12 = 1/6 cada' },
+  { t: 'Tr\u00eas quartos da pizza s\u00e3o de azeitona e mussarela, sendo a azeitona o dobro da mussarela. O resto \u00e9 calabresa.',
+    i: [['A', 6], ['M', 3], ['C', 3]],
+    d: '3/4 = 9/12; azeitona \u00e9 o dobro: 9 \u00f7 3 = 3 \u2192 6/12 de azeitona e 3/12 de mussarela; o resto \u00e9 12 \u2212 9 = 3/12 = 1/4' },
+  { t: 'Um ter\u00e7o da pizza \u00e9 de azeitona, um sexto \u00e9 de calabresa e o resto \u00e9 dividido em partes iguais entre mussarela e calabresa.',
+    i: [['A', 4], ['C', 2], ['M', 3], ['C', 3]],
+    d: '1/3 = 4/12 e 1/6 = 2/12; 4 + 2 = 6; o resto \u00e9 6/12; 6 \u00f7 2 = 3 \u2192 3/12 = 1/4 cada' },
+  { t: 'A pizza tem um sexto de calabresa, um sexto de mussarela e um sexto de azeitona. O resto \u00e9 dividido em partes iguais entre mussarela e azeitona.',
+    i: [['C', 2], ['M', 2], ['A', 2], ['M', 3], ['A', 3]],
+    d: '1/6 = 2/12; 2 + 2 + 2 = 6; o resto \u00e9 6/12; 6 \u00f7 2 = 3 \u2192 3/12 = 1/4 cada' }
 ];
 
 /* As doze rodelas em que o monte é impresso: duas inteiras por folha e uma
-   partida em duas metades na tira da direita. Somadas, são as 46 peças. */
+   partida em duas metades na tira da direita. Somadas, são as 51 peças. */
 var RODELAS = [
-  [[6, 'C'], [6, 'M']],
-  [[6, 'C'], [6, 'M']],
-  [[6, 'C'], [6, 'A']],
-  [[4, 'A'], [4, 'A'], [2, 'A'], [2, 'M']],
-  [[4, 'C'], [4, 'M'], [2, 'C'], [2, 'C']],
-  [[4, 'C'], [4, 'M'], [2, 'C'], [2, 'M']],
-  [[4, 'M'], [4, 'M'], [2, 'A'], [2, 'A']],
-  [[3, 'C'], [3, 'C'], [3, 'C'], [3, 'M']],
-  [[3, 'M'], [3, 'A'], [3, 'A'], [3, 'A']],
-  [[3, 'C'], [3, 'M'], [3, 'M'], [3, 'A']],
-  [[3, 'M'], [3, 'C'], [2, 'M'], [2, 'M'], [2, 'A']],
-  [[3, 'A'], [2, 'A'], [2, 'C'], [2, 'A'], [1, 'M'], [1, 'A'], [1, 'C']]
+  [[2,'A'], [2,'C'], [1,'M'], [2,'C'], [2,'M'], [2,'M'], [1,'A']],
+  [[6,'C'], [6,'A']],
+  [[3,'A'], [4,'M'], [2,'M'], [3,'M']],
+  [[3,'A'], [2,'A'], [2,'C'], [3,'M'], [1,'A'], [1,'A']],
+  [[6,'M'], [4,'C'], [1,'M'], [1,'M']],
+  [[2,'C'], [3,'M'], [1,'A'], [2,'C'], [4,'A']],
+  [[3,'C'], [6,'A'], [3,'C']],
+  [[6,'M'], [2,'C'], [3,'A'], [1,'A']],
+  [[2,'M'], [4,'C'], [3,'M'], [3,'M']],
+  [[4,'M'], [2,'M'], [4,'A'], [2,'A']],
+  [[3,'A'], [4,'M'], [4,'C'], [1,'M']],
+  [[2,'A'], [4,'M'], [3,'C'], [3,'C']],
 ];
 
 var uid = 0;
@@ -328,74 +363,85 @@ function massaSVG(cy) {
 }
 
 function montarMassas() {
-  var texto = ['COMO JOGAR', '', 'A pizza inteira', 'vale 12/12 avos.', '', 'O painel sorteia um',
-    'pedido e abre 5 minutos.', '', 'Escolham as peças no', 'monte e montem sobre', 'a massa.', '',
-    'A beirada colorida diz', 'o sabor; a etiqueta,', 'a fração.', '', 'Se a conta não fechar,',
-    'sobra massa', 'aparecendo: é só', 'ajustar.', '', 'Ao terminar, cliquem', 'em Abrir conferência.',
-    '', 'Conferido, as peças', 'usadas saem do jogo.', '', 'Sem notebook? Usem a', 'cartela de pedidos e',
-    'o gabarito.'];
-  var linhas = '', y = 38;
+  var texto = ['COMO JOGAR', '', 'A pizza inteira', 'vale 12/12 avos.', '',
+    'O grupo recebe os', 'doze pedidos de uma', 'vez e planeja antes', 'de montar.', '',
+    'Escolham as peças no', 'monte e montem sobre', 'a massa, uma pizza', 'de cada vez.', '',
+    'A beirada colorida diz', 'o sabor; a etiqueta,', 'a fração.', '',
+    'Se a conta não fechar,', 'sobra massa', 'aparecendo: é só', 'ajustar.', '',
+    'Anotem o número do', 'pedido em cada massa.', '',
+    'Sem notebook? Usem a', 'folha dos doze', 'pedidos e o gabarito.'];
+  var linhas = '', y = 40;
   for (var i = 0; i < texto.length; i++) {
     if (texto[i]) {
       var forte = texto[i] === 'COMO JOGAR' || texto[i].indexOf('Sem notebook') === 0;
-      linhas += '<text x="142" y="' + y + '" font-family="Verdana" font-size="' +
+      linhas += '<text x="146" y="' + y + '" font-family="Verdana" font-size="' +
         (forte ? 6 : 4.4) + '" fill="' + (forte ? '#3d3a34' : '#6b6357') + '"' +
         (forte ? ' font-weight="bold"' : '') + '>' + texto[i] + '</text>';
     }
-    y += 8.4;
+    y += 8.2;
   }
-  document.getElementById('sec-massas').innerHTML = folhaSVG(massaSVG(72) + massaSVG(218) + linhas,
-    'PIZZARIA DAS FRAÇÕES · as massas de montagem · duas por folha');
+  var html = '';
+  for (var f = 0; f < 6; f++) {
+    var svg = massaSVG(72) + massaSVG(218) +
+      '<text x="146" y="72" font-family="Verdana" font-size="5" fill="#3d3a34" ' +
+      'font-weight="bold">PEDIDO ____</text>' +
+      '<text x="146" y="82" font-family="Verdana" font-size="4.2" fill="#6b6357">' +
+      'equipe: ______________</text>' +
+      '<text x="146" y="218" font-family="Verdana" font-size="5" fill="#3d3a34" ' +
+      'font-weight="bold">PEDIDO ____</text>' +
+      '<text x="146" y="228" font-family="Verdana" font-size="4.2" fill="#6b6357">' +
+      'equipe: ______________</text>' +
+      (f === 0 ? linhas : '');
+    html += folhaSVG(svg, 'PIZZARIA DAS FRAÇÕES · massas de montagem ' + (f * 2 + 1) + ' e ' +
+      (f * 2 + 2) + ' de 12 · folha ' + (f + 1) + ' de 6');
+  }
+  document.getElementById('sec-massas').innerHTML = html;
 }
 
 /* ---------------------------------------------------------------- as cartelas e o gabarito */
-function textoPedido(p) {
-  var t = [];
-  for (var i = 0; i < p.length; i++) t.push(FRAC[p[i][1]] + ' de ' + LONGO[p[i][0]]);
-  return t.join(' + ');
-}
+function textoPedido(p) { return p.t; }
+function itens(p) { return p.i; }
 
 function bolinhas(p) {
-  var s = '', vistos = {}, n = 0;
-  for (var i = 0; i < p.length; i++) {
-    if (vistos[p[i][0]]) continue;
-    vistos[p[i][0]] = 1;
-    s += '<circle cx="' + (11 + n * 6) + '" cy="56" r="2.1" fill="' + CORES[p[i][0]] + '"/>';
+  var s = '', vistos = {}, n = 0, it = itens(p);
+  for (var i = 0; i < it.length; i++) {
+    if (vistos[it[i][0]]) continue;
+    vistos[it[i][0]] = 1;
+    s += '<circle cx="' + (11 + n * 6) + '" cy="56" r="2.1" fill="' + CORES[it[i][0]] + '"/>';
     n++;
   }
   return s;
 }
 
 function montarCartelas() {
-  var html = '';
+  var linhas = '';
   for (var i = 0; i < PEDIDOS.length; i++) {
-    var p = PEDIDOS[i], linhas = '';
-    for (var j = 0; j < p.length; j++) {
-      linhas += '<tspan x="8" dy="' + (j ? 6.6 : 0) + '">' + FRAC[p[j][1]] + ' de ' +
-        LONGO[p[j][0]] + '</tspan>';
-    }
-    html += '<div class="carta"><div class="topo">PEDIDO ' + (i + 1) + '</div>' +
-      '<svg viewBox="0 0 70 72"><text x="8" y="15" font-family="Verdana" font-size="6" ' +
-      'font-weight="bold" fill="#3d3a34">' + linhas + '</text>' + bolinhas(p) +
-      '<text x="8" y="68" font-family="Verdana" font-size="4.6" fill="#6b6357">' +
-      'total: 12/12</text></svg></div>';
+    linhas += '<tr><td class="n">' + (i + 1) + '</td><td class="e">' + PEDIDOS[i].t +
+      '</td><td class="c"></td><td class="c"></td></tr>';
   }
   document.getElementById('sec-cartelas').innerHTML =
-    '<div class="folha cartelas">' + html + '</div>';
+    '<div class="folha pedidos"><h2>Os doze pedidos</h2>' +
+    '<p class="intro">O grupo recebe os doze pedidos de uma vez. Planejem antes de montar: o monte ' +
+    'tem as peças exatas para os doze, então cada peça escolhida faz falta mais adiante. ' +
+    'A pizza inteira vale 12/12 avos. Usem as duas colunas da direita para anotar o que pretendem ' +
+    'usar em cada pedido.</p><table class="tabela-pedidos">' + linhas + '</table>' +
+    '<div class="pe">PIZZARIA DAS FRAÇÕES · folha dos doze pedidos · uma por grupo</div></div>';
 }
 
 function montarGabarito() {
-  var html = '<div class="folha gabarito"><h2>Gabarito dos 12 pedidos</h2>' +
-    '<p>Cada pedido fecha 12/12 avos. Somados, os doze consomem exatamente as 46 peças impressas: ' +
-    '6 de 1/2, 8 de 1/3, 15 de 1/4, 14 de 1/6 e 3 de 1/12. Nada sobra e nada falta. ' +
-    'A ordem em que as peças aparecem aqui é a da cartela.</p>';
+  var html = '<div class="folha gabarito"><h2>Gabarito e dedução</h2>' +
+    '<p class="intro">Cada pedido fecha 12/12 avos. Somados, os doze consomem exatamente as 51 ' +
+    'peças impressas: calabresa 42/12, mussarela 57/12 e azeitona 45/12. Nada sobra e nada falta. ' +
+    'A montagem pode ser feita com peças diferentes das que a dedução sugere — o que tem de bater ' +
+    'é a área de cada sabor sobre a massa.</p>';
   for (var i = 0; i < PEDIDOS.length; i++) {
-    var conta = [];
-    for (var j = 0; j < PEDIDOS[i].length; j++) conta.push(PEDIDOS[i][j][1]);
-    html += '<div class="linha"><b>' + (i + 1) + '.</b> ' + textoPedido(PEDIDOS[i]) +
-      '<span class="conta">' + conta.join(' + ') + ' = 12/12</span></div>';
+    var p = PEDIDOS[i], alvo = [];
+    for (var j = 0; j < p.i.length; j++)
+      alvo.push(FRAC[p.i[j][1]] + ' de ' + LONGO[p.i[j][0]]);
+    html += '<div class="linha"><b>' + (i + 1) + '.</b> ' + p.t +
+      '<span class="conta">' + p.d + ' \u2192 ' + alvo.join(' + ') + '</span></div>';
   }
-  html += '<div class="pe">PIZZARIA DAS FRAÇÕES · gabarito do professor · página 7 de 7</div></div>';
+  html += '<div class="pe">PIZZARIA DAS FRAÇÕES · gabarito do professor · última página</div></div>';
   document.getElementById('sec-gabarito').innerHTML = html;
 }
 
@@ -451,44 +497,43 @@ function pizzaDoPedido(p, escala) {
 function mostraPedido() {
   var cx = document.getElementById('pedido');
   if (estado.pedido < 0) {
-    cx.innerHTML = '<div class="vazio">Clique em <b>Sortear pedido</b> para começar a rodada.</div>';
+    cx.innerHTML = '<div class="vazio">Clique em <b>Abrir o pr\u00f3ximo pedido</b> para ver o ' +
+      'enunciado e a pizza alvo.</div>';
     return;
   }
-  var p = PEDIDOS[estado.pedido];
+  var p = PEDIDOS[estado.pedido], alvo = [];
+  for (var i = 0; i < p.i.length; i++) alvo.push(FRAC[p.i[i][1]] + ' de ' + LONGO[p.i[i][0]]);
   cx.innerHTML = '<div class="numero">PEDIDO ' + (estado.pedido + 1) +
-    ' <span>· os clientes querem 12/12 avos</span></div>' +
-    '<div class="conteudo"><div class="texto">' + textoPedido(p).replace(/ \+ /g, '<br>') +
-    '</div><div class="pizza">' + pizzaDoPedido(p, 200) + '</div></div>';
+    ' <span>· a pizza inteira vale 12/12 avos</span></div>' +
+    '<div class="conteudo"><div class="texto">' + p.t + '</div>' +
+    '<div class="pizza">' + pizzaDoPedido(p.i, 200) + '</div></div>' +
+    '<div class="alvo">alvo: ' + alvo.join(' + ') + '</div>';
 }
 
 function mostraConferencia() {
   var el = document.getElementById('conf');
   if (estado.pedido < 0) { el.innerHTML = ''; return; }
-  var p = PEDIDOS[estado.pedido], conta = [], i;
-  for (i = 0; i < p.length; i++) conta.push(FRAC[p[i][1]] + ' de ' + LONGO[p[i][0]]);
+  var p = PEDIDOS[estado.pedido], alvo = [], i;
+  for (i = 0; i < p.i.length; i++) alvo.push(FRAC[p.i[i][1]] + ' de ' + LONGO[p.i[i][0]]);
   el.innerHTML = '<h3>Conferência do pedido ' + (estado.pedido + 1) + '</h3>' +
-    '<p>Confira a pizza montada na mesa com a figura ao lado: a beirada de cada fatia tem a cor ' +
-    'do sabor e a etiqueta diz a fração. A soma tem de fechar 12/12 — se faltar, sobra massa ' +
-    'aparecendo no fundo.</p>' + '<ul>' + conta.map(function (x) { return '<li>' + x + '</li>'; }).join('') +
-    '</ul><div class="img">' + pizzaDoPedido(p, 240) + '</div>' +
-    '<button class="botao" id="btn-certo" type="button">Fechou 12/12: marcar o ponto</button>';
+    '<p>Como se chega nas quantidades:</p><p class="deducao">' + p.d + '</p>' +
+    '<p>O alvo é <b>' + alvo.join(' + ') + '</b>. Existem v\u00e1rias montagens v\u00e1lidas: ' +
+    'metade de calabresa pode ser uma peça de 1/2, duas de 1/4 ou três de 1/6. O que tem de bater ' +
+    '\u00e9 a \u00e1rea de cada sabor sobre a massa. Se faltar, sobra massa aparecendo no fundo.</p>' +
+    '<div class="img">' + pizzaDoPedido(p.i, 240) + '</div>' +
+    '<button class="botao" id="btn-certo" type="button">Conferido: marcar o pedido como entregue</button>';
   document.getElementById('btn-certo').onclick = darPonto;
 }
 
 function darPonto() {
   if (estado.pedido < 0) return;
-  var p = PEDIDOS[estado.pedido], i;
-  for (i = 0; i < p.length; i++) {
-    var k = p[i][1] + '-' + p[i][0];
-    MONTE[k]--;
-  }
   estado.usados.push(estado.pedido);
   estado.pedido = -1;
-  pararRelogio();
   mostraPedido();
   mostraMonte();
-  document.getElementById('conf').innerHTML = '<h3>Rodada fechada</h3><p>As peças usadas saíram ' +
-    'do monte. Clique em <b>Sortear pedido</b> para a próxima rodada.</p>';
+  document.getElementById('conf').innerHTML = '<h3>Pedido entregue</h3><p>Marquem o número do ' +
+    'pedido na massa que foi montada. Clique em <b>Abrir o pr\u00f3ximo pedido</b> para seguir, ' +
+    'ou escolha outro na lista acima.</p>';
   document.getElementById('btn-conferir').disabled = true;
   document.getElementById('btn-proxima').disabled = false;
 }
@@ -506,41 +551,38 @@ function mostraMonte() {
       '<span class="qtd">' + n + '</span></div>');
   }
   document.getElementById('monte').innerHTML =
-    linhas.join('') + '<div class="restam">Restam <b>' + Math.floor(restam / 12) + '</b> pizzas ' +
-    '(' + restam + '/12 avos) · ' + estado.usados.length + ' de 12 pedidos usados</div>';
+    linhas.join('') + '<div class="restam">O monte tem <b>' + Math.floor(restam / 12) +
+    '</b> pizzas em peças (' + restam + '/12 avos) · ' + estado.usados.length +
+    ' de 12 pedidos entregues</div>';
 }
 
-function sortear() {
-  var livres = [], i;
-  for (i = 0; i < PEDIDOS.length; i++) if (estado.usados.indexOf(i) < 0) livres.push(i);
-  if (!livres.length) {
-    document.getElementById('pedido').innerHTML =
-      '<div class="vazio">Os doze pedidos já foram atendidos. Fim de jogo!</div>';
-    document.getElementById('btn-sortear').disabled = true;
-    return;
+function proximo() {
+  var i;
+  for (i = 0; i < PEDIDOS.length; i++) {
+    if (estado.usados.indexOf(i) < 0) {
+      estado.pedido = i;
+      mostraPedido();
+      document.getElementById('conf').innerHTML = '';
+      document.getElementById('btn-conferir').disabled = false;
+      document.getElementById('btn-proxima').disabled = true;
+      return;
+    }
   }
-  estado.pedido = livres[Math.floor(Math.random() * livres.length)];
-  mostraPedido();
-  comecaRelogio();
-  document.getElementById('conf').innerHTML = '';
-  document.getElementById('btn-conferir').disabled = false;
+  document.getElementById('pedido').innerHTML =
+    '<div class="vazio">Os doze pedidos foram entregues. Fim de jogo!</div>';
+  document.getElementById('btn-sortear').disabled = true;
   document.getElementById('btn-proxima').disabled = true;
 }
 
 function ligar() {
   var sel = document.getElementById('tempo');
-  for (var i = 0; i < sel.options.length; i++)
-    if (+sel.options[i].value === estado.tempo) sel.selectedIndex = i;
-  sel.onchange = function () {
-    estado.tempo = +sel.value;
-    if (estado.pedido >= 0) comecaRelogio();
-  };
-  document.getElementById('btn-sortear').onclick = sortear;
+  if (sel) sel.style.display = 'none';
+  var crono = document.getElementById('crono');
+  if (crono) crono.style.display = 'none';
+  var bs = document.getElementById('btn-sortear');
+  if (bs) { bs.textContent = 'Abrir o pr\u00f3ximo pedido'; bs.onclick = proximo; }
   document.getElementById('btn-conferir').onclick = mostraConferencia;
-  document.getElementById('btn-proxima').onclick = function () {
-    document.getElementById('btn-proxima').disabled = true;
-    sortear();
-  };
+  document.getElementById('btn-proxima').onclick = proximo;
   var botoes = document.querySelectorAll('[data-print]');
   for (var j = 0; j < botoes.length; j++) {
     botoes[j].onclick = function () {
@@ -552,7 +594,6 @@ function ligar() {
   contaMonte();
   mostraMonte();
   mostraPedido();
-  mostraTempo();
 }
 
 montarFolhas();
