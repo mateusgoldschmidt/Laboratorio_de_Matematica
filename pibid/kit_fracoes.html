@@ -444,7 +444,7 @@ function bolinhas(p) {
 function montarCartelas() {
   var linhas = '';
   for (var i = 0; i < PEDIDOS.length; i++) {
-    linhas += '<tr><td class="n">' + (i + 1) + '</td><td class="e">' + PEDIDOS[i].t +
+    linhas += '<tr><td class="n">' + (i + 1) + '</td><td class="e">' + fracHTML(PEDIDOS[i].t) +
       '</td><td class="c"></td><td class="c"></td></tr>';
   }
   document.getElementById('sec-cartelas').innerHTML =
