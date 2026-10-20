@@ -279,19 +279,25 @@ function giroRotulo(meio) {
 function pecaSVG(cx, cy, a0, a1, sabor, tam) {
   var p = setor(cx, cy, R, a0, a1), n = 'c' + (++uid);
   var meio = (a0 + a1) / 2, rad = Math.PI / 180;
-  var larg = 2.2 + 3.1 * FRAC[tam].length, alt = 8;
+  var partes = FRAC[tam].split('/');
+  var larg = 3.4 + 3.6 * Math.max(partes[0].length, partes[1].length), alt = 15;
   var mx = cx + R * 0.64 * Math.cos(meio * rad), my = cy + R * 0.64 * Math.sin(meio * rad);
+  // a fracao fica deitada sobre o raio: numerador para a borda, denominador para o centro
   return '<defs><clipPath id="' + n + '"><path d="' + p.area + '"/></clipPath></defs>' +
     '<image clip-path="url(#' + n + ')" x="' + (cx - R) + '" y="' + (cy - R) + '" width="' + (2 * R) +
     '" height="' + (2 * R) + '" preserveAspectRatio="xMidYMid slice" href="' + IMG + 'pizza-' +
     LONGO[sabor] + '.jpg"/>' +
     '<path d="' + p.arco + '" fill="none" stroke="' + CORES[sabor] + '" stroke-width="3.4"/>' +
     '<path d="' + p.area + '" fill="none" stroke="#ffffff" stroke-width="0.7"/>' +
-    '<g transform="translate(' + mx + ' ' + my + ') rotate(' + giroRotulo(meio) + ')">' +
+    '<g transform="translate(' + mx + ' ' + my + ') rotate(' + (meio + 90) + ')">' +
     '<rect x="' + (-larg / 2) + '" y="' + (-alt / 2) + '" width="' + larg + '" height="' + alt +
-    '" rx="2" fill="#ffffff" opacity="0.95"/>' +
-    '<text x="0" y="0" font-family="Verdana" font-size="6.4" font-weight="bold" fill="#20303a" ' +
-    'text-anchor="middle" dy="2.3">' + FRAC[tam] + '</text></g>';
+    '" rx="1.8" fill="#ffffff" opacity="0.95"/>' +
+    '<text x="0" y="-3.4" font-family="Verdana" font-size="6" font-weight="bold" fill="#20303a" ' +
+    'text-anchor="middle">' + partes[0] + '</text>' +
+    '<line x1="' + (-larg / 2 + 1.6) + '" y1="0" x2="' + (larg / 2 - 1.6) +
+    '" y2="0" stroke="#20303a" stroke-width="0.7"/>' +
+    '<text x="0" y="6.6" font-family="Verdana" font-size="6" font-weight="bold" fill="#20303a" ' +
+    'text-anchor="middle">' + partes[1] + '</text></g>';
 }
 
 function rodelaSVG(rod, cx, cy) {
