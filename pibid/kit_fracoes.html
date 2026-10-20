@@ -1,7 +1,7 @@
 ---
 titulo: "Pizzaria das Frações"
 icone: "🍕"
-descricao: "Jogo de frações do 6º ano para imprimir: o grupo recebe doze pedidos de uma vez, planeja e monta as pizzas com um monte exato de peças de 1/2, 1/3, 1/4, 1/6 e 1/12, sobre massas de 12 avos. Traz painel projetado com a dedução de cada pedido."
+descricao: "Jogo de frações do 6º ano para imprimir: o grupo recebe doze pedidos de uma vez, planeja e monta as pizzas com um monte exato de peças de 1/2, 1/3, 1/4, 1/6 e 1/12 sobre massas de 12 avos. Peças e massas no mesmo tamanho, 4 por folha. Traz painel projetado com a dedução de cada pedido."
 ---
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -160,15 +160,15 @@ h2{font-size:19px;margin:26px 0 10px}
   <p><b>Habilidades da BNCC:</b> EF06MA01 — números racionais na forma fracionária: leitura, escrita,
   comparação, equivalência e representação, além da resolução de problemas com números racionais
   do 6º ano. O jogo também exercita a leitura de instruções escritas e o trabalho em equipe.</p>
-  <p><b>Impressão:</b> três folhas de peças (4 pizzas por folha, 51 peças), seis folhas de massas (duas por folha, 12 massas), uma folha com os doze pedidos e o gabarito. As peças saem encostadas, sem espaço entre as bordas de recorte.</p>
+  <p><b>Impressão:</b> três folhas de peças (4 pizzas por folha, 51 peças), três folhas de massas (4 por folha, 12 massas), uma folha com os doze pedidos e o gabarito. As peças saem encostadas, sem espaço entre as bordas de recorte.</p>
 </section>
 
 <section class="barra">
   <h2 style="margin-top:0">Imprimir</h2>
   <div class="botoes">
-    <button class="botao destaque" type="button" data-print="tudo">Tudo (11 páginas)</button>
+    <button class="botao destaque" type="button" data-print="tudo">Tudo (8 páginas)</button>
     <button class="botao" type="button" data-print="pecas">As 3 folhas de peças</button>
-    <button class="botao" type="button" data-print="massas">As 12 massas de montagem</button>
+    <button class="botao" type="button" data-print="massas">As 3 folhas de massas</button>
     <button class="botao" type="button" data-print="cartelas">A folha dos doze pedidos</button>
     <button class="botao" type="button" data-print="gabarito">O gabarito</button>
   </div>
@@ -177,7 +177,7 @@ h2{font-size:19px;margin:26px 0 10px}
 <h2 class="titulo-material">As três folhas de peças</h2>
 <section class="material" id="sec-pecas"></section>
 
-<h2 class="titulo-material">As 12 massas de montagem</h2>
+<h2 class="titulo-material">As 3 folhas de massas</h2>
 <section class="material" id="sec-massas"></section>
 
 <h2 class="titulo-material">A folha dos doze pedidos</h2>
@@ -341,24 +341,30 @@ function folhaSVG(conteudo, rodape, extra) {
 }
 
 /* ---------------------------------------------------------------- as folhas de peças */
+var K = 0.8, R2 = 56, DX = 97;
+var POS = [[R2, R2], [R2 + DX, 2 * R2], [R2, 3 * R2], [R2 + DX, 4 * R2]];
+
+function legendaNaFolha(linhas, forte) {
+  var out = '';
+  for (var j = 0; j < linhas.length; j++) {
+    out += '<text x="118" y="' + (13 + j * 6.6) + '" font-family="Verdana" font-size="3.5"' +
+      (j === 0 && forte ? ' font-weight="bold" font-size="4.2"' : '') + ' fill="#6b6357">' +
+      linhas[j] + '</text>';
+  }
+  return out;
+}
+
 function montarFolhas() {
-  // quatro pizzas inteiras por folha, num quadrado de 2 x 2
-  var k = 0.7428, m = 52.4, passo = 104.8;
-  var pos = [[m, m], [m + passo, m], [m, m + passo], [m + passo, m + passo]];
-  var legenda = ['Cada pizza desta folha é uma rodela do monte e vale 12/12 avos.',
-    'Recorte cada fatia pela linha do raio. A etiqueta diz a fração: 1/2, 1/3, 1/4, 1/6 ou 1/12.',
-    'As fatias de uma mesma pizza têm sabores diferentes: a beirada colorida diz qual é.'];
+  var legenda = ['COMO RECORTAR', 'Cada pizza é uma rodela', 'do monte e vale 12/12 avos.',
+    'Recorte cada fatia pela', 'linha do raio. A etiqueta', 'diz a fração da fatia.'];
   var html = '';
   for (var f = 0; f < 3; f++) {
     var svg = '';
     for (var i = 0; i < 4; i++) {
-      svg += '<g transform="translate(' + pos[i][0] + ',' + pos[i][1] + ') scale(' + k + ')">' +
+      svg += '<g transform="translate(' + POS[i][0] + ',' + POS[i][1] + ') scale(' + K + ')">' +
         rodelaSVG(RODELAS[f * 4 + i], 0, 0) + '</g>';
     }
-    for (var j = 0; j < legenda.length; j++) {
-      svg += '<text x="6" y="' + (238 + j * 9) + '" font-family="Verdana" font-size="4.4" ' +
-        'fill="#6b6357">' + legenda[j] + '</text>';
-    }
+    svg += legendaNaFolha(legenda, true);
     html += folhaSVG(svg, 'PIZZARIA DAS FRAÇÕES · folha ' + (f + 1) +
       ' de 3 de peças · calabresa vermelho · mussarela amarelo · azeitona roxo');
   }
@@ -367,55 +373,38 @@ function montarFolhas() {
 
 /* ---------------------------------------------------------------- as massas de montagem */
 function massaSVG(cy) {
-  var s = '<circle cx="70" cy="' + cy + '" r="' + R + '" fill="#f6e7cf" stroke="#c9a469" ' +
+  var s = '<circle cx="0" cy="' + cy + '" r="' + R + '" fill="#f6e7cf" stroke="#c9a469" ' +
     'stroke-width="1.2"/>', i, a, rad = Math.PI / 180;
   for (i = 0; i < 12; i++) {
     a = (-90 + i * 30) * rad;
-    s += '<line x1="70" y1="' + cy + '" x2="' + (70 + R * Math.cos(a)) + '" y2="' +
+    s += '<line x1="0" y1="' + cy + '" x2="' + (R * Math.cos(a)) + '" y2="' +
       (cy + R * Math.sin(a)) + '" stroke="#c9a469" stroke-width="0.4" stroke-dasharray="1.6 1.6"/>';
   }
   for (i = 0; i < 12; i++) {
     a = (-90 + i * 30 + 15) * rad;
-    s += '<text x="' + (70 + R * 0.9 * Math.cos(a)) + '" y="' + (cy + R * 0.9 * Math.sin(a)) +
+    s += '<text x="' + (R * 0.9 * Math.cos(a)) + '" y="' + (cy + R * 0.9 * Math.sin(a)) +
       '" font-family="Verdana" font-size="4" fill="#a8845a" text-anchor="middle" dy="1.4">' +
       (i + 1) + '</text>';
   }
-  return s + '<text x="70" y="' + cy + '" font-family="Verdana" font-size="5" fill="#a8845a" ' +
-    'text-anchor="middle">12 avos</text>';
+  return s + '<text x="0" y="' + (cy - 4) + '" font-family="Verdana" font-size="4.4" ' +
+    'fill="#a8845a" text-anchor="middle">12 avos</text>' +
+    '<text x="0" y="' + (cy + 4) + '" font-family="Verdana" font-size="5" font-weight="bold" ' +
+    'fill="#8a6a3c" text-anchor="middle">PEDIDO ____</text>';
 }
 
 function montarMassas() {
-  var texto = ['COMO JOGAR', '', 'A pizza inteira', 'vale 12/12 avos.', '',
-    'O grupo recebe os', 'doze pedidos de uma', 'vez e planeja antes', 'de montar.', '',
-    'Escolham as peças no', 'monte e montem sobre', 'a massa, uma pizza', 'de cada vez.', '',
-    'A beirada colorida diz', 'o sabor; a etiqueta,', 'a fração.', '',
-    'Se a conta não fechar,', 'sobra massa', 'aparecendo: é só', 'ajustar.', '',
-    'Anotem o número do', 'pedido em cada massa.', '',
-    'Sem notebook? Usem a', 'folha dos doze', 'pedidos e o gabarito.'];
-  var linhas = '', y = 40;
-  for (var i = 0; i < texto.length; i++) {
-    if (texto[i]) {
-      var forte = texto[i] === 'COMO JOGAR' || texto[i].indexOf('Sem notebook') === 0;
-      linhas += '<text x="146" y="' + y + '" font-family="Verdana" font-size="' +
-        (forte ? 6 : 4.4) + '" fill="' + (forte ? '#3d3a34' : '#6b6357') + '"' +
-        (forte ? ' font-weight="bold"' : '') + '>' + texto[i] + '</text>';
-    }
-    y += 8.2;
-  }
+  var texto = ['COMO JOGAR', 'O grupo recebe os doze pedidos', 'de uma vez e planeja antes de',
+    'montar as doze pizzas.', 'Se sobrar massa aparecendo,', 'a conta não fechou: ajustem.'];
   var html = '';
-  for (var f = 0; f < 6; f++) {
-    var svg = massaSVG(72) + massaSVG(218) +
-      '<text x="146" y="72" font-family="Verdana" font-size="5" fill="#3d3a34" ' +
-      'font-weight="bold">PEDIDO ____</text>' +
-      '<text x="146" y="82" font-family="Verdana" font-size="4.2" fill="#6b6357">' +
-      'equipe: ______________</text>' +
-      '<text x="146" y="218" font-family="Verdana" font-size="5" fill="#3d3a34" ' +
-      'font-weight="bold">PEDIDO ____</text>' +
-      '<text x="146" y="228" font-family="Verdana" font-size="4.2" fill="#6b6357">' +
-      'equipe: ______________</text>' +
-      (f === 0 ? linhas : '');
-    html += folhaSVG(svg, 'PIZZARIA DAS FRAÇÕES · massas de montagem ' + (f * 2 + 1) + ' e ' +
-      (f * 2 + 2) + ' de 12 · folha ' + (f + 1) + ' de 6');
+  for (var f = 0; f < 3; f++) {
+    var svg = '';
+    for (var i = 0; i < 4; i++) {
+      svg += '<g transform="translate(' + POS[i][0] + ',' + POS[i][1] + ') scale(' + K + ')">' +
+        massaSVG(0) + '</g>';
+    }
+    if (f === 0) svg += legendaNaFolha(texto, true);
+    html += folhaSVG(svg, 'PIZZARIA DAS FRAÇÕES · massas ' + (f * 4 + 1) + ' a ' + (f * 4 + 4) +
+      ' de 12 · folha ' + (f + 1) + ' de 3 · as peças estão nas três folhas de pizzas');
   }
   document.getElementById('sec-massas').innerHTML = html;
 }
