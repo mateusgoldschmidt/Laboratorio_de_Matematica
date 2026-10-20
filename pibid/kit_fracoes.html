@@ -107,6 +107,12 @@ h2{font-size:19px;margin:26px 0 10px}
     font-size: 3.2mm; color: #6b6357; margin: 2mm 0 3mm; }
   .deducao { font-family: Verdana, sans-serif; font-weight: bold; color: #20303a; }
   .alvo { font-family: Verdana, sans-serif; font-size: 4mm; color: #6b6357; margin-top: 2mm; }
+
+  .frac { display: inline-block; vertical-align: -0.34em; text-align: center;
+    font-size: 0.84em; line-height: 1.02; margin: 0 0.14em; }
+  .frac b { display: block; border-bottom: 0.09em solid currentColor;
+    padding: 0 0.2em; font-weight: inherit; }
+  .frac i { display: block; font-style: normal; padding: 0 0.2em; }
 </style>
 </head>
 <body>
@@ -416,6 +422,11 @@ function montarMassas() {
 }
 
 /* ---------------------------------------------------------------- as cartelas e o gabarito */
+function fracHTML(txt) {
+  return String(txt).replace(/(\d+)\/(\d+)/g,
+    '<span class="frac"><b>$1</b><i>$2</i></span>');
+}
+
 function textoPedido(p) { return p.t; }
 function itens(p) { return p.i; }
 
@@ -456,7 +467,7 @@ function montarGabarito() {
     for (var j = 0; j < p.i.length; j++)
       alvo.push(FRAC[p.i[j][1]] + ' de ' + LONGO[p.i[j][0]]);
     html += '<div class="linha"><b>' + (i + 1) + '.</b> ' + p.t +
-      '<span class="conta">' + p.d + ' \u2192 ' + alvo.join(' + ') + '</span></div>';
+      '<span class="conta">' + fracHTML(p.d + ' \u2192 ' + alvo.join(' + ')) + '</span></div>';
   }
   html += '<div class="pe">PIZZARIA DAS FRAÇÕES · gabarito do professor · última página</div></div>';
   document.getElementById('sec-gabarito').innerHTML = html;
@@ -524,7 +535,7 @@ function mostraPedido() {
     ' <span>· a pizza inteira vale 12/12 avos</span></div>' +
     '<div class="conteudo"><div class="texto">' + p.t + '</div>' +
     '<div class="pizza">' + pizzaDoPedido(p.i, 200) + '</div></div>' +
-    '<div class="alvo">alvo: ' + alvo.join(' + ') + '</div>';
+    '<div class="alvo">alvo: ' + fracHTML(alvo.join(' + ')) + '</div>';
 }
 
 function mostraConferencia() {
@@ -533,8 +544,8 @@ function mostraConferencia() {
   var p = PEDIDOS[estado.pedido], alvo = [], i;
   for (i = 0; i < p.i.length; i++) alvo.push(FRAC[p.i[i][1]] + ' de ' + LONGO[p.i[i][0]]);
   el.innerHTML = '<h3>Conferência do pedido ' + (estado.pedido + 1) + '</h3>' +
-    '<p>Como se chega nas quantidades:</p><p class="deducao">' + p.d + '</p>' +
-    '<p>O alvo é <b>' + alvo.join(' + ') + '</b>. Existem v\u00e1rias montagens v\u00e1lidas: ' +
+    '<p>Como se chega nas quantidades:</p><p class="deducao">' + fracHTML(p.d) + '</p>' +
+    '<p>O alvo é <b>' + fracHTML(alvo.join(' + ')) + '</b>. Existem v\u00e1rias montagens v\u00e1lidas: ' +
     'metade de calabresa pode ser uma peça de 1/2, duas de 1/4 ou três de 1/6. O que tem de bater ' +
     '\u00e9 a \u00e1rea de cada sabor sobre a massa. Se faltar, sobra massa aparecendo no fundo.</p>' +
     '<div class="img">' + pizzaDoPedido(p.i, 240) + '</div>' +
@@ -563,7 +574,7 @@ function mostraMonte() {
     var n = MONTE[chaves[i]] || 0, pt = chaves[i].split('-');
     restam += n * (+pt[0]);
     linhas.push('<div class="peca-monte' + (n ? '' : ' zerada') + '">' +
-      '<span class="tam" style="border-color:' + CORES[pt[1]] + '">' + FRAC[pt[0]] + '</span>' +
+      '<span class="tam" style="border-color:' + CORES[pt[1]] + '">' + fracHTML(FRAC[pt[0]]) + '</span>' +
       '<span class="sab" style="color:' + CORES[pt[1]] + '">' + LONGO[pt[1]] + '</span>' +
       '<span class="qtd">' + n + '</span></div>');
   }
