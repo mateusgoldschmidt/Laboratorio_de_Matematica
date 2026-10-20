@@ -160,21 +160,21 @@ h2{font-size:19px;margin:26px 0 10px}
   <p><b>Habilidades da BNCC:</b> EF06MA01 — números racionais na forma fracionária: leitura, escrita,
   comparação, equivalência e representação, além da resolução de problemas com números racionais
   do 6º ano. O jogo também exercita a leitura de instruções escritas e o trabalho em equipe.</p>
-  <p><b>Impressão:</b> quatro folhas de peças (3 pizzas por folha, 51 peças), seis folhas de massas (duas por folha, 12 massas), uma folha com os doze pedidos e o gabarito. As peças saem encostadas, sem espaço entre as bordas de recorte.</p>
+  <p><b>Impressão:</b> três folhas de peças (4 pizzas por folha, 51 peças), seis folhas de massas (duas por folha, 12 massas), uma folha com os doze pedidos e o gabarito. As peças saem encostadas, sem espaço entre as bordas de recorte.</p>
 </section>
 
 <section class="barra">
   <h2 style="margin-top:0">Imprimir</h2>
   <div class="botoes">
-    <button class="botao destaque" type="button" data-print="tudo">Tudo (12 páginas)</button>
-    <button class="botao" type="button" data-print="pecas">As 4 folhas de peças</button>
+    <button class="botao destaque" type="button" data-print="tudo">Tudo (11 páginas)</button>
+    <button class="botao" type="button" data-print="pecas">As 3 folhas de peças</button>
     <button class="botao" type="button" data-print="massas">As 12 massas de montagem</button>
     <button class="botao" type="button" data-print="cartelas">A folha dos doze pedidos</button>
     <button class="botao" type="button" data-print="gabarito">O gabarito</button>
   </div>
 </section>
 
-<h2 class="titulo-material">As quatro folhas de peças</h2>
+<h2 class="titulo-material">As três folhas de peças</h2>
 <section class="material" id="sec-pecas"></section>
 
 <h2 class="titulo-material">As 12 massas de montagem</h2>
@@ -335,12 +335,25 @@ function folhaSVG(conteudo, rodape, extra) {
 
 /* ---------------------------------------------------------------- as folhas de peças */
 function montarFolhas() {
+  // quatro pizzas inteiras por folha, num quadrado de 2 x 2
+  var k = 0.7428, m = 52.4, passo = 104.8;
+  var pos = [[m, m], [m + passo, m], [m, m + passo], [m + passo, m + passo]];
+  var legenda = ['Cada pizza desta folha é uma rodela do monte e vale 12/12 avos.',
+    'Recorte cada fatia pela linha do raio. A etiqueta diz a fração: 1/2, 1/3, 1/4, 1/6 ou 1/12.',
+    'As fatias de uma mesma pizza têm sabores diferentes: a beirada colorida diz qual é.'];
   var html = '';
-  for (var f = 0; f < 4; f++) {
-    var svg = rodelaSVG(RODELAS[f * 3], 70, R) + rodelaSVG(RODELAS[f * 3 + 1], 70, 3 * R) +
-      metadesSVG(RODELAS[f * 3 + 2], R);
+  for (var f = 0; f < 3; f++) {
+    var svg = '';
+    for (var i = 0; i < 4; i++) {
+      svg += '<g transform="translate(' + pos[i][0] + ',' + pos[i][1] + ') scale(' + k + ')">' +
+        rodelaSVG(RODELAS[f * 4 + i], 0, 0) + '</g>';
+    }
+    for (var j = 0; j < legenda.length; j++) {
+      svg += '<text x="6" y="' + (238 + j * 9) + '" font-family="Verdana" font-size="4.4" ' +
+        'fill="#6b6357">' + legenda[j] + '</text>';
+    }
     html += folhaSVG(svg, 'PIZZARIA DAS FRAÇÕES · folha ' + (f + 1) +
-      ' de 4 de peças · calabresa vermelho · mussarela amarelo · azeitona roxo');
+      ' de 3 de peças · calabresa vermelho · mussarela amarelo · azeitona roxo');
   }
   document.getElementById('sec-pecas').innerHTML = html;
 }
