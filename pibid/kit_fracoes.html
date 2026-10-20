@@ -269,6 +269,13 @@ function setor(cx, cy, r, a0, a1) {
   };
 }
 
+function giroRotulo(meio) {
+  // o texto fica sobre o raio, mas nunca de cabeca para baixo
+  var a = ((meio + 180) % 360 + 360) % 360;
+  if (a > 90 && a < 270) a = (a + 180) % 360;
+  return a;
+}
+
 function pecaSVG(cx, cy, a0, a1, sabor, tam) {
   var p = setor(cx, cy, R, a0, a1), n = 'c' + (++uid);
   var meio = (a0 + a1) / 2, rad = Math.PI / 180;
@@ -280,7 +287,7 @@ function pecaSVG(cx, cy, a0, a1, sabor, tam) {
     LONGO[sabor] + '.jpg"/>' +
     '<path d="' + p.arco + '" fill="none" stroke="' + CORES[sabor] + '" stroke-width="3.4"/>' +
     '<path d="' + p.area + '" fill="none" stroke="#ffffff" stroke-width="0.7"/>' +
-    '<g transform="translate(' + mx + ' ' + my + ') rotate(' + (meio + 180) + ')">' +
+    '<g transform="translate(' + mx + ' ' + my + ') rotate(' + giroRotulo(meio) + ')">' +
     '<rect x="' + (-larg / 2) + '" y="' + (-alt / 2) + '" width="' + larg + '" height="' + alt +
     '" rx="2" fill="#ffffff" opacity="0.95"/>' +
     '<text x="0" y="0" font-family="Verdana" font-size="6.4" font-weight="bold" fill="#20303a" ' +
