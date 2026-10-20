@@ -1,7 +1,7 @@
 ---
 titulo: "Pizzaria das Fra\u00e7\u00f5es"
 icone: "\U0001f355"
-descricao: "Jogo de fra\u00e7\u00f5es do 6\u00ba ano para imprimir: o grupo recebe doze pedidos de uma vez, planeja e monta as pizzas com um monte exato de pe\u00e7as de 1/2, 1/3, 1/4, 1/6 e 1/12 sobre massas de 12 avos. Pe\u00e7as e massas no mesmo tamanho, 4 por folha, manual do professor, folha de pedidos e gabarito em folhas separadas."
+descricao: "Jogo de fra\u00e7\u00f5es do 6\u00ba ano para imprimir: o grupo recebe doze pedidos de uma vez, planeja e monta as pizzas com um monte exato de pe\u00e7as de 1/2, 1/3, 1/4, 1/6 e 1/12 sobre massas de 12 avos. Pe\u00e7as e massas no mesmo tamanho, 4 por folha, com o como jogar na folha dos pedidos e o gabarito em folha separada."
 ---
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -86,9 +86,8 @@ h2{font-size:19px;margin:26px 0 10px}
   .material{display:none;margin:0}
   body.print-tudo .material{display:block}
   body.print-pecas #sec-pecas,body.print-massas #sec-massas,
-  body.print-cartelas #sec-cartelas,body.print-gabarito #sec-gabarito,
-  body.print-manual #sec-manual{display:block}
-  .folha.gabarito,.folha.manual{break-before:page}
+  body.print-cartelas #sec-cartelas,body.print-gabarito #sec-gabarito{display:block}
+  .folha.gabarito{break-before:page}
   .folha{margin:0;box-shadow:none;break-after:page}
   .material,.material>section{margin:0!important;padding:0!important;border:0!important}
   main,main>*{margin:0!important;padding:0!important}
@@ -134,6 +133,13 @@ h2{font-size:19px;margin:26px 0 10px}
 
   .tabela-pedidos tr.cab td { background: #f3ece0; font-weight: bold; font-size: 2.8mm;
     color: #5b5449; }
+
+  .comojogar { margin-top: 4mm; background: #faf6ee; border-left: 1.2mm solid #d9a441;
+    padding: 3.5mm 4.5mm; }
+  .comojogar h3 { font-size: 4mm; margin: 0 0 2mm; color: #8a6a3c; }
+  .comojogar ul { margin: 0 0 2mm; padding-left: 4.5mm; }
+  .comojogar li { font-size: 2.9mm; line-height: 1.45; color: #3d3a34; margin-bottom: 1.1mm; }
+  .comojogar .exemplo { font-size: 2.9mm; line-height: 1.45; color: #3d3a34; margin: 0; }
 </style>
 </head>
 <body>
@@ -187,18 +193,17 @@ h2{font-size:19px;margin:26px 0 10px}
   <p><b>Habilidades da BNCC:</b> EF06MA01 — números racionais na forma fracionária: leitura, escrita,
   comparação, equivalência e representação, além da resolução de problemas com números racionais
   do 6º ano. O jogo também exercita a leitura de instruções escritas e o trabalho em equipe.</p>
-  <p><b>Impressão:</b> três folhas de peças (4 pizzas por folha, 51 peças), três folhas de massas (4 por folha, 12 massas), uma folha com os doze pedidos, o manual e o gabarito em folhas separadas. As peças saem encostadas, sem espaço entre as bordas de recorte.</p>
+  <p><b>Impressão:</b> três folhas de peças (4 pizzas por folha, 51 peças), três folhas de massas (4 por folha, 12 massas), uma folha com os doze pedidos e o como jogar, e o gabarito em folha separada. As peças saem encostadas, sem espaço entre as bordas de recorte.</p>
 </section>
 
 <section class="barra">
   <h2 style="margin-top:0">Imprimir</h2>
   <div class="botoes">
-    <button class="botao destaque" type="button" data-print="tudo">Tudo (9 páginas)</button>
+    <button class="botao destaque" type="button" data-print="tudo">Tudo (8 páginas)</button>
     <button class="botao" type="button" data-print="pecas">As 3 folhas de peças</button>
     <button class="botao" type="button" data-print="massas">As 3 folhas de massas</button>
     <button class="botao" type="button" data-print="cartelas">A folha dos doze pedidos</button>
     <button class="botao" type="button" data-print="gabarito">O gabarito</button>
-    <button class="botao" type="button" data-print="manual">O manual (como jogar)</button>
   </div>
 </section>
 
@@ -210,9 +215,6 @@ h2{font-size:19px;margin:26px 0 10px}
 
 <h2 class="titulo-material">A folha dos doze pedidos</h2>
 <section class="material" id="sec-cartelas"></section>
-
-<h2 class="titulo-material">O manual: como jogar</h2>
-<section class="material" id="sec-manual"></section>
 
 <h2 class="titulo-material">O gabarito do professor</h2>
 <section class="material" id="sec-gabarito"></section>
@@ -470,9 +472,19 @@ function montarCartelas() {
   document.getElementById('sec-cartelas').innerHTML =
     '<div class="folha pedidos"><h2>Os doze pedidos</h2>' +
     '<p class="intro">O grupo recebe os doze pedidos de uma vez. Planejem antes de montar: o monte ' +
-    'tem as peças exatas para os doze, então cada peça escolhida faz falta mais adiante. ' +
-    'A pizza inteira vale 12/12 avos. Usem as duas colunas da direita para anotar o que pretendem ' +
-    'usar em cada pedido.</p><table class="tabela-pedidos">' + linhas + '</table></div>';
+    'tem as peças exatas para os doze, então cada peça escolhida faz falta mais adiante. A pizza ' +
+    'inteira vale 12/12 avos. Usem as duas colunas da direita para anotar o que pretendem usar em ' +
+    'cada pedido.</p><table class="tabela-pedidos">' + linhas + '</table>' +
+    '<div class="comojogar"><h3>Como jogar</h3>' +
+    '<ul>' +
+    '<li>Cada pedido fecha 12/12 avos: escolham as peças do sabor pedido, encaixem na massa e ' +
+    'anotem o número do pedido no campo PEDIDO.</li>' +
+    '<li>A massa denuncia o erro: se sobrar massa aparecendo, a conta não fechou.</li>' +
+    '<li>Cada peça do monte entra em um único pedido.</li>' +
+    '</ul>' +
+    '<p class="exemplo"><b>Exemplo, o pedido 1.</b> Metade de calabresa e metade de mussarela: ' +
+    fracHTML('1/2 + 1/2') + '. Também fecha com ' + fracHTML('1/4 + 1/4') + ' de cada sabor — ' +
+    'o que precisa bater é a área de cada sabor, não o tamanho das peças.</p></div></div>';
 }
 
 function montarGabarito() {
@@ -491,33 +503,6 @@ function montarGabarito() {
     'peças impressas: calabresa 42/12, mussarela 57/12 e azeitona 45/12. Nada sobra e nada falta. ' +
     'A montagem pode ser feita com peças diferentes das que a dedução sugere: o que tem de bater ' +
     'é a área de cada sabor sobre a massa.</p><div class="itens">' + itens + '</div></div>';
-}
-
-function montarManual() {
-  document.getElementById('sec-manual').innerHTML =
-    '<div class="folha manual"><h2>Como jogar</h2>' +
-    '<h3>Antes de montar</h3>' +
-    '<p>O grupo recebe os doze pedidos de uma vez. Leiam todos antes de escolher a primeira peça: ' +
-    'o monte tem as peças exatas para os doze pedidos, então a peça gasta em um pedido faz falta ' +
-    'em outro. Combinem a ordem dos pedidos e só depois comecem a montar.</p>' +
-    '<h3>Cada pedido</h3>' +
-    '<p>Escolham as peças cujas frações somam 12/12 avos, respeitando o sabor pedido, e encaixem ' +
-    'sobre a massa. Anotem o número do pedido no centro da massa, no campo PEDIDO.</p>' +
-    '<p>A própria massa denuncia o erro: se sobrar massa aparecendo, a soma não fechou; se a peça ' +
-    'passar da borda, passou de 12/12 avos.</p>' +
-    '<h3>Um exemplo, o pedido 1</h3>' +
-    '<div class="caixa"><p class="pedido-ex"><b>Pedido 1.</b> Metade da pizza é de calabresa e a ' +
-    'outra metade é de mussarela.</p>' +
-    '<p>A pizza inteira vale 12/12 avos, então a metade vale 12 \u00f7 2 = 6 avos, isto é, 1/2. ' +
-    'Solução direta: <b>1/2 de calabresa + 1/2 de mussarela</b>.</p>' +
-    '<p>Também fecha a conta com duas peças de 1/4 de calabresa e duas de 1/4 de mussarela, ou ' +
-    'com três de 1/6 de cada sabor. As três montagens estão certas: o que precisa bater é a área ' +
-    'de cada sabor sobre a massa, não o tamanho das peças.</p></div>' +
-    '<h3>A regra de ouro</h3>' +
-    '<p class="regra">Cada peça do monte entra em um único pedido.</p>' +
-    '<p>É essa regra que obriga o grupo a planejar antes de montar. No fim, confiram com o ' +
-    'gabarito: os doze pedidos consomem exatamente as 51 peças impressas, sem sobra e sem falta.</p>' +
-    '</div>';
 }
 
 /* ---------------------------------------------------------------- o painel */
@@ -675,7 +660,6 @@ montarFolhas();
 montarMassas();
 montarCartelas();
 montarGabarito();
-montarManual();
 ligar();
 </script>
 </body>
