@@ -1,7 +1,7 @@
 ---
-titulo: "Pizzaria das Frações"
-icone: "🍕"
-descricao: "Jogo de frações do 6º ano para imprimir: o grupo recebe doze pedidos de uma vez, planeja e monta as pizzas com um monte exato de peças de 1/2, 1/3, 1/4, 1/6 e 1/12 sobre massas de 12 avos. Peças e massas no mesmo tamanho, 4 por folha, manual do professor, folha de pedidos e gabarito em folhas separadas."
+titulo: "Pizzaria das Fra\u00e7\u00f5es"
+icone: "\U0001f355"
+descricao: "Jogo de fra\u00e7\u00f5es do 6\u00ba ano para imprimir: o grupo recebe doze pedidos de uma vez, planeja e monta as pizzas com um monte exato de pe\u00e7as de 1/2, 1/3, 1/4, 1/6 e 1/12 sobre massas de 12 avos. Pe\u00e7as e massas no mesmo tamanho, 4 por folha, manual do professor, folha de pedidos e gabarito em folhas separadas."
 ---
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -225,7 +225,9 @@ h2{font-size:19px;margin:26px 0 10px}
 var IMG = 'kit_img/';
 var CORES = { C: '#d7263d', M: '#e8a317', A: '#6a4c93' };
 var LONGO = { C: 'calabresa', M: 'mussarela', A: 'azeitona' };
-var FRAC = { 6: '1/2', 4: '1/3', 3: '1/4', 2: '1/6', 1: '1/12' };
+var FRAC = { 6: '1/2', 4: '1/3', 3: '1/4', 2: '1/6', 1: '1/12',
+  8: '2/3', 9: '3/4', 10: '5/6', 5: '5/12', 7: '7/12', 11: '11/12' };
+function fracDe(t) { return FRAC[t] || (t + '/12'); }
 var R = 70, W = 210, H = 297;
 
 var PEDIDOS = [
@@ -473,7 +475,7 @@ function montarGabarito() {
   for (var i = 0; i < PEDIDOS.length; i++) {
     var p = PEDIDOS[i], alvo = [];
     for (var j = 0; j < p.i.length; j++)
-      alvo.push(FRAC[p.i[j][1]] + ' de ' + LONGO[p.i[j][0]]);
+      alvo.push(fracDe(p.i[j][1]) + ' de ' + LONGO[p.i[j][0]]);
     itens += '<div class="item"><div class="enun"><b>' + (i + 1) + '.</b> ' + fracHTML(p.t) +
       '</div><div class="ded"><b>Dedução:</b> ' + fracHTML(p.d) + ' \u2192 ' +
       fracHTML(alvo.join(' + ')) + '</div></div>';
