@@ -1,11 +1,15 @@
-<!---
+---
 titulo: "Applet: Cilindros"
 icone: "🛢️"
 descricao: "Explore cilindros retos e oblíquos no laboratório interativo 3D com cálculos em tempo real."
---->
+habilidades:
+  - EM13MAT504
+  - EM13MAT309
+---
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="pt-BR">
 <head>
+    {% include analytics.html %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cilindros - Geometria Espacial no Ensino Médio</title>
@@ -108,7 +112,7 @@ descricao: "Explore cilindros retos e oblíquos no laboratório interativo 3D co
         <div class="subtitle">Laboratório Virtual de Investigação Geométrica</div>
         <div class="divider"></div>
         <div style="font-size: 0.9rem; color: #718096;">
-            <strong>Autoria:</strong> Mateus Goldschmidt & Karen Laís Vorpagel<br>
+            
             UFFS - Licenciatura em Matemática | 2026
         </div>
     </header>
@@ -609,9 +613,7 @@ document.querySelectorAll('input').forEach(i => i.addEventListener('input', upda
   }
   #btn-voltar:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.45); }
 </style>
-<a id="btn-voltar" href="index.html">
-  &#8592; Menu principal
-</a>
+<a id="btn-voltar" href="index.html">← Voltar ao portal de Geometria</a>
 <!-- Correção: o botão de voltar não deve sair na impressão -->
 <style>@media print { #btn-voltar, [id*="voltar"] { display: none !important; } }</style>
 </body>

@@ -101,6 +101,10 @@
       border-color:rgba(255,255,255,0.18);
       box-shadow: 0 18px 30px rgba(0,0,0,0.45);
     }
+  .skills { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }
+  .skill { font-size: 11px; font-weight: 700; letter-spacing: .3px; padding: 4px 9px; border-radius: 999px;
+           background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.18); color: inherit; opacity: .85; }
+
 
     .card-icon{ font-size:3rem; margin-bottom:18px; }
 
@@ -155,7 +159,7 @@
     <h1>OUTROS MATERIAIS</h1>
 
     <p class="subtitulo">
-      Esta pasta reúne materiais didáticos, oficinas e atividades para apoio às práticas de ensino e aprendizagem.
+      Oficinas, cadernos e atividades de apoio à formação docente e às práticas de ensino e aprendizagem, com cartões de situações-problema, fichas e materiais prontos para imprimir.
     </p>
 
     <div class="cards">
@@ -169,6 +173,11 @@
             {% endif %}
             <h2>{{ pagina.titulo }}</h2>
             <p>{{ pagina.descricao }}</p>
+            {% if pagina.habilidades %}
+              <div class="skills">
+                {% for h in pagina.habilidades %}<span class="skill">{{ h }}</span>{% endfor %}
+              </div>
+            {% endif %}
             <div class="btn">Acessar Material →</div>
           </a>
         {% endif %}
@@ -176,7 +185,7 @@
     </div>
 
     <div class="rodape">
-      Mateus Goldschmidt — UFFS | Licenciatura em Matemática
+      Laboratório de Matemática · UFFS
     </div>
 
   </div>
@@ -204,9 +213,7 @@
     }
     #btn-voltar:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.45); }
   </style>
-  <a id="btn-voltar" href="../index.html">
-    &#8592; Voltar ao Portfólio
-  </a>
+  <a id="btn-voltar" href="../index.html">← Voltar ao portfólio</a>
 
 <!-- Correção: o botão de voltar não deve sair na impressão -->
 <style>@media print { #btn-voltar, [id*="voltar"] { display: none !important; } }</style>

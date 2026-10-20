@@ -2,6 +2,8 @@
 titulo: "Pizzaria das Fra\u00e7\u00f5es"
 icone: "\U0001f355"
 descricao: "Jogo de fra\u00e7\u00f5es do 6\u00ba ano para imprimir: o grupo recebe doze pedidos de uma vez, planeja e monta as pizzas com um monte exato de pe\u00e7as de 1/2, 1/3, 1/4, 1/6 e 1/12 sobre massas de 12 avos. Pe\u00e7as e massas no mesmo tamanho, 4 por folha, com o como jogar e um exemplo desenhado na folha dos pedidos, e o gabarito em folha separada."
+habilidades:
+  - EF06MA07
 ---
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -171,7 +173,7 @@ h2{font-size:19px;margin:26px 0 10px}
         <option value="300" selected>5 minutos</option>
         <option value="600">10 minutos</option>
       </select>
-      <button class="botao" id="btn-sortear" type="button">Sortear pedido</button>
+      <button class="botao" id="btn-sortear" type="button">Abrir o próximo pedido</button>
       <button class="botao secundario" id="btn-conferir" type="button" disabled>Abrir conferência</button>
       <button class="botao secundario" id="btn-proxima" type="button" disabled>Próxima rodada</button>
     </div>
@@ -196,7 +198,7 @@ h2{font-size:19px;margin:26px 0 10px}
     <li><b>Conferência:</b> a qualquer momento. O painel mostra a dedução de cada pedido e a pizza alvo; a própria massa denuncia se a conta não fechou.</li>
     <li><b>Sem notebook:</b> a folha dos doze pedidos faz o papel do painel e o gabarito orienta o professor.</li>
   </ul>
-  <p><b>Habilidades da BNCC:</b> EF06MA01 — números racionais na forma fracionária: leitura, escrita,
+  <p><b>Habilidades da BNCC:</b> EF06MA07 — frações como partes de inteiros e equivalência: leitura, escrita,
   comparação, equivalência e representação, além da resolução de problemas com números racionais
   do 6º ano. O jogo também exercita a leitura de instruções escritas e o trabalho em equipe.</p>
   <p><b>Impressão:</b> três folhas de peças (4 pizzas por folha, 51 peças), três folhas de massas (4 por folha, 12 massas), uma folha com os doze pedidos e o como jogar, e o gabarito em folha separada. As peças saem encostadas, sem espaço entre as bordas de recorte.</p>
@@ -227,7 +229,7 @@ h2{font-size:19px;margin:26px 0 10px}
 
 </main>
 
-<a class="voltar" href="../index.html">&larr; Laboratório</a>
+<a class="voltar" id="btn-voltar" href="index.html">← Voltar ao portal do PIBID</a>
 
 <script>
 /* Pizzaria das Frações — painel projetado e gerador do material impresso.
@@ -709,5 +711,6 @@ montarCartelas();
 montarGabarito();
 ligar();
 </script>
+<style>@media print { #btn-voltar, .voltar, [id*="voltar"] { display: none !important; } }</style>
 </body>
 </html>
