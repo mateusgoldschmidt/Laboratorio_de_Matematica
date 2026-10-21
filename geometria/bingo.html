@@ -563,7 +563,7 @@ habilidades:
                 margin: 0 !important;
                 padding: 0 !important;
                 border: none !important;
-            }}
+            }
 
             /* --- MODO DE IMPRESSÃO: CARTELAS --- */
             body.print-mode-cards #panel-sorteio,
@@ -613,6 +613,41 @@ habilidades:
                 border: 1px solid #000 !important;
             }
 
+            /* --- MODO DE IMPRESSÃO: MATERIAL COMPLETO --- */
+            body[data-print-target="all"] #panel-sorteio {
+                display: none !important;
+            }
+            body[data-print-target="all"] #panel-cartelas,
+            body[data-print-target="all"] #panel-regras {
+                display: block !important;
+            }
+            body[data-print-target="all"] #panel-cartelas .cards-grid {
+                display: block !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            body[data-print-target="all"] #panel-cartelas .sheet-page {
+                margin: 0 auto !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            body[data-print-target="all"] #panel-cartelas .bingo-card {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            body[data-print-target="all"] .guide-table {
+                font-size: 8pt !important;
+            }
+            body[data-print-target="all"] .guide-table th,
+            body[data-print-target="all"] .guide-table td {
+                padding: 4px 6px !important;
+                border: 1px solid #000 !important;
+            }
+
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -632,6 +667,7 @@ habilidades:
         <button class="tab-btn active" onclick="switchTab('sorteio')">🎯 Painel do Sorteio</button>
         <button class="tab-btn" onclick="switchTab('cartelas')">🖨️ Gerar & Imprimir Cartelas</button>
         <button class="tab-btn" onclick="switchTab('regras')">📚 Regras & Gabarito Completo</button>
+        <button class="btn btn-success print-hidden" onclick="printAll()">🖨️ Imprimir tudo</button>
     </div>
 
     <div class="container">
@@ -1125,18 +1161,22 @@ habilidades:
 
         function printCards() {
             document.body.classList.add('print-mode-cards');
-            window.print();
-            document.body.classList.remove('print-mode-cards');
+            window.print();   // a limpeza fica com o listener de afterprint
         }
 
         function printGuide() {
             document.body.classList.add('print-mode-guide');
+            window.print();   // a limpeza fica com o listener de afterprint
+        }
+
+        function printAll() {
+            document.body.dataset.printTarget = 'all';
             window.print();
-            document.body.classList.remove('print-mode-guide');
         }
 
         window.addEventListener('afterprint', () => {
             document.body.classList.remove('print-mode-cards', 'print-mode-guide');
+            delete document.body.dataset.printTarget;
         });
 
         // =========================================================================
@@ -1161,6 +1201,24 @@ habilidades:
         // INICIALIZAÇÃO
         // =========================================================================
         window.onload = function() {
+            // Em abertura direta via file://, o frontmatter e o include do
+            // Jekyll são interpretados como texto no body; remova só esses
+            // nós de template para não criar uma folha impressa extra.
+            (function limparTemplateLocal() {
+                const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+                const nos = [];
+                let no;
+                while ((no = walker.nextNode())) nos.push(no);
+                nos.forEach(textNode => {
+                    const texto = textNode.textContent || '';
+                    // A marca do include e montada em pedacos de proposito: escrita inteira,
+                    // o Jekyll a substituiria aqui dentro e quebraria este script.
+                    const MARCA_INCLUDE = '{' + '% include analytics.html %' + '}';
+                    if (texto.includes(MARCA_INCLUDE) || /^\s*---[\s\S]*?---\s*$/.test(texto)) {
+                        textNode.remove();
+                    }
+                });
+            })();
             document.getElementById('total-count-label').innerText = TOTAL_POOL_SIZE;
             renderGeneralHistoryBoard();
             renderGuideTable();

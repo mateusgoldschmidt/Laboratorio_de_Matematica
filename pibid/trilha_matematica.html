@@ -807,6 +807,19 @@ habilidades:
         padding: 0 !important;
       }
 
+      /* Alvo explícito de impressão: cada botão funciona sem depender da aba ativa. */
+      body[data-print-target="board"] .print-area:not(#tab-board),
+      body[data-print-target="cards"] .print-area:not(#tab-cards),
+      body[data-print-target="guide"] .print-area:not(#tab-guide) {
+        display: none !important;
+      }
+      body[data-print-target="board"] #tab-board,
+      body[data-print-target="cards"] #tab-cards,
+      body[data-print-target="guide"] #tab-guide,
+      body[data-print-target="all"] .print-area {
+        display: block !important;
+      }
+
       /* Quando estiver imprimindo a aba do Tabuleiro: oculta o preview único e imprime as 4 folhas A4 Paisagem exatas */
       #tab-board .board-preview-scroll {
         display: none !important;
@@ -832,6 +845,22 @@ habilidades:
         padding: 5mm !important;
         page-break-after: always;
         break-after: page;
+      }
+
+      /* Não criar uma folha vazia ao terminar cada impressão individual. */
+      body[data-print-target="board"] #tab-board .sheet-page:last-child,
+      body[data-print-target="cards"] #tab-cards .a4-cards-sheet:last-child,
+      body[data-print-target="guide"] #tab-guide .guide-sheet:last-child,
+      body[data-print-target="all"] #tab-guide .guide-sheet:last-child {
+        page-break-after: auto !important;
+        break-after: auto !important;
+      }
+
+      /* No conjunto completo, separe explicitamente as partes que vêm depois. */
+      body[data-print-target="all"] #tab-board .sheet-page:last-child,
+      body[data-print-target="all"] #tab-cards .a4-cards-sheet:last-child {
+        page-break-after: always !important;
+        break-after: page !important;
       }
     }
   </style>
@@ -871,13 +900,16 @@ habilidades:
             <option value="original">Estrelado original</option>
           </select>
         </label>
-        <button class="btn-print btn-print-main" onclick="printCurrentSection()">🖨️ Imprimir Aba Atual</button>
+        <button class="btn-print btn-print-main" onclick="printTarget('all')">🖨️ Imprimir tudo</button>
+        <button class="btn-print" onclick="printTarget('board')">🖨️ Imprimir tabuleiro</button>
+        <button class="btn-print" onclick="printTarget('cards')">🖨️ Imprimir cartas</button>
+        <button class="btn-print" onclick="printTarget('guide')">🖨️ Imprimir regras &amp; gabarito</button>
       </div>
     </div>
 
     <main class="main-container">
       <!-- ABA 1: TABULEIRO -->
-      <section id="tab-board" class="view-section active">
+      <section id="tab-board" class="view-section print-area active">
         <!-- Pré-visualização em tela do Tabuleiro Completo Montado -->
         <div class="board-preview-scroll">
           <div class="solar-board-canvas" id="boardCanvasMain">
@@ -934,12 +966,12 @@ habilidades:
       </section>
 
       <!-- ABA 2: 64 CARTAS DE DESAFIO (16 POR COR) + 8 CARTAS BÔNUS DOS PLANETAS JUNTAS -->
-      <section id="tab-cards" class="view-section">
+      <section id="tab-cards" class="view-section print-area">
         <div id="all-cards-sheets-container"></div>
       </section>
 
       <!-- ABA 3: GUIA E GABARITO DO PROFESSOR -->
-      <section id="tab-guide" class="view-section">
+      <section id="tab-guide" class="view-section print-area">
         <div class="guide-sheet">
           <h2>Regras da Trilha Sistema Solar & Gabarito do Professor</h2>
           <p style="font-size: 0.84rem; margin-bottom: 6px; line-height: 1.45;">
@@ -1001,9 +1033,39 @@ habilidades:
       }
     }
 
-    function printCurrentSection() {
+    function setPrintPageStyle(target) {
+      const styleTag = document.getElementById('dynamic-page-style');
+      if (!styleTag) return;
+      // O tabuleiro usa as folhas A4 sem margem; no conjunto completo ele vem
+      // primeiro e mantém essa mesma configuração física.
+      if (target === 'board' || target === 'all') {
+        styleTag.innerHTML = '@page { size: A4 portrait; margin: 0; }';
+      } else {
+        styleTag.innerHTML = '@page { size: A4 portrait; margin: 8mm; }';
+      }
+    }
+
+    function printTarget(target) {
+      document.body.dataset.printTarget = target;
+      setPrintPageStyle(target);
       window.print();
     }
+
+    function printCurrentSection() {
+      const activeSection = document.querySelector('.view-section.active');
+      const targetBySection = {
+        'tab-board': 'board',
+        'tab-cards': 'cards',
+        'tab-guide': 'guide'
+      };
+      printTarget(targetBySection[activeSection && activeSection.id] || 'board');
+    }
+
+    window.addEventListener('afterprint', () => {
+      delete document.body.dataset.printTarget;
+      const activeSection = document.querySelector('.view-section.active');
+      setPrintPageStyle(activeSection && activeSection.id === 'tab-board' ? 'board' : 'portrait');
+    });
     // Seletor de fundo do tabuleiro: fundo claro para imprimir gastando pouca tinta,
     // nebulosa para projetar no quadro. A escolha fica salva no navegador.
     const FUNDOS = {
@@ -1292,15 +1354,24 @@ habilidades:
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      // Quando o arquivo é aberto direto (sem Jekyll/GitHub Pages), o frontmatter
-      // YAML aparece como texto solto no topo do body. Removemos esse nó.
-      (function limparFrontmatter() {
-        const primeiro = document.body.firstChild;
-        if (primeiro && primeiro.nodeType === 3 && primeiro.textContent.trim().startsWith('---')) {
-          const texto = primeiro.textContent;
-          const fim = texto.indexOf('\n---', 3);
-          primeiro.textContent = fim >= 0 ? texto.slice(fim + 4) : '';
-        }
+      // Quando o arquivo é aberto direto (sem Jekyll/GitHub Pages), o
+      // frontmatter e o include de analytics aparecem como texto solto no
+      // body. Removemos apenas esses nós de template para não gerar uma folha
+      // extra na impressão local.
+      (function limparTemplateLocal() {
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        const nos = [];
+        let no;
+        while ((no = walker.nextNode())) nos.push(no);
+        nos.forEach(textNode => {
+          const texto = textNode.textContent || '';
+          // A marca do include e montada em pedacos de proposito: escrita inteira,
+          // o Jekyll a substituiria aqui dentro e quebraria este script.
+          const MARCA_INCLUDE = '{' + '% include analytics.html %' + '}';
+          if (texto.includes(MARCA_INCLUDE) || /^\s*---[\s\S]*?---\s*$/.test(texto)) {
+            textNode.remove();
+          }
+        });
       })();
       buildBoardElements();
       renderAllCardsTogether();

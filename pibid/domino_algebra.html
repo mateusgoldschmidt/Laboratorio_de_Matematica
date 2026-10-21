@@ -226,6 +226,32 @@ habilidades:
             
             #print-manual-container, #domino-container { display: none !important; }
 
+            /* === MODO 0: IMPRESSÃO COMPLETA (MANUAIS + PEÇAS) === */
+            body.print-mode-all #print-manual-container {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr;
+                gap: 0 !important;
+                align-content: start;
+            }
+            body.print-mode-all #domino-container {
+                display: grid !important;
+                grid-template-columns: 88mm 88mm !important;
+                justify-content: center !important;
+                gap: 0 !important;
+                padding: 0 !important;
+                break-before: page !important;
+            }
+            body.print-mode-all #domino-container .domino-piece {
+                width: 88mm !important;
+                height: 38mm !important;
+                margin: 0 -1px -1px 0 !important;
+                box-shadow: none !important;
+                border: 1px solid #000 !important;
+                border-radius: 0 !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
             /* === MODO 1: IMPRESSÃO DE MANUAIS (COM BORDAS COLADAS) === */
             body.print-mode-manuals #print-manual-container {
                 display: grid !important;
@@ -270,6 +296,10 @@ habilidades:
             }
             .domino-piece:nth-child(14n) {
                 page-break-after: always !important;
+            }
+            .domino-piece:last-child {
+                page-break-after: auto !important;
+                break-after: auto !important;
             }
 
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -319,9 +349,16 @@ habilidades:
                 </div>
 
                 <div class="print-panel">
-                    <label style="color: var(--text-light);">As peças serão impressas com marcações de corte.</label>
+                    <label style="color:var(--text-light);">As peças serão impressas com marcações de corte.</label>
                     <div style="flex-grow: 1; display:flex; align-items:flex-end; width: 100%;">
                         <button class="btn btn-pieces" onclick="printPieces()">🖨️ 2. IMPRIMIR PEÇAS DO JOGO</button>
+                    </div>
+                </div>
+
+                <div class="print-panel">
+                    <label style="color:var(--text-light);">Manual e todas as peças, em sequência.</label>
+                    <div style="flex-grow: 1; display:flex; align-items:flex-end; width: 100%;">
+                        <button class="btn btn-pieces" onclick="printAll()">🖨️ IMPRIMIR TUDO</button>
                     </div>
                 </div>
 
@@ -428,7 +465,7 @@ habilidades:
         const exampleDotsMao = 0;
         const exampleEqMao = { val: '2x = 8' }; 
 
-        function printManuals() {
+        function prepareManuals() {
             const count = parseInt(document.getElementById('manual-copies').value);
             const manualContainer = document.getElementById('print-manual-container');
             manualContainer.innerHTML = '';
@@ -461,16 +498,23 @@ habilidades:
                     </div>
                 `;
             }
+        }
 
+        function printManuals() {
+            prepareManuals();
             document.body.classList.add('print-mode-manuals');
             window.print();
-            document.body.classList.remove('print-mode-manuals');
         }
 
         function printPieces() {
             document.body.classList.add('print-mode-pieces');
             window.print();
-            document.body.classList.remove('print-mode-pieces');
+        }
+
+        function printAll() {
+            prepareManuals();
+            document.body.classList.add('print-mode-all');
+            window.print();
         }
 
         window.onload = () => {
@@ -504,6 +548,12 @@ habilidades:
                 </div>
             `;
         };
+
+        function clearPrintModes() {
+            document.body.classList.remove('print-mode-manuals', 'print-mode-pieces', 'print-mode-all');
+        }
+
+        window.addEventListener('afterprint', clearPrintModes);
     </script>
 </body>
 </html>
