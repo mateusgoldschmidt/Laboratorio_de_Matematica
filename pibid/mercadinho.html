@@ -454,44 +454,69 @@ habilidades:
         /* ================= IMPRESSÃO ================= */
         @media print {
             body { background-color: #ffffff !important; color: #000000 !important; margin: 0 !important; padding: 0 !important; font-size: 12pt; }
-            header, .tabs, .print-controls { display: none !important; }
-            .print-hidden { display: none !important; }
-            .modal-overlay { display: none !important; }
-            
+            header, .tabs, .print-controls, .print-hidden { display: none !important; }
+            #btn-voltar, .modal-overlay { display: none !important; }
+            .container { margin: 0 !important; padding: 0 !important; max-width: none !important; }
+
+            /* As partes ficam disponíveis para impressão mesmo quando sua aba está fechada. */
             .tab-content { display: none !important; }
-            .tab-content.active { display: block !important; }
-            
+            body[data-print-target="guia"] #tab-intro,
+            body[data-print-target="regras"] #tab-regras,
+            body[data-print-target="tabloide"] #tab-tabloide,
+            body[data-print-target="etiquetas"] #tab-etiquetas,
+            body[data-print-target="selos"] #tab-promos,
+            body[data-print-target="produtos"] #tab-embalagens,
+            body[data-print-target="gabarito"] #tab-guia,
+            body[data-print-target="tudo"] #tab-intro,
+            body[data-print-target="tudo"] #tab-regras,
+            body[data-print-target="tudo"] #tab-tabloide,
+            body[data-print-target="tudo"] #tab-etiquetas,
+            body[data-print-target="tudo"] #tab-promos,
+            body[data-print-target="tudo"] #tab-embalagens,
+            body[data-print-target="tudo"] #tab-guia {
+                display: block !important;
+            }
+            body[data-print-target="guia"] .print-area:not(#parte-guia),
+            body[data-print-target="regras"] .print-area:not(#parte-regras),
+            body[data-print-target="tabloide"] .print-area:not(#parte-tabloide),
+            body[data-print-target="etiquetas"] .print-area:not(#parte-etiquetas),
+            body[data-print-target="selos"] .print-area:not(#parte-selos),
+            body[data-print-target="produtos"] .print-area:not(#parte-produtos),
+            body[data-print-target="gabarito"] .print-area:not(#parte-gabarito) {
+                display: none !important;
+            }
+
             .panel { box-shadow: none !important; border: none !important; background-color: transparent !important; color: #000 !important; margin: 0 !important; padding: 0 !important; }
             .panel h2, .fraction-explainer strong { color: #000 !important; }
             .fraction-explainer { background: transparent !important; border-color: #ccc !important; }
-            
-            .labels-grid { padding: 0 !important; justify-content: flex-start !important; display: flex !important; flex-wrap: wrap !important; gap: 5mm !important;}
-            .price-tag { page-break-inside: avoid !important; break-inside: avoid !important; border: 1px dashed #000; width: 45mm !important; min-height: 35mm !important; height: auto !important; padding: 3mm !important;}
-            
-            .promos-grid { padding: 0 !important; text-align: left !important; }
-            .promo-badge { page-break-inside: avoid !important; break-inside: avoid !important; margin-bottom: 15mm !important; margin-right: 10mm !important; }
-            
-            .products-grid-unified { padding: 0 !important; display: flex !important; flex-wrap: wrap !important; gap: 0 !important; justify-content: space-around !important;}
-            
+
+            .labels-grid { padding: 0 !important; justify-content: flex-start !important; display: flex !important; flex-wrap: wrap !important; gap: 0 !important; }
+            .price-tag { page-break-inside: avoid !important; break-inside: avoid !important; border: 1px dashed #000; width: 45mm !important; min-height: 35mm !important; height: auto !important; padding: 3mm !important; margin: 0 !important; }
+
+            .promos-grid { padding: 0 !important; text-align: left !important; display: flex !important; flex-wrap: wrap !important; justify-content: flex-start !important; gap: 0 !important; }
+            .promo-badge { page-break-inside: avoid !important; break-inside: avoid !important; margin: 0 !important; }
+
+            .products-grid-unified { padding: 0 !important; display: flex !important; flex-wrap: wrap !important; gap: 0 !important; justify-content: space-around !important; }
+
             /* Padrão Único (4 itens por página) */
-            .product-pack.unified { 
-                width: 48% !important; 
+            .product-pack.unified {
+                width: 48% !important;
                 height: 46vh !important;
-                margin-bottom: 1vh !important; 
-                page-break-inside: avoid !important; 
+                margin-bottom: 1vh !important;
+                page-break-inside: avoid !important;
                 display: flex !important;
                 justify-content: center !important;
                 align-items: center !important;
-            } 
-            
+            }
+
             .product-img-wrapper { max-height: 100% !important; display: inline-block !important; }
             .product-img-wrapper img { max-height: 42vh !important; width: auto !important; margin: 0 auto !important; }
-            
-            .guide-panel, .lousa, .intro-box { box-shadow: none !important; border: 1px solid #ccc !important; background: #fff !important; color: #000 !important;}
+
+            .guide-panel, .lousa, .intro-box { box-shadow: none !important; border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; }
             .lousa { background: #f9f9f9 !important; border: 2px solid #000 !important; color: #000 !important; }
             .rules-container h3 { background: #eee !important; color: #000 !important; border: 1px solid #ccc !important; page-break-after: avoid; }
             .rules-container { page-break-inside: auto; color: #000 !important; }
-            
+
             .flyer-sheets-wrapper { display: block !important; padding: 0 !important; margin: 0 !important; }
             .flyer-sheet {
                 width: 194mm !important;
@@ -505,14 +530,8 @@ habilidades:
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
             }
-            .flyer-sheet:last-child {
-                page-break-after: auto !important;
-                break-after: auto !important;
-            }
-            .flyer-card {
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-            }
+            .flyer-sheet:last-child { page-break-after: auto !important; break-after: auto !important; }
+            .flyer-card { page-break-inside: avoid !important; break-inside: avoid !important; }
 
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
@@ -547,9 +566,11 @@ habilidades:
                         <span style="font-family: 'Orbitron'; font-size: 1.2rem;">Guia do Professor</span><br>
                         <span style="font-size: 0.9rem;">Imprima este roteiro para utilizar durante a explicação.</span>
                     </div>
-                    <button class="btn btn-success" onclick="window.print()">🖨️ Imprimir Guia</button>
+                    <button class="btn btn-success" onclick="imprimirParte('guia')">🖨️ Imprimir Guia</button>
+                    <button class="btn btn-success" onclick="imprimirParte('tudo')">🖨️ Imprimir tudo</button>
                 </div>
 
+                <div class="print-area" id="parte-guia">
                 <h2 style="margin-top: 20px;">Introdução da aula</h2>
                 
                 <div class="intro-box">
@@ -592,6 +613,7 @@ habilidades:
                     <p><em>Resolução Loja B:</em> 200 ÷ 2 = R$ 100 de desconto. (Paga R$ 100)</p>
                     <p style="margin-top: 10px;"><strong>Lição:</strong> O maior percentual de desconto nem sempre garante o menor preço! Sempre calcule usando o valor base.</p>
                 </div>
+                </div>
             </div>
         </div>
 
@@ -603,9 +625,10 @@ habilidades:
                         <span style="font-family: 'Orbitron'; font-size: 1.2rem;">Manual de Regras</span><br>
                         <span style="font-size: 0.9rem;">Imprima as instruções do jogo para distribuir aos grupos.</span>
                     </div>
-                    <button class="btn btn-success" onclick="window.print()">🖨️ Imprimir Regras</button>
+                    <button class="btn btn-success" onclick="imprimirParte('regras')">🖨️ Imprimir Regras</button>
                 </div>
 
+                <div class="print-area" id="parte-regras">
                 <div class="rules-container" style="line-height: 1.6;">
                     <h2 style="color: #000; border-bottom: 2px solid #000; text-align: center; margin-bottom: 20px;">🛒 Manual de Regras: Mercadinho da Padre Traezel</h2>
                     
@@ -645,6 +668,7 @@ habilidades:
                         <li>O sistema fará a conta final automaticamente e mostrará o cupom na tela.</li>
                         <li>Ao final da rodada, o Placar Geral mostrará qual grupo tomou as melhores decisões e conseguiu o <strong>menor gasto total</strong>!</li>
                     </ol>
+                </div>
                 </div>
             </div>
         </div>
@@ -750,12 +774,14 @@ habilidades:
                             <option value="student">📝 Modo Aluno (Com lacuna R$ ___)</option>
                             <option value="teacher">👨‍🏫 Modo Gabarito (Com valor final)</option>
                         </select>
-                        <button class="btn btn-success" onclick="window.print()">🖨️ Imprimir Tabloide</button>
+                        <button class="btn btn-success" onclick="imprimirParte('tabloide')">🖨️ Imprimir Tabloide</button>
                     </div>
                 </div>
 
+                <div class="print-area" id="parte-tabloide">
                 <div class="flyer-sheets-wrapper" id="flyer-container">
                     <!-- Tabloides gerados via JS -->
+                </div>
                 </div>
             </div>
         </div>
@@ -768,10 +794,12 @@ habilidades:
                         <span style="font-family: 'Orbitron'; font-size: 1.2rem;">Etiquetas Base (Valores Fixos)</span><br>
                         <span style="font-size: 0.9rem;">Imprima apenas uma vez. Recorte e cole na prateleira.</span>
                     </div>
-                    <button class="btn btn-success" onclick="window.print()">🖨️ Imprimir Etiquetas</button>
+                    <button class="btn btn-success" onclick="imprimirParte('etiquetas')">🖨️ Imprimir Etiquetas</button>
                 </div>
+                <div class="print-area" id="parte-etiquetas">
                 <div class="labels-grid" id="labels-container">
                     <!-- Etiquetas geradas via JS -->
+                </div>
                 </div>
             </div>
         </div>
@@ -784,10 +812,12 @@ habilidades:
                         <span style="font-family: 'Orbitron'; font-size: 1.2rem;">Selo de Promoções (Móveis)</span><br>
                         <span style="font-size: 0.9rem;">Imprima, recorte e troque os selos de produto em cada rodada seguindo o Gabarito.</span>
                     </div>
-                    <button class="btn btn-success" onclick="window.print()">🖨️ Imprimir Selos</button>
+                    <button class="btn btn-success" onclick="imprimirParte('selos')">🖨️ Imprimir Selos</button>
                 </div>
+                <div class="print-area" id="parte-selos">
                 <div class="promos-grid" id="promos-container">
                     <!-- Promos geradas via JS -->
+                </div>
                 </div>
             </div>
         </div>
@@ -800,11 +830,13 @@ habilidades:
                         <span style="font-family: 'Orbitron'; font-size: 1.2rem;">Embalagens com Código de Barras Único</span><br>
                         <span style="font-size: 0.9rem;">O código de barras pode ser lido por leitor. Todos padronizados (4 itens por página).</span>
                     </div>
-                    <button class="btn btn-success" onclick="window.print()">🖨️ Imprimir Produtos</button>
+                    <button class="btn btn-success" onclick="imprimirParte('produtos')">🖨️ Imprimir Produtos</button>
                 </div>
                 
+                <div class="print-area" id="parte-produtos">
                 <div class="products-grid-unified" id="products-unified-container">
                     <!-- Todos os Produtos Unificados -->
+                </div>
                 </div>
             </div>
         </div>
@@ -817,13 +849,15 @@ habilidades:
                         <span style="font-family: 'Orbitron'; font-size: 1.2rem;">Gabarito e Montagem das Rodadas</span><br>
                         <span style="font-size: 0.9rem;">Imprima este gabarito para acompanhar a colagem dos selos e auditar os alunos.</span>
                     </div>
-                    <button class="btn btn-success" onclick="window.print()">🖨️ Imprimir Gabarito</button>
+                    <button class="btn btn-success" onclick="imprimirParte('gabarito')">🖨️ Imprimir Gabarito</button>
                 </div>
 
+                <div class="print-area" id="parte-gabarito">
                 <p style="margin-top: 20px; margin-bottom: 15px;"><strong>Como organizar:</strong> Os valores base das etiquetas NUNCA mudam. Em cada rodada, você só precisa pegar os <strong>Selos de Promoção</strong> impressos e colocar em cima do produto correto seguindo a tabela abaixo.</p>
                 
                 <div id="guide-tables-container">
                     <!-- Tabelas geradas via JS -->
+                </div>
                 </div>
             </div>
         </div>
@@ -929,6 +963,15 @@ habilidades:
         // ==========================================
         // LÓGICA DE NAVEGAÇÃO
         // ==========================================
+        function imprimirParte(alvo) {
+            document.body.dataset.printTarget = alvo;
+            window.print();
+        }
+
+        window.addEventListener('afterprint', () => {
+            delete document.body.dataset.printTarget;
+        });
+
         function switchTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));

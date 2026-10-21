@@ -176,7 +176,7 @@ habilidades:
     .manual-box li { margin-bottom: 8px; }
     
     .print-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; flex-wrap: wrap; gap: 10px; }
-    #print-manual-container { display: none; }
+    #print-manual-container, #print-all-container { display: none; }
 
     /* ==========================================================================
        LAYOUT DO LABORATÓRIO (COM CONTROLE LATERAL)
@@ -482,8 +482,51 @@ habilidades:
       
       header.main-header, .tabs, .print-controls, .controls, .status-bar, #btn-voltar { display: none !important; }
       .print-hidden { display: none !important; }
+      #print-all-container { display: none !important; }
       
       .panel { box-shadow: none !important; border: none !important; background-color: transparent !important; color: #000 !important; margin: 0 !important; padding: 0 !important; }
+
+      /* MODO 0: IMPRESSÃO COMPLETA (MANUAL + CARTAS + GABARITOS) */
+      body.print-mode-all #tab-regras,
+      body.print-mode-all #tab-cartas,
+      body.print-mode-all #print-manual-container { display: none !important; }
+      body.print-mode-all #print-all-container {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+      }
+      body.print-mode-all .print-all-manual {
+        display: block !important;
+        color: #000 !important;
+        background: #fff !important;
+        break-after: page !important;
+      }
+      body.print-mode-all .print-all-part {
+        display: block !important;
+        break-before: page !important;
+      }
+      body.print-mode-all .print-all-cards-grid {
+        display: block !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      body.print-mode-all .print-all-cards-grid .sheet-page {
+        margin: 0 auto !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      body.print-mode-all .print-all-cards-grid .sheet-page:last-child {
+        page-break-after: auto !important;
+        break-after: auto !important;
+      }
+      body.print-mode-all .print-all-cards-grid .card {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
 
       /* MODO 1: IMPRESSÃO DE MANUAIS */
       body.print-mode-manuals .layout { display: none !important; }
@@ -588,7 +631,7 @@ habilidades:
     <!-- ABA 1: MANUAL E FONTES DA BASE VERIFICADA -->
     <div id="tab-regras" class="tab-content"><div class="panel">
       <div class="print-controls print-hidden"><div><strong>Manual de regras e indicadores</strong><br><span>Uma página legível por cópia; fontes completas disponíveis abaixo.</span></div>
-      <div style="display:flex;gap:10px;align-items:center"><select id="manual-copies"><option value="1" selected>1 cópia — 1 folha</option><option value="2">2 cópias — 2 folhas</option><option value="4">4 cópias — 4 folhas</option></select><button type="button" class="btn btn-warning" style="width:auto" onclick="printManuals()">Imprimir manual</button></div></div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><select id="manual-copies"><option value="1" selected>1 cópia — 1 folha</option><option value="2">2 cópias — 2 folhas</option><option value="4">4 cópias — 4 folhas</option></select><button type="button" class="btn btn-warning" style="width:auto" onclick="printManuals()">Imprimir manual</button><button type="button" class="btn btn-warning" style="width:auto" onclick="printPieces()">Imprimir cartas</button><button type="button" class="btn btn-success" style="width:auto" onclick="printAll()">Imprimir tudo</button></div></div>
       <div class="manual-box" id="manual-content">
 <h2>Super Trunfo Matemático</h2>
 <p><strong>2 a 6 jogadores · 45 cartas · versões para o 6º ano e 7º ano.</strong></p>
@@ -617,6 +660,7 @@ habilidades:
 
     <!-- CONTAINER INVISÍVEL PARA A IMPRESSÃO DO MANUAL -->
     <div id="print-manual-container"></div>
+    <div id="print-all-container" aria-hidden="true"></div>
 
     <!-- ABA 2: LABORATÓRIO E CARTAS -->
     <div id="tab-cartas" class="tab-content active">
@@ -639,6 +683,11 @@ habilidades:
           </div>
 
           <input type="search" class="search-box" id="searchInput" placeholder="Buscar município ou atrativo...">
+
+          <div class="print-group-box">
+            <div class="print-group-title" style="color: var(--success);">📑 Impressão completa</div>
+            <button class="btn btn-success" id="btnPrintAll" type="button" onclick="printAll()">🖨️ Imprimir tudo</button>
+          </div>
 
           <div class="print-group-box">
             <div class="print-group-title" style="color: var(--electric-cyan);">📘 Impressão — 6º Ano</div>
@@ -2776,11 +2825,49 @@ habilidades:
       const content = document.getElementById('manual-content').innerHTML;
       document.getElementById('print-manual-container').innerHTML = Array.from({length: count}, () => `<section class="print-manual-item">${content}</section>`).join('');
     }
+
+    function buildAllCardsPart(grade, teacherMode) {
+      const previousGrade = currentGrade;
+      const previousTeacherMode = isTeacherKey;
+      currentGrade = grade;
+      isTeacherKey = teacherMode;
+
+      let pagesHtml = '';
+      for (let i = 0; i < MUNICIPIOS.length; i += 9) {
+        const slice = MUNICIPIOS.slice(i, i + 9);
+        pagesHtml += `<div class="sheet-page">${slice.map((d, idx) => makeCard(d, i + idx)).join('')}</div>`;
+      }
+
+      currentGrade = previousGrade;
+      isTeacherKey = previousTeacherMode;
+      return `<section class="print-all-part"><div class="cards-grid print-all-cards-grid">${pagesHtml}</div></section>`;
+    }
+
+    function prepareAllPrint() {
+      const allContainer = document.getElementById('print-all-container');
+      const manualContent = document.getElementById('manual-content').innerHTML;
+      allContainer.innerHTML = `<section class="print-manual-item print-all-manual">${manualContent}</section>`
+        + buildAllCardsPart('6ano', false)
+        + buildAllCardsPart('6ano', true)
+        + buildAllCardsPart('7ano', false)
+        + buildAllCardsPart('7ano', true);
+    }
+
     function printManuals() {
       prepareManuals();
       document.body.classList.add('print-mode-manuals');
       window.print();
-      document.body.classList.remove('print-mode-manuals');
+    }
+
+    function printPieces() {
+      // Modo "pecas": mostra a aba das cartas e imprime so o baralho.
+      document.body.classList.add('print-mode-pieces');
+      window.print();
+    }
+    function printAll() {
+      prepareAllPrint();
+      document.body.classList.add('print-mode-all');
+      window.print();
     }
 
     function getFilteredTowns() {
@@ -2942,7 +3029,10 @@ habilidades:
 
       document.body.classList.add('print-mode-pieces');
       window.print();
-      document.body.classList.remove('print-mode-pieces');
+    }
+
+    function clearPrintModes() {
+      document.body.classList.remove('print-mode-manuals', 'print-mode-pieces', 'print-mode-all');
     }
 
     function setupEventListeners() {
@@ -2986,6 +3076,7 @@ habilidades:
       }
 
       window.addEventListener('afterprint', () => {
+        clearPrintModes();
         setViewMode(false);
       });
     }

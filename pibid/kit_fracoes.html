@@ -85,11 +85,12 @@ h2{font-size:19px;margin:26px 0 10px}
 @media print{
   body{background:#fff}
   .topo-site,.painel,.sobre,.barra,.voltar,.titulo-material{display:none!important}
-  .material{display:none;margin:0}
-  body.print-tudo .material{display:block}
-  body.print-pecas #sec-pecas,body.print-massas #sec-massas,
-  body.print-cartelas #sec-cartelas,body.print-gabarito #sec-gabarito{display:block}
-  .folha.gabarito{break-before:page}
+  .material{display:block;margin:0}
+  .print-area{display:block!important}
+  body[data-print-target="pecas"] .print-area:not(#parte-pecas){display:none!important}
+  body[data-print-target="massas"] .print-area:not(#parte-massas){display:none!important}
+  body[data-print-target="pedidos"] .print-area:not(#parte-pedidos){display:none!important}
+  body[data-print-target="gabarito"] .print-area:not(#parte-gabarito){display:none!important}
   .folha{margin:0;box-shadow:none;break-after:page}
   .material,.material>section{margin:0!important;padding:0!important;border:0!important}
   main,main>*{margin:0!important;padding:0!important}
@@ -205,27 +206,27 @@ h2{font-size:19px;margin:26px 0 10px}
 </section>
 
 <section class="barra">
-  <h2 style="margin-top:0">Imprimir</h2>
+  <h2 style="margin-top:0">Imprimir o material</h2>
   <div class="botoes">
-    <button class="botao destaque" type="button" data-print="tudo">Tudo (8 páginas)</button>
-    <button class="botao" type="button" data-print="pecas">As 3 folhas de peças</button>
-    <button class="botao" type="button" data-print="massas">As 3 folhas de massas</button>
-    <button class="botao" type="button" data-print="cartelas">A folha dos doze pedidos</button>
-    <button class="botao" type="button" data-print="gabarito">O gabarito</button>
+    <button class="botao destaque" type="button" data-print="tudo">🖨️ Imprimir tudo</button>
+    <button class="botao" type="button" data-print="pecas">Imprimir peças/fatias (3 folhas)</button>
+    <button class="botao" type="button" data-print="massas">Imprimir massas (3 folhas)</button>
+    <button class="botao" type="button" data-print="pedidos">Imprimir pedidos + como jogar (1 folha)</button>
+    <button class="botao" type="button" data-print="gabarito">Imprimir manual/gabarito do professor (1 folha)</button>
   </div>
 </section>
 
 <h2 class="titulo-material">As três folhas de peças</h2>
-<section class="material" id="sec-pecas"></section>
+<section class="material print-area" id="parte-pecas"></section>
 
 <h2 class="titulo-material">As 3 folhas de massas</h2>
-<section class="material" id="sec-massas"></section>
+<section class="material print-area" id="parte-massas"></section>
 
 <h2 class="titulo-material">A folha dos doze pedidos</h2>
-<section class="material" id="sec-cartelas"></section>
+<section class="material print-area" id="parte-pedidos"></section>
 
 <h2 class="titulo-material">O gabarito do professor</h2>
-<section class="material" id="sec-gabarito"></section>
+<section class="material print-area" id="parte-gabarito"></section>
 
 </main>
 
@@ -424,7 +425,7 @@ function montarFolhas() {
     }
     html += folhaSVG(svg, '');
   }
-  document.getElementById('sec-pecas').innerHTML = html;
+  document.getElementById('parte-pecas').innerHTML = html;
 }
 
 /* ---------------------------------------------------------------- as massas de montagem */
@@ -458,7 +459,7 @@ function montarMassas() {
     }
     html += folhaSVG(svg, '');
   }
-  document.getElementById('sec-massas').innerHTML = html;
+  document.getElementById('parte-massas').innerHTML = html;
 }
 
 /* ---------------------------------------------------------------- as cartelas e o gabarito */
@@ -488,7 +489,7 @@ function montarCartelas() {
     linhas += '<tr><td class="n">' + (i + 1) + '</td><td class="e">' + fracHTML(PEDIDOS[i].t) +
       '</td><td class="c"></td><td class="c"></td></tr>';
   }
-  document.getElementById('sec-cartelas').innerHTML =
+  document.getElementById('parte-pedidos').innerHTML =
     '<div class="folha pedidos"><h2>Os doze pedidos</h2>' +
     '<p class="intro">O grupo recebe os doze pedidos de uma vez. Planejem antes de montar: o monte ' +
     'tem as peças exatas para os doze, então cada peça escolhida faz falta mais adiante. A pizza ' +
@@ -519,7 +520,7 @@ function montarGabarito() {
       '</div><div class="ded"><b>Dedução:</b> ' + fracHTML(p.d) + ' \u2192 ' +
       fracHTML(alvo.join(' + ')) + '</div></div>';
   }
-  document.getElementById('sec-gabarito').innerHTML =
+  document.getElementById('parte-gabarito').innerHTML =
     '<div class="folha gabarito"><h2>Gabarito e dedução</h2>' +
     '<p class="intro">Cada pedido fecha 12/12 avos. Somados, os doze consomem exatamente as 51 ' +
     'peças impressas: calabresa 42/12, mussarela 57/12 e azeitona 45/12. Nada sobra e nada falta. ' +
@@ -557,6 +558,15 @@ function montarManual() {
 /* ---------------------------------------------------------------- o painel */
 var estado = { tempo: 300, restante: 0, relogio: null, pedido: -1, usados: [], pontos: [0, 0, 0, 0] };
 var MONTE = {};
+
+function imprimirParte(alvo) {
+  document.body.dataset.printTarget = alvo;
+  window.print();
+}
+
+window.addEventListener('afterprint', () => {
+  delete document.body.dataset.printTarget;
+});
 
 function contaMonte() {
   MONTE = {};
@@ -695,16 +705,23 @@ function ligar() {
   var botoes = document.querySelectorAll('[data-print]');
   for (var j = 0; j < botoes.length; j++) {
     botoes[j].onclick = function () {
-      document.body.className = 'print-' + this.getAttribute('data-print');
-      window.print();
+      imprimirParte(this.getAttribute('data-print'));
     };
   }
-  window.onafterprint = function () { document.body.className = ''; };
   contaMonte();
   mostraMonte();
   mostraPedido();
 }
 
+/* Ao abrir o arquivo-fonte diretamente por file://, o navegador trata o
+   front matter do Jekyll como texto no body; ele não faz parte do material. */
+function removerFrontMatterDoArquivoBruto() {
+  var primeiro = document.body && document.body.firstChild;
+  if (primeiro && primeiro.nodeType === 3 && primeiro.textContent.trim().indexOf('---') === 0)
+    primeiro.remove();
+}
+
+removerFrontMatterDoArquivoBruto();
 montarFolhas();
 montarMassas();
 montarCartelas();

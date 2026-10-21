@@ -235,7 +235,6 @@ li { margin-bottom: 1.5mm; }
     body[data-print-target="sec-fichas"] .print-area:not(#sec-fichas),
     body[data-print-target="sec-cruzadinha-atividade"] .print-area:not(#sec-cruzadinha-atividade),
     body[data-print-target="sec-cruzadinha-gabarito"] .print-area:not(#sec-cruzadinha-gabarito),
-    body[data-print-target="atividades"] #sec-cruzadinha-gabarito,
     body[data-print-target="sec-artigo"] .print-area:not(#sec-artigo) {
         display: none !important;
     }
@@ -246,7 +245,8 @@ li { margin-bottom: 1.5mm; }
     body[data-print-target="sec-fichas"] #sec-fichas .sheet,
     body[data-print-target="sec-cruzadinha-atividade"] #sec-cruzadinha-atividade .sheet,
     body[data-print-target="sec-cruzadinha-gabarito"] #sec-cruzadinha-gabarito .sheet,
-    body[data-print-target="sec-artigo"] #sec-artigo .sheet:last-child {
+    body[data-print-target="sec-artigo"] #sec-artigo .sheet:last-child,
+    body[data-print-target="tudo"] #sec-cruzadinha-gabarito .sheet {
         break-after: auto;
     }
     
@@ -326,7 +326,7 @@ li { margin-bottom: 1.5mm; }
 <body>
 <nav aria-label="Menu de Impressão da Oficina" class="toolbar">
 <span class="title">Oficina Pedagógica • Material Completo</span>
-<div class="btn-group"><button onclick="printSection('sec-guia')" type="button">📖 Guia da Turma</button><button onclick="printSection('sec-cartoes')" type="button">✂️ Cartões de Situação</button><button onclick="printSection('sec-fichas')" type="button">📝 Ficha de Resposta</button><button onclick="printSection('sec-cruzadinha-atividade')" type="button">🧩 Cruzadinha (Atividade)</button><button onclick="printSection('sec-cruzadinha-gabarito')" type="button">🔑 Cruzadinha (Gabarito)</button><button onclick="printPDF('artigo_fragmentado.pdf')" type="button">📄 Imprimir Artigo (PDF)</button><button onclick="downloadPDF('artigo_fragmentado.pdf')" type="button">📥 Baixar Artigo (PDF)</button><button class="btn-all" onclick="printAll()" type="button">📑 Imprimir Atividades (HTML)</button></div>
+<div class="btn-group"><button onclick="printSection('sec-guia')" type="button">📖 Guia da Turma</button><button onclick="printSection('sec-cartoes')" type="button">✂️ Cartões de Situação</button><button onclick="printSection('sec-fichas')" type="button">📝 Ficha de Resposta</button><button onclick="printSection('sec-cruzadinha-atividade')" type="button">🧩 Cruzadinha (Atividade)</button><button onclick="printSection('sec-cruzadinha-gabarito')" type="button">🔑 Cruzadinha (Gabarito)</button><button onclick="printPDF('artigo_fragmentado.pdf')" type="button">📄 Imprimir Artigo (PDF)</button><button onclick="downloadPDF('artigo_fragmentado.pdf')" type="button">📥 Baixar Artigo (PDF)</button><button class="btn-all" onclick="printAll()" type="button">🖨️ Imprimir tudo</button></div>
 <span class="tip">Impressão configurada para A4, orientação retrato, escala 100% e margens padrão.</span>
 </nav>
 <main>
@@ -613,8 +613,8 @@ function printSection(sectionId) {
 }
 
 function printAll() {
-    // imprime as atividades do aluno, sem o gabarito da cruzadinha
-    document.body.dataset.printTarget = 'atividades';
+    // imprime todas as partes HTML, incluindo o gabarito da cruzadinha
+    document.body.dataset.printTarget = 'tudo';
     window.print();
 }
 
