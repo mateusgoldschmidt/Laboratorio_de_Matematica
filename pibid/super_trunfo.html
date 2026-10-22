@@ -37,7 +37,7 @@ habilidades:
       
       --font-card-id-size: 6.2pt;          /* Tamanho do número da carta (#01, #02...) */
       --font-card-id-color: #ffffff;       /* Cor do número da carta */
-      --bg-card-id: rgba(15, 23, 42, 0.9); /* Cor de fundo da tarja do número */
+      --bg-card-id: transparent;           /* Cor de fundo do número (sem fundo) */
 
       --font-caption-size: 7.0pt;          /* Tamanho do atrativo turístico na foto */
       --font-caption-color: #ffffff;       /* Cor do atrativo turístico na foto */
@@ -305,13 +305,13 @@ habilidades:
       -webkit-text-stroke: 0.4px #000000; z-index: 2; font-family: 'Orbitron', sans-serif;
     }
     .overlay-id {
-      position: absolute; top: 0; right: 0;
-      background: var(--bg-card-id);
+      position: absolute; top: 1.2mm; right: 2mm;
+      background: transparent;
       color: var(--font-card-id-color);
-      padding: 0.6mm 1.6mm;
       font-size: var(--font-card-id-size);
-      font-weight: 800; z-index: 2;
-      border-bottom-left-radius: 4px;
+      font-weight: 900; line-height: 1.1;
+      text-shadow: -0.85px -0.85px 0 #000, 0.85px -0.85px 0 #000, -0.85px 0.85px 0 #000, 0.85px 0.85px 0 #000, 0 1.5px 2px rgba(0,0,0,0.95);
+      -webkit-text-stroke: 0.35px #000000; z-index: 2; font-family: 'Orbitron', sans-serif;
     }
     .photo-caption {
       position: absolute; bottom: 1.2mm; left: 2mm; right: 2mm;
@@ -2947,7 +2947,7 @@ habilidades:
             onerror="this.onerror=null; this.src='${fallbackUrl}';"
           >
           <div class="photo-town-name">${d.nome || ''}</div>
-          <div class="overlay-id">#${String(d.card_no || index + 1).padStart(2, '0')} · ${gradeBadge}</div>
+          <div class="overlay-id">#${String(d.card_no || index + 1).padStart(2, '0')}</div>
           <div class="photo-caption">📍 ${d.atrativo || ''}</div>
         </div>
 
