@@ -1,7 +1,7 @@
 ---
 titulo: "Trilha Sistema Solar: Desafios da Matemática"
 icone: "🪐"
-descricao: "Material para impressão (Tabuleiro em 4 folhas A4 com distância uniforme e PNGs puros + 64 Cartas Desafio + 8 Cartas Bônus dos Planetas coladas para corte único + Gabarito)."
+descricao: "Material para impressão com versões para o 6º, 7º, 8º e 9º ano (Tabuleiro em 4 folhas A4 + 64 Cartas Desafio + 8 Cartas Bônus dos Planetas coladas para corte único + Gabarito)."
 habilidades:
   - EF06MA03
   - EF06MA05
@@ -14,6 +14,19 @@ habilidades:
   - EF06MA17
   - EF06MA18
   - EF06MA24
+  - EF07MA04
+  - EF07MA12
+  - EF07MA18
+  - EF07MA24
+  - EF08MA01
+  - EF08MA02
+  - EF08MA04
+  - EF08MA06
+  - EF08MA19
+  - EF09MA03
+  - EF09MA04
+  - EF09MA09
+  - EF09MA14
 ---
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -204,9 +217,128 @@ habilidades:
     .pill-geo { background: rgba(234, 88, 12, 0.22); border: 1px solid #f97316; color: #fdba74; }
     .pill-pla { background: rgba(245, 158, 11, 0.22); border: 1px solid #f59e0b; color: #fde68a; }
 
+    .grade-selector {
+      display: flex;
+      gap: 4px;
+      background: #0f172a;
+      padding: 4px;
+      border-radius: 9px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .grade-btn {
+      background: transparent;
+      color: #cbd5e1;
+      border: none;
+      padding: 7px 12px;
+      border-radius: 6px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .grade-btn:hover {
+      color: #ffffff;
+    }
+
+    .grade-btn.active {
+      background: var(--electric);
+      color: #0a0a0c;
+    }
+
+    .gc-question sup, .gc-opt sup, .ans-table sup {
+      font-size: 0.64rem;
+      font-weight: 800;
+      line-height: 0;
+      position: relative;
+      top: -0.35em;
+      padding: 0 0.5px;
+    }
+
+    /* Frações na forma natural (empilhadas) e radicais com barra superior */
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      vertical-align: middle;
+      text-align: center;
+      font-size: 0.80em;
+      line-height: 0.94;
+      padding: 0 1.5px;
+      margin: -2px 1px;
+      font-weight: 800;
+    }
+    .frac .top {
+      border-bottom: 1.2px solid currentColor;
+      padding: 0 1.5px 0.5px;
+    }
+    .frac .bottom {
+      padding: 0.5px 1.5px 0;
+    }
+
+    .exp-frac {
+      font-size: 0.58rem !important;
+      top: -0.55em !important;
+      margin-left: 1px;
+    }
+
+    .rad-wrap {
+      display: inline-flex;
+      align-items: center;
+      vertical-align: middle;
+      font-weight: 800;
+    }
+    .rad-wrap .rad-idx {
+      font-size: 0.56rem;
+      margin-right: -1px;
+      top: -0.45em;
+    }
+    .rad-wrap .rad-bar {
+      border-top: 1.3px solid currentColor;
+      padding: 1px 1.5px 0;
+      margin-left: -1px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* Layout para cartas com representação visual (SVG) ao lado da pergunta */
+    .gc-q-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+      flex: 1;
+      margin-bottom: 2px;
+    }
+    .gc-q-wrap.has-fig .gc-question {
+      font-size: 0.66rem;
+      line-height: 1.18;
+      flex: 1;
+    }
+    .gc-fig {
+      width: 84px;
+      height: 50px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 1px;
+      overflow: hidden;
+    }
+    .gc-fig svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
     .print-buttons {
       display: flex;
       flex-wrap: wrap;
+      align-items: center;
       gap: 8px;
     }
 
@@ -877,7 +1009,7 @@ habilidades:
           <div class="brand-icon">🪐</div>
           <div>
             <div class="brand-title">Trilha Sistema Solar — PIBID Matemática</div>
-            <div class="brand-subtitle">Material para Impressão • 6º Ano</div>
+            <div class="brand-subtitle" id="headerGradeSubtitle">Material para Impressão • 6º ao 9º Ano</div>
           </div>
         </div>
         <nav class="nav-tabs">
@@ -890,6 +1022,13 @@ habilidades:
 
     <!-- BARRA DE AÇÃO E LEGENDA -->
     <div class="action-bar">
+      <div class="grade-selector" aria-label="Selecionar Ano Escolar">
+        <button type="button" class="grade-btn active" id="btnGrade6" onclick="setGrade('6ano')">6º Ano</button>
+        <button type="button" class="grade-btn" id="btnGrade7" onclick="setGrade('7ano')">7º Ano</button>
+        <button type="button" class="grade-btn" id="btnGrade8" onclick="setGrade('8ano')">8º Ano</button>
+        <button type="button" class="grade-btn" id="btnGrade9" onclick="setGrade('9ano')">9º Ano</button>
+      </div>
+
       <div class="print-buttons">
         <label class="fundo-label">
           Fundo do tabuleiro:
@@ -900,10 +1039,10 @@ habilidades:
             <option value="original">Estrelado original</option>
           </select>
         </label>
-        <button class="btn-print btn-print-main" onclick="printTarget('all')">🖨️ Imprimir tudo</button>
+        <button class="btn-print btn-print-main" id="btnPrintAll" onclick="printTarget('all')">🖨️ Imprimir tudo (6º Ano)</button>
         <button class="btn-print" onclick="printTarget('board')">🖨️ Imprimir tabuleiro</button>
-        <button class="btn-print" onclick="printTarget('cards')">🖨️ Imprimir cartas</button>
-        <button class="btn-print" onclick="printTarget('guide')">🖨️ Imprimir regras &amp; gabarito</button>
+        <button class="btn-print" id="btnPrintCards" onclick="printTarget('cards')">🖨️ Imprimir cartas (6º Ano)</button>
+        <button class="btn-print" id="btnPrintGuide" onclick="printTarget('guide')">🖨️ Imprimir gabarito (6º Ano)</button>
       </div>
     </div>
 
@@ -917,12 +1056,12 @@ habilidades:
             <div class="grid-cut-v"></div>
             <div class="board-title">
               <span class="bt-name">TRILHA SISTEMA SOLAR</span>
-              <span class="bt-sub">Matemática · 6º ano · PIBID</span>
+              <span class="bt-sub" id="boardGradeSub">Matemática · 6º ano · PIBID</span>
               <span class="bt-legend">
-                <span><i class="dot-num"></i>Potências e operações</span>
-                <span><i class="dot-fra"></i>Frações</span>
-                <span><i class="dot-pct"></i>Porcentagem e decimais</span>
-                <span><i class="dot-geo"></i>Geometria e medidas</span>
+                <span><i class="dot-num"></i><span class="leg-txt-num">Potências e operações</span></span>
+                <span><i class="dot-fra"></i><span class="leg-txt-fra">Frações</span></span>
+                <span><i class="dot-pct"></i><span class="leg-txt-pct">Porcentagem e decimais</span></span>
+                <span><i class="dot-geo"></i><span class="leg-txt-geo">Geometria e medidas</span></span>
               </span>
             </div>
             <svg class="track-svg" viewBox="0 0 1108 760">
@@ -982,7 +1121,7 @@ habilidades:
             <strong>Casas de Planetas (Bônus Especial!):</strong> Quem parar exatamente sobre um dos 8 planetas (Casas 7, 14, 21, 28, 35, 42, 49 ou 56) lê a <strong>Carta Bônus daquele Planeta</strong> e ganha um impulso extra na trilha! Vence quem chegar a <strong>Netuno (Casa 56)</strong> primeiro!
           </p>
 
-          <h2>✅ Gabarito Oficial das 64 Cartas de Desafio (16 por Cor)</h2>
+          <h2 id="guideKeyTitle">✅ Gabarito Oficial das 64 Cartas de Desafio — 6º Ano (16 por Cor)</h2>
           <div class="ans-grid" id="answer-key-container"></div>
         </div>
       </section>
@@ -1148,9 +1287,54 @@ habilidades:
       });
     }
 
-    // BANCO EXPANDIDO: 16 CARTAS POR COR (64 CARTAS DE DESAFIO) + 8 CARTAS BÔNUS DOS PLANETAS = 72 CARTAS (4 FOLHAS A4 DE 18 CARTAS)
-    const challengeDecks = [
-      {
+    // BANCO EXPANDIDO POR ANO ESCOLAR (6º, 7º, 8º e 9º ANO): 64 CARTAS DE DESAFIO + 8 CARTAS BÔNUS = 72 CARTAS POR ANO
+    let currentGrade = '6ano';
+
+    const GRADE_INFO = {
+      '6ano': {
+        label: '6º Ano',
+        boardSub: 'Matemática · 6º ano · PIBID',
+        legend: {
+          num: 'Potências e operações',
+          fra: 'Frações',
+          pct: 'Porcentagem e decimais',
+          geo: 'Geometria e medidas'
+        }
+      },
+      '7ano': {
+        label: '7º Ano',
+        boardSub: 'Matemática · 7º ano · PIBID',
+        legend: {
+          num: 'Inteiros e potências',
+          fra: 'Racionais e frações',
+          pct: 'Porcentagem e equações',
+          geo: 'Geometria e medidas'
+        }
+      },
+      '8ano': {
+        label: '8º Ano',
+        boardSub: 'Matemática · 8º ano · PIBID',
+        legend: {
+          num: 'Potências e raízes',
+          fra: 'Frações e dízimas',
+          pct: 'Porcentagem e álgebra',
+          geo: 'Geometria e medidas'
+        }
+      },
+      '9ano': {
+        label: '9º Ano',
+        boardSub: 'Matemática · 9º ano · PIBID',
+        legend: {
+          num: 'Radicais e potências',
+          fra: 'Razões e proporções',
+          pct: 'Álgebra e equações',
+          geo: 'Geometria e Pitágoras'
+        }
+      }
+    };
+
+    const challengeDecksByGrade = {
+      '6ano': [{
         id: 'num',
         title: 'OPERAÇÕES E NÚMEROS',
         icon: '🔵',
@@ -1180,22 +1364,22 @@ habilidades:
         icon: '🟣',
         themeClass: 'card-theme-fra',
         cards: [
-          { q: "Quanto vale 1/2 (metade) de 86?", opts: ["42", "43", "44", "46"], ans: "B (43)" },
-          { q: "Qual destas frações representa a MAIOR parte de um inteiro?", opts: ["1/8", "1/4", "1/2", "1/3"], ans: "C (1/2)" },
-          { q: "Quanto é 3/4 de 100?", opts: ["25", "50", "80", "75"], ans: "D (75)" },
-          { q: "Somando as frações 2/7 + 3/7, obtemos:", opts: ["5/7", "5/14", "6/7", "1/7"], ans: "A (5/7)" },
-          { q: "Quanto é 1/3 (a terça parte) de 90?", opts: ["20", "30", "25", "45"], ans: "B (30)" },
-          { q: "Qual é o resultado de 7/8 menos 3/8?", opts: ["3/8", "4/16", "4/8", "5/8"], ans: "C (4/8)" },
-          { q: "Simplificando a fração 6/12 ao máximo, encontramos:", opts: ["1/3", "2/3", "3/4", "1/2"], ans: "D (1/2)" },
-          { q: "Quanto é 2/5 de 50?", opts: ["20", "10", "15", "25"], ans: "A (20)" },
-          { q: "Quantos quartos (1/4) são necessários para formar 2 inteiros?", opts: ["4 quartos", "8 quartos", "6 quartos", "10 quartos"], ans: "B (8 quartos)" },
-          { q: "Quanto vale 1/4 de 200?", opts: ["25", "40", "50", "75"], ans: "C (50)" },
-          { q: "Uma pizza tem 8 fatias iguais e comemos 6. Que fração sobrou?", opts: ["6/8", "1/2", "3/8", "2/8"], ans: "D (2/8)" },
-          { q: "Quanto é 3/10 de 80?", opts: ["24", "18", "30", "32"], ans: "A (24)" },
-          { q: "Qual fração é equivalente a 1/3?", opts: ["2/3", "2/6", "3/6", "1/6"], ans: "B (2/6)" },
-          { q: "Quanto vale 5/6 menos 1/6?", opts: ["3/6", "4/12", "4/6", "6/6"], ans: "C (4/6)" },
-          { q: "Quanto é 2/3 de 60?", opts: ["20", "30", "45", "40"], ans: "D (40)" },
-          { q: "Somando 1/2 + 1/2, obtemos:", opts: ["1 inteiro", "2/4", "1/4", "2 inteiros"], ans: "A (1 inteiro)" }
+          { q: "Quanto vale <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> (metade) de 86?", opts: ["42", "43", "44", "46"], ans: "B (43)" },
+          { q: "Qual destas frações representa a MAIOR parte de um inteiro?", opts: ["<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">8</span></span>", "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span>", "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>", "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span>"], ans: "C (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>)" },
+          { q: "Quanto é <span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span> de 100?", opts: ["25", "50", "80", "75"], ans: "D (75)" },
+          { q: "Somando as frações <span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">7</span></span> + <span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">7</span></span>, obtemos:", opts: ["<span class=\"frac\"><span class=\"top\">5</span><span class=\"bottom\">7</span></span>", "<span class=\"frac\"><span class=\"top\">5</span><span class=\"bottom\">14</span></span>", "<span class=\"frac\"><span class=\"top\">6</span><span class=\"bottom\">7</span></span>", "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">7</span></span>"], ans: "A (<span class=\"frac\"><span class=\"top\">5</span><span class=\"bottom\">7</span></span>)" },
+          { q: "Quanto é <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span> (a terça parte) de 90?", opts: ["20", "30", "25", "45"], ans: "B (30)" },
+          { q: "Qual é o resultado de <span class=\"frac\"><span class=\"top\">7</span><span class=\"bottom\">8</span></span> menos <span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">8</span></span>?", opts: ["<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">8</span></span>", "<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">16</span></span>", "<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">8</span></span>", "<span class=\"frac\"><span class=\"top\">5</span><span class=\"bottom\">8</span></span>"], ans: "C (<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">8</span></span>)" },
+          { q: "Simplificando a fração <span class=\"frac\"><span class=\"top\">6</span><span class=\"bottom\">12</span></span> ao máximo, encontramos:", opts: ["<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span>", "<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">3</span></span>", "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span>", "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>"], ans: "D (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>)" },
+          { q: "Quanto é <span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">5</span></span> de 50?", opts: ["20", "10", "15", "25"], ans: "A (20)" },
+          { q: "Quantos quartos (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span>) são necessários para formar 2 inteiros?", opts: ["4 quartos", "8 quartos", "6 quartos", "10 quartos"], ans: "B (8 quartos)" },
+          { q: "Quanto vale <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> de 200?", opts: ["25", "40", "50", "75"], ans: "C (50)" },
+          { q: "Uma pizza tem 8 fatias iguais e comemos 6. Que fração sobrou?", opts: ["<span class=\"frac\"><span class=\"top\">6</span><span class=\"bottom\">8</span></span>", "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>", "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">8</span></span>", "<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">8</span></span>"], ans: "D (<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">8</span></span>)" },
+          { q: "Quanto é <span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">10</span></span> de 80?", opts: ["24", "18", "30", "32"], ans: "A (24)" },
+          { q: "Qual fração é equivalente a <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span>?", opts: ["<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">3</span></span>", "<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">6</span></span>", "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">6</span></span>", "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">6</span></span>"], ans: "B (<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">6</span></span>)" },
+          { q: "Quanto vale <span class=\"frac\"><span class=\"top\">5</span><span class=\"bottom\">6</span></span> menos <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">6</span></span>?", opts: ["<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">6</span></span>", "<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">12</span></span>", "<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">6</span></span>", "<span class=\"frac\"><span class=\"top\">6</span><span class=\"bottom\">6</span></span>"], ans: "C (<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">6</span></span>)" },
+          { q: "Quanto é <span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">3</span></span> de 60?", opts: ["20", "30", "45", "40"], ans: "D (40)" },
+          { q: "Somando <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> + <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>, obtemos:", opts: ["1 inteiro", "<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">4</span></span>", "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span>", "2 inteiros"], ans: "A (1 inteiro)" }
         ]
       },
       {
@@ -1215,7 +1399,7 @@ habilidades:
           { q: "Qual é o resultado de 5,0 menos 1,8?", opts: ["3,8", "4,2", "3,2", "2,8"], ans: "C (3,2)" },
           { q: "Quanto é 10% de 1.250?", opts: ["12,5", "100", "250", "125"], ans: "D (125)" },
           { q: "Um livro de R$ 60,00 teve 10% de desconto. Qual o novo preço?", opts: ["R$ 54,00", "R$ 50,00", "R$ 56,00", "R$ 48,00"], ans: "A (R$ 54,00)" },
-          { q: "O número decimal 0,25 equivale a qual fração?", opts: ["1/2", "1/4", "1/5", "3/4"], ans: "B (1/4)" },
+          { q: "O número decimal 0,25 equivale a qual fração?", opts: ["<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>", "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span>", "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">5</span></span>", "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span>"], ans: "B (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span>)" },
           { q: "Quanto é 30% de 90?", opts: ["18", "24", "27", "30"], ans: "C (27)" },
           { q: "Qual é o dobro de 0,35?", opts: ["0,60", "0,65", "0,75", "0,70"], ans: "D (0,70)" },
           { q: "Quanto é 1% de 500?", opts: ["5", "1", "10", "50"], ans: "A (5)" },
@@ -1246,7 +1430,2069 @@ habilidades:
           { q: "Quantas arestas possui um cubo?", opts: ["6 arestas", "8 arestas", "12 arestas", "10 arestas"], ans: "C (12 arestas)" }
         ]
       }
-    ];
+    ],
+      '7ano': [
+        {
+                "id": "num",
+                "title": "INTEIROS E POTÊNCIAS",
+                "icon": "🔵",
+                "themeClass": "card-theme-num",
+                "cards": [
+                        {
+                                "q": "Calcule mentalmente: −15 + 8 é igual a:",
+                                "opts": [
+                                        "−7",
+                                        "7",
+                                        "−23",
+                                        "23"
+                                ],
+                                "ans": "A (−7)"
+                        },
+                        {
+                                "q": "Qual é o resultado de −12 − 8?",
+                                "opts": [
+                                        "−4",
+                                        "−20",
+                                        "20",
+                                        "4"
+                                ],
+                                "ans": "B (−20)"
+                        },
+                        {
+                                "q": "Resolva mentalmente: 10 − (−15)",
+                                "opts": [
+                                        "−5",
+                                        "5",
+                                        "25",
+                                        "−25"
+                                ],
+                                "ans": "C (25, pois −(−15) = +15)"
+                        },
+                        {
+                                "q": "Quanto vale o produto (−6) × (−4)?",
+                                "opts": [
+                                        "−24",
+                                        "−10",
+                                        "10",
+                                        "24"
+                                ],
+                                "ans": "D (24)"
+                        },
+                        {
+                                "q": "Qual é o resultado da divisão (−45) ÷ (+9)?",
+                                "opts": [
+                                        "−5",
+                                        "5",
+                                        "−6",
+                                        "6"
+                                ],
+                                "ans": "A (−5)"
+                        },
+                        {
+                                "q": "Quanto vale a potência (−3)²?",
+                                "opts": [
+                                        "−9",
+                                        "9",
+                                        "−6",
+                                        "6"
+                                ],
+                                "ans": "B (9, pois (−3)×(−3) = +9)"
+                        },
+                        {
+                                "q": "Quanto vale a potência (−2)³?",
+                                "opts": [
+                                        "8",
+                                        "−6",
+                                        "−8",
+                                        "6"
+                                ],
+                                "ans": "C (−8)"
+                        },
+                        {
+                                "q": "Atenção ao sinal! Quanto vale −4² (sem parênteses)?",
+                                "opts": [
+                                        "16",
+                                        "−8",
+                                        "8",
+                                        "−16"
+                                ],
+                                "ans": "D (−16)"
+                        },
+                        {
+                                "q": "Calcule mentalmente: (−1)⁵ + 10",
+                                "opts": [
+                                        "9",
+                                        "11",
+                                        "5",
+                                        "−9"
+                                ],
+                                "ans": "A (9, pois (−1)⁵ = −1)"
+                        },
+                        {
+                                "q": "Qual é o oposto (ou simétrico) de −37?",
+                                "opts": [
+                                        "−37",
+                                        "+37",
+                                        "0",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">37</span></span>"
+                                ],
+                                "ans": "B (+37)"
+                        },
+                        {
+                                "q": "Qual é o módulo (valor absoluto) |−28|?",
+                                "opts": [
+                                        "−28",
+                                        "0",
+                                        "28",
+                                        "14"
+                                ],
+                                "ans": "C (28)"
+                        },
+                        {
+                                "q": "No termômetro, a temperatura subiu de −4 °C para +11 °C. Qual foi a variação?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><rect x=\"28\" y=\"6\" width=\"12\" height=\"44\" rx=\"6\" fill=\"#f1f5f9\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><rect x=\"31\" y=\"22\" width=\"6\" height=\"26\" fill=\"#ef4444\"/><circle cx=\"34\" cy=\"52\" r=\"9\" fill=\"#ef4444\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><line x1=\"40\" y1=\"18\" x2=\"47\" y2=\"18\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><text x=\"50\" y=\"22\" font-size=\"10\" font-weight=\"800\" fill=\"#dc2626\">+11°C</text><line x1=\"40\" y1=\"38\" x2=\"47\" y2=\"38\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><text x=\"50\" y=\"42\" font-size=\"10\" font-weight=\"800\" fill=\"#2563eb\">−4°C</text></svg>",
+                                "opts": [
+                                        "7 °C",
+                                        "−15 °C",
+                                        "11 °C",
+                                        "15 °C"
+                                ],
+                                "ans": "D (15 °C)"
+                        },
+                        {
+                                "q": "Calcule mentalmente: (−5) × 4 + 12",
+                                "opts": [
+                                        "−8",
+                                        "8",
+                                        "−32",
+                                        "32"
+                                ],
+                                "ans": "A (−8, pois −20 + 12 = −8)"
+                        },
+                        {
+                                "q": "Quanto vale (−10)² ÷ (−5)?",
+                                "opts": [
+                                        "20",
+                                        "−20",
+                                        "−4",
+                                        "4"
+                                ],
+                                "ans": "B (−20, pois 100 ÷ (−5) = −20)"
+                        },
+                        {
+                                "q": "Qual destes números inteiros é o MAIOR?",
+                                "opts": [
+                                        "−20",
+                                        "−10",
+                                        "−2",
+                                        "−15"
+                                ],
+                                "ans": "C (−2)"
+                        },
+                        {
+                                "q": "Calcule a soma algébrica: −30 + 50 − 25",
+                                "opts": [
+                                        "5",
+                                        "−15",
+                                        "15",
+                                        "−5"
+                                ],
+                                "ans": "D (−5)"
+                        }
+                ]
+        },
+        {
+                "id": "fra",
+                "title": "RACIONAIS E FRAÇÕES",
+                "icon": "🟣",
+                "themeClass": "card-theme-fra",
+                "cards": [
+                        {
+                                "q": "Calcule mentalmente: −<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">5</span></span> − <span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">5</span></span>",
+                                "opts": [
+                                        "−<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">5</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">5</span></span>",
+                                        "−<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">10</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">5</span></span>"
+                                ],
+                                "ans": "A (−<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">5</span></span>)"
+                        },
+                        {
+                                "q": "Quanto vale o produto (−<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>) × (−80)?",
+                                "opts": [
+                                        "−40",
+                                        "40",
+                                        "−160",
+                                        "20"
+                                ],
+                                "ans": "B (40)"
+                        },
+                        {
+                                "q": "Qual é o resultado de (−<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span>) × 20?",
+                                "opts": [
+                                        "15",
+                                        "−12",
+                                        "−15",
+                                        "−20"
+                                ],
+                                "ans": "C (−15)"
+                        },
+                        {
+                                "q": "Quanto é −2,5 + 1,0?",
+                                "opts": [
+                                        "−3,5",
+                                        "1,5",
+                                        "3,5",
+                                        "−1,5"
+                                ],
+                                "ans": "D (−1,5)"
+                        },
+                        {
+                                "q": "Calcule mentalmente: −1,2 − 0,8",
+                                "opts": [
+                                        "−2,0",
+                                        "−0,4",
+                                        "2,0",
+                                        "0,4"
+                                ],
+                                "ans": "A (−2,0)"
+                        },
+                        {
+                                "q": "Quanto vale (−0,5) × (−6)?",
+                                "opts": [
+                                        "−3",
+                                        "3",
+                                        "−30",
+                                        "0,3"
+                                ],
+                                "ans": "B (3)"
+                        },
+                        {
+                                "q": "Qual é o resultado da divisão <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> ÷ <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span>?",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">8</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>",
+                                        "2",
+                                        "4"
+                                ],
+                                "ans": "C (2)"
+                        },
+                        {
+                                "q": "Quanto vale a potência (−<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span>)²?",
+                                "opts": [
+                                        "−<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">9</span></span>",
+                                        "−<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">6</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">9</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">9</span></span>"
+                                ],
+                                "ans": "D (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">9</span></span>)"
+                        },
+                        {
+                                "q": "Qual número decimal equivale à fração −<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span>?",
+                                "opts": [
+                                        "−0,75",
+                                        "−0,25",
+                                        "−3,4",
+                                        "−0,5"
+                                ],
+                                "ans": "A (−0,75)"
+                        },
+                        {
+                                "q": "Calcule mentalmente: 1 − <span class=\"frac\"><span class=\"top\">5</span><span class=\"bottom\">4</span></span>",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span>",
+                                        "−<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span>",
+                                        "−<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">4</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span>"
+                                ],
+                                "ans": "B (−<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span>, pois <span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">4</span></span> − <span class=\"frac\"><span class=\"top\">5</span><span class=\"bottom\">4</span></span> = −<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span>)"
+                        },
+                        {
+                                "q": "Quanto vale (−<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">3</span></span>) de 30?",
+                                "opts": [
+                                        "20",
+                                        "−10",
+                                        "−20",
+                                        "−15"
+                                ],
+                                "ans": "C (−20)"
+                        },
+                        {
+                                "q": "Qual é o inverso multiplicativo da fração <span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">5</span></span>?",
+                                "opts": [
+                                        "−<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">5</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">5</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">5</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">5</span><span class=\"bottom\">3</span></span>"
+                                ],
+                                "ans": "D (<span class=\"frac\"><span class=\"top\">5</span><span class=\"bottom\">3</span></span>)"
+                        },
+                        {
+                                "q": "Quanto vale (−4,5) ÷ 1,5?",
+                                "opts": [
+                                        "−3",
+                                        "3",
+                                        "−2",
+                                        "−3,5"
+                                ],
+                                "ans": "A (−3)"
+                        },
+                        {
+                                "q": "Qual destes números racionais é MENOR que −1?",
+                                "opts": [
+                                        "−0,5",
+                                        "−<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">2</span></span>",
+                                        "−<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span>",
+                                        "0"
+                                ],
+                                "ans": "B (−<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">2</span></span>, que vale −1,5)"
+                        },
+                        {
+                                "q": "Calcule e simplifique: −<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">8</span></span> + <span class=\"frac\"><span class=\"top\">7</span><span class=\"bottom\">8</span></span>",
+                                "opts": [
+                                        "−<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">8</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">10</span><span class=\"bottom\">8</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>",
+                                        "−<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>"
+                                ],
+                                "ans": "C (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>, pois <span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">8</span></span> = <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>)"
+                        },
+                        {
+                                "q": "Quanto vale 0,2 × (−50)?",
+                                "opts": [
+                                        "10",
+                                        "−1",
+                                        "−100",
+                                        "−10"
+                                ],
+                                "ans": "D (−10)"
+                        }
+                ]
+        },
+        {
+                "id": "pct",
+                "title": "PORCENTAGEM E EQUAÇÕES",
+                "icon": "🟢",
+                "themeClass": "card-theme-pct",
+                "cards": [
+                        {
+                                "q": "Na equação 2x = 18, qual é o valor de x?",
+                                "opts": [
+                                        "9",
+                                        "16",
+                                        "20",
+                                        "36"
+                                ],
+                                "ans": "A (9)"
+                        },
+                        {
+                                "q": "Se x − 7 = −2, então x vale:",
+                                "opts": [
+                                        "−9",
+                                        "5",
+                                        "−5",
+                                        "9"
+                                ],
+                                "ans": "B (5, pois 5 − 7 = −2)"
+                        },
+                        {
+                                "q": "A balança está em equilíbrio (3x + 5 = 20). Quanto vale x?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"55,44 47,58 63,58\" fill=\"#64748b\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><line x1=\"18\" y1=\"44\" x2=\"92\" y2=\"44\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"28\" y1=\"44\" x2=\"28\" y2=\"34\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><line x1=\"82\" y1=\"44\" x2=\"82\" y2=\"34\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><path d=\"M12,34 Q28,40 44,34\" fill=\"#dcfce7\" stroke=\"#059669\" stroke-width=\"1.8\"/><path d=\"M66,34 Q82,40 98,34\" fill=\"#dcfce7\" stroke=\"#059669\" stroke-width=\"1.8\"/><text x=\"28\" y=\"27\" text-anchor=\"middle\" font-size=\"10\" font-weight=\"800\" fill=\"#065f46\">3x + 5</text><text x=\"82\" y=\"27\" text-anchor=\"middle\" font-size=\"10.5\" font-weight=\"800\" fill=\"#065f46\">20</text></svg>",
+                                "opts": [
+                                        "3",
+                                        "4",
+                                        "5",
+                                        "6"
+                                ],
+                                "ans": "C (5, pois 3×5 + 5 = 20)"
+                        },
+                        {
+                                "q": "O dobro de um número somado com 4 dá 14. Que número é esse?",
+                                "opts": [
+                                        "3",
+                                        "4",
+                                        "6",
+                                        "5"
+                                ],
+                                "ans": "D (5)"
+                        },
+                        {
+                                "q": "Na equação <span class=\"frac\"><span class=\"top\">x</span><span class=\"bottom\">4</span></span> = −3, qual é o valor de x?",
+                                "opts": [
+                                        "−12",
+                                        "12",
+                                        "−7",
+                                        "−<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span>"
+                                ],
+                                "ans": "A (−12)"
+                        },
+                        {
+                                "q": "Qual é o valor de 2x − 3 quando x = −4?",
+                                "opts": [
+                                        "5",
+                                        "−11",
+                                        "−5",
+                                        "11"
+                                ],
+                                "ans": "B (−11, pois 2×(−4) − 3 = −8 − 3)"
+                        },
+                        {
+                                "q": "Um produto de R$ 80,00 sofreu aumento de 25%. Qual é o novo preço?",
+                                "opts": [
+                                        "R$ 95,00",
+                                        "R$ 105,00",
+                                        "R$ 100,00",
+                                        "R$ 90,00"
+                                ],
+                                "ans": "C (R$ 100,00, pois 25% de 80 é 20)"
+                        },
+                        {
+                                "q": "Uma camisa de R$ 150,00 teve 20% de desconto. Quanto passou a custar?",
+                                "opts": [
+                                        "R$ 130,00",
+                                        "R$ 125,00",
+                                        "R$ 110,00",
+                                        "R$ 120,00"
+                                ],
+                                "ans": "D (R$ 120,00, pois 20% de 150 é 30)"
+                        },
+                        {
+                                "q": "Se 5x = −35, quanto vale x?",
+                                "opts": [
+                                        "−7",
+                                        "7",
+                                        "−30",
+                                        "−6"
+                                ],
+                                "ans": "A (−7)"
+                        },
+                        {
+                                "q": "Simplificando 4x − 7x + 5x, obtemos:",
+                                "opts": [
+                                        "−2x",
+                                        "2x",
+                                        "6x",
+                                        "16x"
+                                ],
+                                "ans": "B (2x)"
+                        },
+                        {
+                                "q": "Quanto é 15% de 200?",
+                                "opts": [
+                                        "15",
+                                        "25",
+                                        "30",
+                                        "35"
+                                ],
+                                "ans": "C (30)"
+                        },
+                        {
+                                "q": "Na proporção <span class=\"frac\"><span class=\"top\">x</span><span class=\"bottom\">6</span></span> = <span class=\"frac\"><span class=\"top\">10</span><span class=\"bottom\">3</span></span>, qual é o valor de x?",
+                                "opts": [
+                                        "15",
+                                        "18",
+                                        "30",
+                                        "20"
+                                ],
+                                "ans": "D (20)"
+                        },
+                        {
+                                "q": "Se 2(x + 3) = 16, quanto vale x?",
+                                "opts": [
+                                        "5",
+                                        "6,5",
+                                        "8",
+                                        "11"
+                                ],
+                                "ans": "A (5, pois x + 3 = 8)"
+                        },
+                        {
+                                "q": "Em uma turma de 30 alunos, 40% usam óculos. Quantos alunos são?",
+                                "opts": [
+                                        "10",
+                                        "12",
+                                        "14",
+                                        "15"
+                                ],
+                                "ans": "B (12)"
+                        },
+                        {
+                                "q": "Se 3 cadernos custam R$ 24,00, quanto custam 5 cadernos iguais?",
+                                "opts": [
+                                        "R$ 35,00",
+                                        "R$ 36,00",
+                                        "R$ 40,00",
+                                        "R$ 45,00"
+                                ],
+                                "ans": "C (R$ 40,00)"
+                        },
+                        {
+                                "q": "Na equação 10 − x = 14, qual é o valor de x?",
+                                "opts": [
+                                        "4",
+                                        "24",
+                                        "−24",
+                                        "−4"
+                                ],
+                                "ans": "D (−4, pois 10 − (−4) = 14)"
+                        }
+                ]
+        },
+        {
+                "id": "geo",
+                "title": "GEOMETRIA E MEDIDAS",
+                "icon": "🟠",
+                "themeClass": "card-theme-geo",
+                "cards": [
+                        {
+                                "q": "Os ângulos da figura são complementares (90°). Quanto mede x?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><line x1=\"20\" y1=\"54\" x2=\"20\" y2=\"8\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"20\" y1=\"54\" x2=\"92\" y2=\"54\" stroke=\"#0f172a\" stroke-width=\"2\"/><rect x=\"20\" y=\"44\" width=\"10\" height=\"10\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"1.3\"/><line x1=\"20\" y1=\"54\" x2=\"78\" y2=\"16\" stroke=\"#ea580c\" stroke-width=\"2\"/><path d=\"M46,54 A26,26 0 0,0 41,40\" fill=\"none\" stroke=\"#ea580c\" stroke-width=\"1.6\"/><path d=\"M36,43 A20,20 0 0,0 20,34\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.6\"/><text x=\"52\" y=\"49\" font-size=\"10\" font-weight=\"800\" fill=\"#ea580c\">35°</text><text x=\"26\" y=\"30\" font-size=\"11\" font-weight=\"800\" fill=\"#2563eb\">x</text></svg>",
+                                "opts": [
+                                        "55°",
+                                        "65°",
+                                        "145°",
+                                        "45°"
+                                ],
+                                "ans": "A (55°)"
+                        },
+                        {
+                                "q": "Os ângulos da figura são suplementares (180°). Quanto mede x?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><line x1=\"8\" y1=\"52\" x2=\"102\" y2=\"52\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"55\" y1=\"52\" x2=\"32\" y2=\"12\" stroke=\"#ea580c\" stroke-width=\"2\"/><path d=\"M77,52 A22,22 0 0,0 44,33\" fill=\"none\" stroke=\"#ea580c\" stroke-width=\"1.6\"/><path d=\"M46,36 A18,18 0 0,0 37,52\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.6\"/><text x=\"64\" y=\"36\" font-size=\"10\" font-weight=\"800\" fill=\"#ea580c\">110°</text><text x=\"24\" y=\"46\" font-size=\"11\" font-weight=\"800\" fill=\"#2563eb\">x</text></svg>",
+                                "opts": [
+                                        "80°",
+                                        "70°",
+                                        "60°",
+                                        "90°"
+                                ],
+                                "ans": "B (70°)"
+                        },
+                        {
+                                "q": "Dois ângulos opostos pelo vértice (α e β na figura) têm sempre:",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><line x1=\"14\" y1=\"14\" x2=\"96\" y2=\"52\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"14\" y1=\"52\" x2=\"96\" y2=\"14\" stroke=\"#0f172a\" stroke-width=\"2\"/><path d=\"M37,25 A20,20 0 0,0 37,41\" fill=\"#fed7aa\" stroke=\"#ea580c\" stroke-width=\"1.6\"/><path d=\"M73,25 A20,20 0 0,1 73,41\" fill=\"#fed7aa\" stroke=\"#ea580c\" stroke-width=\"1.6\"/><text x=\"20\" y=\"37\" font-size=\"10\" font-weight=\"800\" fill=\"#c2410c\">α</text><text x=\"82\" y=\"37\" font-size=\"10\" font-weight=\"800\" fill=\"#c2410c\">β</text></svg>",
+                                "opts": [
+                                        "soma 90°",
+                                        "soma 180°",
+                                        "a mesma medida",
+                                        "metade um do outro"
+                                ],
+                                "ans": "C (a mesma medida)"
+                        },
+                        {
+                                "q": "No triângulo ao lado, dois ângulos medem 50° e 70°. Quanto mede x?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"14,56 98,56 48,10\" fill=\"#fff7ed\" stroke=\"#0f172a\" stroke-width=\"2\"/><text x=\"25\" y=\"51\" font-size=\"9.5\" font-weight=\"800\" fill=\"#ea580c\">50°</text><text x=\"68\" y=\"51\" font-size=\"9.5\" font-weight=\"800\" fill=\"#ea580c\">70°</text><text x=\"45\" y=\"27\" font-size=\"10.5\" font-weight=\"800\" fill=\"#2563eb\">x</text></svg>",
+                                "opts": [
+                                        "50°",
+                                        "70°",
+                                        "80°",
+                                        "60°"
+                                ],
+                                "ans": "D (60°, pois 180° − 120° = 60°)"
+                        },
+                        {
+                                "q": "Qual é a área do triângulo de base 10 cm e altura 6 cm?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"14,52 96,52 46,10\" fill=\"#ffedd5\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"46\" y1=\"10\" x2=\"46\" y2=\"52\" stroke=\"#ea580c\" stroke-width=\"1.6\" stroke-dasharray=\"3,2\"/><rect x=\"46\" y=\"45\" width=\"7\" height=\"7\" fill=\"none\" stroke=\"#ea580c\" stroke-width=\"1.2\"/><text x=\"51\" y=\"35\" font-size=\"9.5\" font-weight=\"800\" fill=\"#c2410c\">6 cm</text><text x=\"55\" y=\"63\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">10 cm</text></svg>",
+                                "opts": [
+                                        "30 cm²",
+                                        "60 cm²",
+                                        "16 cm²",
+                                        "32 cm²"
+                                ],
+                                "ans": "A (30 cm², pois (10×6)÷2 = 30)"
+                        },
+                        {
+                                "q": "Qual é a área do paralelogramo de base 8 cm e altura 5 cm?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"28,12 98,12 80,50 10,50\" fill=\"#ffedd5\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"28\" y1=\"12\" x2=\"28\" y2=\"50\" stroke=\"#ea580c\" stroke-width=\"1.6\" stroke-dasharray=\"3,2\"/><rect x=\"28\" y=\"43\" width=\"7\" height=\"7\" fill=\"none\" stroke=\"#ea580c\" stroke-width=\"1.2\"/><text x=\"33\" y=\"35\" font-size=\"9.5\" font-weight=\"800\" fill=\"#c2410c\">5 cm</text><text x=\"48\" y=\"62\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">8 cm</text></svg>",
+                                "opts": [
+                                        "20 cm²",
+                                        "40 cm²",
+                                        "26 cm²",
+                                        "13 cm²"
+                                ],
+                                "ans": "B (40 cm²)"
+                        },
+                        {
+                                "q": "Na circunferência de raio r = 7 cm, quanto mede o diâmetro total?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><circle cx=\"55\" cy=\"33\" r=\"25\" fill=\"#fff7ed\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"30\" y1=\"33\" x2=\"80\" y2=\"33\" stroke=\"#94a3b8\" stroke-width=\"1.4\" stroke-dasharray=\"3,2\"/><line x1=\"55\" y1=\"33\" x2=\"80\" y2=\"33\" stroke=\"#ea580c\" stroke-width=\"2.2\"/><circle cx=\"55\" cy=\"33\" r=\"2.5\" fill=\"#0f172a\"/><text x=\"67\" y=\"28\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#c2410c\">r = 7</text></svg>",
+                                "opts": [
+                                        "3,5 cm",
+                                        "21 cm",
+                                        "14 cm",
+                                        "49 cm"
+                                ],
+                                "ans": "C (14 cm)"
+                        },
+                        {
+                                "q": "Qual é o volume do bloco retangular de 4 cm × 3 cm × 5 cm?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"18,24 66,24 66,54 18,54\" fill=\"#ffedd5\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><polygon points=\"18,24 34,12 82,12 66,24\" fill=\"#fed7aa\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><polygon points=\"66,24 82,12 82,42 66,54\" fill=\"#fdba74\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><text x=\"42\" y=\"64\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">4 cm</text><text x=\"80\" y=\"53\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">3</text><text x=\"93\" y=\"30\" font-size=\"9.5\" font-weight=\"800\" fill=\"#c2410c\">5</text></svg>",
+                                "opts": [
+                                        "12 cm³",
+                                        "35 cm³",
+                                        "45 cm³",
+                                        "60 cm³"
+                                ],
+                                "ans": "D (60 cm³)"
+                        },
+                        {
+                                "q": "Quanto mede cada ângulo interno de um triângulo equilátero?",
+                                "opts": [
+                                        "60°",
+                                        "45°",
+                                        "90°",
+                                        "120°"
+                                ],
+                                "ans": "A (60°)"
+                        },
+                        {
+                                "q": "A soma dos ângulos internos de qualquer quadrilátero é igual a:",
+                                "opts": [
+                                        "180°",
+                                        "360°",
+                                        "270°",
+                                        "540°"
+                                ],
+                                "ans": "B (360°)"
+                        },
+                        {
+                                "q": "Qual é a área do losango com diagonais de 8 cm e 6 cm?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"55,6 95,33 55,60 15,33\" fill=\"#ffedd5\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"15\" y1=\"33\" x2=\"95\" y2=\"33\" stroke=\"#ea580c\" stroke-width=\"1.5\" stroke-dasharray=\"3,2\"/><line x1=\"55\" y1=\"6\" x2=\"55\" y2=\"60\" stroke=\"#2563eb\" stroke-width=\"1.5\" stroke-dasharray=\"3,2\"/><text x=\"73\" y=\"29\" font-size=\"9.5\" font-weight=\"800\" fill=\"#c2410c\">8</text><text x=\"59\" y=\"21\" font-size=\"9.5\" font-weight=\"800\" fill=\"#2563eb\">6</text></svg>",
+                                "opts": [
+                                        "48 cm²",
+                                        "14 cm²",
+                                        "24 cm²",
+                                        "28 cm²"
+                                ],
+                                "ans": "C (24 cm², pois (8×6)÷2 = 24)"
+                        },
+                        {
+                                "q": "Um ângulo raso (meia-volta completa) mede exatamente:",
+                                "opts": [
+                                        "90°",
+                                        "270°",
+                                        "360°",
+                                        "180°"
+                                ],
+                                "ans": "D (180°)"
+                        },
+                        {
+                                "q": "Qual é o perímetro de um quadrado cuja área é 36 cm²?",
+                                "opts": [
+                                        "24 cm",
+                                        "18 cm",
+                                        "12 cm",
+                                        "36 cm"
+                                ],
+                                "ans": "A (24 cm, pois o lado mede 6 cm)"
+                        },
+                        {
+                                "q": "Quantos centímetros cúbicos (cm³) equivalem a 1 litro?",
+                                "opts": [
+                                        "100 cm³",
+                                        "1.000 cm³",
+                                        "10 cm³",
+                                        "10.000 cm³"
+                                ],
+                                "ans": "B (1.000 cm³)"
+                        },
+                        {
+                                "q": "Se dois ângulos são suplementares e um é o dobro do outro, o menor mede:",
+                                "opts": [
+                                        "30°",
+                                        "45°",
+                                        "60°",
+                                        "90°"
+                                ],
+                                "ans": "C (60°, pois 60° + 120° = 180°)"
+                        },
+                        {
+                                "q": "No triângulo retângulo da figura, um ângulo agudo mede 40°. Quanto mede x?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"18,54 18,12 92,54\" fill=\"#fff7ed\" stroke=\"#0f172a\" stroke-width=\"2\"/><rect x=\"18\" y=\"45\" width=\"9\" height=\"9\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.4\"/><text x=\"64\" y=\"50\" font-size=\"9.5\" font-weight=\"800\" fill=\"#ea580c\">40°</text><text x=\"23\" y=\"29\" font-size=\"10.5\" font-weight=\"800\" fill=\"#2563eb\">x</text></svg>",
+                                "opts": [
+                                        "40°",
+                                        "60°",
+                                        "140°",
+                                        "50°"
+                                ],
+                                "ans": "D (50°)"
+                        }
+                ]
+        }
+],
+      '8ano': [
+        {
+                "id": "num",
+                "title": "POTÊNCIAS E RAÍZES",
+                "icon": "🔵",
+                "themeClass": "card-theme-num",
+                "cards": [
+                        {
+                                "q": "Calcule mentalmente: √144 + √25",
+                                "opts": [
+                                        "17",
+                                        "15",
+                                        "19",
+                                        "13"
+                                ],
+                                "ans": "A (17, pois 12 + 5 = 17)"
+                        },
+                        {
+                                "q": "Qual é o valor da raiz cúbica ∛27?",
+                                "opts": [
+                                        "9",
+                                        "3",
+                                        "6",
+                                        "4"
+                                ],
+                                "ans": "B (3, pois 3³ = 27)"
+                        },
+                        {
+                                "q": "Quanto vale ∛64 + √81?",
+                                "opts": [
+                                        "17",
+                                        "15",
+                                        "13",
+                                        "11"
+                                ],
+                                "ans": "C (13, pois 4 + 9 = 13)"
+                        },
+                        {
+                                "q": "Qual é o valor da potência com expoente negativo 2⁻³?",
+                                "opts": [
+                                        "−8",
+                                        "−6",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">6</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">8</span></span>"
+                                ],
+                                "ans": "D (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">8</span></span>)"
+                        },
+                        {
+                                "q": "Quanto vale 5⁻²?",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">25</span></span>",
+                                        "−25",
+                                        "−10",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">10</span></span>"
+                                ],
+                                "ans": "A (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">25</span></span>)"
+                        },
+                        {
+                                "q": "Simplificando 2³ × 2² em uma única potência, quanto vale?",
+                                "opts": [
+                                        "16",
+                                        "32",
+                                        "64",
+                                        "10"
+                                ],
+                                "ans": "B (32, pois 2⁵ = 32)"
+                        },
+                        {
+                                "q": "Qual é o valor de 7⁵ ÷ 7³?",
+                                "opts": [
+                                        "7",
+                                        "14",
+                                        "49",
+                                        "343"
+                                ],
+                                "ans": "C (49, pois 7² = 49)"
+                        },
+                        {
+                                "q": "Em notação científica, o número 4.500 é escrito como:",
+                                "opts": [
+                                        "45 × 10²",
+                                        "0,45 × 10⁴",
+                                        "4,5 × 10²",
+                                        "4,5 × 10³"
+                                ],
+                                "ans": "D (4,5 × 10³)"
+                        },
+                        {
+                                "q": "Quanto vale 3,2 × 10²?",
+                                "opts": [
+                                        "320",
+                                        "32",
+                                        "3.200",
+                                        "0,032"
+                                ],
+                                "ans": "A (320)"
+                        },
+                        {
+                                "q": "Calcule mentalmente: √169 − √49",
+                                "opts": [
+                                        "5",
+                                        "6",
+                                        "7",
+                                        "8"
+                                ],
+                                "ans": "B (6, pois 13 − 7 = 6)"
+                        },
+                        {
+                                "q": "Qual é o resultado da raiz cúbica negativa ∛(−8)?",
+                                "opts": [
+                                        "2",
+                                        "−4",
+                                        "−2",
+                                        "não existe"
+                                ],
+                                "ans": "C (−2, pois (−2)³ = −8)"
+                        },
+                        {
+                                "q": "Quanto vale (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>)⁻²?",
+                                "opts": [
+                                        "−4",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span>",
+                                        "2",
+                                        "4"
+                                ],
+                                "ans": "D (4, pois inverte a base: 2² = 4)"
+                        },
+                        {
+                                "q": "Na potência de potência (2²)³, o resultado numérico é:",
+                                "opts": [
+                                        "64",
+                                        "32",
+                                        "12",
+                                        "16"
+                                ],
+                                "ans": "A (64, pois 2⁶ = 64)"
+                        },
+                        {
+                                "q": "Quanto vale 10⁻² na forma decimal?",
+                                "opts": [
+                                        "0,1",
+                                        "0,01",
+                                        "−20",
+                                        "0,001"
+                                ],
+                                "ans": "B (0,01)"
+                        },
+                        {
+                                "q": "Calcule mentalmente: √225 ÷ 3",
+                                "opts": [
+                                        "3",
+                                        "4",
+                                        "5",
+                                        "15"
+                                ],
+                                "ans": "C (5, pois 15 ÷ 3 = 5)"
+                        },
+                        {
+                                "q": "Qual é o valor de ∛1000 × 4?",
+                                "opts": [
+                                        "400",
+                                        "100",
+                                        "14",
+                                        "40"
+                                ],
+                                "ans": "D (40, pois 10 × 4 = 40)"
+                        }
+                ]
+        },
+        {
+                "id": "fra",
+                "title": "FRAÇÕES E DÍZIMAS",
+                "icon": "🟣",
+                "themeClass": "card-theme-fra",
+                "cards": [
+                        {
+                                "q": "Qual é a fração geratriz da dízima periódica 0,777...?",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">7</span><span class=\"bottom\">9</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">7</span><span class=\"bottom\">10</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">7</span><span class=\"bottom\">99</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">7</span></span>"
+                                ],
+                                "ans": "A (<span class=\"frac\"><span class=\"top\">7</span><span class=\"bottom\">9</span></span>)"
+                        },
+                        {
+                                "q": "A dízima periódica 0,333... simplificada equivale a:",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">10</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">99</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">9</span></span>"
+                                ],
+                                "ans": "B (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span>, pois <span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">9</span></span> = <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span>)"
+                        },
+                        {
+                                "q": "Qual é a fração geratriz de 0,252525...?",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">25</span><span class=\"bottom\">100</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">25</span><span class=\"bottom\">90</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">25</span><span class=\"bottom\">99</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span>"
+                                ],
+                                "ans": "C (<span class=\"frac\"><span class=\"top\">25</span><span class=\"bottom\">99</span></span>)"
+                        },
+                        {
+                                "q": "Quanto vale a raiz quadrada <span class=\"rad-wrap\">√<span class=\"rad-bar\"><span class=\"frac\"><span class=\"top\">9</span><span class=\"bottom\">16</span></span></span></span>?",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">8</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">9</span><span class=\"bottom\">4</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">16</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span>"
+                                ],
+                                "ans": "D (<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span>)"
+                        },
+                        {
+                                "q": "Quanto vale (<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">3</span></span>)⁻²?",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">9</span><span class=\"bottom\">4</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">9</span></span>",
+                                        "−<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">9</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">6</span><span class=\"bottom\">9</span></span>"
+                                ],
+                                "ans": "A (<span class=\"frac\"><span class=\"top\">9</span><span class=\"bottom\">4</span></span>)"
+                        },
+                        {
+                                "q": "Calcule mentalmente: 0,5² é igual a:",
+                                "opts": [
+                                        "2,5",
+                                        "0,25",
+                                        "1,0",
+                                        "0,05"
+                                ],
+                                "ans": "B (0,25)"
+                        },
+                        {
+                                "q": "Quanto vale a raiz quadrada decimal √0,36?",
+                                "opts": [
+                                        "0,06",
+                                        "0,18",
+                                        "0,6",
+                                        "6,0"
+                                ],
+                                "ans": "C (0,6, pois 0,6 × 0,6 = 0,36)"
+                        },
+                        {
+                                "q": "Somando as dízimas 0,444... + 0,555..., obtemos:",
+                                "opts": [
+                                        "0,9",
+                                        "<span class=\"frac\"><span class=\"top\">9</span><span class=\"bottom\">10</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">9</span><span class=\"bottom\">99</span></span>",
+                                        "1 inteiro"
+                                ],
+                                "ans": "D (1 inteiro, pois <span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">9</span></span> + <span class=\"frac\"><span class=\"top\">5</span><span class=\"bottom\">9</span></span> = <span class=\"frac\"><span class=\"top\">9</span><span class=\"bottom\">9</span></span> = 1)"
+                        },
+                        {
+                                "q": "Qual é o valor de <span class=\"rad-wrap\">√<span class=\"rad-bar\"><span class=\"frac\"><span class=\"top\">25</span><span class=\"bottom\">4</span></span></span></span> × 2?",
+                                "opts": [
+                                        "5",
+                                        "2,5",
+                                        "10",
+                                        "<span class=\"frac\"><span class=\"top\">25</span><span class=\"bottom\">2</span></span>"
+                                ],
+                                "ans": "A (5, pois <span class=\"frac\"><span class=\"top\">5</span><span class=\"bottom\">2</span></span> × 2 = 5)"
+                        },
+                        {
+                                "q": "A dízima 1,222... na forma de fração imprópria é:",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">12</span><span class=\"bottom\">9</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">11</span><span class=\"bottom\">9</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">12</span><span class=\"bottom\">10</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">10</span><span class=\"bottom\">9</span></span>"
+                                ],
+                                "ans": "B (<span class=\"frac\"><span class=\"top\">11</span><span class=\"bottom\">9</span></span>, pois 1 + <span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">9</span></span> = <span class=\"frac\"><span class=\"top\">11</span><span class=\"bottom\">9</span></span>)"
+                        },
+                        {
+                                "q": "Quanto vale (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span>)⁻¹ + (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>)⁻¹?",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">5</span><span class=\"bottom\">6</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">5</span></span>",
+                                        "5",
+                                        "6"
+                                ],
+                                "ans": "C (5, pois 3 + 2 = 5)"
+                        },
+                        {
+                                "q": "Dividindo <span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span> por 0,75, o resultado é:",
+                                "opts": [
+                                        "0",
+                                        "<span class=\"frac\"><span class=\"top\">9</span><span class=\"bottom\">16</span></span>",
+                                        "0,75",
+                                        "1"
+                                ],
+                                "ans": "D (1, pois <span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span> = 0,75)"
+                        },
+                        {
+                                "q": "Quanto vale a raiz cúbica <span class=\"rad-wrap\"><sup class=\"rad-idx\">3</sup>√<span class=\"rad-bar\"><span class=\"frac\"><span class=\"top\">8</span><span class=\"bottom\">27</span></span></span></span>?",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">3</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">9</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">9</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">8</span><span class=\"bottom\">3</span></span>"
+                                ],
+                                "ans": "A (<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">3</span></span>)"
+                        },
+                        {
+                                "q": "Qual fração irredutível representa a dízima 0,666...?",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">6</span><span class=\"bottom\">10</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">3</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">5</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">6</span><span class=\"bottom\">99</span></span>"
+                                ],
+                                "ans": "B (<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">3</span></span>)"
+                        },
+                        {
+                                "q": "Quanto vale √0,09 + 0,7?",
+                                "opts": [
+                                        "0,73",
+                                        "0,16",
+                                        "1,0",
+                                        "1,6"
+                                ],
+                                "ans": "C (1,0, pois 0,3 + 0,7 = 1,0)"
+                        },
+                        {
+                                "q": "Qual é a metade da potência 2¹⁰?",
+                                "opts": [
+                                        "1¹⁰",
+                                        "2⁵",
+                                        "510",
+                                        "2⁹"
+                                ],
+                                "ans": "D (2⁹, pois 2¹⁰ ÷ 2¹ = 2⁹)"
+                        }
+                ]
+        },
+        {
+                "id": "pct",
+                "title": "PORCENTAGEM E ÁLGEBRA",
+                "icon": "🟢",
+                "themeClass": "card-theme-pct",
+                "cards": [
+                        {
+                                "q": "Qual é o valor numérico de x² − 2x para x = 5?",
+                                "opts": [
+                                        "15",
+                                        "20",
+                                        "35",
+                                        "0"
+                                ],
+                                "ans": "A (15, pois 25 − 10 = 15)"
+                        },
+                        {
+                                "q": "Simplificando o produto de monômios (3x²) · (4x³), obtemos:",
+                                "opts": [
+                                        "7x⁵",
+                                        "12x⁵",
+                                        "12x⁶",
+                                        "7x⁶"
+                                ],
+                                "ans": "B (12x⁵)"
+                        },
+                        {
+                                "q": "Simplificando a divisão <span class=\"frac\"><span class=\"top\">20a⁴</span><span class=\"bottom\">5a²</span></span>, encontramos:",
+                                "opts": [
+                                        "15a²",
+                                        "4a⁶",
+                                        "4a²",
+                                        "4a"
+                                ],
+                                "ans": "C (4a²)"
+                        },
+                        {
+                                "q": "No sistema x + y = 10 e x − y = 4, quanto vale x?",
+                                "opts": [
+                                        "5",
+                                        "6",
+                                        "8",
+                                        "7"
+                                ],
+                                "ans": "D (7, pois 7 + 3 = 10 e 7 − 3 = 4)"
+                        },
+                        {
+                                "q": "Um tênis de R$ 200,00 teve 15% de desconto. Qual o valor do desconto?",
+                                "opts": [
+                                        "R$ 30,00",
+                                        "R$ 15,00",
+                                        "R$ 25,00",
+                                        "R$ 35,00"
+                                ],
+                                "ans": "A (R$ 30,00)"
+                        },
+                        {
+                                "q": "Quanto vale 120% de 50?",
+                                "opts": [
+                                        "55",
+                                        "60",
+                                        "70",
+                                        "120"
+                                ],
+                                "ans": "B (60)"
+                        },
+                        {
+                                "q": "Para x = −3, quanto vale a expressão x² + 1?",
+                                "opts": [
+                                        "−8",
+                                        "−5",
+                                        "10",
+                                        "7"
+                                ],
+                                "ans": "C (10, pois (−3)² + 1 = 9 + 1)"
+                        },
+                        {
+                                "q": "Se 4 operários fazem um muro em 6 dias, 8 operários farão em:",
+                                "opts": [
+                                        "12 dias",
+                                        "4 dias",
+                                        "2 dias",
+                                        "3 dias"
+                                ],
+                                "ans": "D (3 dias — inversamente proporcional)"
+                        },
+                        {
+                                "q": "Qual é o resultado de 3(2x − 4) quando aplicamos a distributiva?",
+                                "opts": [
+                                        "6x − 12",
+                                        "6x − 4",
+                                        "5x − 7",
+                                        "6x + 12"
+                                ],
+                                "ans": "A (6x − 12)"
+                        },
+                        {
+                                "q": "Resolva mentalmente: 5x − 10 = 2x + 8. Quanto vale x?",
+                                "opts": [
+                                        "4",
+                                        "6",
+                                        "5",
+                                        "9"
+                                ],
+                                "ans": "B (6, pois 3x = 18)"
+                        },
+                        {
+                                "q": "Dois aumentos sucessivos de 10% sobre R$ 100,00 resultam em:",
+                                "opts": [
+                                        "R$ 120,00",
+                                        "R$ 119,00",
+                                        "R$ 121,00",
+                                        "R$ 122,00"
+                                ],
+                                "ans": "C (R$ 121,00, pois 100 → 110 → 121)"
+                        },
+                        {
+                                "q": "No sistema x + y = 12 e y = 2x, quanto vale x?",
+                                "opts": [
+                                        "3",
+                                        "6",
+                                        "8",
+                                        "4"
+                                ],
+                                "ans": "D (4, pois x = 4 e y = 8)"
+                        },
+                        {
+                                "q": "Qual é o grau do monômio 7x³y²?",
+                                "opts": [
+                                        "5º grau",
+                                        "3º grau",
+                                        "6º grau",
+                                        "7º grau"
+                                ],
+                                "ans": "A (5º grau, pois 3 + 2 = 5)"
+                        },
+                        {
+                                "q": "Qual é a média aritmética entre 6, 8 e 10?",
+                                "opts": [
+                                        "7",
+                                        "8",
+                                        "9",
+                                        "8,5"
+                                ],
+                                "ans": "B (8, pois 24 ÷ 3 = 8)"
+                        },
+                        {
+                                "q": "Se 30% de uma quantia vale 60, qual é a quantia total (100%)?",
+                                "opts": [
+                                        "180",
+                                        "150",
+                                        "200",
+                                        "240"
+                                ],
+                                "ans": "C (200)"
+                        },
+                        {
+                                "q": "Quanto vale (−2x³)²?",
+                                "opts": [
+                                        "−4x⁶",
+                                        "4x⁵",
+                                        "−4x⁵",
+                                        "4x⁶"
+                                ],
+                                "ans": "D (4x⁶)"
+                        }
+                ]
+        },
+        {
+                "id": "geo",
+                "title": "GEOMETRIA E MEDIDAS",
+                "icon": "🟠",
+                "themeClass": "card-theme-geo",
+                "cards": [
+                        {
+                                "q": "Quantas diagonais possui o pentágono ao lado?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"55,6 90,26 77,58 33,58 20,26\" fill=\"#fff7ed\" stroke=\"#0f172a\" stroke-width=\"2\"/><polygon points=\"55,6 77,58 20,26 90,26 33,58\" fill=\"none\" stroke=\"#ea580c\" stroke-width=\"1.3\" stroke-dasharray=\"2.5,2\"/></svg>",
+                                "opts": [
+                                        "5 diagonais",
+                                        "4 diagonais",
+                                        "6 diagonais",
+                                        "10 diagonais"
+                                ],
+                                "ans": "A (5 diagonais)"
+                        },
+                        {
+                                "q": "Qual é a soma dos ângulos internos de um pentágono?",
+                                "opts": [
+                                        "360°",
+                                        "540°",
+                                        "720°",
+                                        "450°"
+                                ],
+                                "ans": "B (540°, pois (5−2)×180° = 540°)"
+                        },
+                        {
+                                "q": "A soma dos ângulos EXTERNOS de qualquer polígono convexo é sempre:",
+                                "opts": [
+                                        "180°",
+                                        "540°",
+                                        "360°",
+                                        "depende dos lados"
+                                ],
+                                "ans": "C (360°)"
+                        },
+                        {
+                                "q": "Qual é a área do trapézio de bases 10 cm e 6 cm, e altura 4 cm?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"32,14 78,14 96,50 14,50\" fill=\"#ffedd5\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"32\" y1=\"14\" x2=\"32\" y2=\"50\" stroke=\"#ea580c\" stroke-width=\"1.5\" stroke-dasharray=\"3,2\"/><rect x=\"32\" y=\"43\" width=\"6\" height=\"7\" fill=\"none\" stroke=\"#ea580c\" stroke-width=\"1.2\"/><text x=\"55\" y=\"11\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">6 cm</text><text x=\"55\" y=\"62\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">10 cm</text><text x=\"36\" y=\"36\" font-size=\"9.5\" font-weight=\"800\" fill=\"#c2410c\">4</text></svg>",
+                                "opts": [
+                                        "24 cm²",
+                                        "64 cm²",
+                                        "16 cm²",
+                                        "32 cm²"
+                                ],
+                                "ans": "D (32 cm², pois ((10+6)×4)÷2 = 32)"
+                        },
+                        {
+                                "q": "Usando π ≈ 3, qual é a área do círculo de raio 4 cm (A = π·r²)?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><circle cx=\"55\" cy=\"33\" r=\"25\" fill=\"#fed7aa\" stroke=\"#0f172a\" stroke-width=\"2\"/><circle cx=\"55\" cy=\"33\" r=\"2.5\" fill=\"#0f172a\"/><line x1=\"55\" y1=\"33\" x2=\"80\" y2=\"33\" stroke=\"#c2410c\" stroke-width=\"2\"/><text x=\"67\" y=\"28\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#c2410c\">4 cm</text></svg>",
+                                "opts": [
+                                        "48 cm²",
+                                        "24 cm²",
+                                        "36 cm²",
+                                        "12 cm²"
+                                ],
+                                "ans": "A (48 cm², pois 3 × 16 = 48)"
+                        },
+                        {
+                                "q": "Usando π ≈ 3, qual é o comprimento da circunferência de raio 5 cm (C = 2·π·r)?",
+                                "opts": [
+                                        "15 cm",
+                                        "30 cm",
+                                        "25 cm",
+                                        "75 cm"
+                                ],
+                                "ans": "B (30 cm, pois 2 × 3 × 5 = 30)"
+                        },
+                        {
+                                "q": "Qual é o volume do cilindro com área da base 20 cm² e altura 6 cm?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><path d=\"M26,16 L26,48 A24,8 0 0,0 74,48 L74,16\" fill=\"#ffedd5\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><ellipse cx=\"50\" cy=\"16\" rx=\"24\" ry=\"8\" fill=\"#fed7aa\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><ellipse cx=\"50\" cy=\"48\" rx=\"24\" ry=\"8\" fill=\"#fdba74\" fill-opacity=\"0.6\" stroke=\"#0f172a\" stroke-width=\"1.4\" stroke-dasharray=\"3,2\"/><text x=\"50\" y=\"51\" text-anchor=\"middle\" font-size=\"8.5\" font-weight=\"800\" fill=\"#0f172a\">20 cm²</text><text x=\"79\" y=\"36\" font-size=\"9.5\" font-weight=\"800\" fill=\"#c2410c\">6 cm</text></svg>",
+                                "opts": [
+                                        "26 cm³",
+                                        "60 cm³",
+                                        "120 cm³",
+                                        "240 cm³"
+                                ],
+                                "ans": "C (120 cm³)"
+                        },
+                        {
+                                "q": "Quantos litros cabem em uma caixa d'água de 2 m³?",
+                                "opts": [
+                                        "20 L",
+                                        "200 L",
+                                        "20.000 L",
+                                        "2.000 L"
+                                ],
+                                "ans": "D (2.000 L)"
+                        },
+                        {
+                                "q": "Quanto mede cada ângulo externo de um hexágono regular?",
+                                "opts": [
+                                        "60°",
+                                        "45°",
+                                        "120°",
+                                        "90°"
+                                ],
+                                "ans": "A (60°, pois 360° ÷ 6 = 60°)"
+                        },
+                        {
+                                "q": "No triângulo isósceles da figura, o ângulo do vértice mede 40°. Quanto mede x?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"55,6 88,56 22,56\" fill=\"#fff7ed\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"34\" y1=\"30\" x2=\"42\" y2=\"34\" stroke=\"#ea580c\" stroke-width=\"2\"/><line x1=\"76\" y1=\"30\" x2=\"68\" y2=\"34\" stroke=\"#ea580c\" stroke-width=\"2\"/><text x=\"55\" y=\"25\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#ea580c\">40°</text><text x=\"31\" y=\"52\" font-size=\"10\" font-weight=\"800\" fill=\"#2563eb\">x</text><text x=\"74\" y=\"52\" font-size=\"10\" font-weight=\"800\" fill=\"#2563eb\">x</text></svg>",
+                                "opts": [
+                                        "40°",
+                                        "70°",
+                                        "60°",
+                                        "80°"
+                                ],
+                                "ans": "B (70°, pois (180°−40°)÷2 = 70°)"
+                        },
+                        {
+                                "q": "Qual é a área do quadrado de diagonal 6 cm (A = <span class=\"frac\"><span class=\"top\">d²</span><span class=\"bottom\">2</span></span>)?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><rect x=\"31\" y=\"9\" width=\"48\" height=\"48\" fill=\"#ffedd5\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"31\" y1=\"57\" x2=\"79\" y2=\"9\" stroke=\"#ea580c\" stroke-width=\"2\" stroke-dasharray=\"3,2\"/><text x=\"61\" y=\"39\" font-size=\"9.5\" font-weight=\"800\" fill=\"#c2410c\">6 cm</text></svg>",
+                                "opts": [
+                                        "12 cm²",
+                                        "36 cm²",
+                                        "18 cm²",
+                                        "24 cm²"
+                                ],
+                                "ans": "C (18 cm², pois 36 ÷ 2 = 18)"
+                        },
+                        {
+                                "q": "Quantas diagonais passam pelo centro de um octógono regular (8 lados)?",
+                                "opts": [
+                                        "2",
+                                        "6",
+                                        "8",
+                                        "4"
+                                ],
+                                "ans": "D (4)"
+                        },
+                        {
+                                "q": "O cubo da figura tem aresta de 4 cm. Qual é o seu volume (V = a³)?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"26,24 62,24 62,58 26,58\" fill=\"#ffedd5\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><polygon points=\"26,24 40,12 76,12 62,24\" fill=\"#fed7aa\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><polygon points=\"62,24 76,12 76,46 62,58\" fill=\"#fdba74\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><text x=\"80\" y=\"38\" font-size=\"9.5\" font-weight=\"800\" fill=\"#c2410c\">4 cm</text></svg>",
+                                "opts": [
+                                        "64 cm³",
+                                        "16 cm³",
+                                        "48 cm³",
+                                        "24 cm³"
+                                ],
+                                "ans": "A (64 cm³)"
+                        },
+                        {
+                                "q": "Qual polígono regular tem ângulo externo medindo 90°?",
+                                "opts": [
+                                        "Triângulo",
+                                        "Quadrado",
+                                        "Pentágono",
+                                        "Hexágono"
+                                ],
+                                "ans": "B (Quadrado, pois 360° ÷ 90° = 4 lados)"
+                        },
+                        {
+                                "q": "A mediatriz m divide o segmento de 18 cm em duas partes iguais x de:",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><line x1=\"14\" y1=\"38\" x2=\"96\" y2=\"38\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"55\" y1=\"8\" x2=\"55\" y2=\"60\" stroke=\"#ea580c\" stroke-width=\"2\" stroke-dasharray=\"3,2\"/><rect x=\"55\" y=\"30\" width=\"8\" height=\"8\" fill=\"none\" stroke=\"#ea580c\" stroke-width=\"1.3\"/><circle cx=\"14\" cy=\"38\" r=\"2.5\" fill=\"#0f172a\"/><circle cx=\"96\" cy=\"38\" r=\"2.5\" fill=\"#0f172a\"/><text x=\"59\" y=\"17\" font-size=\"9.5\" font-weight=\"800\" fill=\"#c2410c\">m</text><text x=\"34\" y=\"52\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#2563eb\">x</text><text x=\"76\" y=\"52\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#2563eb\">x</text></svg>",
+                                "opts": [
+                                        "6 cm",
+                                        "18 cm",
+                                        "9 cm",
+                                        "4,5 cm"
+                                ],
+                                "ans": "C (9 cm)"
+                        },
+                        {
+                                "q": "A bissetriz divide o ângulo de 70° em dois ângulos iguais x de:",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><line x1=\"18\" y1=\"54\" x2=\"92\" y2=\"54\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"18\" y1=\"54\" x2=\"68\" y2=\"10\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"18\" y1=\"54\" x2=\"88\" y2=\"28\" stroke=\"#ea580c\" stroke-width=\"2\" stroke-dasharray=\"3,2\"/><path d=\"M50,54 A32,32 0 0,0 40,35\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.5\"/><text x=\"58\" y=\"48\" font-size=\"9.5\" font-weight=\"800\" fill=\"#2563eb\">x</text><text x=\"50\" y=\"29\" font-size=\"9.5\" font-weight=\"800\" fill=\"#2563eb\">x</text></svg>",
+                                "opts": [
+                                        "25°",
+                                        "45°",
+                                        "140°",
+                                        "35°"
+                                ],
+                                "ans": "D (35°)"
+                        }
+                ]
+        }
+],
+      '9ano': [
+        {
+                "id": "num",
+                "title": "RADICAIS E POTÊNCIAS",
+                "icon": "🔵",
+                "themeClass": "card-theme-num",
+                "cards": [
+                        {
+                                "q": "Calcule mentalmente o produto de radicais: √2 × √18",
+                                "opts": [
+                                        "6",
+                                        "9",
+                                        "12",
+                                        "36"
+                                ],
+                                "ans": "A (6, pois √36 = 6)"
+                        },
+                        {
+                                "q": "Quanto vale <span class=\"frac\"><span class=\"top\">√50</span><span class=\"bottom\">√2</span></span>?",
+                                "opts": [
+                                        "25",
+                                        "5",
+                                        "10",
+                                        "√24"
+                                ],
+                                "ans": "B (5, pois √25 = 5)"
+                        },
+                        {
+                                "q": "Qual é o valor da potência com expoente fracionário 49<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span></sup>?",
+                                "opts": [
+                                        "24,5",
+                                        "14",
+                                        "7",
+                                        "9"
+                                ],
+                                "ans": "C (7, pois 49<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span></sup> = √49 = 7)"
+                        },
+                        {
+                                "q": "Quanto vale 8<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span></sup> + 16<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span></sup>?",
+                                "opts": [
+                                        "10",
+                                        "8",
+                                        "5",
+                                        "6"
+                                ],
+                                "ans": "D (6, pois ∛8 + √16 = 2 + 4 = 6)"
+                        },
+                        {
+                                "q": "Simplificando √12 + √27 (dica: 2√3 + 3√3), obtemos:",
+                                "opts": [
+                                        "5√3",
+                                        "√39",
+                                        "6√3",
+                                        "5√6"
+                                ],
+                                "ans": "A (5√3)"
+                        },
+                        {
+                                "q": "Quanto vale (3√2)²?",
+                                "opts": [
+                                        "6",
+                                        "18",
+                                        "12",
+                                        "36"
+                                ],
+                                "ans": "B (18, pois 9 × 2 = 18)"
+                        },
+                        {
+                                "q": "Calcule mentalmente: √8 × √2 + 10",
+                                "opts": [
+                                        "18",
+                                        "12",
+                                        "14",
+                                        "26"
+                                ],
+                                "ans": "C (14, pois √16 + 10 = 4 + 10)"
+                        },
+                        {
+                                "q": "Qual é o valor de 27<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span></sup> × 5?",
+                                "opts": [
+                                        "45",
+                                        "9",
+                                        "25",
+                                        "15"
+                                ],
+                                "ans": "D (15, pois 3 × 5 = 15)"
+                        },
+                        {
+                                "q": "Racionalizando a fração <span class=\"frac\"><span class=\"top\">6</span><span class=\"bottom\">√3</span></span>, encontramos:",
+                                "opts": [
+                                        "2√3",
+                                        "3√3",
+                                        "6√3",
+                                        "√2"
+                                ],
+                                "ans": "A (2√3, pois <span class=\"frac\"><span class=\"top\">6√3</span><span class=\"bottom\">3</span></span> = 2√3)"
+                        },
+                        {
+                                "q": "Quanto vale <span class=\"frac\"><span class=\"top\">√75</span><span class=\"bottom\">√3</span></span>?",
+                                "opts": [
+                                        "25",
+                                        "5",
+                                        "15",
+                                        "3"
+                                ],
+                                "ans": "B (5, pois √25 = 5)"
+                        },
+                        {
+                                "q": "Qual destes números é IRRACIONAL?",
+                                "opts": [
+                                        "√49",
+                                        "0,333...",
+                                        "√7",
+                                        "−<span class=\"frac\"><span class=\"top\">5</span><span class=\"bottom\">2</span></span>"
+                                ],
+                                "ans": "C (√7)"
+                        },
+                        {
+                                "q": "Quanto vale 100<sup>0,5</sup> − 64<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span></sup>?",
+                                "opts": [
+                                        "4",
+                                        "8",
+                                        "2",
+                                        "6"
+                                ],
+                                "ans": "D (6, pois 10 − 4 = 6)"
+                        },
+                        {
+                                "q": "Calcule mentalmente: (√5)² + (√11)²",
+                                "opts": [
+                                        "16",
+                                        "√16",
+                                        "8",
+                                        "55"
+                                ],
+                                "ans": "A (16, pois 5 + 11 = 16)"
+                        },
+                        {
+                                "q": "Quanto vale √(3² + 4²)?",
+                                "opts": [
+                                        "7",
+                                        "5",
+                                        "25",
+                                        "12"
+                                ],
+                                "ans": "B (5, pois √(9 + 16) = √25 = 5)"
+                        },
+                        {
+                                "q": "Na notação científica, (2 × 10³) × (4 × 10²) é igual a:",
+                                "opts": [
+                                        "8 × 10⁶",
+                                        "6 × 10⁵",
+                                        "8 × 10⁵",
+                                        "8 × 10¹"
+                                ],
+                                "ans": "C (8 × 10⁵)"
+                        },
+                        {
+                                "q": "Quanto vale <span class=\"frac\"><span class=\"top\">√32</span><span class=\"bottom\">√8</span></span>?",
+                                "opts": [
+                                        "4",
+                                        "√2",
+                                        "8",
+                                        "2"
+                                ],
+                                "ans": "D (2, pois √4 = 2)"
+                        }
+                ]
+        },
+        {
+                "id": "fra",
+                "title": "RAZÕES E PROPORÇÕES",
+                "icon": "🟣",
+                "themeClass": "card-theme-fra",
+                "cards": [
+                        {
+                                "q": "Pelo Teorema de Tales (<span class=\"frac\"><span class=\"top\">x</span><span class=\"bottom\">4</span></span> = <span class=\"frac\"><span class=\"top\">9</span><span class=\"bottom\">6</span></span>), quanto vale x?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><line x1=\"8\" y1=\"12\" x2=\"102\" y2=\"12\" stroke=\"#64748b\" stroke-width=\"1.6\"/><line x1=\"8\" y1=\"35\" x2=\"102\" y2=\"35\" stroke=\"#64748b\" stroke-width=\"1.6\"/><line x1=\"8\" y1=\"56\" x2=\"102\" y2=\"56\" stroke=\"#64748b\" stroke-width=\"1.6\"/><line x1=\"42\" y1=\"6\" x2=\"22\" y2=\"62\" stroke=\"#9333ea\" stroke-width=\"2.2\"/><line x1=\"68\" y1=\"6\" x2=\"88\" y2=\"62\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><text x=\"23\" y=\"27\" font-size=\"10.5\" font-weight=\"800\" fill=\"#9333ea\">x</text><text x=\"16\" y=\"49\" font-size=\"10\" font-weight=\"800\" fill=\"#0f172a\">4</text><text x=\"80\" y=\"27\" font-size=\"10\" font-weight=\"800\" fill=\"#0f172a\">9</text><text x=\"87\" y=\"49\" font-size=\"10\" font-weight=\"800\" fill=\"#0f172a\">6</text></svg>",
+                                "opts": [
+                                        "6",
+                                        "5",
+                                        "8",
+                                        "4,5"
+                                ],
+                                "ans": "A (6, pois 6x = 36)"
+                        },
+                        {
+                                "q": "Os triângulos têm razão de semelhança k = 3. A razão entre suas ÁREAS é:",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"10,54 34,54 22,34\" fill=\"#f3e8ff\" stroke=\"#9333ea\" stroke-width=\"1.8\"/><polygon points=\"48,54 100,54 74,10\" fill=\"#f3e8ff\" stroke=\"#9333ea\" stroke-width=\"2\"/><text x=\"22\" y=\"64\" text-anchor=\"middle\" font-size=\"9\" font-weight=\"800\" fill=\"#0f172a\">1</text><text x=\"74\" y=\"64\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#9333ea\">k = 3</text></svg>",
+                                "opts": [
+                                        "3",
+                                        "9",
+                                        "6",
+                                        "27"
+                                ],
+                                "ans": "B (9, pois k² = 3² = 9)"
+                        },
+                        {
+                                "q": "Em um mapa com escala 1:100.000, 3 cm no mapa equivalem a quantos km reais?",
+                                "opts": [
+                                        "30 km",
+                                        "0,3 km",
+                                        "3 km",
+                                        "300 km"
+                                ],
+                                "ans": "C (3 km)"
+                        },
+                        {
+                                "q": "Qual é a média geométrica positiva entre 4 e 9 (√(4 × 9))?",
+                                "opts": [
+                                        "6,5",
+                                        "5",
+                                        "13",
+                                        "6"
+                                ],
+                                "ans": "D (6, pois √36 = 6)"
+                        },
+                        {
+                                "q": "Um carro percorre 180 km em 2 horas. Qual é sua velocidade média?",
+                                "opts": [
+                                        "90 km/h",
+                                        "80 km/h",
+                                        "100 km/h",
+                                        "60 km/h"
+                                ],
+                                "ans": "A (90 km/h)"
+                        },
+                        {
+                                "q": "Lançando dois dados comuns, quantos resultados possíveis existem no total?",
+                                "opts": [
+                                        "12",
+                                        "36",
+                                        "24",
+                                        "18"
+                                ],
+                                "ans": "B (36, pois 6 × 6 = 36)"
+                        },
+                        {
+                                "q": "Em uma urna com 3 bolas azuis e 7 verdes, a probabilidade de sortear uma azul é:",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">7</span></span>",
+                                        "70%",
+                                        "30%",
+                                        "3%"
+                                ],
+                                "ans": "C (30%, pois <span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">10</span></span> = 0,30)"
+                        },
+                        {
+                                "q": "Pelo Teorema de Tales no triângulo (<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">3</span></span> = <span class=\"frac\"><span class=\"top\">10</span><span class=\"bottom\">y</span></span>), quanto vale y?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"55,6 16,58 94,58\" fill=\"#faf5ff\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"34\" y1=\"34\" x2=\"76\" y2=\"34\" stroke=\"#9333ea\" stroke-width=\"2\"/><text x=\"34\" y=\"23\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">2</text><text x=\"16\" y=\"49\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">3</text><text x=\"70\" y=\"23\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">10</text><text x=\"88\" y=\"49\" font-size=\"10.5\" font-weight=\"800\" fill=\"#9333ea\">y</text></svg>",
+                                "opts": [
+                                        "12",
+                                        "20",
+                                        "18",
+                                        "15"
+                                ],
+                                "ans": "D (15)"
+                        },
+                        {
+                                "q": "Qual é a razão entre a área do quadrado de lado 2 e a do quadrado de lado 6?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><rect x=\"14\" y=\"34\" width=\"20\" height=\"20\" fill=\"#f3e8ff\" stroke=\"#9333ea\" stroke-width=\"1.8\"/><rect x=\"52\" y=\"10\" width=\"44\" height=\"44\" fill=\"#f3e8ff\" stroke=\"#0f172a\" stroke-width=\"2\"/><text x=\"24\" y=\"64\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#9333ea\">2</text><text x=\"74\" y=\"64\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">6</text></svg>",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">9</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">6</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">6</span></span>"
+                                ],
+                                "ans": "A (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">9</span></span>, pois <span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">36</span></span> = <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">9</span></span>)"
+                        },
+                        {
+                                "q": "Quanto vale (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>)⁻³ ÷ 2?",
+                                "opts": [
+                                        "2",
+                                        "4",
+                                        "8",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span>"
+                                ],
+                                "ans": "B (4, pois 8 ÷ 2 = 4)"
+                        },
+                        {
+                                "q": "Se 5 máquinas produzem 100 peças, quantas peças 8 máquinas iguais produzirão?",
+                                "opts": [
+                                        "140",
+                                        "150",
+                                        "160",
+                                        "180"
+                                ],
+                                "ans": "C (160)"
+                        },
+                        {
+                                "q": "A densidade demográfica de uma cidade com 60.000 hab e 200 km² é:",
+                                "opts": [
+                                        "30 hab/km²",
+                                        "120 hab/km²",
+                                        "200 hab/km²",
+                                        "300 hab/km²"
+                                ],
+                                "ans": "D (300 hab/km²)"
+                        },
+                        {
+                                "q": "Quanto vale a expressão (<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">2</span></span>)² − <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span>?",
+                                "opts": [
+                                        "2",
+                                        "<span class=\"frac\"><span class=\"top\">8</span><span class=\"bottom\">3</span></span>",
+                                        "1",
+                                        "<span class=\"frac\"><span class=\"top\">5</span><span class=\"bottom\">4</span></span>"
+                                ],
+                                "ans": "A (2, pois <span class=\"frac\"><span class=\"top\">9</span><span class=\"bottom\">4</span></span> − <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> = <span class=\"frac\"><span class=\"top\">8</span><span class=\"bottom\">4</span></span> = 2)"
+                        },
+                        {
+                                "q": "Qual é a mediana do conjunto de dados (3, 5, 8, 12, 20)?",
+                                "opts": [
+                                        "5",
+                                        "8",
+                                        "9,6",
+                                        "12"
+                                ],
+                                "ans": "B (8 — termo central)"
+                        },
+                        {
+                                "q": "Num sorteio de 1 a 20, qual a probabilidade de sair um múltiplo de 5?",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">5</span></span> (20%)",
+                                        "<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">10</span></span> (40%)",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> (25%)",
+                                        "5%"
+                                ],
+                                "ans": "A (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">5</span></span> ou 20%: são 5, 10, 15 e 20)"
+                        },
+                        {
+                                "q": "Se a razão entre dois segmentos é 0,4, essa razão na forma irredutível é:",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">100</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">5</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">5</span></span>"
+                                ],
+                                "ans": "C (<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">5</span></span>)"
+                        }
+                ]
+        },
+        {
+                "id": "pct",
+                "title": "ÁLGEBRA E EQUAÇÕES",
+                "icon": "🟢",
+                "themeClass": "card-theme-pct",
+                "cards": [
+                        {
+                                "q": "Use a diferença de quadrados (a²−b²): quanto vale 11² − 9²?",
+                                "opts": [
+                                        "40",
+                                        "20",
+                                        "4",
+                                        "200"
+                                ],
+                                "ans": "A (40, pois (11−9)×(11+9) = 2×20)"
+                        },
+                        {
+                                "q": "Quais são as raízes da equação do 2º grau x² − 25 = 0?",
+                                "opts": [
+                                        "0 e 5",
+                                        "−5 e 5",
+                                        "−25 e 25",
+                                        "apenas 5"
+                                ],
+                                "ans": "B (−5 e 5)"
+                        },
+                        {
+                                "q": "Quais são as raízes de x² − 5x + 6 = 0 (soma 5 e produto 6)?",
+                                "opts": [
+                                        "1 e 6",
+                                        "−2 e −3",
+                                        "2 e 3",
+                                        "−1 e 6"
+                                ],
+                                "ans": "C (2 e 3)"
+                        },
+                        {
+                                "q": "Desenvolvendo o produto notável (x + 3)², obtemos:",
+                                "opts": [
+                                        "x² + 9",
+                                        "x² + 3x + 9",
+                                        "x² + 6x + 6",
+                                        "x² + 6x + 9"
+                                ],
+                                "ans": "D (x² + 6x + 9)"
+                        },
+                        {
+                                "q": "Fatorando x² − 7x = 0, quais são as duas raízes?",
+                                "opts": [
+                                        "0 e 7",
+                                        "0 e −7",
+                                        "7 e −7",
+                                        "1 e 7"
+                                ],
+                                "ans": "A (0 e 7)"
+                        },
+                        {
+                                "q": "Na função f(x) = 2x − 5, qual é o valor de f(4)?",
+                                "opts": [
+                                        "−3",
+                                        "3",
+                                        "13",
+                                        "8"
+                                ],
+                                "ans": "B (3, pois 2×4 − 5 = 3)"
+                        },
+                        {
+                                "q": "Qual é a soma das raízes da equação x² − 8x + 12 = 0?",
+                                "opts": [
+                                        "−8",
+                                        "12",
+                                        "8",
+                                        "4"
+                                ],
+                                "ans": "C (8, pelas relações de Girard: −<span class=\"frac\"><span class=\"top\">b</span><span class=\"bottom\">a</span></span>)"
+                        },
+                        {
+                                "q": "Qual é o produto das raízes da equação x² − 7x + 10 = 0?",
+                                "opts": [
+                                        "7",
+                                        "−10",
+                                        "3",
+                                        "10"
+                                ],
+                                "ans": "D (10, pois <span class=\"frac\"><span class=\"top\">c</span><span class=\"bottom\">a</span></span> = 10)"
+                        },
+                        {
+                                "q": "Na equação x² − 4x + 4 = 0, o discriminante Δ (b² − 4ac) vale:",
+                                "opts": [
+                                        "0",
+                                        "16",
+                                        "32",
+                                        "−16"
+                                ],
+                                "ans": "A (0, pois 16 − 16 = 0)"
+                        },
+                        {
+                                "q": "Quanto vale mentalmente 15² − 5²?",
+                                "opts": [
+                                        "100",
+                                        "200",
+                                        "150",
+                                        "250"
+                                ],
+                                "ans": "B (200, pois (15−5)×(15+5) = 10×20)"
+                        },
+                        {
+                                "q": "Se f(x) = x² − 1, quanto vale f(−3)?",
+                                "opts": [
+                                        "−10",
+                                        "−7",
+                                        "8",
+                                        "10"
+                                ],
+                                "ans": "C (8, pois (−3)² − 1 = 9 − 1 = 8)"
+                        },
+                        {
+                                "q": "Qual é o zero (raiz) da função afim f(x) = 3x − 12?",
+                                "opts": [
+                                        "−4",
+                                        "3",
+                                        "12",
+                                        "4"
+                                ],
+                                "ans": "D (4, pois 3×4 − 12 = 0)"
+                        },
+                        {
+                                "q": "Um capital de R$ 500,00 rende 2% ao mês a juros simples. Em 3 meses rende:",
+                                "opts": [
+                                        "R$ 30,00",
+                                        "R$ 10,00",
+                                        "R$ 60,00",
+                                        "R$ 15,00"
+                                ],
+                                "ans": "A (R$ 30,00, pois R$ 10/mês × 3)"
+                        },
+                        {
+                                "q": "Fatorando a expressão a² − 49, encontramos:",
+                                "opts": [
+                                        "(a − 7)²",
+                                        "(a − 7)(a + 7)",
+                                        "(a + 7)²",
+                                        "a(a − 49)"
+                                ],
+                                "ans": "B ((a − 7)(a + 7))"
+                        },
+                        {
+                                "q": "Se 2x² = 18, quais são os valores reais de x?",
+                                "opts": [
+                                        "9 e −9",
+                                        "apenas 3",
+                                        "3 e −3",
+                                        "6 e −6"
+                                ],
+                                "ans": "C (3 e −3, pois x² = 9)"
+                        },
+                        {
+                                "q": "Em uma promoção, um item de R$ 250,00 caiu para R$ 200,00. O desconto foi de:",
+                                "opts": [
+                                        "50%",
+                                        "25%",
+                                        "15%",
+                                        "20%"
+                                ],
+                                "ans": "D (20%, pois <span class=\"frac\"><span class=\"top\">50</span><span class=\"bottom\">250</span></span> = <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">5</span></span> = 20%)"
+                        }
+                ]
+        },
+        {
+                "id": "geo",
+                "title": "GEOMETRIA E PITÁGORAS",
+                "icon": "🟠",
+                "themeClass": "card-theme-geo",
+                "cards": [
+                        {
+                                "q": "No triângulo retângulo de catetos 3 cm e 4 cm, quanto mede a hipotenusa x?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"22,52 22,12 86,52\" fill=\"#ffedd5\" stroke=\"#0f172a\" stroke-width=\"2\"/><rect x=\"22\" y=\"43\" width=\"9\" height=\"9\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.3\"/><text x=\"8\" y=\"35\" font-size=\"10\" font-weight=\"800\" fill=\"#0f172a\">3</text><text x=\"54\" y=\"63\" text-anchor=\"middle\" font-size=\"10\" font-weight=\"800\" fill=\"#0f172a\">4</text><text x=\"60\" y=\"28\" font-size=\"10.5\" font-weight=\"800\" fill=\"#c2410c\">x</text></svg>",
+                                "opts": [
+                                        "5 cm",
+                                        "7 cm",
+                                        "6 cm",
+                                        "25 cm"
+                                ],
+                                "ans": "A (5 cm — terno pitagórico 3, 4, 5)"
+                        },
+                        {
+                                "q": "Se a hipotenusa mede 10 cm e um cateto mede 6 cm, quanto mede o cateto x?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"22,52 22,12 86,52\" fill=\"#ffedd5\" stroke=\"#0f172a\" stroke-width=\"2\"/><rect x=\"22\" y=\"43\" width=\"9\" height=\"9\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.3\"/><text x=\"8\" y=\"35\" font-size=\"10\" font-weight=\"800\" fill=\"#0f172a\">6</text><text x=\"54\" y=\"63\" text-anchor=\"middle\" font-size=\"10.5\" font-weight=\"800\" fill=\"#c2410c\">x</text><text x=\"58\" y=\"28\" font-size=\"10\" font-weight=\"800\" fill=\"#0f172a\">10</text></svg>",
+                                "opts": [
+                                        "4 cm",
+                                        "8 cm",
+                                        "7 cm",
+                                        "64 cm"
+                                ],
+                                "ans": "B (8 cm, pois √(100 − 36) = √64 = 8)"
+                        },
+                        {
+                                "q": "No triângulo retângulo de catetos 5 cm e 12 cm, quanto mede a hipotenusa x?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"18,52 18,16 92,52\" fill=\"#ffedd5\" stroke=\"#0f172a\" stroke-width=\"2\"/><rect x=\"18\" y=\"43\" width=\"9\" height=\"9\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.3\"/><text x=\"6\" y=\"37\" font-size=\"10\" font-weight=\"800\" fill=\"#0f172a\">5</text><text x=\"55\" y=\"63\" text-anchor=\"middle\" font-size=\"10\" font-weight=\"800\" fill=\"#0f172a\">12</text><text x=\"58\" y=\"29\" font-size=\"10.5\" font-weight=\"800\" fill=\"#c2410c\">x</text></svg>",
+                                "opts": [
+                                        "17 cm",
+                                        "15 cm",
+                                        "13 cm",
+                                        "14 cm"
+                                ],
+                                "ans": "C (13 cm, pois √(25 + 144) = √169 = 13)"
+                        },
+                        {
+                                "q": "Quanto mede a diagonal d do quadrado de lado 5 cm?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><rect x=\"28\" y=\"8\" width=\"44\" height=\"44\" fill=\"#ffedd5\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"28\" y1=\"52\" x2=\"72\" y2=\"8\" stroke=\"#ea580c\" stroke-width=\"2\"/><text x=\"50\" y=\"63\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">5 cm</text><text x=\"76\" y=\"34\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">5</text><text x=\"45\" y=\"29\" font-size=\"10\" font-weight=\"800\" fill=\"#c2410c\">d</text></svg>",
+                                "opts": [
+                                        "10 cm",
+                                        "25 cm",
+                                        "5√3 cm",
+                                        "5√2 cm"
+                                ],
+                                "ans": "D (5√2 cm)"
+                        },
+                        {
+                                "q": "Qual é a distância entre A(0, 0) e B(3, 4) no plano cartesiano?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><line x1=\"18\" y1=\"54\" x2=\"96\" y2=\"54\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><line x1=\"24\" y1=\"60\" x2=\"24\" y2=\"8\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><line x1=\"76\" y1=\"54\" x2=\"76\" y2=\"16\" stroke=\"#94a3b8\" stroke-width=\"1.3\" stroke-dasharray=\"3,2\"/><line x1=\"24\" y1=\"16\" x2=\"76\" y2=\"16\" stroke=\"#94a3b8\" stroke-width=\"1.3\" stroke-dasharray=\"3,2\"/><line x1=\"24\" y1=\"54\" x2=\"76\" y2=\"16\" stroke=\"#ea580c\" stroke-width=\"2.2\"/><circle cx=\"24\" cy=\"54\" r=\"2.8\" fill=\"#0f172a\"/><circle cx=\"76\" cy=\"16\" r=\"2.8\" fill=\"#ea580c\"/><text x=\"76\" y=\"64\" text-anchor=\"middle\" font-size=\"9\" font-weight=\"800\" fill=\"#0f172a\">3</text><text x=\"14\" y=\"20\" font-size=\"9\" font-weight=\"800\" fill=\"#0f172a\">4</text><text x=\"82\" y=\"16\" font-size=\"9\" font-weight=\"800\" fill=\"#c2410c\">B</text></svg>",
+                                "opts": [
+                                        "5",
+                                        "7",
+                                        "12",
+                                        "25"
+                                ],
+                                "ans": "A (5)"
+                        },
+                        {
+                                "q": "Qual é o ponto médio do segmento que liga A(2, 4) e B(6, 10)?",
+                                "opts": [
+                                        "(4, 6)",
+                                        "(4, 7)",
+                                        "(8, 14)",
+                                        "(3, 5)"
+                                ],
+                                "ans": "B ((4, 7))"
+                        },
+                        {
+                                "q": "Na circunferência, o arco mede 80°. Quanto mede o ângulo inscrito x?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><circle cx=\"55\" cy=\"33\" r=\"26\" fill=\"#fff7ed\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><path d=\"M74,15 A26,26 0 0,1 74,51\" fill=\"none\" stroke=\"#ea580c\" stroke-width=\"3\"/><line x1=\"29\" y1=\"33\" x2=\"74\" y2=\"15\" stroke=\"#2563eb\" stroke-width=\"1.8\"/><line x1=\"29\" y1=\"33\" x2=\"74\" y2=\"51\" stroke=\"#2563eb\" stroke-width=\"1.8\"/><text x=\"43\" y=\"36\" font-size=\"10\" font-weight=\"800\" fill=\"#2563eb\">x</text><text x=\"84\" y=\"36\" font-size=\"9.5\" font-weight=\"800\" fill=\"#c2410c\">80°</text></svg>",
+                                "opts": [
+                                        "80°",
+                                        "160°",
+                                        "40°",
+                                        "20°"
+                                ],
+                                "ans": "C (40° — metade do arco)"
+                        },
+                        {
+                                "q": "Pelas relações métricas (h² = m · n), com m = 4 e n = 9, quanto vale a altura h?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"12,50 98,50 42,12\" fill=\"#ffedd5\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"42\" y1=\"12\" x2=\"42\" y2=\"50\" stroke=\"#ea580c\" stroke-width=\"2\"/><rect x=\"42\" y=\"43\" width=\"6\" height=\"7\" fill=\"none\" stroke=\"#ea580c\" stroke-width=\"1.2\"/><text x=\"46\" y=\"35\" font-size=\"10\" font-weight=\"800\" fill=\"#c2410c\">h</text><text x=\"27\" y=\"62\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">m=4</text><text x=\"70\" y=\"62\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">n=9</text></svg>",
+                                "opts": [
+                                        "6,5",
+                                        "13",
+                                        "36",
+                                        "6"
+                                ],
+                                "ans": "D (6, pois h² = 36)"
+                        },
+                        {
+                                "q": "Qual é o valor do seno de 30° (sen 30°)?",
+                                "opts": [
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">√3</span><span class=\"bottom\">2</span></span>",
+                                        "<span class=\"frac\"><span class=\"top\">√2</span><span class=\"bottom\">2</span></span>",
+                                        "1"
+                                ],
+                                "ans": "A (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> ou 0,5)"
+                        },
+                        {
+                                "q": "No triângulo retângulo de hipotenusa 20 m e ângulo 30°, quanto mede x?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><polygon points=\"14,54 92,54 92,14\" fill=\"#ffedd5\" stroke=\"#0f172a\" stroke-width=\"2\"/><rect x=\"83\" y=\"45\" width=\"9\" height=\"9\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.3\"/><text x=\"32\" y=\"50\" font-size=\"9.5\" font-weight=\"800\" fill=\"#2563eb\">30°</text><text x=\"46\" y=\"29\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">20 m</text><text x=\"97\" y=\"38\" font-size=\"10.5\" font-weight=\"800\" fill=\"#c2410c\">x</text></svg>",
+                                "opts": [
+                                        "15 m",
+                                        "10 m",
+                                        "10√3 m",
+                                        "40 m"
+                                ],
+                                "ans": "B (10 m, pois 20 × sen 30° = 10)"
+                        },
+                        {
+                                "q": "Qual é o valor da tangente de 45° (tg 45°)?",
+                                "opts": [
+                                        "0",
+                                        "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>",
+                                        "1",
+                                        "√3"
+                                ],
+                                "ans": "C (1)"
+                        },
+                        {
+                                "q": "Usando π ≈ 3, qual é a área da coroa circular (R = 5 cm e r = 3 cm)?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><circle cx=\"55\" cy=\"33\" r=\"26\" fill=\"#fed7aa\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><circle cx=\"55\" cy=\"33\" r=\"14\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.6\"/><circle cx=\"55\" cy=\"33\" r=\"2\" fill=\"#0f172a\"/><line x1=\"55\" y1=\"33\" x2=\"81\" y2=\"33\" stroke=\"#c2410c\" stroke-width=\"1.8\"/><line x1=\"55\" y1=\"33\" x2=\"55\" y2=\"19\" stroke=\"#2563eb\" stroke-width=\"1.8\"/><text x=\"70\" y=\"44\" font-size=\"9\" font-weight=\"800\" fill=\"#c2410c\">R=5</text><text x=\"34\" y=\"27\" font-size=\"9\" font-weight=\"800\" fill=\"#2563eb\">r=3</text></svg>",
+                                "opts": [
+                                        "24 cm²",
+                                        "16 cm²",
+                                        "75 cm²",
+                                        "48 cm²"
+                                ],
+                                "ans": "D (48 cm², pois 3 × (25 − 9) = 3 × 16)"
+                        },
+                        {
+                                "q": "Todo triângulo inscrito numa semicircunferência (base no diâmetro) é:",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><path d=\"M14,48 A41,41 0 0,1 96,48 Z\" fill=\"#fff7ed\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><polygon points=\"14,48 96,48 40,14\" fill=\"#fed7aa\" stroke=\"#ea580c\" stroke-width=\"1.8\"/><circle cx=\"55\" cy=\"48\" r=\"2.5\" fill=\"#0f172a\"/><text x=\"55\" y=\"60\" text-anchor=\"middle\" font-size=\"9\" font-weight=\"800\" fill=\"#0f172a\">diâmetro</text></svg>",
+                                "opts": [
+                                        "retângulo",
+                                        "equilátero",
+                                        "obtusângulo",
+                                        "isósceles"
+                                ],
+                                "ans": "A (retângulo)"
+                        },
+                        {
+                                "q": "Qual é o volume do cilindro de raio 2 cm e altura 5 cm (use π ≈ 3)?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><path d=\"M30,16 L30,48 A20,7 0 0,0 70,48 L70,16\" fill=\"#ffedd5\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><ellipse cx=\"50\" cy=\"16\" rx=\"20\" ry=\"7\" fill=\"#fed7aa\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><line x1=\"50\" y1=\"16\" x2=\"70\" y2=\"16\" stroke=\"#c2410c\" stroke-width=\"1.8\"/><text x=\"60\" y=\"13\" text-anchor=\"middle\" font-size=\"9\" font-weight=\"800\" fill=\"#c2410c\">r=2</text><text x=\"75\" y=\"36\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">h=5</text></svg>",
+                                "opts": [
+                                        "30 cm³",
+                                        "60 cm³",
+                                        "120 cm³",
+                                        "40 cm³"
+                                ],
+                                "ans": "B (60 cm³, pois 3 × 2² × 5 = 60)"
+                        },
+                        {
+                                "q": "A escada de 15 m está a 9 m da base do prédio. Qual a altura h alcançada?",
+                                "svg": "<svg viewBox=\"0 0 110 66\"><rect x=\"18\" y=\"8\" width=\"16\" height=\"44\" fill=\"#cbd5e1\" stroke=\"#0f172a\" stroke-width=\"1.6\"/><line x1=\"12\" y1=\"52\" x2=\"96\" y2=\"52\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"34\" y1=\"12\" x2=\"84\" y2=\"52\" stroke=\"#ea580c\" stroke-width=\"2.5\"/><text x=\"63\" y=\"28\" font-size=\"9.5\" font-weight=\"800\" fill=\"#c2410c\">15 m</text><text x=\"59\" y=\"63\" text-anchor=\"middle\" font-size=\"9.5\" font-weight=\"800\" fill=\"#0f172a\">9 m</text><text x=\"7\" y=\"34\" font-size=\"10\" font-weight=\"800\" fill=\"#2563eb\">h</text></svg>",
+                                "opts": [
+                                        "6 m",
+                                        "10 m",
+                                        "12 m",
+                                        "14 m"
+                                ],
+                                "ans": "C (12 m — múltiplo do triângulo 3, 4, 5)"
+                        },
+                        {
+                                "q": "Se dobrarmos o raio de um círculo, sua área fica multiplicada por:",
+                                "opts": [
+                                        "2",
+                                        "6",
+                                        "8",
+                                        "4"
+                                ],
+                                "ans": "D (4, pois 2² = 4)"
+                        }
+                ]
+        }
+]
+    };
+
+    let challengeDecks = challengeDecksByGrade['6ano'];
 
     // EXATAMENTE 8 CARTAS BÔNUS (UMA PARA CADA PLANETA, SEM CARTA DE PENALIZAÇÃO!)
     const planetBonusCards = [
@@ -1269,12 +3515,30 @@ habilidades:
       challengeDecks.forEach(deck => {
         deck.cards.forEach((c, i) => {
           const numStr = String(i + 1).padStart(2, '0');
+          const formatSup = txt => {
+            let s = String(txt || '').replace(/²/g, '<sup>2</sup>').replace(/³/g, '<sup>3</sup>');
+            if (currentGrade !== '6ano') {
+              s = s.replace(/⁻¹/g, '<sup>−1</sup>')
+                   .replace(/⁻²/g, '<sup>−2</sup>')
+                   .replace(/⁻³/g, '<sup>−3</sup>')
+                   .replace(/¹⁰/g, '<sup>10</sup>')
+                   .replace(/⁴/g, '<sup>4</sup>')
+                   .replace(/⁵/g, '<sup>5</sup>')
+                   .replace(/⁶/g, '<sup>6</sup>')
+                   .replace(/⁹/g, '<sup>9</sup>');
+            }
+            return s;
+          };
           const optsHtml = c.opts.map((optText, oIdx) => `
             <div class="gc-opt">
               <span class="gc-opt-letter">${letters[oIdx]}</span>
-              <span>${optText}</span>
+              <span>${formatSup(optText)}</span>
             </div>
           `).join('');
+
+          const questionBlockHtml = (c.svg && currentGrade !== '6ano')
+            ? `<div class="gc-q-wrap has-fig"><div class="gc-question">${formatSup(c.q)}</div><div class="gc-fig">${c.svg}</div></div>`
+            : `<div class="gc-question">${formatSup(c.q)}</div>`;
 
           allCardsHTML.push(`
             <div class="game-card ${deck.themeClass}">
@@ -1284,7 +3548,7 @@ habilidades:
                   <span class="gc-badge">#${numStr}</span>
                 </div>
                 <div class="gc-body">
-                  <div class="gc-question">${c.q}</div>
+                  ${questionBlockHtml}
                   <div class="gc-options">${optsHtml}</div>
                 </div>
               </div>
@@ -1335,11 +3599,25 @@ habilidades:
 
     function renderTeacherAnswerKey() {
       const container = document.getElementById('answer-key-container');
+      const formatSup = txt => {
+        let s = String(txt || '').replace(/²/g, '<sup>2</sup>').replace(/³/g, '<sup>3</sup>');
+        if (currentGrade !== '6ano') {
+          s = s.replace(/⁻¹/g, '<sup>−1</sup>')
+               .replace(/⁻²/g, '<sup>−2</sup>')
+               .replace(/⁻³/g, '<sup>−3</sup>')
+               .replace(/¹⁰/g, '<sup>10</sup>')
+               .replace(/⁴/g, '<sup>4</sup>')
+               .replace(/⁵/g, '<sup>5</sup>')
+               .replace(/⁶/g, '<sup>6</sup>')
+               .replace(/⁹/g, '<sup>9</sup>');
+        }
+        return s;
+      };
       container.innerHTML = challengeDecks.map(deck => {
         const rows = deck.cards.map((c, i) => `
           <tr>
             <td><strong>#${String(i + 1).padStart(2, '0')}</strong></td>
-            <td><strong>${c.ans}</strong></td>
+            <td><strong>${formatSup(c.ans)}</strong></td>
           </tr>
         `).join('');
         return `
@@ -1351,6 +3629,52 @@ habilidades:
           </div>
         `;
       }).join('');
+    }
+
+    function setGrade(grade) {
+      currentGrade = challengeDecksByGrade[grade] ? grade : '6ano';
+      challengeDecks = challengeDecksByGrade[currentGrade];
+      const info = GRADE_INFO[currentGrade] || GRADE_INFO['6ano'];
+
+      ['6', '7', '8', '9'].forEach(n => {
+        const btn = document.getElementById('btnGrade' + n);
+        if (btn) btn.classList.toggle('active', currentGrade === (n + 'ano'));
+      });
+
+      const subEl = document.getElementById('headerGradeSubtitle');
+      if (subEl) subEl.textContent = `Material para Impressão • ${info.label}`;
+
+      const btnAll = document.getElementById('btnPrintAll');
+      if (btnAll) btnAll.textContent = `🖨️ Imprimir tudo (${info.label})`;
+
+      const btnCards = document.getElementById('btnPrintCards');
+      if (btnCards) btnCards.textContent = `🖨️ Imprimir cartas (${info.label})`;
+
+      const btnGuide = document.getElementById('btnPrintGuide');
+      if (btnGuide) btnGuide.textContent = `🖨️ Imprimir gabarito (${info.label})`;
+
+      const keyTitle = document.getElementById('guideKeyTitle');
+      if (keyTitle) keyTitle.textContent = `✅ Gabarito Oficial das 64 Cartas de Desafio — ${info.label} (16 por Cor)`;
+
+      // Atualiza título e legenda do tabuleiro (no principal e nos 4 quadrantes de impressão)
+      document.querySelectorAll('.solar-board-canvas .bt-sub').forEach(el => {
+        el.textContent = info.boardSub;
+      });
+      document.querySelectorAll('.solar-board-canvas .leg-txt-num').forEach(el => {
+        el.textContent = info.legend.num;
+      });
+      document.querySelectorAll('.solar-board-canvas .leg-txt-fra').forEach(el => {
+        el.textContent = info.legend.fra;
+      });
+      document.querySelectorAll('.solar-board-canvas .leg-txt-pct').forEach(el => {
+        el.textContent = info.legend.pct;
+      });
+      document.querySelectorAll('.solar-board-canvas .leg-txt-geo').forEach(el => {
+        el.textContent = info.legend.geo;
+      });
+
+      renderAllCardsTogether();
+      renderTeacherAnswerKey();
     }
 
     window.addEventListener('DOMContentLoaded', () => {
