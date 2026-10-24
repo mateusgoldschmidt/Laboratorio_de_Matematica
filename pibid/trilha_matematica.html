@@ -645,6 +645,8 @@ habilidades:
       position: relative;
       overflow: hidden;
       flex: 0 0 auto;
+      /* Linha guia bem sutil ao redor do quadrante para facilitar o recorte com a tesoura */
+      outline: 0.25mm dashed #94a3b8;
       /* contain evita que a cópia maior do tabuleiro, guardada aqui dentro,
          aumente a largura do documento e faça o navegador reduzir a impressão */
       contain: strict;
@@ -965,16 +967,24 @@ habilidades:
       }
 
       .a4-cards-sheet {
+        width: 210mm !important;
+        height: 297mm !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
         box-shadow: none !important;
         margin: 0 auto !important;
+        padding: 0 !important;
         page-break-after: always;
         break-after: page;
+        page-break-inside: avoid;
+        break-inside: avoid;
       }
 
       .guide-sheet {
         box-shadow: none !important;
         margin: 0 auto !important;
-        padding: 5mm !important;
+        padding: 10mm 12mm !important;
         page-break-after: always;
         break-after: page;
       }
@@ -1168,7 +1178,7 @@ habilidades:
         // nos aplicativos de impressão de celular.
         styleTag.innerHTML = '@page { size: A4 portrait; margin: 0; }';
       } else {
-        styleTag.innerHTML = '@page { size: A4 portrait; margin: 8mm; }';
+        styleTag.innerHTML = '@page { size: A4 portrait; margin: 0; }';
       }
     }
 
@@ -1180,7 +1190,7 @@ habilidades:
       if (target === 'board' || target === 'all') {
         styleTag.innerHTML = '@page { size: A4 portrait; margin: 0; }';
       } else {
-        styleTag.innerHTML = '@page { size: A4 portrait; margin: 8mm; }';
+        styleTag.innerHTML = '@page { size: A4 portrait; margin: 0; }';
       }
     }
 
