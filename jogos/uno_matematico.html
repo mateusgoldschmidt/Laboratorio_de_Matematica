@@ -1,0 +1,1497 @@
+---
+titulo: "UNO Matemático: Equivalências & Cálculo Mental"
+icone: "🃏"
+descricao: "Baralho completo de UNO Matemático (108 cartas) para impressão A4, adaptado para 6º, 7º, 8º e 9º ano com gabarito de 1 folha."
+habilidades:
+  - EF06MA03
+  - EF06MA07
+  - EF06MA09
+  - EF06MA11
+  - EF06MA13
+  - EF07MA04
+  - EF07MA12
+  - EF08MA01
+  - EF08MA02
+  - EF08MA05
+  - EF09MA03
+  - EF09MA04
+  - EF09MA09
+---
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  {% include analytics.html %}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNO Matemático: Equivalências &amp; Cálculo Mental</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Outfit:wght@500;600;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       🎨 PAINEL DE VARIÁVEIS E CONFIGURAÇÕES GERAIS (TEMA DARK / NEON)
+       ========================================================================== */
+    :root {
+      --bg-dark: #0b0c10;
+      --bg-card: #1f2833;
+      --electric-cyan: #00f0ff;
+      --neon-pink: #ff007f;
+      --text-light: #c5c6c7;
+      --white: #ffffff;
+      --success: #00ff88;
+      --warning: #ffcc00;
+
+      /* Dimensões físicas padrão de carta (3x3 = 9 cartas por folha A4 com folga segura) */
+      --card-w: 63mm;
+      --card-h: 86mm;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 16px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* CABEÇALHO DO LABORATÓRIO */
+    header.main-header {
+      background: linear-gradient(135deg, #12121c 0%, #1f2833 100%);
+      border-bottom: 2px solid var(--electric-cyan);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header.main-header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.1rem;
+      color: var(--white);
+      text-shadow: 0 0 10px var(--electric-cyan);
+      letter-spacing: 1.5px;
+      line-height: 1.1;
+    }
+    header.main-header p {
+      font-size: 1.05rem;
+      color: var(--electric-cyan);
+      text-transform: uppercase;
+      margin-top: 5px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+    }
+    header.main-header .lab-identity {
+      margin-top: 6px;
+      font-size: 0.82rem;
+      color: rgba(197, 198, 199, 0.82);
+      text-transform: none;
+      font-weight: 600;
+      letter-spacing: 0.45px;
+    }
+
+    .print-bar {
+      max-width: 1100px;
+      margin: 14px auto 0;
+      padding: 0 15px;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .print-bar .btn {
+      flex: 1 1 190px;
+      min-height: 42px;
+    }
+    @media (max-width: 650px) {
+      .print-bar {
+        padding: 0 12px;
+        gap: 8px;
+      }
+      .print-bar .btn {
+        flex-basis: 100%;
+      }
+    }
+
+    /* ABAS DE NAVEGAÇÃO */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      background-color: #121212;
+      border-bottom: 1px solid #333;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-light);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.98rem;
+      padding: 13px 24px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .tab-btn:hover { color: var(--electric-cyan); }
+    .tab-btn.active {
+      color: var(--electric-cyan);
+      font-weight: bold;
+      background: rgba(0, 240, 255, 0.05);
+    }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--electric-cyan);
+      box-shadow: 0 0 10px var(--electric-cyan);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 0 15px 80px;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* PAINÉIS E BOTÕES */
+    .panel {
+      background-color: var(--bg-card);
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      background: transparent;
+      border: 2px solid var(--electric-cyan);
+      color: var(--electric-cyan);
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      font-size: 0.82rem;
+      padding: 8px 14px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .btn:hover {
+      background-color: var(--electric-cyan);
+      color: var(--bg-dark);
+      box-shadow: 0 0 15px var(--electric-cyan);
+    }
+    .btn-success { border-color: var(--success); color: var(--success); }
+    .btn-success:hover { background-color: var(--success); color: var(--bg-dark); box-shadow: 0 0 15px var(--success); }
+    .btn-warning { border-color: var(--warning); color: var(--warning); }
+    .btn-warning:hover { background-color: var(--warning); color: var(--bg-dark); box-shadow: 0 0 15px var(--warning); }
+
+    /* BARRA DE CONTROLE SIMPLES E FUNCIONAL NO TOPO */
+    .controls {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .mode-selector {
+      display: flex;
+      gap: 4px;
+      background: #12121c;
+      padding: 4px;
+      border-radius: 6px;
+      border: 1px solid #333;
+    }
+    .mode-btn {
+      padding: 8px 12px;
+      font-size: 0.82rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .mode-btn:hover { color: var(--white); }
+    .mode-btn.active {
+      background: var(--electric-cyan);
+      color: var(--bg-dark);
+    }
+
+    /* ==========================================================================
+       CARTAS UNO MATEMÁTICO (MODELO CLÁSSICO: 63,5mm x 88,9mm — 9 POR FOLHA A4)
+       ========================================================================== */
+    .sheets-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      padding: 6px 0;
+    }
+
+    .uno-sheet-page {
+      display: grid;
+      grid-template-columns: repeat(3, var(--card-w));
+      grid-template-rows: repeat(3, var(--card-h));
+      gap: 0;
+      width: calc(var(--card-w) * 3);
+      height: calc(var(--card-h) * 3);
+      margin: 0 auto;
+      background: #ffffff;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+      border-top: 1px solid #000000;
+      border-left: 1px solid #000000;
+      box-sizing: border-box;
+    }
+
+    .card-item.uno-card {
+      width: var(--card-w);
+      height: var(--card-h);
+      position: relative;
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+      background-color: #ffffff;
+      color: #000000;
+      overflow: hidden;
+      border-right: 1px solid #000000;
+      border-bottom: 1px solid #000000;
+      border-radius: 0;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* Fundo SVG com pequena borda branca anti-espiada + Elipse em SVG puro */
+    .uno-bg-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .uno-card .top-left,
+    .uno-card .bottom-right {
+      position: absolute;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .uno-card .top-left { top: 4.5mm; left: 4.5mm; }
+    .uno-card .bottom-right { bottom: 4.5mm; right: 4.5mm; transform: rotate(180deg); }
+
+    .uno-card .center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      width: 40mm;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    /* Mini expressão nos cantos superior esquerdo e inferior direito (com resultado oculto!) */
+    .uno-corner-badge {
+      background-color: #ffffff;
+      color: #0f172a;
+      border: 1.4px solid #000000;
+      box-shadow: 1.2px 1.2px 0 #000000;
+      border-radius: 1.8mm;
+      padding: 0.7mm 1.3mm;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 6.4pt;
+      line-height: 1.05;
+      white-space: nowrap;
+      max-width: 24mm;
+      text-align: center;
+    }
+    .uno-corner-id {
+      margin-top: 0.5mm;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 5.2pt;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: -0.8px -0.8px 0 #000, 0.8px -0.8px 0 #000, -0.8px 0.8px 0 #000, 0.8px 0.8px 0 #000;
+      letter-spacing: 0.2px;
+    }
+
+    /* Expressão matemática central grande dentro da elipse branca */
+    .uno-math-center {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      font-size: 13.8pt;
+      line-height: 1.15;
+      color: #0f172a;
+      text-align: center;
+      padding: 1mm 1.5mm;
+      word-break: keep-all;
+    }
+
+    /* Frações na forma natural (empilhadas) e potências legíveis */
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      vertical-align: middle;
+      text-align: center;
+      font-size: 0.82em;
+      line-height: 0.94;
+      padding: 0 1.5px;
+      margin: -1px 1px;
+      font-weight: 900;
+    }
+    .frac .top {
+      border-bottom: 1.4px solid currentColor;
+      padding: 0 1.5px 0.5px;
+    }
+    .frac .bottom {
+      padding: 0.5px 1.5px 0;
+    }
+
+    .uno-corner-badge .frac {
+      font-size: 0.78em;
+    }
+    .uno-corner-badge .frac .top {
+      border-bottom-width: 1px;
+    }
+
+    .uno-math-center sup,
+    .uno-corner-badge sup,
+    .key-table sup {
+      font-size: 0.72em;
+      font-weight: 900;
+      line-height: 0;
+      position: relative;
+      top: -0.38em;
+      padding: 0 0.5px;
+    }
+
+    .exp-frac {
+      font-size: 0.62em !important;
+      top: -0.55em !important;
+      margin-left: 1px;
+    }
+
+    /* Cartas de Ação (+2, Bloquear, Inverter, Curinga, +4) */
+    .uno-action-small {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: 11pt;
+      color: #ffffff;
+      text-shadow: -1.2px -1.2px 0 #000, 1.2px -1.2px 0 #000, -1.2px 1.2px 0 #000, 1.2px 1.2px 0 #000, 1.5px 1.5px 0 #000;
+      line-height: 1;
+    }
+    .uno-action-center {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: 28pt;
+      text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 2.5px 2.5px 0 #000;
+      line-height: 1;
+    }
+    .uno-action-label {
+      margin-top: 1.5mm;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 6.5pt;
+      font-weight: 800;
+      color: #0f172a;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .uno-symbol {
+      font-size: 14pt;
+      font-weight: 900;
+      line-height: 1;
+      color: #ffffff;
+      text-shadow: -1.2px -1.2px 0 #000, 1.2px -1.2px 0 #000, -1.2px 1.2px 0 #000, 1.2px 1.2px 0 #000, 1.5px 1.5px 0 #000;
+    }
+    .uno-symbol-center {
+      font-size: 36pt;
+      font-weight: 900;
+      line-height: 1;
+      text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 2.5px 2.5px 0 #000;
+    }
+    .wild-icon {
+      width: 22mm;
+      height: 22mm;
+      border-radius: 50%;
+      border: 2px solid #000000;
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.35);
+      background: conic-gradient(#E73E32 0 90deg, #1976D2 90deg 180deg, #F7D002 180deg 270deg, #388E3C 270deg 360deg);
+    }
+    .wild-icon-small {
+      width: 7.5mm;
+      height: 7.5mm;
+      border-radius: 50%;
+      border: 1.5px solid #ffffff;
+      box-shadow: 1.2px 1.2px 0 #000000;
+      background: conic-gradient(#E73E32 0 90deg, #1976D2 90deg 180deg, #F7D002 180deg 270deg, #388E3C 270deg 360deg);
+    }
+
+    /* ==========================================================================
+       TABELA DE GABARITO DO PROFESSOR (1 FOLHA A4 COMPACTA E ECONÔMICA)
+       ========================================================================== */
+    .key-sheet {
+      width: 194mm;
+      margin: 0 auto;
+      background: #ffffff;
+      color: #000000;
+      padding: 6mm 7mm;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
+      border-radius: 2px;
+      font-family: Arial, sans-serif;
+      box-sizing: border-box;
+    }
+    .key-sheet-header {
+      text-align: center;
+      margin-bottom: 3mm;
+      padding-bottom: 2mm;
+      border-bottom: 0.4mm solid #000;
+    }
+    .key-sheet-header h2 {
+      font-size: 11pt;
+      font-weight: bold;
+      margin: 0;
+      color: #000;
+    }
+    .key-sheet-header p {
+      font-size: 8pt;
+      margin: 1mm 0 0;
+      color: #333;
+    }
+    .key-columns-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4mm;
+    }
+    .key-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 7.5pt;
+      line-height: 1.15;
+      color: #000;
+    }
+    .key-table th, .key-table td {
+      border: 0.25mm solid #475569;
+      padding: 1.1mm 1.8mm;
+      text-align: left;
+      vertical-align: middle;
+    }
+    .key-table th {
+      background: #e2e8f0;
+      font-weight: bold;
+      font-size: 7.4pt;
+      text-transform: uppercase;
+    }
+    .key-table tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    .key-table td.col-no {
+      width: 11mm;
+      text-align: center;
+      font-weight: bold;
+    }
+    .key-table td.col-color {
+      width: 19mm;
+      font-weight: bold;
+    }
+    .key-table td.col-expr {
+      font-weight: 700;
+    }
+    .key-table td.col-val {
+      width: 14mm;
+      text-align: center;
+      font-weight: 900;
+      font-size: 8.5pt;
+      background: #f1f5f9;
+    }
+
+    /* MANUAL E REGRAS */
+    .manual-box {
+      font-family: Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+    .manual-box h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--white);
+      margin-bottom: 10px;
+      font-size: 1.35rem;
+    }
+    .manual-box h3 {
+      color: var(--electric-cyan);
+      margin: 14px 0 6px;
+      font-size: 1.08rem;
+    }
+    .manual-box ol, .manual-box ul {
+      margin: 6px 0 10px 22px;
+    }
+    .manual-box li { margin-bottom: 6px; }
+
+    #print-key-container { display: none; }
+
+    /* ==========================================================================
+       IMPRESSÃO A4 RÍGIDA (@media print)
+       ========================================================================== */
+    @page { size: A4 portrait; margin: 8mm; }
+
+    @media print {
+      html, body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      header.main-header, .tabs, .controls, .print-bar, .print-hidden, #btn-voltar {
+        display: none !important;
+      }
+      .container {
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .panel {
+        box-shadow: none !important;
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      #tab-regras, #tab-cartas, #print-key-container {
+        display: none !important;
+      }
+
+      /* Manual e regras: uma folha, sem a interface da aba. */
+      body[data-print-target="manual"] #tab-regras,
+      body[data-print-target="tudo"] #tab-regras {
+        display: block !important;
+        color: #000 !important;
+      }
+      body[data-print-target="manual"] #tab-regras .manual-box,
+      body[data-print-target="tudo"] #tab-regras .manual-box {
+        color: #000 !important;
+        font: 10pt/1.35 Arial, sans-serif !important;
+      }
+      body[data-print-target="manual"] #tab-regras .manual-box h2,
+      body[data-print-target="tudo"] #tab-regras .manual-box h2 {
+        font: bold 14pt/1.2 Arial, sans-serif !important;
+        color: #000 !important;
+        margin-bottom: 8px !important;
+      }
+      body[data-print-target="manual"] #tab-regras .manual-box h3,
+      body[data-print-target="tudo"] #tab-regras .manual-box h3 {
+        font: bold 11pt/1.2 Arial, sans-serif !important;
+        color: #000 !important;
+        margin: 10px 0 4px !important;
+      }
+      body[data-print-target="tudo"] #tab-regras {
+        page-break-after: always !important;
+        break-after: page !important;
+      }
+
+      /* Baralho: 12 folhas, uma grade 3x3 por página. */
+      body[data-print-target="cartas"] #tab-cartas,
+      body[data-print-target="tudo"] #tab-cartas {
+        display: block !important;
+      }
+      body[data-print-target="cartas"] #tab-cartas .sheets-stack,
+      body[data-print-target="tudo"] #tab-cartas .sheets-stack {
+        display: block !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      body[data-print-target="cartas"] .uno-sheet-page,
+      body[data-print-target="tudo"] .uno-sheet-page {
+        margin: 0 auto !important;
+        box-shadow: none !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      body[data-print-target="cartas"] .uno-sheet-page:last-child,
+      body[data-print-target="tudo"] .uno-sheet-page:last-child {
+        page-break-after: auto !important;
+        break-after: auto !important;
+      }
+
+      /* Gabarito: contêiner separado para também caber no alvo tudo. */
+      body[data-print-target="gabarito"] #print-key-container,
+      body[data-print-target="tudo"] #print-key-container {
+        display: block !important;
+      }
+      body[data-print-target="gabarito"] #print-key-container .key-sheet,
+      body[data-print-target="tudo"] #print-key-container .key-sheet {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      body[data-print-target="tudo"] #print-key-container {
+        page-break-before: always !important;
+        break-before: page !important;
+      }
+
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="main-header">
+    <h1>UNO MATEMÁTICO</h1>
+    <p>Equivalências &amp; Cálculo Mental • 6º ao 9º Ano</p>
+    <p class="lab-identity">Laboratório de Matemática · UFFS</p>
+  </header>
+
+  <div class="print-bar print-hidden" aria-label="Barra de impressão">
+    <button type="button" class="btn btn-success" onclick="imprimirParte('tudo')">🖨️ Imprimir tudo</button>
+    <button type="button" class="btn" onclick="imprimirParte('manual')">🖨️ Manual e regras</button>
+    <button type="button" class="btn" onclick="imprimirParte('cartas')">🖨️ Cartas (12 folhas)</button>
+    <button type="button" class="btn btn-warning" onclick="imprimirParte('gabarito')">🖨️ Gabarito do professor</button>
+  </div>
+
+  <div class="tabs print-hidden">
+    <button class="tab-btn" onclick="switchTab('regras')">Manual e Regras</button>
+    <button class="tab-btn active" onclick="switchTab('cartas')">🃏 Baralho e Gabarito</button>
+  </div>
+
+  <div class="container">
+
+    <!-- ABA 1: MANUAL E REGRAS -->
+    <div id="tab-regras" class="tab-content print-area">
+      <div class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:15px;padding-bottom:12px;border-bottom:1px solid #333;" class="print-hidden">
+          <div>
+            <strong style="color:var(--white);font-size:1.1rem;">Manual de Regras e Habilidades BNCC</strong><br>
+            <span>Regras clássicas do UNO adaptadas para equivalências matemáticas de 0 a 9.</span>
+          </div>
+        </div>
+
+        <div class="manual-box" id="manual-content">
+          <h2>UNO Matemático: Equivalências &amp; Cálculo Mental</h2>
+          <p><strong>2 a 6 jogadores · 108 cartas (76 cartas de cálculo mental de 0 a 9 + 24 cartas de ação coloridas + 8 curingas)</strong></p>
+
+          <h3>Como Jogar</h3>
+          <ol>
+            <li>Embaralhem as 108 cartas e distribuam <strong>7 cartas</strong> para cada jogador. As cartas restantes formam o monte de compra, e a primeira carta do monte é virada na mesa para iniciar o descarte.</li>
+            <li>Na sua vez, o jogador deve descartar uma carta que combine com a carta do topo da mesa pela <strong>MESMA COR</strong> ou pelo <strong>MESMO RESULTADO MATEMÁTICO (de 0 a 9)</strong>, anunciando em voz alta o valor da sua expressão.
+              <br><em>Exemplo:</em> Se na mesa está uma carta <strong>Vermelha</strong> com <code>2³ − 2</code> (valor <strong>6</strong>), o próximo jogador pode jogar qualquer carta <strong>Vermelha</strong> OU uma carta de qualquer outra cor cujo resultado também seja <strong>6</strong> (como <code>50% de 12</code>, <code>√36</code> ou <code>(−3) × (−2)</code>).</li>
+            <li>Se o jogador anunciar um resultado incorreto (conferido pelos colegas ou pelo professor no <strong>Gabarito de 1 Folha</strong>), ele recolhe sua carta e compra 1 carta de penalidade.</li>
+            <li>Quem não tiver carta compatível deve comprar 1 carta do monte. Se a carta comprada servir, pode jogá-la imediatamente; caso contrário, passa a vez.</li>
+            <li>Ao ficar com apenas <strong>1 carta na mão</strong>, o jogador deve gritar <strong>“UNO!”</strong>. Vence a rodada quem descartar todas as suas cartas primeiro!</li>
+          </ol>
+
+          <h3>Cartas Especiais de Ação</h3>
+          <ul>
+            <li><strong>⊘ Bloquear (Pular):</strong> O próximo jogador perde a vez.</li>
+            <li><strong>⇄ Inverter:</strong> Inverte o sentido do jogo (horário ↔ anti-horário).</li>
+            <li><strong>+2 (Comprar 2):</strong> O próximo jogador compra 2 cartas e perde a vez.</li>
+            <li><strong>Curinga (4 Cores):</strong> Pode ser jogado sobre qualquer carta; quem jogou escolhe a nova cor da rodada.</li>
+            <li><strong>+4 Curinga:</strong> Escolhe a nova cor da rodada e o próximo jogador compra 4 cartas e perde a vez.</li>
+          </ul>
+
+          <h3>Conteúdos da BNCC por Baralho (Resultados de 0 a 9)</h3>
+          <ul>
+            <li><strong>6º Ano (EF06MA03, EF06MA07, EF06MA09, EF06MA11, EF06MA13):</strong> Potências naturais, frações de uma quantidade, frações equivalentes, adições/subtrações de decimais e porcentagens mentais (10%, 20%, 25%, 50%, 70%).</li>
+            <li><strong>7º Ano (EF07MA04, EF07MA12):</strong> Adição, subtração, multiplicação, divisão, módulo e potenciação de números inteiros e racionais negativos com regra de sinais.</li>
+            <li><strong>8º Ano (EF08MA01, EF08MA02, EF08MA05):</strong> Raízes quadradas e cúbicas exatas, potências com expoente inteiro negativo, propriedades de potências, base 10 e dízimas periódicas.</li>
+            <li><strong>9º Ano (EF09MA03, EF09MA04, EF09MA09):</strong> Produto e quociente de radicais, potências com expoente fracionário, diferença de quadrados e razões trigonométricas notáveis.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ABA 2: BARALHO E GABARITO -->
+    <div id="tab-cartas" class="tab-content active print-area">
+
+      <!-- Barra de Controle Enxuta e Direta -->
+      <section class="controls print-hidden" aria-label="Controles do Baralho UNO">
+        <div class="controls-group">
+          <div class="mode-selector">
+            <button class="mode-btn active" id="btnGrade6" type="button" onclick="setGradeMode('6ano')">6º Ano</button>
+            <button class="mode-btn" id="btnGrade7" type="button" onclick="setGradeMode('7ano')">7º Ano</button>
+            <button class="mode-btn" id="btnGrade8" type="button" onclick="setGradeMode('8ano')">8º Ano</button>
+            <button class="mode-btn" id="btnGrade9" type="button" onclick="setGradeMode('9ano')">9º Ano</button>
+          </div>
+
+          <div class="mode-selector">
+            <button class="mode-btn active" id="btnModeStudent" type="button" onclick="setViewMode(false)">Cartas (12 Folhas)</button>
+            <button class="mode-btn" id="btnModeTeacher" type="button" onclick="setViewMode(true)">Gabarito (1 Folha)</button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Área Principal: Folhas 3x3 de Cartas UNO ou Tabela de Gabarito de 1 Folha -->
+      <main id="unoMainContainer" class="sheets-stack"></main>
+
+    </div>
+
+    <div id="print-key-container" class="print-area" aria-hidden="true"></div>
+
+  </div>
+
+  <script>
+    const GRADE_LABELS = {
+      '6ano': '6º Ano',
+      '7ano': '7º Ano',
+      '8ano': '8º Ano',
+      '9ano': '9º Ano'
+    };
+
+    const UNO_COLORS = [
+      { key: 'red',    name: 'Vermelho', hex: '#E73E32' },
+      { key: 'yellow', name: 'Amarelo',  hex: '#F7D002' },
+      { key: 'green',  name: 'Verde',    hex: '#388E3C' },
+      { key: 'blue',   name: 'Azul',     hex: '#1976D2' }
+    ];
+
+    const UNO_DECKS = {
+      "6ano": {
+            "0": [
+                  "5 − 5",
+                  "0 × <span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span>",
+                  "2³ − 8",
+                  "3² − 9"
+            ],
+            "1": [
+                  "7⁰",
+                  "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> + <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>",
+                  "10% de 10",
+                  "<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">4</span></span>",
+                  "2,5 − 1,5",
+                  "3² − 8",
+                  "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> de 4",
+                  "0,25 × 4"
+            ],
+            "2": [
+                  "2¹",
+                  "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> de 4",
+                  "20% de 10",
+                  "0,5 × 4",
+                  "<span class=\"frac\"><span class=\"top\">6</span><span class=\"bottom\">3</span></span>",
+                  "5 − 3,0",
+                  "1,2 + 0,8",
+                  "2⁴ ÷ 8"
+            ],
+            "3": [
+                  "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span> de 9",
+                  "2² − 1",
+                  "50% de 6",
+                  "1,5 × 2",
+                  "<span class=\"frac\"><span class=\"top\">12</span><span class=\"bottom\">4</span></span>",
+                  "10 − 7",
+                  "0,3 × 10",
+                  "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">5</span></span> + <span class=\"frac\"><span class=\"top\">14</span><span class=\"bottom\">5</span></span>"
+            ],
+            "4": [
+                  "2²",
+                  "25% de 16",
+                  "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> de 8",
+                  "<span class=\"frac\"><span class=\"top\">20</span><span class=\"bottom\">5</span></span>",
+                  "1,6 + 2,4",
+                  "3² − 5",
+                  "0,4 × 10",
+                  "<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">3</span></span> de 6"
+            ],
+            "5": [
+                  "50% de 10",
+                  "2² + 1",
+                  "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> de 20",
+                  "2,5 × 2",
+                  "<span class=\"frac\"><span class=\"top\">15</span><span class=\"bottom\">3</span></span>",
+                  "10% de 50",
+                  "8,5 − 3,5",
+                  "3² − 4"
+            ],
+            "6": [
+                  "2³ − 2",
+                  "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span> de 8",
+                  "50% de 12",
+                  "<span class=\"frac\"><span class=\"top\">18</span><span class=\"bottom\">3</span></span>",
+                  "1,5 × 4",
+                  "4,2 + 1,8",
+                  "2 × 3¹",
+                  "10% de 60"
+            ],
+            "7": [
+                  "4² − 9",
+                  "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> de 14",
+                  "70% de 10",
+                  "<span class=\"frac\"><span class=\"top\">21</span><span class=\"bottom\">3</span></span>",
+                  "3,5 × 2",
+                  "10 − 3",
+                  "2³ − 1",
+                  "4,5 + 2,5"
+            ],
+            "8": [
+                  "2³",
+                  "<span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">5</span></span> de 10",
+                  "50% de 16",
+                  "<span class=\"frac\"><span class=\"top\">24</span><span class=\"bottom\">3</span></span>",
+                  "3² − 1",
+                  "1,6 × 5",
+                  "20% de 40",
+                  "5,3 + 2,7"
+            ],
+            "9": [
+                  "3²",
+                  "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span> de 12",
+                  "50% de 18",
+                  "<span class=\"frac\"><span class=\"top\">27</span><span class=\"bottom\">3</span></span>",
+                  "2³ + 1",
+                  "4,5 × 2",
+                  "10% de 90",
+                  "12,5 − 3,5"
+            ]
+      },
+      "7ano": {
+            "0": [
+                  "−7 + 7",
+                  "(−1)³ + 1",
+                  "−4 − (−4)",
+                  "0 ÷ (−8)"
+            ],
+            "1": [
+                  "(−1)²",
+                  "−5 + 6",
+                  "(−8) ÷ (−8)",
+                  "−3 − (−4)",
+                  "−<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> + <span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">2</span></span>",
+                  "(−2)² − 3",
+                  "|−4| − 3",
+                  "10 + (−9)"
+            ],
+            "2": [
+                  "−6 + 8",
+                  "(−10) ÷ (−5)",
+                  "−3 − (−5)",
+                  "(−2)³ + 10",
+                  "(−<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span>) × (−6)",
+                  "|−2|",
+                  "−1,5 + 3,5",
+                  "(−3)² − 7"
+            ],
+            "3": [
+                  "−7 + 10",
+                  "(−15) ÷ (−5)",
+                  "−2 − (−5)",
+                  "(−2)² − 1",
+                  "(−<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>) × (−6)",
+                  "|−3|",
+                  "−4,5 + 7,5",
+                  "(−1)⁴ + 2"
+            ],
+            "4": [
+                  "(−2)²",
+                  "−6 + 10",
+                  "(−20) ÷ (−5)",
+                  "−1 − (−5)",
+                  "(−2) × (−2)",
+                  "(−<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">3</span></span>) × (−6)",
+                  "|−4|",
+                  "(−3)² − 5"
+            ],
+            "5": [
+                  "−4 + 9",
+                  "(−25) ÷ (−5)",
+                  "1 − (−4)",
+                  "(−2)² + 1",
+                  "(−<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>) × (−10)",
+                  "|−5|",
+                  "(−3)² − 4",
+                  "−2,5 + 7,5"
+            ],
+            "6": [
+                  "−4 + 10",
+                  "(−3) × (−2)",
+                  "(−18) ÷ (−3)",
+                  "2 − (−4)",
+                  "(−2)² + 2",
+                  "(−<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span>) × (−8)",
+                  "|−6|",
+                  "(−2)³ + 14"
+            ],
+            "7": [
+                  "−3 + 10",
+                  "(−21) ÷ (−3)",
+                  "2 − (−5)",
+                  "(−3)² − 2",
+                  "(−1)³ + 8",
+                  "(−<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>) × (−14)",
+                  "|−7|",
+                  "(−4)² − 9"
+            ],
+            "8": [
+                  "−2 + 10",
+                  "(−4) × (−2)",
+                  "(−24) ÷ (−3)",
+                  "3 − (−5)",
+                  "(−3)² − 1",
+                  "−(−2)³",
+                  "|−8|",
+                  "(−4)² ÷ 2"
+            ],
+            "9": [
+                  "(−3)²",
+                  "−1 + 10",
+                  "(−27) ÷ (−3)",
+                  "4 − (−5)",
+                  "(−2)³ + 17",
+                  "|−9|",
+                  "(−4)² − 7",
+                  "(−1)² × 9"
+            ]
+      },
+      "8ano": {
+            "0": [
+                  "√9 − 3",
+                  "∛8 − 2",
+                  "5⁰ − 1",
+                  "√16 − 2²"
+            ],
+            "1": [
+                  "√1",
+                  "∛1",
+                  "9 × 0,111...",
+                  "2³ × 2⁻³",
+                  "√9 − 2",
+                  "10⁻¹ × 10",
+                  "(<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">5</span></span>)⁰",
+                  "√16 − 3"
+            ],
+            "2": [
+                  "√4",
+                  "∛8",
+                  "(<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>)⁻¹",
+                  "9 × 0,222...",
+                  "2⁴ ÷ 2³",
+                  "√25 − 3",
+                  "0,2 × 10¹",
+                  "√9 − 1"
+            ],
+            "3": [
+                  "√9",
+                  "∛27",
+                  "(<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span>)⁻¹",
+                  "9 × 0,333...",
+                  "3⁴ ÷ 3³",
+                  "√16 − 1",
+                  "0,3 × 10¹",
+                  "√36 ÷ 2"
+            ],
+            "4": [
+                  "√16",
+                  "∛64",
+                  "(<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>)⁻²",
+                  "9 × 0,444...",
+                  "2⁵ ÷ 2³",
+                  "√25 − 1",
+                  "0,4 × 10¹",
+                  "√64 ÷ 2"
+            ],
+            "5": [
+                  "√25",
+                  "∛125",
+                  "(<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">5</span></span>)⁻¹",
+                  "9 × 0,555...",
+                  "5³ ÷ 5²",
+                  "√36 − 1",
+                  "0,5 × 10¹",
+                  "√100 ÷ 2"
+            ],
+            "6": [
+                  "√36",
+                  "(<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">6</span></span>)⁻¹",
+                  "9 × 0,666...",
+                  "√16 + 2",
+                  "∛8 × 3",
+                  "0,6 × 10¹",
+                  "√144 ÷ 2",
+                  "√49 − 1"
+            ],
+            "7": [
+                  "√49",
+                  "(<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">7</span></span>)⁻¹",
+                  "9 × 0,777...",
+                  "√25 + 2",
+                  "∛27 + 4",
+                  "0,7 × 10¹",
+                  "√64 − 1",
+                  "7³ ÷ 7²"
+            ],
+            "8": [
+                  "√64",
+                  "(<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>)⁻³",
+                  "9 × 0,888...",
+                  "2² × 2¹",
+                  "∛8 × 4",
+                  "0,8 × 10¹",
+                  "√81 − 1",
+                  "√16 × 2"
+            ],
+            "9": [
+                  "√81",
+                  "(<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span>)⁻²",
+                  "3¹ × 3¹",
+                  "∛27 × 3",
+                  "√100 − 1",
+                  "0,9 × 10¹",
+                  "√25 + 4",
+                  "√36 + 3"
+            ]
+      },
+      "9ano": {
+            "0": [
+                  "√5 − √5",
+                  "3² − 9",
+                  "2 × sen 0°",
+                  "√4 − 2"
+            ],
+            "1": [
+                  "tg 45°",
+                  "2² − 3",
+                  "(√1)²",
+                  "<span class=\"frac\"><span class=\"top\">√7</span><span class=\"bottom\">√7</span></span>",
+                  "1<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span></sup>",
+                  "2 × sen 30°",
+                  "3² − 2³",
+                  "√9 − √4"
+            ],
+            "2": [
+                  "√2 × √2",
+                  "4<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span></sup>",
+                  "8<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span></sup>",
+                  "<span class=\"frac\"><span class=\"top\">√8</span><span class=\"bottom\">√2</span></span>",
+                  "(√2)²",
+                  "4 × sen 30°",
+                  "3² − 7",
+                  "<span class=\"frac\"><span class=\"top\">√12</span><span class=\"bottom\">√3</span></span>"
+            ],
+            "3": [
+                  "√3 × √3",
+                  "9<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span></sup>",
+                  "27<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span></sup>",
+                  "<span class=\"frac\"><span class=\"top\">√18</span><span class=\"bottom\">√2</span></span>",
+                  "(√3)²",
+                  "2² − 1²",
+                  "6 × sen 30°",
+                  "<span class=\"frac\"><span class=\"top\">√27</span><span class=\"bottom\">√3</span></span>"
+            ],
+            "4": [
+                  "√2 × √8",
+                  "16<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span></sup>",
+                  "64<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span></sup>",
+                  "<span class=\"frac\"><span class=\"top\">√32</span><span class=\"bottom\">√2</span></span>",
+                  "(√4)²",
+                  "8 × sen 30°",
+                  "5² − 21",
+                  "<span class=\"frac\"><span class=\"top\">√48</span><span class=\"bottom\">√3</span></span>"
+            ],
+            "5": [
+                  "√5 × √5",
+                  "25<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span></sup>",
+                  "125<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span></sup>",
+                  "<span class=\"frac\"><span class=\"top\">√50</span><span class=\"bottom\">√2</span></span>",
+                  "3² − 2²",
+                  "√(3² + 4²)",
+                  "(√5)²",
+                  "10 × sen 30°"
+            ],
+            "6": [
+                  "√2 × √18",
+                  "36<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span></sup>",
+                  "<span class=\"frac\"><span class=\"top\">√72</span><span class=\"bottom\">√2</span></span>",
+                  "√3 × √12",
+                  "(√6)²",
+                  "12 × sen 30°",
+                  "(2√3)² ÷ 2",
+                  "5² − 19"
+            ],
+            "7": [
+                  "√7 × √7",
+                  "49<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span></sup>",
+                  "<span class=\"frac\"><span class=\"top\">√98</span><span class=\"bottom\">√2</span></span>",
+                  "4² − 3²",
+                  "(√7)²",
+                  "14 × sen 30°",
+                  "<span class=\"frac\"><span class=\"top\">√147</span><span class=\"bottom\">√3</span></span>",
+                  "√25 + √4"
+            ],
+            "8": [
+                  "√2 × √32",
+                  "64<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span></sup>",
+                  "4<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">2</span></span></sup>",
+                  "(2√2)²",
+                  "3² − 1²",
+                  "(√8)²",
+                  "16 × sen 30°",
+                  "√16 × √4"
+            ],
+            "9": [
+                  "√3 × √27",
+                  "81<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span></sup>",
+                  "5² − 4²",
+                  "(3√1)²",
+                  "√9 × √9",
+                  "(√9)²",
+                  "18 × sen 30°",
+                  "27<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">3</span></span></sup>"
+            ]
+      }
+};
+
+    let currentGrade = '6ano';
+    let isTeacherKey = false;
+
+    function formatSup(txt) {
+      return String(txt || '')
+        .replace(/⁰/g, '<sup>0</sup>')
+        .replace(/¹/g, '<sup>1</sup>')
+        .replace(/²/g, '<sup>2</sup>')
+        .replace(/³/g, '<sup>3</sup>')
+        .replace(/⁴/g, '<sup>4</sup>')
+        .replace(/⁵/g, '<sup>5</sup>')
+        .replace(/⁻¹/g, '<sup>−1</sup>')
+        .replace(/⁻²/g, '<sup>−2</sup>')
+        .replace(/⁻³/g, '<sup>−3</sup>');
+    }
+
+    // Constrói a lista estruturada das 108 cartas do UNO para o ano selecionado
+    function buildDeckList(grade) {
+      const gradeData = UNO_DECKS[grade] || UNO_DECKS['6ano'];
+      const cards = [];
+      let numberCardId = 1;
+
+      // 1. Cartas numéricas (76 cartas: 4 de valor 0 + 8 de cada valor de 1 a 9)
+      UNO_COLORS.forEach((col, cIdx) => {
+        // Uma carta de valor 0 para esta cor
+        const expr0 = formatSup(gradeData['0'][cIdx]);
+        cards.push({
+          kind: 'number',
+          cardNo: numberCardId++,
+          colorName: col.name,
+          colorHex: col.hex,
+          exprHtml: expr0,
+          targetVal: 0
+        });
+
+        // Duas cartas de cada valor de 1 a 9 para esta cor
+        for (let v = 1; v <= 9; v++) {
+          const pairIdx1 = cIdx * 2;
+          const pairIdx2 = cIdx * 2 + 1;
+          const exprA = formatSup(gradeData[String(v)][pairIdx1]);
+          const exprB = formatSup(gradeData[String(v)][pairIdx2]);
+
+          cards.push({
+            kind: 'number',
+            cardNo: numberCardId++,
+            colorName: col.name,
+            colorHex: col.hex,
+            exprHtml: exprA,
+            targetVal: v
+          });
+          cards.push({
+            kind: 'number',
+            cardNo: numberCardId++,
+            colorName: col.name,
+            colorHex: col.hex,
+            exprHtml: exprB,
+            targetVal: v
+          });
+        }
+      });
+
+      // 2. Cartas de Ação Coloridas (24 cartas: 2x +2, 2x Bloquear, 2x Inverter por cor)
+      UNO_COLORS.forEach(col => {
+        for (let i = 0; i < 2; i++) {
+          cards.push({ kind: 'action', actionType: '+2', colorName: col.name, colorHex: col.hex });
+          cards.push({ kind: 'action', actionType: 'block', colorName: col.name, colorHex: col.hex });
+          cards.push({ kind: 'action', actionType: 'reverse', colorName: col.name, colorHex: col.hex });
+        }
+      });
+
+      // 3. Cartas Curinga Pretas (8 cartas: 4x Curinga, 4x +4)
+      for (let i = 0; i < 4; i++) {
+        cards.push({ kind: 'wild', actionType: 'wild', colorName: 'Preto', colorHex: '#222222' });
+        cards.push({ kind: 'wild', actionType: '+4', colorName: 'Preto', colorHex: '#222222' });
+      }
+
+      return cards;
+    }
+
+    function makeUnoCardSvgBg(colorHex) {
+      return `
+        <svg class="uno-bg-svg" viewBox="0 0 63 86" preserveAspectRatio="none" aria-hidden="true">
+          <rect x="0" y="0" width="63" height="86" fill="#ffffff" />
+          <rect x="2.6" y="2.6" width="57.8" height="80.8" rx="2.2" ry="2.2" fill="${colorHex}" stroke="#000000" stroke-width="0.45" />
+          <ellipse cx="32.2" cy="43.7" rx="20.2" ry="28.8" transform="rotate(24 32.2 43.7)" fill="rgba(0,0,0,0.28)" />
+          <ellipse cx="31.5" cy="43" rx="20.2" ry="28.8" transform="rotate(24 31.5 43)" fill="#ffffff" stroke="#000000" stroke-width="1.0" />
+        </svg>
+      `;
+    }
+
+    function renderSingleUnoCard(c) {
+      const svgBg = makeUnoCardSvgBg(c.colorHex);
+
+      if (c.kind === 'number') {
+        const cornerHtml = `<div class="uno-corner-badge">${c.exprHtml}</div>`;
+        return `
+          <article class="card-item uno-card">
+            ${svgBg}
+            <div class="top-left">${cornerHtml}</div>
+            <div class="center">
+              <div class="uno-math-center">${c.exprHtml}</div>
+            </div>
+            <div class="bottom-right">${cornerHtml}</div>
+          </article>
+        `;
+      }
+
+      let topHTML = '';
+      let centerHTML = '';
+      if (c.actionType === '+2') {
+        topHTML = `<div class="uno-action-small">+2</div>`;
+        centerHTML = `<div class="uno-action-center" style="color: ${c.colorHex};">+2</div><div class="uno-action-label">Comprar 2</div>`;
+      } else if (c.actionType === 'block') {
+        topHTML = `<span class="uno-symbol">⊘</span>`;
+        centerHTML = `<span class="uno-symbol-center" style="color: ${c.colorHex};">⊘</span><div class="uno-action-label">Bloquear</div>`;
+      } else if (c.actionType === 'reverse') {
+        topHTML = `<span class="uno-symbol">⇄</span>`;
+        centerHTML = `<span class="uno-symbol-center" style="color: ${c.colorHex};">⇄</span><div class="uno-action-label">Inverter</div>`;
+      } else if (c.actionType === 'wild') {
+        topHTML = `<div class="wild-icon-small"></div>`;
+        centerHTML = `<div class="wild-icon"></div><div class="uno-action-label">Curinga</div>`;
+      } else if (c.actionType === '+4') {
+        topHTML = `<div class="uno-action-small">+4</div>`;
+        centerHTML = `<div class="uno-action-center" style="color: #222222;">+4</div><div class="wild-icon-small" style="margin-top:2mm;border-color:#000;"></div><div class="uno-action-label">Curinga +4</div>`;
+      }
+
+      return `
+        <article class="card-item uno-card">
+          ${svgBg}
+          <div class="top-left">${topHTML}</div>
+          <div class="center">${centerHTML}</div>
+          <div class="bottom-right">${topHTML}</div>
+        </article>
+      `;
+    }
+
+    function makeKeyTableHtml(deckList, grade) {
+      const gradeLabel = GRADE_LABELS[grade] || '6º Ano';
+      const numCards = deckList.filter(c => c.kind === 'number');
+      const half = Math.ceil(numCards.length / 2); // 38 cartas em cada coluna = 76 cartas em 1 única folha A4
+      const leftList = numCards.slice(0, half);
+      const rightList = numCards.slice(half);
+
+      const renderRows = arr => arr.map(c => `
+        <tr>
+          <td class="col-color">${c.colorName}</td>
+          <td class="col-expr">${c.exprHtml}</td>
+          <td class="col-val">${c.targetVal}</td>
+        </tr>
+      `).join('');
+
+      return `
+        <div class="key-sheet">
+          <div class="key-sheet-header">
+            <h2>GABARITO DO PROFESSOR — UNO MATEMÁTICO (${gradeLabel.toUpperCase()})</h2>
+            <p>Conferência Rápida das 76 Cartas de Cálculo Mental (Valores de 0 a 9) • Laboratório de Matemática · UFFS</p>
+          </div>
+          <div class="key-columns-grid">
+            <table class="key-table">
+              <thead>
+                <tr>
+                  <th>Cor da Carta</th>
+                  <th>Cálculo da Carta</th>
+                  <th style="text-align:center;">Resultado</th>
+                </tr>
+              </thead>
+              <tbody>${renderRows(leftList)}</tbody>
+            </table>
+            <table class="key-table">
+              <thead>
+                <tr>
+                  <th>Cor da Carta</th>
+                  <th>Cálculo da Carta</th>
+                  <th style="text-align:center;">Resultado</th>
+                </tr>
+              </thead>
+              <tbody>${renderRows(rightList)}</tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCurrentView() {
+      const container = document.getElementById('unoMainContainer');
+      if (!container) return;
+
+      const deckList = buildDeckList(currentGrade);
+      const gradeLabel = GRADE_LABELS[currentGrade] || '6º Ano';
+
+      if (isTeacherKey) {
+        container.innerHTML = makeKeyTableHtml(deckList, currentGrade);
+      } else {
+        let pagesHtml = '';
+        for (let i = 0; i < deckList.length; i += 9) {
+          const slice = deckList.slice(i, i + 9);
+          pagesHtml += `<div class="uno-sheet-page">${slice.map(c => renderSingleUnoCard(c)).join('')}</div>`;
+        }
+        container.innerHTML = pagesHtml;
+      }
+
+      const btnPrintStu = document.getElementById('btnPrintActiveStudents');
+      if (btnPrintStu) btnPrintStu.textContent = `🖨️ Imprimir Cartas (${gradeLabel})`;
+
+      const btnPrintKey = document.getElementById('btnPrintActiveKey');
+      if (btnPrintKey) btnPrintKey.textContent = `🖨️ Imprimir Gabarito (${gradeLabel})`;
+    }
+
+    function updateGradeButtons(grade) {
+      ['6', '7', '8', '9'].forEach(n => {
+        const btn = document.getElementById('btnGrade' + n);
+        if (btn) btn.classList.toggle('active', grade === (n + 'ano'));
+      });
+    }
+
+    function setGradeMode(grade) {
+      currentGrade = grade;
+      updateGradeButtons(grade);
+      renderCurrentView();
+    }
+
+    function setViewMode(teacherMode) {
+      isTeacherKey = teacherMode;
+      const bStu = document.getElementById('btnModeStudent');
+      const bTea = document.getElementById('btnModeTeacher');
+      if (bStu) bStu.classList.toggle('active', !teacherMode);
+      if (bTea) bTea.classList.toggle('active', teacherMode);
+      renderCurrentView();
+    }
+
+    function executePrint(grade, forTeacher) {
+      currentGrade = grade;
+      updateGradeButtons(grade);
+      imprimirParte(forTeacher ? 'gabarito' : 'cartas');
+    }
+
+    function printManual() {
+      imprimirParte('manual');
+    }
+
+    function imprimirParte(alvo) {
+      const alvosValidos = ['manual', 'cartas', 'gabarito', 'tudo'];
+      if (!alvosValidos.includes(alvo)) return;
+
+      if (alvo === 'manual' || alvo === 'tudo') {
+        switchTab('regras');
+      } else {
+        switchTab('cartas');
+      }
+
+      if (alvo === 'gabarito') {
+        setViewMode(true);
+      } else if (alvo === 'cartas' || alvo === 'tudo') {
+        setViewMode(false);
+      }
+
+      const keyContainer = document.getElementById('print-key-container');
+      if (keyContainer) {
+        keyContainer.innerHTML = (alvo === 'gabarito' || alvo === 'tudo')
+          ? makeKeyTableHtml(buildDeckList(currentGrade), currentGrade)
+          : '';
+      }
+
+      document.body.dataset.printTarget = alvo;
+      window.print();
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      document.querySelector(`.tab-btn[onclick="switchTab('${tab}')"]`).classList.add('active');
+      document.getElementById(`tab-${tab}`).classList.add('active');
+    }
+
+    window.addEventListener('afterprint', () => {
+      delete document.body.dataset.printTarget;
+      const keyContainer = document.getElementById('print-key-container');
+      if (keyContainer) keyContainer.innerHTML = '';
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderCurrentView();
+    });
+  </script>
+
+  <!-- Botão fixo: Voltar ao Portal -->
+  <style>
+    #btn-voltar {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 9999;
+      background: linear-gradient(135deg, #1a237e, #1565c0);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.88rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    #btn-voltar:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.45); }
+    @media print { #btn-voltar { display: none !important; } }
+  </style>
+  <a id="btn-voltar" href="index.html">← Voltar ao portal de jogos</a>
+
+</body>
+</html>
