@@ -1,12 +1,17 @@
 ---
 titulo: "Super Trunfo Matemático"
 icone: "🃏"
-descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, com baralhos adaptados para o 6º e 7º ano."
+descricao: "Jogo de cartas focado na região das Missões e Fronteira Noroeste, com baralhos adaptados para o 6º, 7º, 8º e 9º ano."
 habilidades:
   - EF06MA09
   - EF06MA11
   - EF07MA04
   - EF07MA12
+  - EF08MA01
+  - EF08MA02
+  - EF08MA04
+  - EF09MA03
+  - EF09MA09
 ---
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -79,6 +84,7 @@ habilidades:
 
       --font-formula-size: 6.8pt;          /* Tamanho da fórmula matemática */
       --font-formula-color: #000000;       /* Cor da fórmula matemática */
+      --font-exp-size: 5.8pt;              /* Tamanho dos expoentes das potências */
       --font-frac-size: 6.2pt;             /* Tamanho dos números das frações verticais */
 
       --line-blank-width: 7mm;             /* Comprimento do traço de resposta do aluno */
@@ -179,67 +185,165 @@ habilidades:
     #print-manual-container, #print-all-container { display: none; }
 
     /* ==========================================================================
-       LAYOUT DO LABORATÓRIO (COM CONTROLE LATERAL)
+       LAYOUT SIMPLES E DIRETO (BARRA NO TOPO + BARALHO OU TABELA DE GABARITO)
        ========================================================================== */
     .layout {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      gap: 25px;
-      align-items: start;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 1000px;
+      margin: 0 auto;
     }
 
-    .controls { position: sticky; top: 20px; }
-
-    .mode-selector { display: flex; gap: 6px; background: #12121c; padding: 6px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #333; }
-    .mode-btn {
-      flex: 1; padding: 10px 4px; font-size: 0.85rem; font-family: 'Orbitron', sans-serif; font-weight: bold;
-      border: none; border-radius: 4px; background: transparent; color: var(--text-light);
-      cursor: pointer; transition: all 0.2s ease; text-align: center;
-    }
-    .mode-btn.active { background: var(--electric-cyan); color: var(--bg-dark); box-shadow: 0 0 10px var(--electric-cyan); }
-
-    .search-box {
-      width: 100%; padding: 10px; border: 1px solid #555; background: #12121c; color: white;
-      border-radius: 4px; font-size: 0.95rem; margin-bottom: 15px; font-family: 'Rajdhani', sans-serif;
-    }
-    .search-box:focus { outline: none; border-color: var(--electric-cyan); }
-
-    .action-buttons { display: grid; gap: 10px; margin-top: 10px; }
-
-    .control-label {
-      display: block;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 0.78rem;
-      color: var(--electric-cyan);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin: 12px 0 6px;
-      font-weight: 700;
-    }
-    .print-group-box {
-      background: rgba(18, 18, 28, 0.65);
+    .controls {
+      width: 100%;
+      background-color: var(--bg-card);
       border: 1px solid #333;
-      border-radius: 6px;
-      padding: 10px;
-      margin-top: 10px;
-      display: grid;
+      border-radius: 8px;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 0;
+    }
+
+    .controls-group {
+      display: flex;
+      align-items: center;
       gap: 8px;
+      flex-wrap: wrap;
     }
-    .print-group-title {
+
+    .mode-selector {
+      display: flex;
+      gap: 4px;
+      background: #12121c;
+      padding: 4px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      margin: 0;
+    }
+    .mode-btn {
+      padding: 8px 12px;
+      font-size: 0.82rem;
       font-family: 'Orbitron', sans-serif;
-      font-size: 0.8rem;
       font-weight: bold;
-      color: var(--white);
-      text-transform: uppercase;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      padding-bottom: 4px;
-      margin-bottom: 2px;
+      border: none;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .mode-btn:hover { color: var(--white); }
+    .mode-btn.active {
+      background: var(--electric-cyan);
+      color: var(--bg-dark);
     }
 
+    .controls .btn {
+      width: auto;
+      padding: 8px 14px;
+      font-size: 0.82rem;
+    }
 
-    .status-bar {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 10px 15px;
-      background: var(--bg-card); border: 1px solid #333; border-radius: 6px; font-size: 0.95rem; font-weight: bold; color: var(--text-light);
+    /* TABELA SIMPLES DE GABARITO (1 FOLHA A4) */
+    .key-sheet {
+      width: 190mm;
+      margin: 0 auto;
+      background: #ffffff;
+      color: #000000;
+      padding: 6mm 8mm;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
+      border-radius: 2px;
+      font-family: Arial, sans-serif;
+      box-sizing: border-box;
+    }
+    .key-sheet-header {
+      text-align: center;
+      margin-bottom: 3mm;
+      padding-bottom: 2mm;
+      border-bottom: 0.4mm solid #000;
+    }
+    .key-sheet-header h2 {
+      font-size: 11pt;
+      font-weight: bold;
+      margin: 0;
+      color: #000;
+      font-family: Arial, sans-serif;
+      border: none;
+      padding: 0;
+    }
+    .key-sheet-header p {
+      font-size: 8pt;
+      margin: 1mm 0 0;
+      color: #333;
+    }
+    .key-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 7.4pt;
+      line-height: 1.12;
+      color: #000;
+    }
+    .key-table th, .key-table td {
+      border: 0.25mm solid #475569;
+      padding: 0.85mm 2mm;
+      text-align: left;
+      vertical-align: middle;
+    }
+    .key-table th {
+      background: #e2e8f0;
+      font-weight: bold;
+      font-size: 7.5pt;
+      text-transform: uppercase;
+    }
+    .key-table tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    .key-table td.col-no {
+      width: 12mm;
+      text-align: center;
+      font-weight: bold;
+    }
+    .key-table td.col-town {
+      width: 44mm;
+      font-weight: bold;
+    }
+    .key-table td.col-calc {
+      font-weight: 600;
+    }
+    .key-table td.col-res {
+      width: 28mm;
+      text-align: right;
+      font-weight: bold;
+    }
+    .key-table .key-attr-name {
+      font-weight: bold;
+      color: #1e293b;
+      margin-right: 4px;
+    }
+    .key-table sup {
+      font-size: 6.2pt;
+      font-weight: bold;
+      line-height: 0;
+      position: relative;
+      top: -0.35em;
+    }
+    .key-table .frac {
+      font-size: 6.0pt;
+      line-height: 0.9;
+      vertical-align: middle;
+    }
+
+    @media (max-width: 900px) {
+      .controls { flex-direction: column; align-items: stretch; }
+      .controls-group { justify-content: center; }
+      .key-sheet { width: 100%; overflow-x: auto; }
     }
 
     /* ==========================================================================
@@ -427,6 +531,15 @@ habilidades:
       display: flex; align-items: center;
       gap: 0.6mm; white-space: nowrap;
     }
+    .trunfo-calc-formula sup {
+      font-size: var(--font-exp-size);
+      font-weight: 900;
+      line-height: 0;
+      vertical-align: baseline;
+      position: relative;
+      top: -0.38em;
+      padding: 0 0.4px;
+    }
 
     /* Frações Verticais Empilhadas */
     .frac {
@@ -611,6 +724,18 @@ habilidades:
     .print-manual-item li { margin-bottom:4px!important; }
     .print-manual-item .manual-source-line { font-size:8pt!important; }
   }
+
+    @media print {
+      .key-sheet {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+    }
+
 </style>
 </head>
 <body>
@@ -653,6 +778,14 @@ habilidades:
 <p><strong>Atenção:</strong> maior valor vence por uma regra do jogo; isso não torna um município ou sua população “melhor”. Os quatro atributos usam uma fonte, definição e ano uniformes para os 45 municípios.</p>
 <p class="manual-source-line"><strong>Fontes:</strong> IBGE/SIDRA 4714, 6805 e 9543; IBGE — PIB dos Municípios; MapBiomas — Coleção 11.</p>
 </div>
+            <details class="fontes-completas print-hidden" open><summary>Habilidades da BNCC por Ano Escolar (6º ao 9º Ano)</summary>
+        <ul>
+          <li><strong>6º Ano (EF06MA09 e EF06MA11):</strong> Adição e subtração de números decimais com reagrupamento (ex: <code>318,2 + 130,5</code>), cálculo de fração de uma quantidade natural (ex: <code>1/4 × 160 + 23,5</code>) e potenciação com números naturais (ex: <code>8² + 25,0</code>).</li>
+          <li><strong>7º Ano (EF07MA04 e EF07MA12):</strong> Operações com números inteiros e racionais positivos e negativos com regra de sinais (ex: <code>328,7 − (−120,0)</code>), produto de frações negativas (ex: <code>(−3/5) × (−100) + 15,2</code>) e potências com base inteira negativa (ex: <code>122,6 + (−3)³</code>).</li>
+          <li><strong>8º Ano (EF08MA01, EF08MA02 e EF08MA04):</strong> Potências de base 10 e notação científica (ex: <code>3,2 × 10² + 128,7</code>), radiciação com raízes quadradas e cúbicas exatas (ex: <code>√144 × 6 + 23,9</code> e <code>∛1000 × 6 + 27,2</code>) e cálculo mental de porcentagens (ex: <code>25% de 160 + 23,5</code>).</li>
+          <li><strong>9º Ano (EF09MA03, EF09MA04 e EF09MA09):</strong> Propriedades dos radicais com produto de raízes não exatas que geram quadrados perfeitos (ex: <code>√50 × √2 × 32 + 128,7</code>), potências com expoentes fracionários (ex: <code>81<sup>1/2</sup> × 8 + 23,6</code> e <code>64<sup>1/3</sup> × 18 + 26,7</code>) e produtos notáveis pela diferença de quadrados (ex: <code>(11² − 9²) + 18,9</code>).</li>
+        </ul>
+      </details>
       <details class="fontes-completas print-hidden"><summary>Fontes completas, definições e seleção do campo amarelo</summary><ul><li><strong>População (2022):</strong> <a href="https://sidra.ibge.gov.br/tabela/4714" target="_blank" rel="noopener">IBGE — SIDRA 4714</a>. População residente no município, Censo 2022. Contagem censitária; não é estimativa de 2026.</li><li><strong>Área territorial (2022):</strong> <a href="https://sidra.ibge.gov.br/tabela/4714" target="_blank" rel="noopener">IBGE — SIDRA 4714</a>. Área do município associada à base territorial 2022. Arredondada ao km² inteiro nas cartas; área precisa preservada na planilha.</li><li><strong>Vegetação nativa (2025):</strong> <a href="https://brasil.mapbiomas.org/downloads/estatisticas/" target="_blank" rel="noopener">MapBiomas — Coleção 11, COVERAGE_11, y2025</a>. Soma das classes vegetadas nativas em todos os biomas de cada município; hectares divididos por 100. Nos 45 municípios: classes 3 (formação florestal), 11 (área úmida) e 12 (formação campestre). Estimativa de cobertura por satélite; área absoluta, não percentual de conservação. Exclui água, silvicultura e agropecuária.</li><li><strong>Saneamento: rede/fossa séptica (2022):</strong> <a href="https://sidra.ibge.gov.br/tabela/6805" target="_blank" rel="noopener">IBGE — Censo 2022, SIDRA 6805, variável 381</a>. 100 × (domicílios na categoria 46290 + categoria 72112) / total 46292. Rede geral, pluvial ou fossa ligada à rede + fossa séptica/filtro não ligada. Não comprova tratamento de esgoto nem reúne água, lixo e drenagem.</li><li><strong>PIB per capita (2023):</strong> <a href="https://www.ibge.gov.br/estatisticas/economicas/contas-nacionais/9088-produto-interno-bruto-dos-municipios.html" target="_blank" rel="noopener">IBGE — PIB dos Municípios / Cidades, pesquisa 38, indicador 47001</a>. Valor publicado do PIB per capita a preços correntes, dividido por 1.000 para apresentação em mil R$. Edição 2022–2023 publicada em dezembro/2025. IBGE usa população do Censo 2022 nessa edição. Não é salário, renda pessoal ou distribuição de riqueza.</li><li><strong>Alfabetização 15+ (2022):</strong> <a href="https://sidra.ibge.gov.br/tabela/9543" target="_blank" rel="noopener">IBGE — Censo 2022, SIDRA 9543, variável 2513</a>. Taxa de pessoas que sabem ler e escrever pelo menos um bilhete simples; sexo, cor/raça e idade no total. Substitui o IDEB; não é nota escolar, taxa de matrícula nem avaliação das escolas atuais.</li></ul><p>Arquivo municipal MapBiomas: <a href="https://drive.google.com/uc?id=1otOqymHuixvkRGVl65zTTNyfaHo46Gqk&amp;export=download" target="_blank" rel="noopener">estatísticas de biomas, estados e municípios — Coleção 11</a>. Dados MapBiomas: CC BY 4.0.</p><p>O <a href="https://www.gov.br/inep/pt-br/areas-de-atuacao/pesquisas-estatisticas-e-indicadores/ideb/resultados" target="_blank" rel="noopener">IDEB 2025</a> foi consultado: faltam resultados dos anos finais/rede pública para Dezesseis de Novembro, Pirapó e Roque Gonzales. Não foram preenchidos com zero nem com outra edição. A alternativa educacional completa é alfabetização 15+.</p><p>O potencial do campo amarelo é V/44 × 100 em um duelo contra carta sorteada uniformemente; V é o número de valores menores nas outras cartas. Empates não contam como vitória. Esse potencial não prevê uma partida real, na qual as cartas circulam e as escolhas dos jogadores importam.</p><p>Imagens, autoria e textos turísticos foram preservados do HTML fornecido; não fazem parte da auditoria dos seis indicadores estatísticos.</p></details>
     </div></div>
 
@@ -664,48 +797,30 @@ habilidades:
     <div id="tab-cartas" class="tab-content active">
       <div class="layout">
         
-        <!-- Painel Lateral de Controle Simplificado -->
-        <aside class="panel controls print-hidden">
-          <h2 style="color: var(--electric-cyan);">Painel de Controle</h2>
+        <!-- Barra de Controle Simples e Direta -->
+        <section class="controls print-hidden" aria-label="Controles do Baralho">
+          <div class="controls-group">
+            <div class="mode-selector">
+              <button class="mode-btn active" id="btnGrade6" type="button">6º Ano</button>
+              <button class="mode-btn" id="btnGrade7" type="button">7º Ano</button>
+              <button class="mode-btn" id="btnGrade8" type="button">8º Ano</button>
+              <button class="mode-btn" id="btnGrade9" type="button">9º Ano</button>
+            </div>
 
-          <span class="control-label">Ano Escolar (Baralho)</span>
-          <div class="mode-selector">
-            <button class="mode-btn active" id="btnGrade6" type="button">📘 6º Ano</button>
-            <button class="mode-btn" id="btnGrade7" type="button">📗 7º Ano</button>
+            <div class="mode-selector">
+              <button class="mode-btn active" id="btnModeStudent" type="button">Cartas (Alunos)</button>
+              <button class="mode-btn" id="btnModeTeacher" type="button">Gabarito (1 Folha)</button>
+            </div>
           </div>
 
-          <span class="control-label">Modo de Visualização</span>
-          <div class="mode-selector">
-            <button class="mode-btn active" id="btnModeStudent" type="button">📝 Modo Aluno</button>
-            <button class="mode-btn" id="btnModeTeacher" type="button">👨‍🏫 Gabarito</button>
+          <div class="controls-group">
+            <button class="btn" id="btnPrintActiveStudents" type="button">🖨️ Imprimir Cartas (6º Ano)</button>
+            <button class="btn btn-success" id="btnPrintActiveKey" type="button">🖨️ Imprimir Gabarito (1 Folha)</button>
           </div>
+        </section>
 
-          <input type="search" class="search-box" id="searchInput" placeholder="Buscar município ou atrativo...">
-
-          <div class="print-group-box">
-            <div class="print-group-title" style="color: var(--success);">📑 Impressão completa</div>
-            <button class="btn btn-success" id="btnPrintAll" type="button" onclick="printAll()">🖨️ Imprimir tudo</button>
-          </div>
-
-          <div class="print-group-box">
-            <div class="print-group-title" style="color: var(--electric-cyan);">📘 Impressão — 6º Ano</div>
-            <button class="btn btn-student" id="btnPrintStudents6" type="button">🖨️ Cartas 6º Ano (Alunos)</button>
-            <button class="btn btn-success" id="btnPrintKey6" type="button">🖨️ Gabarito 6º Ano (Prof)</button>
-          </div>
-
-          <div class="print-group-box">
-            <div class="print-group-title" style="color: var(--warning);">📗 Impressão — 7º Ano</div>
-            <button class="btn btn-warning" id="btnPrintStudents7" type="button">🖨️ Cartas 7º Ano (Alunos)</button>
-            <button class="btn btn-success" id="btnPrintKey7" type="button">🖨️ Gabarito 7º Ano (Prof)</button>
-          </div>
-        </aside>
-
-        <!-- Grade Principal de Cartas -->
+        <!-- Grade Principal de Cartas ou Tabela de Gabarito -->
         <main class="right-column">
-          <div class="status-bar print-hidden">
-            <span id="cardsStatus">Exibindo 45 cartas</span>
-            <span id="currentModeLabel" style="color: var(--electric-cyan);">Modo: Aluno (Com lacunas)</span>
-          </div>
           <div class="cards-grid" id="cardsGrid">
             <div style="padding: 24px; text-align: center; color: var(--muted); background: white; border-radius: 0;">
               Carregando baralho...
@@ -776,6 +891,22 @@ habilidades:
       "expression": "631.9-(-320.0)",
       "mental_steps": 2,
       "type": "Racionais em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "7,2 × 10² + 231,9",
+      "unit": "km²",
+      "result_str": "951,9 km²",
+      "expression": "7.2*(10**2)+231.9",
+      "mental_steps": 2,
+      "type": "Potência Base 10"
+    },
+    "challenge_9ano": {
+      "formula": "√50 × √2 × 70 + 251,9",
+      "unit": "km²",
+      "result_str": "951,9 km²",
+      "expression": "math.sqrt(50*2)*70+251.9",
+      "mental_steps": 2,
+      "type": "Operações com Radicais"
     }
   },
   {
@@ -822,6 +953,22 @@ habilidades:
       "expression": "(-4)**3+159.9",
       "mental_steps": 2,
       "type": "Potência em ℤ"
+    },
+    "challenge_8ano": {
+      "formula": "√144 × 6 + 23,9",
+      "unit": "%",
+      "result_str": "95,9%",
+      "expression": "math.sqrt(144)*6+23.9",
+      "mental_steps": 2,
+      "type": "Radiciação"
+    },
+    "challenge_9ano": {
+      "formula": "49<sup>1/2</sup> × 10 + 25,9",
+      "unit": "%",
+      "result_str": "95,9%",
+      "expression": "(49**0.5)*10+25.9",
+      "mental_steps": 2,
+      "type": "Expoente Fracionário"
     }
   },
   {
@@ -840,10 +987,10 @@ habilidades:
     },
     "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> × 100 + 8,9",
+      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> × 80 + 18,9",
       "unit": "mil R$",
       "result_str": "R$ 58,9 mil",
-      "expression": "(1/2)*100+8.9",
+      "expression": "(1/2)*80+18.9",
       "mental_steps": 2,
       "type": "Fração"
     },
@@ -862,12 +1009,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "<span class=\"frac\"><span class=\"top\">−1</span><span class=\"bottom\">2</span></span> × (−100) + 8,9",
+      "formula": "<span class=\"frac\"><span class=\"top\">−2</span><span class=\"bottom\">5</span></span> × (−100) + 18,9",
       "unit": "mil R$",
       "result_str": "R$ 58,9 mil",
-      "expression": "(-1/2)*(-100)+8.9",
+      "expression": "(-2/5)*(-100)+18.9",
       "mental_steps": 2,
       "type": "Fração em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "20% de 200 + 18,9",
+      "unit": "mil R$",
+      "result_str": "R$ 58,9 mil",
+      "expression": "0.20*200+18.9",
+      "mental_steps": 2,
+      "type": "Porcentagem"
+    },
+    "challenge_9ano": {
+      "formula": "(11² − 9²) + 18,9",
+      "unit": "mil R$",
+      "result_str": "R$ 58,9 mil",
+      "expression": "(11**2-9**2)+18.9",
+      "mental_steps": 2,
+      "type": "Diferença de Quadrados"
     }
   },
   {
@@ -914,6 +1077,22 @@ habilidades:
       "expression": "54.7-(-120.0)",
       "mental_steps": 2,
       "type": "Racionais em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "1,2 × 10² + 54,7",
+      "unit": "km²",
+      "result_str": "174,7 km²",
+      "expression": "1.2*(10**2)+54.7",
+      "mental_steps": 2,
+      "type": "Potência Base 10"
+    },
+    "challenge_9ano": {
+      "formula": "√50 × √2 × 12 + 54,7",
+      "unit": "km²",
+      "result_str": "174,7 km²",
+      "expression": "math.sqrt(50*2)*12+54.7",
+      "mental_steps": 2,
+      "type": "Operações com Radicais"
     }
   },
   {
@@ -960,6 +1139,22 @@ habilidades:
       "expression": "(-130.0)+258.6",
       "mental_steps": 2,
       "type": "Racionais em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "0,8 × 10² + 48,6",
+      "unit": "km²",
+      "result_str": "128,6 km²",
+      "expression": "0.8*(10**2)+48.6",
+      "mental_steps": 2,
+      "type": "Potência Base 10"
+    },
+    "challenge_9ano": {
+      "formula": "√32 × √2 × 10 + 48,6",
+      "unit": "km²",
+      "result_str": "128,6 km²",
+      "expression": "math.sqrt(32*2)*10+48.6",
+      "mental_steps": 2,
+      "type": "Operações com Radicais"
     }
   },
   {
@@ -1000,12 +1195,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "(−9)² + 4,4",
+      "formula": "(−8)² + 21,4",
       "unit": "mil R$",
       "result_str": "R$ 85,4 mil",
-      "expression": "(-9)**2+4.4",
+      "expression": "(-8)**2+21.4",
       "mental_steps": 2,
       "type": "Potência em ℤ"
+    },
+    "challenge_8ano": {
+      "formula": "√121 × 5 + 30,4",
+      "unit": "mil R$",
+      "result_str": "R$ 85,4 mil",
+      "expression": "math.sqrt(121)*5+30.4",
+      "mental_steps": 2,
+      "type": "Radiciação"
+    },
+    "challenge_9ano": {
+      "formula": "64<sup>1/2</sup> × 8 + 21,4",
+      "unit": "mil R$",
+      "result_str": "R$ 85,4 mil",
+      "expression": "(64**0.5)*8+21.4",
+      "mental_steps": 2,
+      "type": "Expoente Fracionário"
     }
   },
   {
@@ -1052,6 +1263,22 @@ habilidades:
       "expression": "328.7-(-120.0)",
       "mental_steps": 2,
       "type": "Racionais em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "3,2 × 10² + 128,7",
+      "unit": "km²",
+      "result_str": "448,7 km²",
+      "expression": "3.2*(10**2)+128.7",
+      "mental_steps": 2,
+      "type": "Potência Base 10"
+    },
+    "challenge_9ano": {
+      "formula": "√50 × √2 × 32 + 128,7",
+      "unit": "km²",
+      "result_str": "448,7 km²",
+      "expression": "math.sqrt(50*2)*32+128.7",
+      "mental_steps": 2,
+      "type": "Operações com Radicais"
     }
   },
   {
@@ -1070,10 +1297,10 @@ habilidades:
     },
     "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> × 240 + 3,5",
+      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> × 160 + 23,5",
       "unit": "mil R$",
       "result_str": "R$ 63,5 mil",
-      "expression": "(1/4)*240+3.5",
+      "expression": "(1/4)*160+23.5",
       "mental_steps": 2,
       "type": "Fração"
     },
@@ -1092,12 +1319,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "<span class=\"frac\"><span class=\"top\">−3</span><span class=\"bottom\">5</span></span> × (−100) + 3,5",
+      "formula": "<span class=\"frac\"><span class=\"top\">−2</span><span class=\"bottom\">5</span></span> × (−100) + 23,5",
       "unit": "mil R$",
       "result_str": "R$ 63,5 mil",
-      "expression": "(-3/5)*(-100)+3.5",
+      "expression": "(-2/5)*(-100)+23.5",
       "mental_steps": 2,
       "type": "Fração em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "25% de 160 + 23,5",
+      "unit": "mil R$",
+      "result_str": "R$ 63,5 mil",
+      "expression": "0.25*160+23.5",
+      "mental_steps": 2,
+      "type": "Porcentagem"
+    },
+    "challenge_9ano": {
+      "formula": "(8² − 4²) + 15,5",
+      "unit": "mil R$",
+      "result_str": "R$ 63,5 mil",
+      "expression": "(8**2-4**2)+15.5",
+      "mental_steps": 2,
+      "type": "Diferença de Quadrados"
     }
   },
   {
@@ -1144,6 +1387,22 @@ habilidades:
       "expression": "122.6+(-3)**3",
       "mental_steps": 2,
       "type": "Potência em ℤ"
+    },
+    "challenge_8ano": {
+      "formula": "√169 × 5 + 30,6",
+      "unit": "%",
+      "result_str": "95,6%",
+      "expression": "math.sqrt(169)*5+30.6",
+      "mental_steps": 2,
+      "type": "Radiciação"
+    },
+    "challenge_9ano": {
+      "formula": "81<sup>1/2</sup> × 8 + 23,6",
+      "unit": "%",
+      "result_str": "95,6%",
+      "expression": "(81**0.5)*8+23.6",
+      "mental_steps": 2,
+      "type": "Expoente Fracionário"
     }
   },
   {
@@ -1162,10 +1421,10 @@ habilidades:
     },
     "hidden_attr": "san_pct",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> × 140 + 3,5",
+      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> × 100 + 23,5",
       "unit": "%",
       "result_str": "73,5%",
-      "expression": "(1/2)*140+3.5",
+      "expression": "(1/2)*100+23.5",
       "mental_steps": 2,
       "type": "Fração"
     },
@@ -1184,12 +1443,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "<span class=\"frac\"><span class=\"top\">−7</span><span class=\"bottom\">10</span></span> × (−100) + 3,5",
+      "formula": "<span class=\"frac\"><span class=\"top\">−1</span><span class=\"bottom\">2</span></span> × (−100) + 23,5",
       "unit": "%",
       "result_str": "73,5%",
-      "expression": "(-7/10)*(-100)+3.5",
+      "expression": "(-1/2)*(-100)+23.5",
       "mental_steps": 2,
       "type": "Fração em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "30% de 150 + 28,5",
+      "unit": "%",
+      "result_str": "73,5%",
+      "expression": "0.30*150+28.5",
+      "mental_steps": 2,
+      "type": "Porcentagem"
+    },
+    "challenge_9ano": {
+      "formula": "(9² − 6²) + 28,5",
+      "unit": "%",
+      "result_str": "73,5%",
+      "expression": "(9**2-6**2)+28.5",
+      "mental_steps": 2,
+      "type": "Diferença de Quadrados"
     }
   },
   {
@@ -1236,6 +1511,22 @@ habilidades:
       "expression": "135.7+(-50.0)",
       "mental_steps": 2,
       "type": "Racionais em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "1,3 × 10² − 44,3",
+      "unit": "%",
+      "result_str": "85,7%",
+      "expression": "1.3*(10**2)-44.3",
+      "mental_steps": 2,
+      "type": "Potência Base 10"
+    },
+    "challenge_9ano": {
+      "formula": "√18 × √2 × 10 + 25,7",
+      "unit": "%",
+      "result_str": "85,7%",
+      "expression": "math.sqrt(18*2)*10+25.7",
+      "mental_steps": 2,
+      "type": "Operações com Radicais"
     }
   },
   {
@@ -1282,6 +1573,22 @@ habilidades:
       "expression": "67.7-(-120.0)",
       "mental_steps": 2,
       "type": "Racionais em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "1,4 × 10² + 47,7",
+      "unit": "km²",
+      "result_str": "187,7 km²",
+      "expression": "1.4*(10**2)+47.7",
+      "mental_steps": 2,
+      "type": "Potência Base 10"
+    },
+    "challenge_9ano": {
+      "formula": "√72 × √2 × 10 + 67,7",
+      "unit": "km²",
+      "result_str": "187,7 km²",
+      "expression": "math.sqrt(72*2)*10+67.7",
+      "mental_steps": 2,
+      "type": "Operações com Radicais"
     }
   },
   {
@@ -1300,10 +1607,10 @@ habilidades:
     },
     "hidden_attr": "san_pct",
     "challenge": {
-      "formula": "9² − 7,2",
+      "formula": "8² + 9,8",
       "unit": "%",
       "result_str": "73,8%",
-      "expression": "9**2-7.2",
+      "expression": "8**2+9.8",
       "mental_steps": 2,
       "type": "Potência"
     },
@@ -1328,6 +1635,22 @@ habilidades:
       "expression": "46.8-(-3)**3",
       "mental_steps": 2,
       "type": "Potência em ℤ"
+    },
+    "challenge_8ano": {
+      "formula": "√81 × 6 + 19,8",
+      "unit": "%",
+      "result_str": "73,8%",
+      "expression": "math.sqrt(81)*6+19.8",
+      "mental_steps": 2,
+      "type": "Radiciação"
+    },
+    "challenge_9ano": {
+      "formula": "36<sup>1/2</sup> × 9 + 19,8",
+      "unit": "%",
+      "result_str": "73,8%",
+      "expression": "(36**0.5)*9+19.8",
+      "mental_steps": 2,
+      "type": "Expoente Fracionário"
     }
   },
   {
@@ -1346,10 +1669,10 @@ habilidades:
     },
     "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> × 240 + 0,3",
+      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> × 160 + 20,3",
       "unit": "mil R$",
       "result_str": "R$ 60,3 mil",
-      "expression": "(1/4)*240+0.3",
+      "expression": "(1/4)*160+20.3",
       "mental_steps": 2,
       "type": "Fração"
     },
@@ -1368,12 +1691,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "<span class=\"frac\"><span class=\"top\">−3</span><span class=\"bottom\">5</span></span> × (−100) + 0,3",
+      "formula": "<span class=\"frac\"><span class=\"top\">−2</span><span class=\"bottom\">5</span></span> × (−100) + 20,3",
       "unit": "mil R$",
       "result_str": "R$ 60,3 mil",
-      "expression": "(-3/5)*(-100)+0.3",
+      "expression": "(-2/5)*(-100)+20.3",
       "mental_steps": 2,
       "type": "Fração em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "15% de 200 + 30,3",
+      "unit": "mil R$",
+      "result_str": "R$ 60,3 mil",
+      "expression": "0.15*200+30.3",
+      "mental_steps": 2,
+      "type": "Porcentagem"
+    },
+    "challenge_9ano": {
+      "formula": "(7² − 3²) + 20,3",
+      "unit": "mil R$",
+      "result_str": "R$ 60,3 mil",
+      "expression": "(7**2-3**2)+20.3",
+      "mental_steps": 2,
+      "type": "Diferença de Quadrados"
     }
   },
   {
@@ -1420,6 +1759,22 @@ habilidades:
       "expression": "71.7-(-3)**3",
       "mental_steps": 2,
       "type": "Potência em ℤ"
+    },
+    "challenge_8ano": {
+      "formula": "√196 × 5 + 28,7",
+      "unit": "%",
+      "result_str": "98,7%",
+      "expression": "math.sqrt(196)*5+28.7",
+      "mental_steps": 2,
+      "type": "Radiciação"
+    },
+    "challenge_9ano": {
+      "formula": "64<sup>1/3</sup> × 18 + 26,7",
+      "unit": "%",
+      "result_str": "98,7%",
+      "expression": "round(64**(1/3))*18+26.7",
+      "mental_steps": 2,
+      "type": "Expoente Fracionário"
     }
   },
   {
@@ -1466,6 +1821,22 @@ habilidades:
       "expression": "1070.4+(-220.0)",
       "mental_steps": 2,
       "type": "Racionais em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "6,2 × 10² + 230,4",
+      "unit": "km²",
+      "result_str": "850,4 km²",
+      "expression": "6.2*(10**2)+230.4",
+      "mental_steps": 2,
+      "type": "Potência Base 10"
+    },
+    "challenge_9ano": {
+      "formula": "√50 × √2 × 60 + 250,4",
+      "unit": "km²",
+      "result_str": "850,4 km²",
+      "expression": "math.sqrt(50*2)*60+250.4",
+      "mental_steps": 2,
+      "type": "Operações com Radicais"
     }
   },
   {
@@ -1512,6 +1883,22 @@ habilidades:
       "expression": "36.1-(-110.0)",
       "mental_steps": 2,
       "type": "Racionais em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "0,9 × 10² + 56,1",
+      "unit": "km²",
+      "result_str": "146,1 km²",
+      "expression": "0.9*(10**2)+56.1",
+      "mental_steps": 2,
+      "type": "Potência Base 10"
+    },
+    "challenge_9ano": {
+      "formula": "√32 × √2 × 12 + 50,1",
+      "unit": "km²",
+      "result_str": "146,1 km²",
+      "expression": "math.sqrt(32*2)*12+50.1",
+      "mental_steps": 2,
+      "type": "Operações com Radicais"
     }
   },
   {
@@ -1530,10 +1917,10 @@ habilidades:
     },
     "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> × 180 + 5,7",
+      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> × 140 + 25,7",
       "unit": "%",
       "result_str": "95,7%",
-      "expression": "(1/2)*180+5.7",
+      "expression": "(1/2)*140+25.7",
       "mental_steps": 2,
       "type": "Fração"
     },
@@ -1552,12 +1939,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "<span class=\"frac\"><span class=\"top\">−9</span><span class=\"bottom\">10</span></span> × (−100) + 5,7",
+      "formula": "<span class=\"frac\"><span class=\"top\">−7</span><span class=\"bottom\">10</span></span> × (−100) + 25,7",
       "unit": "%",
       "result_str": "95,7%",
-      "expression": "(-9/10)*(-100)+5.7",
+      "expression": "(-7/10)*(-100)+25.7",
       "mental_steps": 2,
       "type": "Fração em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "35% de 200 + 25,7",
+      "unit": "%",
+      "result_str": "95,7%",
+      "expression": "0.35*200+25.7",
+      "mental_steps": 2,
+      "type": "Porcentagem"
+    },
+    "challenge_9ano": {
+      "formula": "(12² − 8²) + 15,7",
+      "unit": "%",
+      "result_str": "95,7%",
+      "expression": "(12**2-8**2)+15.7",
+      "mental_steps": 2,
+      "type": "Diferença de Quadrados"
     }
   },
   {
@@ -1604,6 +2007,22 @@ habilidades:
       "expression": "(-130.0)+571.7",
       "mental_steps": 2,
       "type": "Racionais em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "2,9 × 10² + 151,7",
+      "unit": "km²",
+      "result_str": "441,7 km²",
+      "expression": "2.9*(10**2)+151.7",
+      "mental_steps": 2,
+      "type": "Potência Base 10"
+    },
+    "challenge_9ano": {
+      "formula": "√50 × √2 × 30 + 141,7",
+      "unit": "km²",
+      "result_str": "441,7 km²",
+      "expression": "math.sqrt(50*2)*30+141.7",
+      "mental_steps": 2,
+      "type": "Operações com Radicais"
     }
   },
   {
@@ -1644,12 +2063,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "(−9)² + 6,2",
+      "formula": "(−8)² + 23,2",
       "unit": "%",
       "result_str": "87,2%",
-      "expression": "(-9)**2+6.2",
+      "expression": "(-8)**2+23.2",
       "mental_steps": 2,
       "type": "Potência em ℤ"
+    },
+    "challenge_8ano": {
+      "formula": "∛1000 × 6 + 27,2",
+      "unit": "%",
+      "result_str": "87,2%",
+      "expression": "10*6+27.2",
+      "mental_steps": 2,
+      "type": "Radiciação"
+    },
+    "challenge_9ano": {
+      "formula": "27<sup>1/3</sup> × 20 + 27,2",
+      "unit": "%",
+      "result_str": "87,2%",
+      "expression": "round(27**(1/3))*20+27.2",
+      "mental_steps": 2,
+      "type": "Expoente Fracionário"
     }
   },
   {
@@ -1696,6 +2131,22 @@ habilidades:
       "expression": "115.5-(-120.0)",
       "mental_steps": 2,
       "type": "Racionais em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "1,8 × 10² + 55,5",
+      "unit": "km²",
+      "result_str": "235,5 km²",
+      "expression": "1.8*(10**2)+55.5",
+      "mental_steps": 2,
+      "type": "Potência Base 10"
+    },
+    "challenge_9ano": {
+      "formula": "√50 × √2 × 18 + 55,5",
+      "unit": "km²",
+      "result_str": "235,5 km²",
+      "expression": "math.sqrt(50*2)*18+55.5",
+      "mental_steps": 2,
+      "type": "Operações com Radicais"
     }
   },
   {
@@ -1714,10 +2165,10 @@ habilidades:
     },
     "hidden_attr": "san_pct",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> × 240 + 5,2",
+      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> × 200 + 15,2",
       "unit": "%",
       "result_str": "65,2%",
-      "expression": "(1/4)*240+5.2",
+      "expression": "(1/4)*200+15.2",
       "mental_steps": 2,
       "type": "Fração"
     },
@@ -1736,12 +2187,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "<span class=\"frac\"><span class=\"top\">−3</span><span class=\"bottom\">5</span></span> × (−100) + 5,2",
+      "formula": "<span class=\"frac\"><span class=\"top\">−1</span><span class=\"bottom\">2</span></span> × (−100) + 15,2",
       "unit": "%",
       "result_str": "65,2%",
-      "expression": "(-3/5)*(-100)+5.2",
+      "expression": "(-1/2)*(-100)+15.2",
       "mental_steps": 2,
       "type": "Fração em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "20% de 250 + 15,2",
+      "unit": "%",
+      "result_str": "65,2%",
+      "expression": "0.20*250+15.2",
+      "mental_steps": 2,
+      "type": "Porcentagem"
+    },
+    "challenge_9ano": {
+      "formula": "(8² − 4²) + 17,2",
+      "unit": "%",
+      "result_str": "65,2%",
+      "expression": "(8**2-4**2)+17.2",
+      "mental_steps": 2,
+      "type": "Diferença de Quadrados"
     }
   },
   {
@@ -1788,6 +2255,22 @@ habilidades:
       "expression": "147.5+(-50.5)",
       "mental_steps": 2,
       "type": "Racionais em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "1,5 × 10² − 53,0",
+      "unit": "%",
+      "result_str": "97,0%",
+      "expression": "1.5*(10**2)-53.0",
+      "mental_steps": 2,
+      "type": "Potência Base 10"
+    },
+    "challenge_9ano": {
+      "formula": "√27 × √3 × 8 + 25,0",
+      "unit": "%",
+      "result_str": "97,0%",
+      "expression": "math.sqrt(27*3)*8+25.0",
+      "mental_steps": 2,
+      "type": "Operações com Radicais"
     }
   },
   {
@@ -1834,6 +2317,22 @@ habilidades:
       "expression": "123.7+(-3)**3",
       "mental_steps": 2,
       "type": "Potência em ℤ"
+    },
+    "challenge_8ano": {
+      "formula": "√225 × 4 + 36,7",
+      "unit": "%",
+      "result_str": "96,7%",
+      "expression": "math.sqrt(225)*4+36.7",
+      "mental_steps": 2,
+      "type": "Radiciação"
+    },
+    "challenge_9ano": {
+      "formula": "100<sup>1/2</sup> × 7 + 26,7",
+      "unit": "%",
+      "result_str": "96,7%",
+      "expression": "(100**0.5)*7+26.7",
+      "mental_steps": 2,
+      "type": "Expoente Fracionário"
     }
   },
   {
@@ -1852,10 +2351,10 @@ habilidades:
     },
     "hidden_attr": "san_pct",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> × 120 + 6,4",
+      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> × 100 + 16,4",
       "unit": "%",
       "result_str": "66,4%",
-      "expression": "(1/2)*120+6.4",
+      "expression": "(1/2)*100+16.4",
       "mental_steps": 2,
       "type": "Fração"
     },
@@ -1874,12 +2373,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "<span class=\"frac\"><span class=\"top\">−3</span><span class=\"bottom\">5</span></span> × (−100) + 6,4",
+      "formula": "<span class=\"frac\"><span class=\"top\">−1</span><span class=\"bottom\">2</span></span> × (−100) + 16,4",
       "unit": "%",
       "result_str": "66,4%",
-      "expression": "(-3/5)*(-100)+6.4",
+      "expression": "(-1/2)*(-100)+16.4",
       "mental_steps": 2,
       "type": "Fração em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "25% de 200 + 16,4",
+      "unit": "%",
+      "result_str": "66,4%",
+      "expression": "0.25*200+16.4",
+      "mental_steps": 2,
+      "type": "Porcentagem"
+    },
+    "challenge_9ano": {
+      "formula": "(11² − 9²) + 26,4",
+      "unit": "%",
+      "result_str": "66,4%",
+      "expression": "(11**2-9**2)+26.4",
+      "mental_steps": 2,
+      "type": "Diferença de Quadrados"
     }
   },
   {
@@ -1898,10 +2413,10 @@ habilidades:
     },
     "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "10² − 2,4",
+      "formula": "9² + 16,6",
       "unit": "%",
       "result_str": "97,6%",
-      "expression": "10**2-2.4",
+      "expression": "9**2+16.6",
       "mental_steps": 2,
       "type": "Potência"
     },
@@ -1926,6 +2441,22 @@ habilidades:
       "expression": "(-6)**2+61.6",
       "mental_steps": 2,
       "type": "Potência em ℤ"
+    },
+    "challenge_8ano": {
+      "formula": "√100 × 7 + 27,6",
+      "unit": "%",
+      "result_str": "97,6%",
+      "expression": "math.sqrt(100)*7+27.6",
+      "mental_steps": 2,
+      "type": "Radiciação"
+    },
+    "challenge_9ano": {
+      "formula": "121<sup>1/2</sup> × 6 + 31,6",
+      "unit": "%",
+      "result_str": "97,6%",
+      "expression": "(121**0.5)*6+31.6",
+      "mental_steps": 2,
+      "type": "Expoente Fracionário"
     }
   },
   {
@@ -1944,10 +2475,10 @@ habilidades:
     },
     "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> × 240 + 1,2",
+      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> × 160 + 21,2",
       "unit": "mil R$",
       "result_str": "R$ 61,2 mil",
-      "expression": "(1/4)*240+1.2",
+      "expression": "(1/4)*160+21.2",
       "mental_steps": 2,
       "type": "Fração"
     },
@@ -1966,12 +2497,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "<span class=\"frac\"><span class=\"top\">−3</span><span class=\"bottom\">5</span></span> × (−100) + 1,2",
+      "formula": "<span class=\"frac\"><span class=\"top\">−2</span><span class=\"bottom\">5</span></span> × (−100) + 21,2",
       "unit": "mil R$",
       "result_str": "R$ 61,2 mil",
-      "expression": "(-3/5)*(-100)+1.2",
+      "expression": "(-2/5)*(-100)+21.2",
       "mental_steps": 2,
       "type": "Fração em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "40% de 120 + 13,2",
+      "unit": "mil R$",
+      "result_str": "R$ 61,2 mil",
+      "expression": "0.40*120+13.2",
+      "mental_steps": 2,
+      "type": "Porcentagem"
+    },
+    "challenge_9ano": {
+      "formula": "(9² − 6²) + 16,2",
+      "unit": "mil R$",
+      "result_str": "R$ 61,2 mil",
+      "expression": "(9**2-6**2)+16.2",
+      "mental_steps": 2,
+      "type": "Diferença de Quadrados"
     }
   },
   {
@@ -2018,6 +2565,22 @@ habilidades:
       "expression": "(-8)**2+33.0",
       "mental_steps": 2,
       "type": "Potência em ℤ"
+    },
+    "challenge_8ano": {
+      "formula": "√144 × 5 + 37,0",
+      "unit": "mil R$",
+      "result_str": "R$ 97,0 mil",
+      "expression": "math.sqrt(144)*5+37.0",
+      "mental_steps": 2,
+      "type": "Radiciação"
+    },
+    "challenge_9ano": {
+      "formula": "144<sup>1/2</sup> × 6 + 25,0",
+      "unit": "mil R$",
+      "result_str": "R$ 97,0 mil",
+      "expression": "(144**0.5)*6+25.0",
+      "mental_steps": 2,
+      "type": "Expoente Fracionário"
     }
   },
   {
@@ -2036,10 +2599,10 @@ habilidades:
     },
     "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> × 180 + 7,5",
+      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> × 150 + 22,5",
       "unit": "%",
       "result_str": "97,5%",
-      "expression": "(1/2)*180+7.5",
+      "expression": "(1/2)*150+22.5",
       "mental_steps": 2,
       "type": "Fração"
     },
@@ -2058,12 +2621,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "<span class=\"frac\"><span class=\"top\">−9</span><span class=\"bottom\">10</span></span> × (−100) + 7,5",
+      "formula": "<span class=\"frac\"><span class=\"top\">−3</span><span class=\"bottom\">4</span></span> × (−100) + 22,5",
       "unit": "%",
       "result_str": "97,5%",
-      "expression": "(-9/10)*(-100)+7.5",
+      "expression": "(-3/4)*(-100)+22.5",
       "mental_steps": 2,
       "type": "Fração em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "30% de 250 + 22,5",
+      "unit": "%",
+      "result_str": "97,5%",
+      "expression": "0.30*250+22.5",
+      "mental_steps": 2,
+      "type": "Porcentagem"
+    },
+    "challenge_9ano": {
+      "formula": "(10² − 6²) + 33,5",
+      "unit": "%",
+      "result_str": "97,5%",
+      "expression": "(10**2-6**2)+33.5",
+      "mental_steps": 2,
+      "type": "Diferença de Quadrados"
     }
   },
   {
@@ -2110,6 +2689,22 @@ habilidades:
       "expression": "56.9-(-40.0)",
       "mental_steps": 2,
       "type": "Racionais em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "1,4 × 10² − 43,1",
+      "unit": "%",
+      "result_str": "96,9%",
+      "expression": "1.4*(10**2)-43.1",
+      "mental_steps": 2,
+      "type": "Potência Base 10"
+    },
+    "challenge_9ano": {
+      "formula": "√12 × √3 × 11 + 30,9",
+      "unit": "%",
+      "result_str": "96,9%",
+      "expression": "math.sqrt(12*3)*11+30.9",
+      "mental_steps": 2,
+      "type": "Operações com Radicais"
     }
   },
   {
@@ -2128,10 +2723,10 @@ habilidades:
     },
     "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "10² − 1,8",
+      "formula": "9² + 17,2",
       "unit": "%",
       "result_str": "98,2%",
-      "expression": "10**2-1.8",
+      "expression": "9**2+17.2",
       "mental_steps": 2,
       "type": "Potência"
     },
@@ -2156,6 +2751,22 @@ habilidades:
       "expression": "(-7)**2+49.2",
       "mental_steps": 2,
       "type": "Potência em ℤ"
+    },
+    "challenge_8ano": {
+      "formula": "∛125 × 12 + 38,2",
+      "unit": "%",
+      "result_str": "98,2%",
+      "expression": "5*12+38.2",
+      "mental_steps": 2,
+      "type": "Radiciação"
+    },
+    "challenge_9ano": {
+      "formula": "125<sup>1/3</sup> × 14 + 28,2",
+      "unit": "%",
+      "result_str": "98,2%",
+      "expression": "round(125**(1/3))*14+28.2",
+      "mental_steps": 2,
+      "type": "Expoente Fracionário"
     }
   },
   {
@@ -2174,10 +2785,10 @@ habilidades:
     },
     "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> × 240 + 9,0",
+      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> × 200 + 19,0",
       "unit": "mil R$",
       "result_str": "R$ 69,0 mil",
-      "expression": "(1/4)*240+9.0",
+      "expression": "(1/4)*200+19.0",
       "mental_steps": 2,
       "type": "Fração"
     },
@@ -2196,12 +2807,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "<span class=\"frac\"><span class=\"top\">−7</span><span class=\"bottom\">10</span></span> × (−100) − 1,0",
+      "formula": "<span class=\"frac\"><span class=\"top\">−1</span><span class=\"bottom\">2</span></span> × (−100) + 19,0",
       "unit": "mil R$",
       "result_str": "R$ 69,0 mil",
-      "expression": "(-7/10)*(-100)-1.0",
+      "expression": "(-1/2)*(-100)+19.0",
       "mental_steps": 2,
       "type": "Fração em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "20% de 250 + 19,0",
+      "unit": "mil R$",
+      "result_str": "R$ 69,0 mil",
+      "expression": "0.20*250+19.0",
+      "mental_steps": 2,
+      "type": "Porcentagem"
+    },
+    "challenge_9ano": {
+      "formula": "(8² − 4²) + 21,0",
+      "unit": "mil R$",
+      "result_str": "R$ 69,0 mil",
+      "expression": "(8**2-4**2)+21.0",
+      "mental_steps": 2,
+      "type": "Diferença de Quadrados"
     }
   },
   {
@@ -2220,10 +2847,10 @@ habilidades:
     },
     "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "7² + 10,6",
+      "formula": "6² + 23,6",
       "unit": "mil R$",
       "result_str": "R$ 59,6 mil",
-      "expression": "7**2+10.6",
+      "expression": "6**2+23.6",
       "mental_steps": 2,
       "type": "Potência"
     },
@@ -2242,12 +2869,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "(−7)² + 10,6",
+      "formula": "(−6)² + 23,6",
       "unit": "mil R$",
       "result_str": "R$ 59,6 mil",
-      "expression": "(-7)**2+10.6",
+      "expression": "(-6)**2+23.6",
       "mental_steps": 2,
       "type": "Potência em ℤ"
+    },
+    "challenge_8ano": {
+      "formula": "√64 × 5 + 19,6",
+      "unit": "mil R$",
+      "result_str": "R$ 59,6 mil",
+      "expression": "math.sqrt(64)*5+19.6",
+      "mental_steps": 2,
+      "type": "Radiciação"
+    },
+    "challenge_9ano": {
+      "formula": "25<sup>1/2</sup> × 8 + 19,6",
+      "unit": "mil R$",
+      "result_str": "R$ 59,6 mil",
+      "expression": "(25**0.5)*8+19.6",
+      "mental_steps": 2,
+      "type": "Expoente Fracionário"
     }
   },
   {
@@ -2294,6 +2937,22 @@ habilidades:
       "expression": "241.3+(-120.0)",
       "mental_steps": 2,
       "type": "Racionais em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "0,7 × 10² + 51,3",
+      "unit": "km²",
+      "result_str": "121,3 km²",
+      "expression": "0.7*(10**2)+51.3",
+      "mental_steps": 2,
+      "type": "Potência Base 10"
+    },
+    "challenge_9ano": {
+      "formula": "√27 × √3 × 9 + 40,3",
+      "unit": "km²",
+      "result_str": "121,3 km²",
+      "expression": "math.sqrt(27*3)*9+40.3",
+      "mental_steps": 2,
+      "type": "Operações com Radicais"
     }
   },
   {
@@ -2312,10 +2971,10 @@ habilidades:
     },
     "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> × 180 + 7,9",
+      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> × 160 + 17,9",
       "unit": "%",
       "result_str": "97,9%",
-      "expression": "(1/2)*180+7.9",
+      "expression": "(1/2)*160+17.9",
       "mental_steps": 2,
       "type": "Fração"
     },
@@ -2334,12 +2993,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "<span class=\"frac\"><span class=\"top\">−9</span><span class=\"bottom\">10</span></span> × (−100) + 7,9",
+      "formula": "<span class=\"frac\"><span class=\"top\">−4</span><span class=\"bottom\">5</span></span> × (−100) + 17,9",
       "unit": "%",
       "result_str": "97,9%",
-      "expression": "(-9/10)*(-100)+7.9",
+      "expression": "(-4/5)*(-100)+17.9",
       "mental_steps": 2,
       "type": "Fração em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "40% de 200 + 17,9",
+      "unit": "%",
+      "result_str": "97,9%",
+      "expression": "0.40*200+17.9",
+      "mental_steps": 2,
+      "type": "Porcentagem"
+    },
+    "challenge_9ano": {
+      "formula": "(11² − 7²) + 25,9",
+      "unit": "%",
+      "result_str": "97,9%",
+      "expression": "(11**2-7**2)+25.9",
+      "mental_steps": 2,
+      "type": "Diferença de Quadrados"
     }
   },
   {
@@ -2358,10 +3033,10 @@ habilidades:
     },
     "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "10² − 3,8",
+      "formula": "9² + 15,2",
       "unit": "%",
       "result_str": "96,2%",
-      "expression": "10**2-3.8",
+      "expression": "9**2+15.2",
       "mental_steps": 2,
       "type": "Potência"
     },
@@ -2386,6 +3061,22 @@ habilidades:
       "expression": "(-4)**2+80.2",
       "mental_steps": 2,
       "type": "Potência em ℤ"
+    },
+    "challenge_8ano": {
+      "formula": "∛64 × 15 + 36,2",
+      "unit": "%",
+      "result_str": "96,2%",
+      "expression": "4*15+36.2",
+      "mental_steps": 2,
+      "type": "Radiciação"
+    },
+    "challenge_9ano": {
+      "formula": "81<sup>1/2</sup> × 7 + 33,2",
+      "unit": "%",
+      "result_str": "96,2%",
+      "expression": "(81**0.5)*7+33.2",
+      "mental_steps": 2,
+      "type": "Expoente Fracionário"
     }
   },
   {
@@ -2404,10 +3095,10 @@ habilidades:
     },
     "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> × 200 + 1,1",
+      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> × 120 + 21,1",
       "unit": "mil R$",
       "result_str": "R$ 51,1 mil",
-      "expression": "(1/4)*200+1.1",
+      "expression": "(1/4)*120+21.1",
       "mental_steps": 2,
       "type": "Fração"
     },
@@ -2426,12 +3117,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "<span class=\"frac\"><span class=\"top\">−1</span><span class=\"bottom\">2</span></span> × (−100) + 1,1",
+      "formula": "<span class=\"frac\"><span class=\"top\">−3</span><span class=\"bottom\">10</span></span> × (−100) + 21,1",
       "unit": "mil R$",
       "result_str": "R$ 51,1 mil",
-      "expression": "(-1/2)*(-100)+1.1",
+      "expression": "(-3/10)*(-100)+21.1",
       "mental_steps": 2,
       "type": "Fração em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "15% de 200 + 21,1",
+      "unit": "mil R$",
+      "result_str": "R$ 51,1 mil",
+      "expression": "0.15*200+21.1",
+      "mental_steps": 2,
+      "type": "Porcentagem"
+    },
+    "challenge_9ano": {
+      "formula": "(7² − 4²) + 18,1",
+      "unit": "mil R$",
+      "result_str": "R$ 51,1 mil",
+      "expression": "(7**2-4**2)+18.1",
+      "mental_steps": 2,
+      "type": "Diferença de Quadrados"
     }
   },
   {
@@ -2478,6 +3185,22 @@ habilidades:
       "expression": "35.0-(-50.0)",
       "mental_steps": 2,
       "type": "Racionais em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "1,3 × 10² − 45,0",
+      "unit": "km²",
+      "result_str": "85,0 km²",
+      "expression": "1.3*(10**2)-45.0",
+      "mental_steps": 2,
+      "type": "Potência Base 10"
+    },
+    "challenge_9ano": {
+      "formula": "√8 × √2 × 15 + 25,0",
+      "unit": "km²",
+      "result_str": "85,0 km²",
+      "expression": "math.sqrt(8*2)*15+25.0",
+      "mental_steps": 2,
+      "type": "Operações com Radicais"
     }
   },
   {
@@ -2496,10 +3219,10 @@ habilidades:
     },
     "hidden_attr": "veg_km2",
     "challenge": {
-      "formula": "6² + 5,5",
+      "formula": "5² + 16,5",
       "unit": "km²",
       "result_str": "41,5 km²",
-      "expression": "6**2+5.5",
+      "expression": "5**2+16.5",
       "mental_steps": 2,
       "type": "Potência"
     },
@@ -2518,12 +3241,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "(−6)² + 5,5",
+      "formula": "(−5)² + 16,5",
       "unit": "km²",
       "result_str": "41,5 km²",
-      "expression": "(-6)**2+5.5",
+      "expression": "(-5)**2+16.5",
       "mental_steps": 2,
       "type": "Potência em ℤ"
+    },
+    "challenge_8ano": {
+      "formula": "√169 × 2 + 15,5",
+      "unit": "km²",
+      "result_str": "41,5 km²",
+      "expression": "math.sqrt(169)*2+15.5",
+      "mental_steps": 2,
+      "type": "Radiciação"
+    },
+    "challenge_9ano": {
+      "formula": "16<sup>1/2</sup> × 6 + 17,5",
+      "unit": "km²",
+      "result_str": "41,5 km²",
+      "expression": "(16**0.5)*6+17.5",
+      "mental_steps": 2,
+      "type": "Expoente Fracionário"
     }
   },
   {
@@ -2542,10 +3281,10 @@ habilidades:
     },
     "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> × 80 + 4,1",
+      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> × 60 + 14,1",
       "unit": "mil R$",
       "result_str": "R$ 44,1 mil",
-      "expression": "(1/2)*80+4.1",
+      "expression": "(1/2)*60+14.1",
       "mental_steps": 2,
       "type": "Fração"
     },
@@ -2564,12 +3303,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "<span class=\"frac\"><span class=\"top\">−2</span><span class=\"bottom\">5</span></span> × (−100) + 4,1",
+      "formula": "<span class=\"frac\"><span class=\"top\">−3</span><span class=\"bottom\">10</span></span> × (−100) + 14,1",
       "unit": "mil R$",
       "result_str": "R$ 44,1 mil",
-      "expression": "(-2/5)*(-100)+4.1",
+      "expression": "(-3/10)*(-100)+14.1",
       "mental_steps": 2,
       "type": "Fração em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "20% de 150 + 14,1",
+      "unit": "mil R$",
+      "result_str": "R$ 44,1 mil",
+      "expression": "0.20*150+14.1",
+      "mental_steps": 2,
+      "type": "Porcentagem"
+    },
+    "challenge_9ano": {
+      "formula": "(6² − 2²) + 12,1",
+      "unit": "mil R$",
+      "result_str": "R$ 44,1 mil",
+      "expression": "(6**2-2**2)+12.1",
+      "mental_steps": 2,
+      "type": "Diferença de Quadrados"
     }
   },
   {
@@ -2588,10 +3343,10 @@ habilidades:
     },
     "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "9² − 7,2",
+      "formula": "7² + 24,8",
       "unit": "mil R$",
       "result_str": "R$ 73,8 mil",
-      "expression": "9**2-7.2",
+      "expression": "7**2+24.8",
       "mental_steps": 2,
       "type": "Potência"
     },
@@ -2616,6 +3371,22 @@ habilidades:
       "expression": "100.8+(-3)**3",
       "mental_steps": 2,
       "type": "Potência em ℤ"
+    },
+    "challenge_8ano": {
+      "formula": "∛27 × 15 + 28,8",
+      "unit": "mil R$",
+      "result_str": "R$ 73,8 mil",
+      "expression": "3*15+28.8",
+      "mental_steps": 2,
+      "type": "Radiciação"
+    },
+    "challenge_9ano": {
+      "formula": "64<sup>1/3</sup> × 12 + 25,8",
+      "unit": "mil R$",
+      "result_str": "R$ 73,8 mil",
+      "expression": "round(64**(1/3))*12+25.8",
+      "mental_steps": 2,
+      "type": "Expoente Fracionário"
     }
   },
   {
@@ -2634,10 +3405,10 @@ habilidades:
     },
     "hidden_attr": "san_pct",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> × 280 + 5,2",
+      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> × 240 + 15,2",
       "unit": "%",
       "result_str": "75,2%",
-      "expression": "(1/4)*280+5.2",
+      "expression": "(1/4)*240+15.2",
       "mental_steps": 2,
       "type": "Fração"
     },
@@ -2656,12 +3427,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "<span class=\"frac\"><span class=\"top\">−7</span><span class=\"bottom\">10</span></span> × (−100) + 5,2",
+      "formula": "<span class=\"frac\"><span class=\"top\">−3</span><span class=\"bottom\">5</span></span> × (−100) + 15,2",
       "unit": "%",
       "result_str": "75,2%",
-      "expression": "(-7/10)*(-100)+5.2",
+      "expression": "(-3/5)*(-100)+15.2",
       "mental_steps": 2,
       "type": "Fração em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "25% de 240 + 15,2",
+      "unit": "%",
+      "result_str": "75,2%",
+      "expression": "0.25*240+15.2",
+      "mental_steps": 2,
+      "type": "Porcentagem"
+    },
+    "challenge_9ano": {
+      "formula": "(9² − 5²) + 19,2",
+      "unit": "%",
+      "result_str": "75,2%",
+      "expression": "(9**2-5**2)+19.2",
+      "mental_steps": 2,
+      "type": "Diferença de Quadrados"
     }
   },
   {
@@ -2680,10 +3467,10 @@ habilidades:
     },
     "hidden_attr": "pib_mil",
     "challenge": {
-      "formula": "9² + 8,0",
+      "formula": "8² + 25,0",
       "unit": "mil R$",
       "result_str": "R$ 89,0 mil",
-      "expression": "9**2+8.0",
+      "expression": "8**2+25.0",
       "mental_steps": 2,
       "type": "Potência"
     },
@@ -2702,12 +3489,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "(−9)² + 8,0",
+      "formula": "(−8)² + 25,0",
       "unit": "mil R$",
       "result_str": "R$ 89,0 mil",
-      "expression": "(-9)**2+8.0",
+      "expression": "(-8)**2+25.0",
       "mental_steps": 2,
       "type": "Potência em ℤ"
+    },
+    "challenge_8ano": {
+      "formula": "√121 × 6 + 23,0",
+      "unit": "mil R$",
+      "result_str": "R$ 89,0 mil",
+      "expression": "math.sqrt(121)*6+23.0",
+      "mental_steps": 2,
+      "type": "Radiciação"
+    },
+    "challenge_9ano": {
+      "formula": "49<sup>1/2</sup> × 9 + 26,0",
+      "unit": "mil R$",
+      "result_str": "R$ 89,0 mil",
+      "expression": "(49**0.5)*9+26.0",
+      "mental_steps": 2,
+      "type": "Expoente Fracionário"
     }
   },
   {
@@ -2726,10 +3529,10 @@ habilidades:
     },
     "hidden_attr": "alf_pct",
     "challenge": {
-      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> × 180 + 4,9",
+      "formula": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> × 140 + 24,9",
       "unit": "%",
       "result_str": "94,9%",
-      "expression": "(1/2)*180+4.9",
+      "expression": "(1/2)*140+24.9",
       "mental_steps": 2,
       "type": "Fração"
     },
@@ -2748,12 +3551,28 @@ habilidades:
     },
     "fonte_verificada_em": "2026-10-07",
     "challenge_7ano": {
-      "formula": "<span class=\"frac\"><span class=\"top\">−9</span><span class=\"bottom\">10</span></span> × (−100) + 4,9",
+      "formula": "<span class=\"frac\"><span class=\"top\">−7</span><span class=\"bottom\">10</span></span> × (−100) + 24,9",
       "unit": "%",
       "result_str": "94,9%",
-      "expression": "(-9/10)*(-100)+4.9",
+      "expression": "(-7/10)*(-100)+24.9",
       "mental_steps": 2,
       "type": "Fração em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "30% de 200 + 34,9",
+      "unit": "%",
+      "result_str": "94,9%",
+      "expression": "0.30*200+34.9",
+      "mental_steps": 2,
+      "type": "Porcentagem"
+    },
+    "challenge_9ano": {
+      "formula": "(10² − 6²) + 30,9",
+      "unit": "%",
+      "result_str": "94,9%",
+      "expression": "(10**2-6**2)+30.9",
+      "mental_steps": 2,
+      "type": "Diferença de Quadrados"
     }
   },
   {
@@ -2800,6 +3619,22 @@ habilidades:
       "expression": "(-40.0)+87.2",
       "mental_steps": 2,
       "type": "Racionais em ℚ"
+    },
+    "challenge_8ano": {
+      "formula": "0,9 × 10² − 42,8",
+      "unit": "km²",
+      "result_str": "47,2 km²",
+      "expression": "0.9*(10**2)-42.8",
+      "mental_steps": 2,
+      "type": "Potência Base 10"
+    },
+    "challenge_9ano": {
+      "formula": "√8 × √2 × 7 + 19,2",
+      "unit": "km²",
+      "result_str": "47,2 km²",
+      "expression": "math.sqrt(8*2)*7+19.2",
+      "mental_steps": 2,
+      "type": "Operações com Radicais"
     }
   }
 ];
@@ -2824,21 +3659,86 @@ habilidades:
       document.getElementById('print-manual-container').innerHTML = Array.from({length: count}, () => `<section class="print-manual-item">${content}</section>`).join('');
     }
 
+    const ATTR_NAMES_CLEAN = {
+      'veg_km2': '1. Vegetação Nativa',
+      'san_pct': '2. Saneamento',
+      'pib_mil': '3. PIB per capita',
+      'alf_pct': '4. Alfabetização 15+'
+    };
+
+    const GRADE_LABELS = {
+      '6ano': '6º Ano',
+      '7ano': '7º Ano',
+      '8ano': '8º Ano',
+      '9ano': '9º Ano'
+    };
+
+    function getChallengeForGrade(d, grade) {
+      if (grade === '7ano' && d.challenge_7ano) return d.challenge_7ano;
+      if (grade === '8ano' && d.challenge_8ano) return d.challenge_8ano;
+      if (grade === '9ano' && d.challenge_9ano) return d.challenge_9ano;
+      return d.challenge;
+    }
+
+    function makeKeyTableHtml(list, grade) {
+      const gradeLabel = GRADE_LABELS[grade] || '6º Ano';
+      const rowsHtml = list.map((d, idx) => {
+        const cardNo = '#' + String(d.card_no || idx + 1).padStart(2, '0');
+        const attrTitle = ATTR_NAMES_CLEAN[d.hidden_attr] || d.hidden_attr;
+        const ch = getChallengeForGrade(d, grade);
+        const formattedFormula = String(ch ? ch.formula : '')
+          .replace(/²/g, '<sup>2</sup>')
+          .replace(/³/g, '<sup>3</sup>');
+        const resStr = ch ? ch.result_str : '-';
+
+        return `<tr>
+          <td class="col-no">${cardNo}</td>
+          <td class="col-town">${d.nome || ''}</td>
+          <td class="col-calc"><span class="key-attr-name">${attrTitle}:</span> ${formattedFormula}</td>
+          <td class="col-res">${resStr}</td>
+        </tr>`;
+      }).join('');
+
+      return `<div class="key-sheet">
+        <div class="key-sheet-header">
+          <h2>GABARITO DO PROFESSOR — SUPER TRUNFO MATEMÁTICO (${gradeLabel.toUpperCase()})</h2>
+          <p>Região das Missões &amp; Fronteira Noroeste do RS • 45 Cartas</p>
+        </div>
+        <table class="key-table">
+          <thead>
+            <tr>
+              <th style="text-align:center;">Nº</th>
+              <th>Município</th>
+              <th>Atributo Oculto e Cálculo</th>
+              <th style="text-align:right;">Resultado</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+        </table>
+      </div>`;
+    }
+
     function buildAllCardsPart(grade, teacherMode) {
       const previousGrade = currentGrade;
       const previousTeacherMode = isTeacherKey;
       currentGrade = grade;
       isTeacherKey = teacherMode;
 
-      let pagesHtml = '';
-      for (let i = 0; i < MUNICIPIOS.length; i += 9) {
-        const slice = MUNICIPIOS.slice(i, i + 9);
-        pagesHtml += `<div class="sheet-page">${slice.map((d, idx) => makeCard(d, i + idx)).join('')}</div>`;
+      let contentHtml = '';
+      if (teacherMode) {
+        contentHtml = makeKeyTableHtml(MUNICIPIOS, grade);
+      } else {
+        for (let i = 0; i < MUNICIPIOS.length; i += 9) {
+          const slice = MUNICIPIOS.slice(i, i + 9);
+          contentHtml += `<div class="sheet-page">${slice.map((d, idx) => makeCard(d, i + idx)).join('')}</div>`;
+        }
       }
 
       currentGrade = previousGrade;
       isTeacherKey = previousTeacherMode;
-      return `<section class="print-all-part"><div class="cards-grid print-all-cards-grid">${pagesHtml}</div></section>`;
+      return `<section class="print-all-part"><div class="cards-grid print-all-cards-grid">${contentHtml}</div></section>`;
     }
 
     function prepareAllPrint() {
@@ -2848,7 +3748,11 @@ habilidades:
         + buildAllCardsPart('6ano', false)
         + buildAllCardsPart('6ano', true)
         + buildAllCardsPart('7ano', false)
-        + buildAllCardsPart('7ano', true);
+        + buildAllCardsPart('7ano', true)
+        + buildAllCardsPart('8ano', false)
+        + buildAllCardsPart('8ano', true)
+        + buildAllCardsPart('9ano', false)
+        + buildAllCardsPart('9ano', true);
     }
 
     function printManuals() {
@@ -2858,7 +3762,6 @@ habilidades:
     }
 
     function printPieces() {
-      // Modo "pecas": mostra a aba das cartas e imprime so o baralho.
       document.body.classList.add('print-mode-pieces');
       window.print();
     }
@@ -2869,9 +3772,7 @@ habilidades:
     }
 
     function getFilteredTowns() {
-      const norm = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-      const q = norm(document.getElementById('searchInput')?.value).trim();
-      return q ? MUNICIPIOS.filter(d => norm(d.nome).includes(q) || norm(d.atrativo).includes(q)) : MUNICIPIOS;
+      return MUNICIPIOS;
     }
 
     const ATTR_CONFIG = [
@@ -2903,16 +3804,21 @@ habilidades:
       const areaStr = (typeof d.area === 'number') ? nfInt.format(Math.round(d.area)) : (d.area || '');
       const fallbackUrl = makeFallbackSvg(d.nome, d.atrativo);
 
-      const activeChallenge = (currentGrade === '7ano' && d.challenge_7ano) ? d.challenge_7ano : d.challenge;
-      const gradeBadge = currentGrade === '7ano' ? '7º' : '6º';
+      let activeChallenge = d.challenge;
+      if (currentGrade === '7ano' && d.challenge_7ano) activeChallenge = d.challenge_7ano;
+      else if (currentGrade === '8ano' && d.challenge_8ano) activeChallenge = d.challenge_8ano;
+      else if (currentGrade === '9ano' && d.challenge_9ano) activeChallenge = d.challenge_9ano;
 
       const attrBoxesHtml = ATTR_CONFIG.map(attr => {
         const isTrunfo = (d.hidden_attr === attr.key);
         if (isTrunfo && activeChallenge) {
           const challenge = activeChallenge;
+          const formattedFormula = String(challenge.formula || '')
+            .replace(/²/g, '<sup>2</sup>')
+            .replace(/³/g, '<sup>3</sup>');
           const formulaHtml = isTeacherKey 
-            ? `${challenge.formula} = <span class="solved-val">${challenge.result_str}</span>`
-            : `${challenge.formula} = <span class="blank-box">&nbsp;</span> <span class="unit-text">${challenge.unit}</span>`;
+            ? `${formattedFormula} = <span class="solved-val">${challenge.result_str}</span>`
+            : `${formattedFormula} = <span class="blank-box">&nbsp;</span> <span class="unit-text">${challenge.unit}</span>`;
 
           return `
           <div class="param-box is-trunfo">
@@ -2971,39 +3877,44 @@ habilidades:
       if (!cardsGrid) return;
 
       const chosen = getFilteredTowns();
-      if (!chosen.length) {
-        cardsGrid.innerHTML = '<div style="padding: 30px; text-align: center; color: var(--text-light); background: var(--bg-card); border-radius: 8px;">Nenhum município encontrado.</div>';
-        return;
+      const gradeName = GRADE_LABELS[currentGrade] || '6º Ano';
+
+      if (isTeacherKey) {
+        cardsGrid.innerHTML = makeKeyTableHtml(chosen, currentGrade);
+      } else {
+        let pagesHtml = '';
+        for (let i = 0; i < chosen.length; i += 9) {
+          const slice = chosen.slice(i, i + 9);
+          pagesHtml += `<div class="sheet-page">` + slice.map((d, idx) => makeCard(d, i + idx)).join('') + `</div>`;
+        }
+        cardsGrid.innerHTML = pagesHtml;
       }
 
-      let pagesHtml = '';
-      for (let i = 0; i < chosen.length; i += 9) {
-        const slice = chosen.slice(i, i + 9);
-        pagesHtml += `<div class="sheet-page">` + slice.map((d, idx) => makeCard(d, i + idx)).join('') + `</div>`;
+      const btnPrintStu = document.getElementById('btnPrintActiveStudents');
+      if (btnPrintStu) {
+        btnPrintStu.textContent = `🖨️ Imprimir Cartas (${gradeName})`;
       }
 
-      cardsGrid.innerHTML = pagesHtml;
-
-      const gradeName = currentGrade === '7ano' ? '7º Ano' : '6º Ano';
-      const cardsStatus = document.getElementById('cardsStatus');
-      if (cardsStatus) {
-        const totalPages = Math.ceil(chosen.length / 9);
-        cardsStatus.textContent = `Exibindo ${chosen.length} cartas — Baralho ${gradeName} (${totalPages} folha${totalPages === 1 ? '' : 's'} A4)`;
+      const btnPrintKey = document.getElementById('btnPrintActiveKey');
+      if (btnPrintKey) {
+        btnPrintKey.textContent = `🖨️ Imprimir Gabarito (${gradeName})`;
       }
+    }
 
-      const modeLabel = document.getElementById('currentModeLabel');
-      if (modeLabel) {
-        modeLabel.textContent = `Baralho ${gradeName} • ` + (isTeacherKey ? 'Modo: Gabarito (Resolvido)' : 'Modo: Aluno (Com lacunas)');
-        modeLabel.style.color = isTeacherKey ? 'var(--warning)' : 'var(--electric-cyan)';
-      }
+    function updateGradeButtons(grade) {
+      const bG6 = document.getElementById('btnGrade6');
+      const bG7 = document.getElementById('btnGrade7');
+      const bG8 = document.getElementById('btnGrade8');
+      const bG9 = document.getElementById('btnGrade9');
+      if (bG6) bG6.classList.toggle('active', grade === '6ano');
+      if (bG7) bG7.classList.toggle('active', grade === '7ano');
+      if (bG8) bG8.classList.toggle('active', grade === '8ano');
+      if (bG9) bG9.classList.toggle('active', grade === '9ano');
     }
 
     function setGradeMode(grade) {
       currentGrade = grade;
-      const bG6 = document.getElementById('btnGrade6');
-      const bG7 = document.getElementById('btnGrade7');
-      if (bG6) bG6.classList.toggle('active', grade === '6ano');
-      if (bG7) bG7.classList.toggle('active', grade === '7ano');
+      updateGradeButtons(grade);
       renderCards();
     }
 
@@ -3019,10 +3930,7 @@ habilidades:
     function executePrint(grade, forTeacher) {
       currentGrade = grade;
       isTeacherKey = forTeacher;
-      const bG6 = document.getElementById('btnGrade6');
-      const bG7 = document.getElementById('btnGrade7');
-      if (bG6) bG6.classList.toggle('active', grade === '6ano');
-      if (bG7) bG7.classList.toggle('active', grade === '7ano');
+      updateGradeButtons(grade);
       setViewMode(forTeacher);
 
       document.body.classList.add('print-mode-pieces');
@@ -3034,18 +3942,17 @@ habilidades:
     }
 
     function setupEventListeners() {
-      const searchInput = document.getElementById('searchInput');
-      if (searchInput) {
-        searchInput.addEventListener('input', () => {
-          renderCards();
-        });
-      }
-
       const btnGrade6 = document.getElementById('btnGrade6');
       if (btnGrade6) btnGrade6.addEventListener('click', () => setGradeMode('6ano'));
 
       const btnGrade7 = document.getElementById('btnGrade7');
       if (btnGrade7) btnGrade7.addEventListener('click', () => setGradeMode('7ano'));
+
+      const btnGrade8 = document.getElementById('btnGrade8');
+      if (btnGrade8) btnGrade8.addEventListener('click', () => setGradeMode('8ano'));
+
+      const btnGrade9 = document.getElementById('btnGrade9');
+      if (btnGrade9) btnGrade9.addEventListener('click', () => setGradeMode('9ano'));
 
       const btnModeStudent = document.getElementById('btnModeStudent');
       if (btnModeStudent) btnModeStudent.addEventListener('click', () => setViewMode(false));
@@ -3053,24 +3960,14 @@ habilidades:
       const btnModeTeacher = document.getElementById('btnModeTeacher');
       if (btnModeTeacher) btnModeTeacher.addEventListener('click', () => setViewMode(true));
 
-      const btnPrintStudents6 = document.getElementById('btnPrintStudents6');
-      if (btnPrintStudents6) {
-        btnPrintStudents6.addEventListener('click', () => executePrint('6ano', false));
+      const btnPrintActiveStudents = document.getElementById('btnPrintActiveStudents');
+      if (btnPrintActiveStudents) {
+        btnPrintActiveStudents.addEventListener('click', () => executePrint(currentGrade, false));
       }
 
-      const btnPrintKey6 = document.getElementById('btnPrintKey6');
-      if (btnPrintKey6) {
-        btnPrintKey6.addEventListener('click', () => executePrint('6ano', true));
-      }
-
-      const btnPrintStudents7 = document.getElementById('btnPrintStudents7');
-      if (btnPrintStudents7) {
-        btnPrintStudents7.addEventListener('click', () => executePrint('7ano', false));
-      }
-
-      const btnPrintKey7 = document.getElementById('btnPrintKey7');
-      if (btnPrintKey7) {
-        btnPrintKey7.addEventListener('click', () => executePrint('7ano', true));
+      const btnPrintActiveKey = document.getElementById('btnPrintActiveKey');
+      if (btnPrintActiveKey) {
+        btnPrintActiveKey.addEventListener('click', () => executePrint(currentGrade, true));
       }
 
       window.addEventListener('afterprint', () => {
