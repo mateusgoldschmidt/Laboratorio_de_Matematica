@@ -94,4 +94,4 @@ O portal lista os materiais automaticamente: basta que o arquivo esteja na pasta
 
 ## Créditos
 
-Materiais desenvolvidos no Laboratório de Matemática da UFFS, com apoio do PIBID.
+Materiais desenvolvidos como PIBIDiano e durante minha graduação em Matemática ne UFFS.
