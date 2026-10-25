@@ -1,7 +1,7 @@
 ---
 titulo: "Batalha Naval Cartesiana & Algébrica"
 icone: "🚢"
-descricao: "Batalha Naval no plano cartesiano: 1 tabuleiro por jogador (2 folhas A4), 36 Cartas Táticas de coordenadas, simetria e funções (2 folhas) e gabarito do professor (1 folha) — 6º ao 9º ano."
+descricao: "Batalha Naval no plano cartesiano: 1 tabuleiro por jogador (2 folhas A4), 36 Cartas Táticas de coordenadas, simetria e funções, peças de frota e escudos — 6º ao 9º ano."
 habilidades:
   - EF06MA16
   - EF06MA03
@@ -496,6 +496,29 @@ habilidades:
     .key-table th:nth-child(4), .key-table td.col-res { width: 20mm; font-weight: bold; background: #f1f5f9; }
     .key-sheet-footer { margin-top: 2mm; padding-top: 1.3mm; border-top: .25mm solid #64748b; text-align: right; font: bold 7pt Arial, sans-serif; color: #334155; }
     #print-manual-container { display: none; }
+    .a4-pieces-sheet,.a4-shields-sheet { width:210mm;height:297mm;margin:0 auto;background:#fff;color:#111;font-family:Arial,sans-serif; }
+    .a4-pieces-sheet { display:grid;grid-template-columns:repeat(3,65mm);grid-template-rows:repeat(5,48mm);justify-content:center;align-content:start; }
+    .fleet-set { width:65mm;height:48mm;border:.2mm solid #111;padding:.5mm 1mm;display:grid;grid-template-rows:4.6mm 10.5mm 10.5mm 10.5mm 10.5mm;align-content:start; }
+    .fleet-set-label { font:bold 7pt Arial,sans-serif;color:#334155;padding-left:1mm; }
+    .ship-row { display:flex;height:10.5mm;width:100%;gap:0; }
+    .ship-piece { height:10.5mm;flex:none;position:relative;box-sizing:border-box;overflow:hidden;border:.25mm solid var(--ship-border);background:var(--ship-fill);color:#111; }
+    .ship-piece.aircraft { width:43.2mm;--ship-fill:#dbeafe;--ship-border:#1d4ed8; }
+    .ship-piece.battleship { width:30.8mm;--ship-fill:#dcfce7;--ship-border:#15803d; }
+    .ship-piece.submarine { width:18.4mm;--ship-fill:#fef3c7;--ship-border:#b45309; }
+    .ship-piece.patrol { width:10.5mm;--ship-fill:#f3e8ff;--ship-border:#7e22ce; }
+    .ship-piece svg { position:absolute;inset:-.25mm;width:calc(100% + .5mm);height:calc(100% + .5mm); }
+    .ship-name { position:absolute;left:1mm;top:.45mm;font:bold 5.5pt/1 Arial,sans-serif;white-space:nowrap; }
+    .ship-count { position:absolute;right:.6mm;bottom:.4mm;font:bold 5.5pt/1 Arial,sans-serif; }
+    .pieces-legend,.calibration { grid-column:1/-1;font:6.3pt/1.2 Arial,sans-serif;padding:1mm 3mm; }
+    .calibration svg { display:block;width:101.3mm;height:5mm;margin:1mm 0; }
+    .shield-grid { height:100%;display:flex;flex-direction:column;padding:8mm 10mm;gap:8mm; }
+    .shield-panel { height:132mm;border:.35mm solid #334155;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8mm;position:relative; }
+    .shield-panel:after { content:'';position:absolute;left:0;right:0;bottom:12mm;border-top:.35mm dashed #64748b; }
+    .shield-panel:before { content:'';position:absolute;top:0;bottom:12mm;left:50%;border-left:.35mm dashed #64748b; }
+    .shield-panel h2 { font:bold 16pt Arial,sans-serif;margin-bottom:3mm; }
+    .shield-panel p { font:10pt Arial,sans-serif; }
+    .shield-fold { position:absolute;top:3mm;right:3mm;font:7pt Arial,sans-serif;color:#475569; }
+    .shield-foot { position:absolute;bottom:3mm;font:7pt Arial,sans-serif; }
 
     #btn-voltar {
       position: fixed;
@@ -519,9 +542,12 @@ habilidades:
 
     /* Celular: a prévia em tamanho A4 rola na horizontal dentro do próprio quadro,
        sem arrastar a página inteira; o botão de voltar fica menor. */
-    @media (max-width: 820px) {
+    /* Só na tela: no celular as folhas A4 aparecem reduzidas (zoom) para caber na
+       largura da tela — sem arrasto lateral — e a impressão continua em tamanho real. */
+    @media screen and (max-width: 820px) {
       .container { padding-left: 10px; padding-right: 10px; }
       .sheets-stack { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .a4-boards-sheet, .a4-cards-sheet, .key-sheet, .a4-pieces-sheet, .a4-shields-sheet { zoom: .44; }
       .print-quantity { margin: 10px auto; padding: 10px 12px; }
       .print-quantity p { font-size: .82rem; }
       #btn-voltar { padding: 8px 12px; font-size: .78rem; bottom: 12px; left: 12px; }
@@ -537,14 +563,21 @@ habilidades:
       body[data-print-target="boards"] #tab-jogo,
       body[data-print-target="cards"] #tab-jogo,
       body[data-print-target="key"] #tab-jogo,
-      body[data-print-target="all"] #tab-jogo { display: block !important; }
+      body[data-print-target="all"] #tab-jogo,
+      body[data-print-target="pecas"] #tab-jogo,
+      body[data-print-target="escudo"] #tab-jogo { display: block !important; }
       body[data-print-target="boards"] #navalMainContainer,
       body[data-print-target="cards"] #navalMainContainer,
       body[data-print-target="key"] #navalMainContainer,
-      body[data-print-target="all"] #navalMainContainer { display: block !important; }
+      body[data-print-target="all"] #navalMainContainer, body[data-print-target="pecas"] #navalMainContainer, body[data-print-target="escudo"] #navalMainContainer { display: block !important; }
       body[data-print-target="manual"] #print-manual-container,
       body[data-print-target="all"] #print-manual-container { width: 210mm; min-height: 297mm; padding: 9mm 11mm 8mm; color: #000; font: 8.1pt/1.25 Arial, sans-serif; column-count: 2; column-gap: 8mm; }
       body[data-print-target="all"] #print-manual-container { break-after: page; }
+      body[data-print-target="boards"] #parte-pecas,body[data-print-target="boards"] #parte-escudo,body[data-print-target="cards"] #parte-pecas,body[data-print-target="cards"] #parte-escudo,body[data-print-target="key"] #parte-pecas,body[data-print-target="key"] #parte-escudo,
+      body[data-print-target="pecas"] #parte-tabuleiros,body[data-print-target="pecas"] #parte-cartas,body[data-print-target="pecas"] #parte-gabarito,body[data-print-target="pecas"] #parte-escudo,
+      body[data-print-target="escudo"] #parte-tabuleiros,body[data-print-target="escudo"] #parte-cartas,body[data-print-target="escudo"] #parte-gabarito,body[data-print-target="escudo"] #parte-pecas { display:none!important; }
+      .a4-pieces-sheet,.a4-shields-sheet { box-shadow:none!important;page-break-after:always;break-after:page;page-break-inside:avoid;break-inside:avoid; }
+      #parte-pecas .a4-pieces-sheet:last-child,#parte-escudo .a4-shields-sheet:last-child { page-break-after:auto;break-after:auto; }
       #print-manual-container h2 { column-span: all; font: bold 14pt/1.1 Arial, sans-serif; margin: 0 0 3mm; color: #000; }
       #print-manual-container > p { margin: 0 0 2.4mm; }
       #print-manual-container h3 { break-after: avoid; font: bold 9.5pt/1.1 Arial, sans-serif; margin: 2.4mm 0 1mm; color: #000; }
@@ -572,8 +605,8 @@ habilidades:
       .container { margin-top: 12px; padding-left: 10px; padding-right: 10px; }
       .controls { padding: 11px; }
       .controls-group { width: 100%; }
-      .mode-selector { flex: 1 1 100%; }
-      .mode-btn { flex: 1; font-size: .66rem; padding: 8px 4px; }
+      .mode-selector { flex: 1 1 100%; flex-wrap: wrap; }
+      .mode-btn { flex: 1 1 auto; font-size: .66rem; padding: 8px 4px; white-space: normal; line-height: 1.15; text-align: center; }
     }
   </style>
 </head>
@@ -587,20 +620,22 @@ habilidades:
 
   <div class="tabs print-hidden">
     <button class="tab-btn" onclick="switchTab('regras')">Manual e Regras</button>
-    <button class="tab-btn active" onclick="switchTab('jogo')">🚢 Tabuleiros, Cartas e Gabarito</button>
+    <button class="tab-btn active" onclick="switchTab('jogo')">🚢 Tabuleiros, Peças, Cartas e Gabarito</button>
   </div>
 
   <nav class="print-bar" aria-label="Impressão do material">
-    <button type="button" onclick="imprimirParte('all')">🖨️ Imprimir tudo</button>
+    <button type="button" onclick="imprimirParte('all')">🖨️ Imprimir tudo (9 folhas)</button>
     <button type="button" onclick="imprimirParte('manual')">🖨️ Manual e regras (1 folha)</button>
     <button type="button" onclick="imprimirParte('boards')">🖨️ Tabuleiros (2 folhas)</button>
+    <button type="button" onclick="imprimirParte('pecas')">🖨️ Peças da frota (2 folhas)</button>
     <button type="button" onclick="imprimirParte('cards')">🖨️ Cartas (2 folhas)</button>
+    <button type="button" onclick="imprimirParte('escudo')">🖨️ Escudo (1 folha)</button>
     <button type="button" onclick="imprimirParte('key')">🖨️ Gabarito do professor (1 folha)</button>
   </nav>
 
   <section class="print-quantity print-hidden" aria-label="Quantidade de material para uma turma">
     <h2>Quanto imprimir?</h2>
-    <p><strong>Para jogar em duplas:</strong> 1 folha de tabuleiros por jogador (2 jogadores = 2 folhas) + 1 conjunto de 36 cartas por dupla (2 folhas) + 1 gabarito para o professor (1 folha). <strong>Turma de 30 alunos:</strong> 30 folhas de tabuleiros, 15 conjuntos de cartas = 30 folhas de cartas e 1 folha de gabarito.</p>
+    <p><strong>Para jogar em duplas:</strong> 1 folha de tabuleiros por jogador; 1 folha de peças traz 15 conjuntos completos de frota (15 jogadores) e 1 folha de escudo atende 2 jogadores. Cada conjunto de cartas (36 cartas) usa 2 folhas. <strong>Turma de 30 alunos:</strong> 30 folhas de tabuleiros, 2 folhas de peças, 15 folhas de escudo, 15 conjuntos de cartas (30 folhas) e 1 gabarito.</p>
   </section>
 
   <div class="container">
@@ -611,13 +646,13 @@ habilidades:
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:15px;padding-bottom:12px;border-bottom:1px solid #333;" class="print-hidden">
           <div>
             <strong style="color:var(--white);font-size:1.1rem;">Manual de Regras e Habilidades BNCC</strong><br>
-            <span>2 tabuleiros completos por folha A4 (reutilizáveis com plástico/canetinha) + 36 Cartas Táticas por ano.</span>
+            <span>2 tabuleiros por folha; peças recortáveis, escudos, 36 Cartas Táticas por ano e gabarito.</span>
           </div>
         </div>
 
         <div class="manual-box" id="manual-content">
           <h2>Batalha Naval Cartesiana &amp; Algébrica</h2>
-          <p><strong>2 jogadores (ou 2 duplas) · 1 Folha A4 com 2 Tabuleiros + 36 Cartas Táticas de Coordenada e Radar</strong></p>
+          <p><strong>2 jogadores (ou 2 duplas) · tabuleiros, peças de frota, escudos, 36 cartas táticas e gabarito</strong></p>
 
           <h3>1. Preparação da Frota (Posicionamento Secreto)</h3>
           <ol>
@@ -631,6 +666,7 @@ habilidades:
               </ul>
             </li>
             <li><strong>Importante:</strong> Os navios são marcados exatamente sobre as <strong>bolinhas de interseção $(x, y)$</strong> das linhas da malha cartesiana (primeiro lê-se a abscissa $x$ no eixo horizontal e depois a ordenada $y$ no eixo vertical).</li>
+                <li><strong>Modo peças:</strong> Plastifique o tabuleiro (ou use saco plástico), recorte as peças da frota, cole fita dupla face atrás e posicione os navios sobre as bolinhas $(x, y)$. As peças têm a mesma medida da malha: as bolinhas da peça caem sobre as bolinhas do plano. <strong>Imprima sempre em 100%</strong> e confira com a régua de conferência. No modo antigo, desenhe com canetinha de quadro branco sobre o plástico.</li>
           </ol>
 
           <h3>2. Como Atacar (2 Modos de Jogo à Escolha do Professor)</h3>
@@ -677,6 +713,8 @@ habilidades:
           <div class="mode-selector">
             <button class="mode-btn active" id="btnViewBoards" type="button" onclick="setViewType('boards')">Tabuleiros (2 folhas)</button>
             <button class="mode-btn" id="btnViewCards" type="button" onclick="setViewType('cards')">Cartas (2 folhas)</button>
+            <button class="mode-btn" id="btnViewPieces" type="button" onclick="setViewType('pecas')">Peças (2 folhas)</button>
+            <button class="mode-btn" id="btnViewShield" type="button" onclick="setViewType('escudo')">Escudo (1 folha)</button>
             <button class="mode-btn" id="btnViewKey" type="button" onclick="setViewType('key')">Gabarito (1 folha)</button>
           </div>
         </div>
@@ -2118,6 +2156,19 @@ habilidades:
       `;
     }
 
+    function shipPiece(type,name,count,points) {
+      const width={aircraft:43.2,battleship:30.8,submarine:18.4,patrol:10.5}[type];
+      const dots=points.map(x=>`<circle cx="${x}" cy="5.25" r="1.05" fill="#fff" stroke="#111" stroke-width=".35"/>`).join('');
+      const icon={aircraft:'♧',battleship:'▣',submarine:'⌁',patrol:'◆'}[type];
+      return `<div class="ship-piece ${type}" aria-label="${name}, ${count} pontos"><svg viewBox="0 0 ${width} 10.5" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">${dots}</svg><span class="ship-name">${icon} ${name}</span><span class="ship-count">${count} pt${count>1?'s':''}</span></div>`;
+    }
+    function renderPiecesSheetsHtml() {
+      const oneSet=n=>`<div class="fleet-set"><div class="fleet-set-label">Conjunto ${n}</div><div class="ship-row">${shipPiece('aircraft','Porta-aviões',4,[3,15.4,27.8,40.2])}</div><div class="ship-row">${shipPiece('battleship','Encouraçado',3,[3,15.4,27.8])}${shipPiece('battleship','Encouraçado',3,[3,15.4,27.8])}</div><div class="ship-row">${shipPiece('submarine','Submarino',2,[3,15.4])}${shipPiece('submarine','Submarino',2,[3,15.4])}${shipPiece('submarine','Submarino',2,[3,15.4])}</div><div class="ship-row">${shipPiece('patrol','Patrulha',1,[5.25])}${shipPiece('patrol','Patrulha',1,[5.25])}</div></div>`;
+      const sheet=Array.from({length:15},(_,i)=>oneSet(i+1)).join('')+`<div class="pieces-legend"><b>Legenda:</b> Porta-aviões azul-claro (#dbeafe); encouraçado verde-claro (#dcfce7); submarino amarelo-claro (#fef3c7); patrulha lilás-claro (#f3e8ff). Nomes e bordas distinguem os tipos também em preto e branco.</div><div class="calibration"><b>RÉGUA DE CONFERÊNCIA</b><svg viewBox="-1.05 0 101.3 5" xmlns="http://www.w3.org/2000/svg">${Array.from({length:9},(_,i)=>`<circle cx="${i*12.4}" cy="2.5" r="1.05" fill="#fff" stroke="#111" stroke-width=".35"/>`).join('')}</svg>Se estas 9 bolinhas caírem exatamente sobre 9 pontos da malha do tabuleiro, sua impressão está em tamanho real (100%). Se não, imprima de novo escolhendo ‘Tamanho real’ e desligando ‘Ajustar à página’.</div>`;
+      return `<section id="parte-pecas" class="print-area">${[1,2].map(()=>`<div class="a4-pieces-sheet">${sheet}</div>`).join('')}</section>`;
+    }
+    function renderShieldSheetHtml(){return `<section id="parte-escudo" class="print-area"><div class="a4-shields-sheet"><div class="shield-grid">${[1,2].map(n=>`<div class="shield-panel"><span class="shield-fold">Dobre ao meio</span><h2>BATALHA NAVAL CARTESIANA</h2><p>Esconda sua frota aqui enquanto posiciona as peças.</p><span class="shield-foot">Jogador ${n} · Nome: ______________________________ · dobre na linha do meio e dobre a aba de 12 mm para trás para firmar em pé.</span></div>`).join('')}</div></div></section>`;}
+
     function renderBoardsSheetHtml(grade) {
       return `
         <section id="parte-tabuleiros" class="print-area">
@@ -2248,11 +2299,13 @@ habilidades:
     function renderViewHtml(viewType) {
       if (viewType === 'boards') return renderBoardsSheetHtml(currentGrade);
       if (viewType === 'cards') return renderCardsSheetsHtml(currentGrade);
+      if (viewType === 'pecas') return renderPiecesSheetsHtml();
+      if (viewType === 'escudo') return renderShieldSheetHtml();
       return renderKeySheetHtml(currentGrade);
     }
 
     function renderAllViewsHtml() {
-      return renderBoardsSheetHtml(currentGrade) + renderCardsSheetsHtml(currentGrade) + renderKeySheetHtml(currentGrade);
+      return renderBoardsSheetHtml(currentGrade) + renderPiecesSheetsHtml() + renderCardsSheetsHtml(currentGrade) + renderKeySheetHtml(currentGrade) + renderShieldSheetHtml();
     }
 
     function updatePrintLabels() {
@@ -2285,6 +2338,8 @@ habilidades:
       currentView = viewType;
       document.getElementById('btnViewBoards')?.classList.toggle('active', viewType === 'boards');
       document.getElementById('btnViewCards')?.classList.toggle('active', viewType === 'cards');
+      document.getElementById('btnViewPieces')?.classList.toggle('active', viewType === 'pecas');
+      document.getElementById('btnViewShield')?.classList.toggle('active', viewType === 'escudo');
       document.getElementById('btnViewKey')?.classList.toggle('active', viewType === 'key');
       renderCurrentView();
     }
