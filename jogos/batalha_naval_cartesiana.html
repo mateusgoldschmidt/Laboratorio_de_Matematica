@@ -1,0 +1,2346 @@
+---
+titulo: "Batalha Naval Cartesiana & Algébrica"
+icone: "🚢"
+descricao: "Jogo de Batalha Naval no Plano Cartesiano (2 tabuleiros por folha A4 + 36 Cartas Táticas de Coordenadas, Simetria e Funções + Gabarito) para 6º, 7º, 8º e 9º ano."
+habilidades:
+  - EF06MA16
+  - EF06MA03
+  - EF07MA04
+  - EF07MA19
+  - EF07MA20
+  - EF08MA07
+  - EF08MA08
+  - EF09MA06
+  - EF09MA09
+  - EF09MA16
+---
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  {% include analytics.html %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Batalha Naval Cartesiana & Algébrica — Laboratório de Matemática · UFFS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Outfit:wght@500;600;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0b0c10;
+      --bg-card: #1f2833;
+      --electric-cyan: #00f0ff;
+      --text-light: #c5c6c7;
+      --white: #ffffff;
+      --success: #00ff88;
+      --warning: #ffcc00;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { min-width: 320px; }
+    body {
+      background: var(--bg-dark);
+      color: var(--text-light);
+      font-family: 'Rajdhani', Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    header.main-header {
+      background: linear-gradient(135deg, #12121c 0%, #1f2833 100%);
+      border-bottom: 2px solid var(--electric-cyan);
+      padding: 22px 18px 17px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.15);
+    }
+    header.main-header h1 {
+      font-family: 'Orbitron', Arial, sans-serif;
+      font-size: clamp(1.45rem, 3vw, 2.05rem);
+      color: var(--white);
+      text-shadow: 0 0 10px var(--electric-cyan);
+      letter-spacing: 1.2px;
+      line-height: 1.1;
+    }
+    header.main-header p {
+      font-size: 1.05rem;
+      color: var(--electric-cyan);
+      text-transform: uppercase;
+      margin-top: 6px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+    }
+    header.main-header .institution-line {
+      color: #aeb8c7;
+      font-size: 0.82rem;
+      text-transform: none;
+      letter-spacing: 0.35px;
+      margin-top: 7px;
+      font-weight: 600;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      background: #121212;
+      border-bottom: 1px solid #333;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-light);
+      font-family: 'Orbitron', Arial, sans-serif;
+      font-size: 0.88rem;
+      padding: 13px 22px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .tab-btn:hover { color: var(--electric-cyan); }
+    .tab-btn.active {
+      color: var(--electric-cyan);
+      font-weight: bold;
+      background: rgba(0, 240, 255, 0.05);
+    }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--electric-cyan);
+      box-shadow: 0 0 10px var(--electric-cyan);
+    }
+    .print-bar {
+      max-width: 1100px;
+      margin: 16px auto 0;
+      padding: 12px 15px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #17202b;
+      border: 1px solid #39495b;
+      border-radius: 8px;
+    }
+    .print-bar button {
+      border: 1px solid #8ca1b8;
+      border-radius: 5px;
+      background: #263443;
+      color: #fff;
+      padding: 8px 11px;
+      font-family: 'Orbitron', Arial, sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .print-bar button:first-child { border-color: var(--electric-cyan); color: var(--electric-cyan); }
+    .print-bar button:hover { background: #3b5065; }
+    .print-quantity {
+      max-width: 1100px;
+      margin: 12px auto 0;
+      padding: 12px 16px;
+      background: #f4f7fa;
+      color: #17202b;
+      border: 1px solid #c5d0dc;
+      border-left: 4px solid var(--electric-cyan);
+      border-radius: 8px;
+      font-family: Arial, sans-serif;
+    }
+    .print-quantity h2 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+    .print-quantity p {
+      font-size: .88rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+    .print-quantity strong { color: #0f3d5e; }
+
+    .container {
+      max-width: 1100px;
+      margin: 18px auto;
+      padding: 0 15px 80px;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      margin-bottom: 20px;
+    }
+    .controls {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .controls-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .mode-selector {
+      display: flex;
+      gap: 4px;
+      background: #12121c;
+      padding: 4px;
+      border-radius: 6px;
+      border: 1px solid #333;
+    }
+    .mode-btn {
+      padding: 8px 11px;
+      font-size: 0.75rem;
+      font-family: 'Orbitron', Arial, sans-serif;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text-light);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .mode-btn.active { background: var(--electric-cyan); color: var(--bg-dark); }
+    .btn {
+      background: transparent;
+      border: 2px solid var(--electric-cyan);
+      color: var(--electric-cyan);
+      font-family: 'Orbitron', Arial, sans-serif;
+      font-weight: bold;
+      font-size: 0.75rem;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .btn-success { border-color: var(--success); color: var(--success); }
+    .btn-warning { border-color: var(--warning); color: var(--warning); }
+    .sheets-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      padding: 6px 0;
+    }
+
+    /* Manual na tela */
+    .manual-box { font-family: Arial, sans-serif; font-size: 1rem; line-height: 1.55; }
+    .manual-box h2 { font-family: 'Orbitron', Arial, sans-serif; color: var(--white); margin-bottom: 10px; font-size: 1.35rem; }
+    .manual-box h3 { color: var(--electric-cyan); margin: 14px 0 6px; font-size: 1.08rem; }
+    .manual-box ol, .manual-box ul { margin: 6px 0 10px 22px; }
+    .manual-box li { margin-bottom: 6px; }
+
+    /* Folhas de tabuleiros: um jogador por folha, dois mapas na mesma A4. */
+    .a4-boards-sheet {
+      width: 210mm;
+      height: 297mm;
+      padding: 6mm;
+      margin: 0 auto;
+      background: #fff;
+      color: #0f172a;
+      box-shadow: 0 12px 32px rgba(0,0,0,.55);
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+    .player-station {
+      width: 198mm;
+      height: 285mm;
+      border: .45mm solid #0f172a;
+      padding: 3.2mm 3.5mm;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5mm;
+    }
+    .station-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 3mm;
+      align-items: start;
+      border-bottom: .35mm solid #0f172a;
+      padding-bottom: 2.2mm;
+    }
+    .st-title-block { min-width: 0; }
+    .st-title {
+      font-family: 'Orbitron', Arial, sans-serif;
+      font-size: 10pt;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: .15px;
+      line-height: 1.15;
+    }
+    .st-commander {
+      font-family: 'Outfit', Arial, sans-serif;
+      font-size: 8pt;
+      font-weight: 700;
+      color: #334155;
+      margin-top: 1.5mm;
+      line-height: 1.25;
+    }
+    .station-meta {
+      display: flex;
+      gap: 8mm;
+      margin-top: 1.7mm;
+      font: 8pt 'Outfit', Arial, sans-serif;
+      color: #0f172a;
+    }
+    .fleet-bar {
+      display: grid;
+      grid-template-columns: repeat(2, auto);
+      gap: 1.2mm 2.5mm;
+      align-items: center;
+      background: #f8fafc;
+      border: .25mm solid #64748b;
+      padding: 1.6mm 2mm;
+      font: 6.7pt/1.1 'Outfit', Arial, sans-serif;
+      font-weight: 700;
+      color: #0f172a;
+      white-space: nowrap;
+    }
+    .fleet-item { display: flex; align-items: center; gap: 1mm; }
+    .ship-dots { font-size: 7.2pt; letter-spacing: -.5px; font-weight: 900; }
+    .chk-box { display: inline-block; width: 3.1mm; height: 3.1mm; border: .25mm solid #0f172a; background: #fff; }
+    .grids-row {
+      display: flex;
+      flex-direction: column;
+      gap: 3mm;
+      align-items: stretch;
+      flex: 1;
+      min-height: 0;
+    }
+    .cartesian-panel {
+      border: .35mm solid #1e293b;
+      display: flex;
+      flex: 1 1 0;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+      background: #fff;
+    }
+    .cp-header {
+      min-height: 10mm;
+      background: #f1f5f9;
+      color: #0f172a;
+      border-bottom: .25mm solid #1e293b;
+      padding: 1.6mm 2mm;
+      font: 700 7.1pt/1.2 'Orbitron', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: .8mm;
+    }
+    .cp-header span:last-child { font: 700 6.5pt/1.15 'Outfit', Arial, sans-serif !important; color: #475569 !important; }
+    .cp-svg-wrap {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 1.6mm 1mm 0;
+      min-height: 0;
+    }
+    .cp-svg-wrap svg { width: 116mm; height: 116mm; max-width: 100%; display: block; }
+
+    /* Cartas: grade 3 x 6 em duas folhas, sem espaço entre peças. */
+    .a4-cards-sheet {
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      padding: 0;
+      background: #fff;
+      box-shadow: 0 12px 32px rgba(0,0,0,.55);
+    }
+    .cards-cut-grid {
+      width: 210mm;
+      height: 297mm;
+      display: grid;
+      grid-template-columns: repeat(3, 70mm);
+      grid-template-rows: repeat(6, 49.5mm);
+      gap: 0;
+      border-left: .3mm solid #111;
+      border-top: .3mm solid #111;
+    }
+    .naval-card {
+      width: 70mm;
+      height: 49.5mm;
+      padding: 1.7mm;
+      border-right: .3mm solid #111;
+      border-bottom: .3mm solid #111;
+      background: #fff;
+      color: #0f172a;
+      display: flex;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .naval-card-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      background: #fff;
+    }
+    .nc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2mm;
+      min-height: 7mm;
+      padding: 1.3mm 1.7mm;
+      border-bottom: .35mm solid #111;
+      color: #0f172a;
+      font: 800 6.5pt/1.1 'Orbitron', Arial, sans-serif;
+      letter-spacing: .05px;
+    }
+    .is-torp .nc-header { border-left: 2.2mm solid #1d4ed8; background: #eff6ff; }
+    .is-spec .nc-header { border-left: 2.2mm solid #b45309; background: #fffbeb; }
+    .nc-header > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+    .card-kind { font-weight: 900; letter-spacing: .25px; }
+    .nc-body {
+      padding: 1.6mm 1.7mm;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.5mm;
+      overflow: hidden;
+    }
+    .torp-coords-box { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6mm; width: 100%; }
+    .coord-pill {
+      background: #f8fafc;
+      border: .25mm solid #64748b;
+      min-height: 24mm;
+      padding: 1.5mm 1mm;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .coord-axis-lbl {
+      font: 800 6pt/1.05 'Orbitron', Arial, sans-serif;
+      color: #1e3a8a;
+      margin-bottom: 1mm;
+      text-transform: uppercase;
+    }
+    .coord-math {
+      font: 900 12pt/1.12 'Outfit', Arial, sans-serif;
+      color: #0f172a;
+      overflow-wrap: anywhere;
+    }
+    .coord-math sup, .spec-question sup, .key-table sup { font-size: .72em; line-height: 0; position: relative; top: -.36em; }
+    .nc-footer-note { display: none; }
+    .spec-question {
+      font: 700 7.2pt/1.3 'Outfit', Arial, sans-serif;
+      color: #0f172a;
+      overflow-wrap: anywhere;
+    }
+    .spec-effect-badge {
+      background: #fff;
+      border: .25mm solid #475569;
+      padding: 1.2mm 1.4mm;
+      color: #0f172a;
+      text-align: center;
+      font: 800 6.15pt/1.12 'Orbitron', Arial, sans-serif;
+      overflow-wrap: anywhere;
+    }
+    .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; font-size: .82em; line-height: .94; padding: 0 1.5px; margin: -1px 1px; font-weight: 900; }
+    .frac .top { border-bottom: 1.3px solid currentColor; padding: 0 1.5px .5px; }
+    .frac .bottom { padding: .5px 1.5px 0; }
+    .exp-frac { font-size: .62em !important; top: -.55em !important; margin-left: 1px; }
+    .rad-wrap { display: inline-flex; align-items: center; vertical-align: middle; font-weight: 900; }
+    .rad-wrap .rad-bar { border-top: 1.3px solid currentColor; padding: 1px 1.5px 0; margin-left: -1px; display: inline-flex; align-items: center; }
+
+    /* Gabarito: duas colunas de 18 cartas, uma folha. */
+    .key-sheet {
+      width: 210mm;
+      height: 297mm;
+      padding: 7mm 7.5mm 6mm;
+      margin: 0 auto;
+      background: #fff;
+      color: #000;
+      box-shadow: 0 8px 30px rgba(0,0,0,.55);
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+    .key-sheet-header { text-align: center; padding-bottom: 2.2mm; margin-bottom: 2.8mm; border-bottom: .4mm solid #000; }
+    .key-sheet-header h2 { font: bold 11pt/1.1 Arial, sans-serif; color: #000; }
+    .key-sheet-header p { font: 7.3pt/1.15 Arial, sans-serif; margin-top: 1mm; color: #333; }
+    .key-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; flex: 1; min-height: 0; align-items: stretch; }
+    .key-table { width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed; font: 7pt/1.18 Arial, sans-serif; color: #000; }
+    .key-table th, .key-table td { border: .22mm solid #475569; padding: 1.25mm 1.1mm; text-align: left; vertical-align: middle; overflow-wrap: anywhere; }
+    .key-table th { background: #e2e8f0; font-size: 6.55pt; text-transform: uppercase; }
+    .key-table tbody tr { height: 12mm; }
+    .key-table tbody tr:nth-child(even) { background: #f8fafc; }
+    .key-table th:nth-child(1), .key-table td.col-no { width: 8mm; text-align: center; font-weight: bold; }
+    .key-table th:nth-child(2), .key-table td.col-type { width: 21mm; font-weight: bold; }
+    .key-table th:nth-child(4), .key-table td.col-res { width: 20mm; font-weight: bold; background: #f1f5f9; }
+    .key-sheet-footer { margin-top: 2mm; padding-top: 1.3mm; border-top: .25mm solid #64748b; text-align: right; font: bold 7pt Arial, sans-serif; color: #334155; }
+    #print-manual-container { display: none; }
+
+    #btn-voltar {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 9999;
+      background: linear-gradient(135deg, #1a237e, #1565c0);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: .88rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.35);
+    }
+
+    /* Celular: a prévia em tamanho A4 rola na horizontal dentro do próprio quadro,
+       sem arrastar a página inteira; o botão de voltar fica menor. */
+    @media (max-width: 820px) {
+      .container { padding-left: 10px; padding-right: 10px; }
+      .sheets-stack { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .print-quantity { margin: 10px auto; padding: 10px 12px; }
+      .print-quantity p { font-size: .82rem; }
+      #btn-voltar { padding: 8px 12px; font-size: .78rem; bottom: 12px; left: 12px; }
+    }
+    @page { size: A4 portrait; margin: 0; }
+    @media print {
+      html, body { width: 210mm; min-width: 0; background: #fff !important; color: #000 !important; margin: 0 !important; padding: 0 !important; }
+      header.main-header, .tabs, .print-bar, .controls, .print-hidden, #btn-voltar { display: none !important; }
+      .container { width: 210mm !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }
+      #tab-regras, #tab-jogo, #navalMainContainer, #print-manual-container { display: none !important; }
+      body[data-print-target="manual"] #print-manual-container,
+      body[data-print-target="all"] #print-manual-container,
+      body[data-print-target="boards"] #tab-jogo,
+      body[data-print-target="cards"] #tab-jogo,
+      body[data-print-target="key"] #tab-jogo,
+      body[data-print-target="all"] #tab-jogo { display: block !important; }
+      body[data-print-target="boards"] #navalMainContainer,
+      body[data-print-target="cards"] #navalMainContainer,
+      body[data-print-target="key"] #navalMainContainer,
+      body[data-print-target="all"] #navalMainContainer { display: block !important; }
+      body[data-print-target="manual"] #print-manual-container,
+      body[data-print-target="all"] #print-manual-container { width: 210mm; min-height: 297mm; padding: 9mm 11mm 8mm; color: #000; font: 8.1pt/1.25 Arial, sans-serif; column-count: 2; column-gap: 8mm; }
+      body[data-print-target="all"] #print-manual-container { break-after: page; }
+      #print-manual-container h2 { column-span: all; font: bold 14pt/1.1 Arial, sans-serif; margin: 0 0 3mm; color: #000; }
+      #print-manual-container > p { margin: 0 0 2.4mm; }
+      #print-manual-container h3 { break-after: avoid; font: bold 9.5pt/1.1 Arial, sans-serif; margin: 2.4mm 0 1mm; color: #000; }
+      #print-manual-container ol, #print-manual-container ul { margin: 1mm 0 1.8mm 4.3mm; padding-left: 3.5mm; }
+      #print-manual-container li { margin-bottom: .8mm; }
+      #print-manual-container code { font-family: Arial, sans-serif; }
+      #tab-jogo { margin: 0 !important; padding: 0 !important; }
+      #tab-jogo .sheets-stack { display: block !important; padding: 0 !important; margin: 0 !important; }
+      .print-area { display: block !important; }
+      body[data-print-target="boards"] #parte-cartas,
+      body[data-print-target="boards"] #parte-gabarito,
+      body[data-print-target="cards"] #parte-tabuleiros,
+      body[data-print-target="cards"] #parte-gabarito,
+      body[data-print-target="key"] #parte-tabuleiros,
+      body[data-print-target="key"] #parte-cartas { display: none !important; }
+      .a4-boards-sheet, .a4-cards-sheet, .key-sheet { box-shadow: none !important; }
+      .a4-boards-sheet, .a4-cards-sheet { page-break-after: always; break-after: page; page-break-inside: avoid; break-inside: avoid; }
+      #parte-tabuleiros .a4-boards-sheet:last-child,
+      #parte-cartas .a4-cards-sheet:last-child { page-break-after: auto; break-after: auto; }
+      #parte-gabarito .key-sheet { page-break-after: auto; break-after: auto; }
+    }
+    @media (max-width: 820px) {
+      .print-bar { margin: 12px 12px 0; padding: 10px; }
+      .print-bar button { flex: 1 1 145px; }
+      .container { margin-top: 12px; padding-left: 10px; padding-right: 10px; }
+      .controls { padding: 11px; }
+      .controls-group { width: 100%; }
+      .mode-selector { flex: 1 1 100%; }
+      .mode-btn { flex: 1; font-size: .66rem; padding: 8px 4px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="main-header">
+    <h1>BATALHA NAVAL CARTESIANA</h1>
+    <p>Pares Ordenados, Simetria, Retas &amp; Funções • 6º ao 9º Ano</p>
+    <p class="institution-line">Laboratório de Matemática · UFFS</p>
+  </header>
+
+  <div class="tabs print-hidden">
+    <button class="tab-btn" onclick="switchTab('regras')">Manual e Regras</button>
+    <button class="tab-btn active" onclick="switchTab('jogo')">🚢 Tabuleiros, Cartas e Gabarito</button>
+  </div>
+
+  <nav class="print-bar" aria-label="Impressão do material">
+    <button type="button" onclick="imprimirParte('all')">🖨️ Imprimir tudo</button>
+    <button type="button" onclick="imprimirParte('manual')">🖨️ Manual e regras (1 folha)</button>
+    <button type="button" onclick="imprimirParte('boards')">🖨️ Tabuleiros (2 folhas)</button>
+    <button type="button" onclick="imprimirParte('cards')">🖨️ Cartas (2 folhas)</button>
+    <button type="button" onclick="imprimirParte('key')">🖨️ Gabarito do professor (1 folha)</button>
+  </nav>
+
+  <section class="print-quantity print-hidden" aria-label="Quantidade de material para uma turma">
+    <h2>Quanto imprimir?</h2>
+    <p><strong>Para jogar em duplas:</strong> 1 folha de tabuleiros por jogador (2 jogadores = 2 folhas) + 1 conjunto de 36 cartas por dupla (2 folhas) + 1 gabarito para o professor (1 folha). <strong>Turma de 30 alunos:</strong> 30 folhas de tabuleiros, 15 conjuntos de cartas = 30 folhas de cartas e 1 folha de gabarito.</p>
+  </section>
+
+  <div class="container">
+
+    <!-- ABA 1: MANUAL E REGRAS -->
+    <div id="tab-regras" class="tab-content">
+      <div class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:15px;padding-bottom:12px;border-bottom:1px solid #333;" class="print-hidden">
+          <div>
+            <strong style="color:var(--white);font-size:1.1rem;">Manual de Regras e Habilidades BNCC</strong><br>
+            <span>2 tabuleiros completos por folha A4 (reutilizáveis com plástico/canetinha) + 36 Cartas Táticas por ano.</span>
+          </div>
+        </div>
+
+        <div class="manual-box" id="manual-content">
+          <h2>Batalha Naval Cartesiana &amp; Algébrica</h2>
+          <p><strong>2 jogadores (ou 2 duplas) · 1 Folha A4 com 2 Tabuleiros + 36 Cartas Táticas de Coordenada e Radar</strong></p>
+
+          <h3>1. Preparação da Frota (Posicionamento Secreto)</h3>
+          <ol>
+            <li>Cada jogador recebe metade da folha de tabuleiros contendo dois planos cartesianos: <strong>🛡️ MINHA FROTA (Defesa)</strong> e <strong>🎯 RADAR DO OPONENTE (Ataque)</strong>.</li>
+            <li>Sem deixar o oponente ver, cada jogador desenha no mapa <strong>MINHA FROTA</strong> as suas <strong>8 embarcações (totalizando 18 pontos de interseção)</strong>, ligando pontos vizinhos na horizontal ou na vertical (não vale na diagonal):
+              <ul>
+                <li><strong>1 Porta-Aviões:</strong> 4 pontos alinhados seguidos (<code>●—●—●—●</code>)</li>
+                <li><strong>2 Encouraçados:</strong> 3 pontos alinhados cada (<code>●—●—●</code>)</li>
+                <li><strong>3 Submarinos:</strong> 2 pontos alinhados cada (<code>●—●</code>)</li>
+                <li><strong>2 Barcos de Patrulha:</strong> 1 ponto cada (<code>●</code>)</li>
+              </ul>
+            </li>
+            <li><strong>Importante:</strong> Os navios são marcados exatamente sobre as <strong>bolinhas de interseção $(x, y)$</strong> das linhas da malha cartesiana (primeiro lê-se a abscissa $x$ no eixo horizontal e depois a ordenada $y$ no eixo vertical).</li>
+          </ol>
+
+          <h3>2. Como Atacar (2 Modos de Jogo à Escolha do Professor)</h3>
+          <ul>
+            <li><strong>Modo A — Clássico com Cartas Táticas (Recomendado):</strong> Na sua vez, o jogador puxa 1 carta do monte de 36 Cartas Táticas:
+              <ul>
+                <li>Se for uma <strong>🎯 Carta de Torpedo de Coordenada (#01 a #24):</strong> Ele resolve mentalmente os cálculos de $x$ e de $y$. Acertando (conferido pelo gabarito), ele dispara no ponto $(x, y)$ calculado <strong>E ganha +1 disparo livre</strong> em qualquer coordenada que desejar!</li>
+                <li>Se for uma <strong>📡 Carta de Radar &amp; Arma Especial (#25 a #36):</strong> Ele resolve o desafio matemático da carta para acionar um efeito especial no plano cartesiano (ex.: <em>Disparo Simétrico</em>, <em>Radar de Quadrante</em> ou <em>Laser sobre uma Reta/Função</em>)!</li>
+              </ul>
+            </li>
+            <li><strong>Modo B — Rápido sem Cartas (Apenas Tabuleiro):</strong> Em partidas curtas de 10 minutos, os jogadores alternam turnos anunciando diretamente o par ordenado $(x, y)$ que desejam atacar, registrando <code>✕</code> (Água) ou <code>⊗</code> (Navio Atingido) no seu <strong>RADAR DO OPONENTE</strong>.</li>
+          </ul>
+
+          <h3>3. Vitória e Dica de Reutilização</h3>
+          <p>Vence o comandante que afundar toda a frota adversária (ou que atingir mais pontos de navio ao final do tempo da aula).<br>
+          <strong>Dica Eco-Tinta:</strong> Coloque cada meio-tabuleiro dentro de um saquinho plástico transparente (furo universal) e entregue uma canetinha de quadro branco para cada aluno: ao final da partida, basta apagar com papel ou flanela e jogar novamente o ano inteiro!</p>
+
+          <h3>4. Progressão Pedagógica BNCC (6º ao 9º Ano)</h3>
+          <ul>
+            <li><strong>6º Ano (EF06MA16):</strong> Plano cartesiano no <strong>1º Quadrante</strong> ($x, y \in \{0, 1, \dots, 8\}$), leitura de abscissa e ordenada, diagonais e coordenadas primas/pares.</li>
+            <li><strong>7º Ano (EF07MA04, EF07MA19, EF07MA20):</strong> Plano cartesiano completo nos <strong>4 Quadrantes</strong> ($x, y \in \{-4, \dots, +4\}$), operações com inteiros negativos e <strong>simetrias</strong> em relação ao eixo $x$, ao eixo $y$ e à origem $(0,0)$.</li>
+            <li><strong>8º Ano (EF08MA07, EF08MA08):</strong> Potências, raízes, dízimas, pares ordenados soluções de <strong>sistemas lineares $2 \times 2$</strong> e disparos laser sobre retas ($y = x$, $y = -x$, $y = 2x$).</li>
+            <li><strong>9º Ano (EF09MA06, EF09MA09, EF09MA16):</strong> Radicais, expoentes fracionários, disparos sobre gráficos de <strong>funções afins e quadráticas</strong> ($y = 2x - 1$, $y = x^2 - 2$), raízes de equações do 2º grau e distância entre pontos (Teorema de Pitágoras).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="print-manual-container"></div>
+
+    <!-- ABA 2: TABULEIROS, CARTAS E GABARITO -->
+    <div id="tab-jogo" class="tab-content active">
+
+      <!-- Barra de Controle Enxuta e Direta -->
+      <section class="controls print-hidden" aria-label="Controles da Batalha Naval">
+        <div class="controls-group">
+          <div class="mode-selector">
+            <button class="mode-btn active" id="btnGrade6" type="button" onclick="setGradeMode('6ano')">6º Ano</button>
+            <button class="mode-btn" id="btnGrade7" type="button" onclick="setGradeMode('7ano')">7º Ano</button>
+            <button class="mode-btn" id="btnGrade8" type="button" onclick="setGradeMode('8ano')">8º Ano</button>
+            <button class="mode-btn" id="btnGrade9" type="button" onclick="setGradeMode('9ano')">9º Ano</button>
+          </div>
+
+          <div class="mode-selector">
+            <button class="mode-btn active" id="btnViewBoards" type="button" onclick="setViewType('boards')">Tabuleiros (2 folhas)</button>
+            <button class="mode-btn" id="btnViewCards" type="button" onclick="setViewType('cards')">Cartas (2 folhas)</button>
+            <button class="mode-btn" id="btnViewKey" type="button" onclick="setViewType('key')">Gabarito (1 folha)</button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Área Principal de Renderização -->
+      <main id="navalMainContainer" class="sheets-stack"></main>
+
+    </div>
+
+  </div>
+
+  <script>
+    const GRADE_LABELS = {
+      '6ano': '6º Ano',
+      '7ano': '7º Ano',
+      '8ano': '8º Ano',
+      '9ano': '9º Ano'
+    };
+
+    const GRADE_SUBTITLES = {
+      '6ano': '1º Quadrante • Coordenadas Naturais (0 a 8)',
+      '7ano': '4 Quadrantes • Números Inteiros (−4 a +4) e Simetria',
+      '8ano': '4 Quadrantes • Raízes, Sistemas e Retas (−4 a +4)',
+      '9ano': '4 Quadrantes • Funções, Pitágoras e Raízes (−4 a +4)'
+    };
+
+    const CARDS_BY_GRADE = {
+      "6ano": [
+            {
+                  "no": 1,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "2³ − 8",
+                  "y_expr": "50% de 10",
+                  "ans": "(0, 5)",
+                  "detail": "x = 8 − 8 = 0 e y = 5"
+            },
+            {
+                  "no": 2,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> de 12",
+                  "y_expr": "3² − 7",
+                  "ans": "(6, 2)",
+                  "detail": "x = 6 e y = 9 − 7 = 2"
+            },
+            {
+                  "no": 3,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "25% de 16",
+                  "y_expr": "7⁰",
+                  "ans": "(4, 1)",
+                  "detail": "x = 4 e y = 1"
+            },
+            {
+                  "no": 4,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "1,5 × 2",
+                  "y_expr": "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span> de 8",
+                  "ans": "(3, 6)",
+                  "detail": "x = 3 e y = 6"
+            },
+            {
+                  "no": 5,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "2³",
+                  "y_expr": "10 − 6,0",
+                  "ans": "(8, 4)",
+                  "detail": "x = 8 e y = 4"
+            },
+            {
+                  "no": 6,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "10% de 70",
+                  "y_expr": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span> de 9",
+                  "ans": "(7, 3)",
+                  "detail": "x = 7 e y = 3"
+            },
+            {
+                  "no": 7,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "4,2 − 2,2",
+                  "y_expr": "2³ − 1",
+                  "ans": "(2, 7)",
+                  "detail": "x = 2 e y = 8 − 1 = 7"
+            },
+            {
+                  "no": 8,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">5</span></span> de 10",
+                  "y_expr": "50% de 16",
+                  "ans": "(4, 8)",
+                  "detail": "x = 4 e y = 8"
+            },
+            {
+                  "no": 9,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "9⁰",
+                  "y_expr": "2,5 + 3,5",
+                  "ans": "(1, 6)",
+                  "detail": "x = 1 e y = 6"
+            },
+            {
+                  "no": 10,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "3² − 4",
+                  "y_expr": "0 × 15",
+                  "ans": "(5, 0)",
+                  "detail": "x = 9 − 4 = 5 e y = 0"
+            },
+            {
+                  "no": 11,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> de 28",
+                  "y_expr": "2²",
+                  "ans": "(7, 4)",
+                  "detail": "x = 7 e y = 4"
+            },
+            {
+                  "no": 12,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "20% de 10",
+                  "y_expr": "1,5 + 3,5",
+                  "ans": "(2, 5)",
+                  "detail": "x = 2 e y = 5"
+            },
+            {
+                  "no": 13,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "4² − 10",
+                  "y_expr": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span> + <span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>",
+                  "ans": "(6, 1)",
+                  "detail": "x = 16 − 10 = 6 e y = 1"
+            },
+            {
+                  "no": 14,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "0,5 × 6",
+                  "y_expr": "2³",
+                  "ans": "(3, 8)",
+                  "detail": "x = 3 e y = 8"
+            },
+            {
+                  "no": 15,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "5² − 17",
+                  "y_expr": "25% de 12",
+                  "ans": "(8, 3)",
+                  "detail": "x = 25 − 17 = 8 e y = 3"
+            },
+            {
+                  "no": 16,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "12 ÷ 12",
+                  "y_expr": "10 − 3",
+                  "ans": "(1, 7)",
+                  "detail": "x = 1 e y = 7"
+            },
+            {
+                  "no": 17,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "50% de 10",
+                  "y_expr": "<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">3</span></span> de 6",
+                  "ans": "(5, 4)",
+                  "detail": "x = 5 e y = 4"
+            },
+            {
+                  "no": 18,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "2⁴ − 16",
+                  "y_expr": "3,4 + 4,6",
+                  "ans": "(0, 8)",
+                  "detail": "x = 16 − 16 = 0 e y = 8"
+            },
+            {
+                  "no": 19,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "<span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">5</span></span> de 10",
+                  "y_expr": "3² − 2",
+                  "ans": "(6, 7)",
+                  "detail": "x = 6 e y = 9 − 2 = 7"
+            },
+            {
+                  "no": 20,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "1,25 × 4",
+                  "y_expr": "20% de 15",
+                  "ans": "(5, 3)",
+                  "detail": "x = 5 e y = 3"
+            },
+            {
+                  "no": 21,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "2³ − 1",
+                  "y_expr": "8,5 − 2,5",
+                  "ans": "(7, 6)",
+                  "detail": "x = 7 e y = 6"
+            },
+            {
+                  "no": 22,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "10% de 30",
+                  "y_expr": "<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">5</span></span> de 10",
+                  "ans": "(3, 2)",
+                  "detail": "x = 3 e y = 2"
+            },
+            {
+                  "no": 23,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "0,8 × 10",
+                  "y_expr": "5⁰",
+                  "ans": "(8, 1)",
+                  "detail": "x = 8 e y = 1"
+            },
+            {
+                  "no": 24,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "6,5 − 2,5",
+                  "y_expr": "2²",
+                  "ans": "(4, 4)",
+                  "detail": "x = 4 e y = 4"
+            },
+            {
+                  "no": 25,
+                  "type": "spec",
+                  "title": "RADAR DA DIAGONAL (x = y)",
+                  "q": "Calcule: 2³ + 4². Se acertar, o oponente revela quantos pontos de navio ele tem na diagonal onde x = y!",
+                  "effect": "RADAR: Diagonal (0,0), (1,1), (2,2)... (8,8)",
+                  "ans": "24 (pois 8 + 16 = 24)"
+            },
+            {
+                  "no": 26,
+                  "type": "spec",
+                  "title": "TORPEDO INVERSO (y, x)",
+                  "q": "Calcule: <span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">4</span></span> de 20. Se acertar, dispare em um ponto (x, y) à sua escolha e ganhe outro tiro no ponto inverso (y, x)!",
+                  "effect": "BÔNUS: Disparo Duplo em (x, y) e (y, x)",
+                  "ans": "15"
+            },
+            {
+                  "no": 27,
+                  "type": "spec",
+                  "title": "SCANNER DOS EIXOS",
+                  "q": "Qual é o único número primo que é par? Se acertar, o oponente revela se há algum ponto de navio sobre o Eixo X ou Eixo Y!",
+                  "effect": "RADAR: Verifica todos os pontos com x = 0 ou y = 0",
+                  "ans": "2"
+            },
+            {
+                  "no": 28,
+                  "type": "spec",
+                  "title": "LASER HORIZONTAL",
+                  "q": "Calcule: 50% de 14. Se acertar, dispare 3 torpedos seguidos na linha horizontal y = 7!",
+                  "effect": "ATAQUE: 3 disparos na reta horizontal y = 7",
+                  "ans": "7"
+            },
+            {
+                  "no": 29,
+                  "type": "spec",
+                  "title": "LASER VERTICAL",
+                  "q": "Calcule: 3² − 6. Se acertar, dispare 3 torpedos seguidos na coluna vertical x = 3!",
+                  "effect": "ATAQUE: 3 disparos na reta vertical x = 3",
+                  "ans": "3 (pois 9 − 6 = 3)"
+            },
+            {
+                  "no": 30,
+                  "type": "spec",
+                  "title": "RADAR DE COORDENADA PRIMA",
+                  "q": "Quantos lados tem um hexágono? Se acertar, escolha um número primo (2, 3, 5 ou 7) e o oponente diz se tem navio nessa coluna x!",
+                  "effect": "RADAR: Escaneia uma coluna x prima inteira",
+                  "ans": "6 lados"
+            },
+            {
+                  "no": 31,
+                  "type": "spec",
+                  "title": "BOMBA EM CRUZ (+)",
+                  "q": "Calcule: 2,5 × 4. Se acertar, escolha um ponto (x, y) e ataque também o ponto logo acima (x, y+1)!",
+                  "effect": "BÔNUS: Ataque em (x, y) e (x, y+1)",
+                  "ans": "10"
+            },
+            {
+                  "no": 32,
+                  "type": "spec",
+                  "title": "RADAR DE BORDA EXTERNA",
+                  "q": "Qual é o perímetro de um quadrado de lado 8 cm? Se acertar, o oponente diz se possui algum navio na linha x = 8 ou y = 8!",
+                  "effect": "RADAR: Verifica as bordas x = 8 e y = 8",
+                  "ans": "32 cm"
+            },
+            {
+                  "no": 33,
+                  "type": "spec",
+                  "title": "DISPARO DUPLO DE MÚLTIPLOS",
+                  "q": "Qual é o menor múltiplo comum (MMC) de 3 e 4? Se acertar, você ganha 2 disparos livres em qualquer coordenada!",
+                  "effect": "BÔNUS: 2 Disparos Livres no Radar",
+                  "ans": "12"
+            },
+            {
+                  "no": 34,
+                  "type": "spec",
+                  "title": "SCANNER DE SOMA PAR",
+                  "q": "Calcule: <span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">5</span></span> + <span class=\"frac\"><span class=\"top\">3</span><span class=\"bottom\">5</span></span>. Se acertar, escolha um ponto (x, y) e ganhe +1 tiro em (x+1, y)!",
+                  "effect": "BÔNUS: Ataque em (x, y) e (x+1, y)",
+                  "ans": "1 inteiro (5/5)"
+            },
+            {
+                  "no": 35,
+                  "type": "spec",
+                  "title": "LASER NA LINHA CENTRAL",
+                  "q": "Calcule: 25% de 16. Se acertar, dispare 3 torpedos em pontos quaisquer da linha central y = 4!",
+                  "effect": "ATAQUE: 3 disparos na reta y = 4",
+                  "ans": "4"
+            },
+            {
+                  "no": 36,
+                  "type": "spec",
+                  "title": "SUPER TORPEDO ORBITAL",
+                  "q": "Calcule: 10² − 85. Se acertar, faça 2 disparos livres imediatamente no radar!",
+                  "effect": "BÔNUS: 2 Disparos Livres no Radar",
+                  "ans": "15"
+            }
+      ],
+      "7ano": [
+            {
+                  "no": 1,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−7 + 4",
+                  "y_expr": "(−2)²",
+                  "ans": "(−3, 4)",
+                  "detail": "x = −3 e y = 4 (2º Quadrante)"
+            },
+            {
+                  "no": 2,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "(−12) ÷ (−6)",
+                  "y_expr": "−1 − 3",
+                  "ans": "(2, −4)",
+                  "detail": "x = 2 e y = −4 (4º Quadrante)"
+            },
+            {
+                  "no": 3,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "(−1)³ − 3",
+                  "y_expr": "−6 + 4",
+                  "ans": "(−4, −2)",
+                  "detail": "x = −4 e y = −2 (3º Quadrante)"
+            },
+            {
+                  "no": 4,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "1 − (−2)",
+                  "y_expr": "−5 + 8",
+                  "ans": "(3, 3)",
+                  "detail": "x = 3 e y = 3 (1º Quadrante)"
+            },
+            {
+                  "no": 5,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−2² (sem parênt.)",
+                  "y_expr": "|−1|",
+                  "ans": "(−4, 1)",
+                  "detail": "x = −4 e y = 1 (2º Quadrante)"
+            },
+            {
+                  "no": 6,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "(−<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>) × 6",
+                  "y_expr": "(−2)³ + 5",
+                  "ans": "(−3, −3)",
+                  "detail": "x = −3 e y = −8 + 5 = −3"
+            },
+            {
+                  "no": 7,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "0 ÷ (−9)",
+                  "y_expr": "−8 + 4",
+                  "ans": "(0, −4)",
+                  "detail": "x = 0 e y = −4 (Eixo Y)"
+            },
+            {
+                  "no": 8,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−2 − (−6)",
+                  "y_expr": "(−15) ÷ 5",
+                  "ans": "(4, −3)",
+                  "detail": "x = 4 e y = −3 (4º Quadrante)"
+            },
+            {
+                  "no": 9,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "(−2)³ + 6",
+                  "y_expr": "|−3|",
+                  "ans": "(−2, 3)",
+                  "detail": "x = −2 e y = 3 (2º Quadrante)"
+            },
+            {
+                  "no": 10,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−3,5 + 2,5",
+                  "y_expr": "2 − 6",
+                  "ans": "(−1, −4)",
+                  "detail": "x = −1 e y = −4 (3º Quadrante)"
+            },
+            {
+                  "no": 11,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "(−<span class=\"frac\"><span class=\"top\">2</span><span class=\"bottom\">3</span></span>) × (−6)",
+                  "y_expr": "−5 + 5",
+                  "ans": "(4, 0)",
+                  "detail": "x = 4 e y = 0 (Eixo X)"
+            },
+            {
+                  "no": 12,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "(−9) ÷ 3",
+                  "y_expr": "−2 − (−4)",
+                  "ans": "(−3, 2)",
+                  "detail": "x = −3 e y = 2 (2º Quadrante)"
+            },
+            {
+                  "no": 13,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "(−1)⁴",
+                  "y_expr": "−7 + 5",
+                  "ans": "(1, −2)",
+                  "detail": "x = 1 e y = −2 (4º Quadrante)"
+            },
+            {
+                  "no": 14,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−10 + 8",
+                  "y_expr": "(−6) ÷ 6",
+                  "ans": "(−2, −1)",
+                  "detail": "x = −2 e y = −1 (3º Quadrante)"
+            },
+            {
+                  "no": 15,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−1 + 4",
+                  "y_expr": "(−2)² − 3",
+                  "ans": "(3, 1)",
+                  "detail": "x = 3 e y = 4 − 3 = 1"
+            },
+            {
+                  "no": 16,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−1,5 − 2,5",
+                  "y_expr": "(−8) ÷ (−2)",
+                  "ans": "(−4, 4)",
+                  "detail": "x = −4 e y = 4 (2º Quadrante)"
+            },
+            {
+                  "no": 17,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "|−2|",
+                  "y_expr": "(−3)² − 5",
+                  "ans": "(2, 4)",
+                  "detail": "x = 2 e y = 9 − 5 = 4"
+            },
+            {
+                  "no": 18,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "(−1)³",
+                  "y_expr": "1 − (−2)",
+                  "ans": "(−1, 3)",
+                  "detail": "x = −1 e y = 3 (2º Quadrante)"
+            },
+            {
+                  "no": 19,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "10 − 14",
+                  "y_expr": "(−1)² − 1",
+                  "ans": "(−4, 0)",
+                  "detail": "x = −4 e y = 0 (Eixo X)"
+            },
+            {
+                  "no": 20,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span> + <span class=\"frac\"><span class=\"top\">9</span><span class=\"bottom\">4</span></span>",
+                  "y_expr": "−10 + 7",
+                  "ans": "(2, −3)",
+                  "detail": "x = 8/4 = 2 e y = −3"
+            },
+            {
+                  "no": 21,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "(−20) ÷ 5",
+                  "y_expr": "−3 − (−1)",
+                  "ans": "(−4, −2)",
+                  "detail": "x = −4 e y = −2"
+            },
+            {
+                  "no": 22,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−4 + 5",
+                  "y_expr": "(−2)²",
+                  "ans": "(1, 4)",
+                  "detail": "x = 1 e y = 4 (1º Quadrante)"
+            },
+            {
+                  "no": 23,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "(−3) + 6",
+                  "y_expr": "(−4) ÷ 2",
+                  "ans": "(3, −2)",
+                  "detail": "x = 3 e y = −2 (4º Quadrante)"
+            },
+            {
+                  "no": 24,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−8 + 8",
+                  "y_expr": "−3 − (−3)",
+                  "ans": "(0, 0)",
+                  "detail": "Origem do Plano Cartesiano (0, 0)"
+            },
+            {
+                  "no": 25,
+                  "type": "spec",
+                  "title": "TORPEDO SIMÉTRICO (EIXO Y)",
+                  "q": "Calcule: (−3)² − 15. Se acertar, dispare em um ponto (x, y) e ganhe um disparo automático no simétrico (−x, y)!",
+                  "effect": "SIMETRIA EIXO Y: Ataca (x, y) e (−x, y)",
+                  "ans": "−6 (pois 9 − 15 = −6)"
+            },
+            {
+                  "no": 26,
+                  "type": "spec",
+                  "title": "TORPEDO SIMÉTRICO (EIXO X)",
+                  "q": "Resolva: 2x + 6 = 0. Se acertar x, dispare em um ponto (x, y) e ganhe outro disparo no simétrico (x, −y)!",
+                  "effect": "SIMETRIA EIXO X: Ataca (x, y) e (x, −y)",
+                  "ans": "x = −3"
+            },
+            {
+                  "no": 27,
+                  "type": "spec",
+                  "title": "TORPEDO OPOSTO PELA ORIGEM",
+                  "q": "Calcule: (−2)³ − (−10). Se acertar, dispare em (x, y) e ganhe outro disparo no ponto oposto (−x, −y)!",
+                  "effect": "SIMETRIA NA ORIGEM: Ataca (x, y) e (−x, −y)",
+                  "ans": "2 (pois −8 + 10 = 2)"
+            },
+            {
+                  "no": 28,
+                  "type": "spec",
+                  "title": "RADAR DE QUADRANTE",
+                  "q": "Em qual quadrante fica um ponto com x < 0 e y > 0? Se acertar, o oponente revela quantos pontos de navio tem no 2º Quadrante!",
+                  "effect": "RADAR: Escaneia todo o 2º Quadrante",
+                  "ans": "2º Quadrante (II)"
+            },
+            {
+                  "no": 29,
+                  "type": "spec",
+                  "title": "RADAR DO 3º QUADRANTE",
+                  "q": "Em qual quadrante ambas as coordenadas são negativas (x < 0 e y < 0)? Se acertar, o oponente diz se há navio nesse quadrante!",
+                  "effect": "RADAR: Escaneia todo o 3º Quadrante",
+                  "ans": "3º Quadrante (III)"
+            },
+            {
+                  "no": 30,
+                  "type": "spec",
+                  "title": "LASER NA RETA x = −2",
+                  "q": "Resolva a equação: 3x = −6. Se acertar, dispare 3 torpedos em pontos quaisquer da reta vertical x = −2!",
+                  "effect": "ATAQUE: 3 disparos na reta x = −2",
+                  "ans": "x = −2"
+            },
+            {
+                  "no": 31,
+                  "type": "spec",
+                  "title": "LASER NA RETA y = −3",
+                  "q": "Calcule: −10 + 7. Se acertar, dispare 3 torpedos em pontos quaisquer da reta horizontal y = −3!",
+                  "effect": "ATAQUE: 3 disparos na reta y = −3",
+                  "ans": "−3"
+            },
+            {
+                  "no": 32,
+                  "type": "spec",
+                  "title": "SCANNER DOS EIXOS (x=0 ou y=0)",
+                  "q": "Qual é o complemento de 55°? Se acertar, o oponente revela quantos pontos de navio dele estão exatamente sobre os eixos X e Y!",
+                  "effect": "RADAR: Verifica todos os pontos sobre os eixos",
+                  "ans": "35°"
+            },
+            {
+                  "no": 33,
+                  "type": "spec",
+                  "title": "BOMBA DE MÓDULO |x| = 3",
+                  "q": "Quais são os dois números inteiros cujo módulo é 3? Se acertar, faça 2 disparos livres no radar!",
+                  "effect": "BÔNUS: 2 Disparos Livres no Radar",
+                  "ans": "−3 e +3"
+            },
+            {
+                  "no": 34,
+                  "type": "spec",
+                  "title": "LASER NA BISSETRIZ (y = x)",
+                  "q": "Qual é o suplemento de 130°? Se acertar, ataque 3 pontos onde x e y são iguais: ex. (−3,−3), (1,1), (4,4)!",
+                  "effect": "ATAQUE: 3 disparos onde y = x",
+                  "ans": "50°"
+            },
+            {
+                  "no": 35,
+                  "type": "spec",
+                  "title": "TORPEDO DA EQUAÇÃO",
+                  "q": "Resolva: 4x − 2 = 10. Se acertar, faça 2 disparos livres em qualquer quadrante!",
+                  "effect": "BÔNUS: 2 Disparos Livres no Radar",
+                  "ans": "x = 3"
+            },
+            {
+                  "no": 36,
+                  "type": "spec",
+                  "title": "SUPER RADAR DO 4º QUADRANTE",
+                  "q": "Calcule: (−4) × (−5) − 25. Se acertar, o oponente revela quantos pontos de navio possui no 4º Quadrante (x > 0, y < 0)!",
+                  "effect": "RADAR: Escaneia todo o 4º Quadrante",
+                  "ans": "−5 (pois 20 − 25 = −5)"
+            }
+      ],
+      "8ano": [
+            {
+                  "no": 1,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "√9",
+                  "y_expr": "∛(−8)",
+                  "ans": "(3, −2)",
+                  "detail": "x = 3 e y = −2"
+            },
+            {
+                  "no": 2,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "∛(−64)",
+                  "y_expr": "(<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>)⁻¹",
+                  "ans": "(−4, 2)",
+                  "detail": "x = −4 e y = 2"
+            },
+            {
+                  "no": 3,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "9 × 0,333...",
+                  "y_expr": "√16",
+                  "ans": "(3, 4)",
+                  "detail": "x = 3 e y = 4"
+            },
+            {
+                  "no": 4,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−√16",
+                  "y_expr": "5⁰ − 4",
+                  "ans": "(−4, −3)",
+                  "detail": "x = −4 e y = 1 − 4 = −3"
+            },
+            {
+                  "no": 5,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "(<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span>)⁻²",
+                  "y_expr": "∛(−27)",
+                  "ans": "(4, −3)",
+                  "detail": "x = 2² = 4 e y = −3"
+            },
+            {
+                  "no": 6,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "2³ × 2⁻³",
+                  "y_expr": "−√9",
+                  "ans": "(1, −3)",
+                  "detail": "x = 2⁰ = 1 e y = −3"
+            },
+            {
+                  "no": 7,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "√25 − 7",
+                  "y_expr": "∛64",
+                  "ans": "(−2, 4)",
+                  "detail": "x = 5 − 7 = −2 e y = 4"
+            },
+            {
+                  "no": 8,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "0,2 × 10¹",
+                  "y_expr": "9 × 0,111...",
+                  "ans": "(2, 1)",
+                  "detail": "x = 2 e y = 1"
+            },
+            {
+                  "no": 9,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "∛(−1)",
+                  "y_expr": "√9 − 7",
+                  "ans": "(−1, −4)",
+                  "detail": "x = −1 e y = 3 − 7 = −4"
+            },
+            {
+                  "no": 10,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−√4",
+                  "y_expr": "2⁵ ÷ 2³",
+                  "ans": "(−2, 4)",
+                  "detail": "x = −2 e y = 2² = 4"
+            },
+            {
+                  "no": 11,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "√36 − 6",
+                  "y_expr": "(<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span>)⁻¹",
+                  "ans": "(0, 3)",
+                  "detail": "x = 0 e y = 3"
+            },
+            {
+                  "no": 12,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "3⁴ ÷ 3³",
+                  "y_expr": "√1 − 5",
+                  "ans": "(3, −4)",
+                  "detail": "x = 3 e y = 1 − 5 = −4"
+            },
+            {
+                  "no": 13,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "√49 − 10",
+                  "y_expr": "∛8",
+                  "ans": "(−3, 2)",
+                  "detail": "x = 7 − 10 = −3 e y = 2"
+            },
+            {
+                  "no": 14,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "9 × 0,444...",
+                  "y_expr": "−√1",
+                  "ans": "(4, −1)",
+                  "detail": "x = 4 e y = −1"
+            },
+            {
+                  "no": 15,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "√0,25 × 4",
+                  "y_expr": "∛(−8)",
+                  "ans": "(2, −2)",
+                  "detail": "x = 0,5 × 4 = 2 e y = −2"
+            },
+            {
+                  "no": 16,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−∛27",
+                  "y_expr": "√16 − 5",
+                  "ans": "(−3, −1)",
+                  "detail": "x = −3 e y = 4 − 5 = −1"
+            },
+            {
+                  "no": 17,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "<span class=\"rad-wrap\">√<span class=\"rad-bar\"><span class=\"frac\"><span class=\"top\">16</span><span class=\"bottom\">4</span></span></span></span>",
+                  "y_expr": "0,3 × 10¹",
+                  "ans": "(2, 3)",
+                  "detail": "x = √4 = 2 e y = 3"
+            },
+            {
+                  "no": 18,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "10⁻² × 10²",
+                  "y_expr": "−√16",
+                  "ans": "(1, −4)",
+                  "detail": "x = 1 e y = −4"
+            },
+            {
+                  "no": 19,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "√64 − 12",
+                  "y_expr": "∛27",
+                  "ans": "(−4, 3)",
+                  "detail": "x = 8 − 12 = −4 e y = 3"
+            },
+            {
+                  "no": 20,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "∛0",
+                  "y_expr": "−√4",
+                  "ans": "(0, −2)",
+                  "detail": "x = 0 e y = −2"
+            },
+            {
+                  "no": 21,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−9 × 0,222...",
+                  "y_expr": "√9 − 5",
+                  "ans": "(−2, −2)",
+                  "detail": "x = −2 e y = −2"
+            },
+            {
+                  "no": 22,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "(<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">4</span></span>)⁻¹",
+                  "y_expr": "∛1",
+                  "ans": "(4, 1)",
+                  "detail": "x = 4 e y = 1"
+            },
+            {
+                  "no": 23,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "√81 − 10",
+                  "y_expr": "2²",
+                  "ans": "(−1, 4)",
+                  "detail": "x = 9 − 10 = −1 e y = 4"
+            },
+            {
+                  "no": 24,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−√9",
+                  "y_expr": "7⁰ − 1",
+                  "ans": "(−3, 0)",
+                  "detail": "x = −3 e y = 0"
+            },
+            {
+                  "no": 25,
+                  "type": "spec",
+                  "title": "SONDA DE SISTEMA LINEAR",
+                  "q": "Resolva mentalmente o sistema: x + y = 5 e x − y = 1. Se acertar (x, y), ataque esse ponto + 2 disparos livres!",
+                  "effect": "ATAQUE: Disparo em (3, 2) + 2 Tiros Livres",
+                  "ans": "(3, 2), pois 3+2=5 e 3−2=1"
+            },
+            {
+                  "no": 26,
+                  "type": "spec",
+                  "title": "LASER NA RETA y = x",
+                  "q": "Calcule: (<span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span>)⁻² + √16. Se acertar, dispare 3 torpedos em pontos quaisquer da reta y = x!",
+                  "effect": "LASER: 3 disparos na reta bissetriz y = x",
+                  "ans": "13 (pois 9 + 4 = 13)"
+            },
+            {
+                  "no": 27,
+                  "type": "spec",
+                  "title": "LASER NA RETA y = −x",
+                  "q": "Qual é a fração geratriz de 0,555...? Se acertar, dispare 3 torpedos na reta y = −x: ex. (−3,3), (1,−1), (4,−4)!",
+                  "effect": "LASER: 3 disparos na reta y = −x",
+                  "ans": "<span class=\"frac\"><span class=\"top\">5</span><span class=\"bottom\">9</span></span>"
+            },
+            {
+                  "no": 28,
+                  "type": "spec",
+                  "title": "TORPEDO DO SISTEMA LINEAR II",
+                  "q": "No sistema x + y = 0 e x − y = −6, quanto valem x e y? Se acertar, ataque (x, y) + 2 disparos livres!",
+                  "effect": "ATAQUE: Disparo em (−3, 3) + 2 Tiros Livres",
+                  "ans": "(−3, 3)"
+            },
+            {
+                  "no": 29,
+                  "type": "spec",
+                  "title": "LASER NA RETA y = 2x",
+                  "q": "Simplifique (2x³) · (5x²). Se acertar, ataque 3 pontos pertencentes à reta y = 2x: ex. (−2,−4), (0,0), (1,2), (2,4)!",
+                  "effect": "LASER: 3 disparos sobre a reta y = 2x",
+                  "ans": "10x⁵"
+            },
+            {
+                  "no": 30,
+                  "type": "spec",
+                  "title": "RADAR DE SIMETRIA AXIAL",
+                  "q": "Para x = −3, quanto vale x² − 5? Se acertar, ataque um ponto (x, y) e seu reflexo no eixo X (x, −y)!",
+                  "effect": "SIMETRIA: Disparo duplo em (x, y) e (x, −y)",
+                  "ans": "4 (pois 9 − 5 = 4)"
+            },
+            {
+                  "no": 31,
+                  "type": "spec",
+                  "title": "VARREDURA HORIZONTAL y = 3",
+                  "q": "Qual é a soma dos ângulos internos de um pentágono? Se acertar, faça 3 disparos na reta y = 3!",
+                  "effect": "LASER: 3 disparos na reta horizontal y = 3",
+                  "ans": "540°"
+            },
+            {
+                  "no": 32,
+                  "type": "spec",
+                  "title": "VARREDURA VERTICAL x = −3",
+                  "q": "Quanto vale ∛125 + 2⁻⁰? (Dica: 2⁰ = 1). Se acertar, faça 3 disparos na reta vertical x = −3!",
+                  "effect": "LASER: 3 disparos na reta vertical x = −3",
+                  "ans": "6 (pois 5 + 1 = 6)"
+            },
+            {
+                  "no": 33,
+                  "type": "spec",
+                  "title": "RADAR DE POLÍGONO (QUADRANTE)",
+                  "q": "Quantas diagonais tem um pentágono? Se acertar, escolha um quadrante (I, II, III ou IV) e o oponente diz quantos pontos de navio há nele!",
+                  "effect": "RADAR: Escaneia um quadrante inteiro",
+                  "ans": "5 diagonais"
+            },
+            {
+                  "no": 34,
+                  "type": "spec",
+                  "title": "LASER NA RETA x + y = 2",
+                  "q": "Calcule: √144 ÷ ∛8. Se acertar, ataque 3 pontos onde x + y = 2: ex. (−2,4), (0,2), (1,1), (3,−1)!",
+                  "effect": "LASER: 3 disparos onde x + y = 2",
+                  "ans": "6 (pois 12 ÷ 2 = 6)"
+            },
+            {
+                  "no": 35,
+                  "type": "spec",
+                  "title": "TORPEDO DE NOTAÇÃO CIENTÍFICA",
+                  "q": "Escreva 0,004 em potência de base 10. Se acertar, ganhe 2 disparos livres imediatos!",
+                  "effect": "BÔNUS: 2 Disparos Livres no Radar",
+                  "ans": "4 × 10⁻³"
+            },
+            {
+                  "no": 36,
+                  "type": "spec",
+                  "title": "BOMBA DE TRANSLAÇÃO (+1, −1)",
+                  "q": "Usando π ≈ 3, qual a área do círculo de raio 3 cm? Se acertar, dispare em (x, y) e também no ponto transladado (x+1, y−1)!",
+                  "effect": "TRANSLAÇÃO: Ataca (x, y) e (x+1, y−1)",
+                  "ans": "27 cm² (pois 3 × 3² = 27)"
+            }
+      ],
+      "9ano": [
+            {
+                  "no": 1,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "√2 × √8",
+                  "y_expr": "−9<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span></sup>",
+                  "ans": "(4, −3)",
+                  "detail": "x = √16 = 4 e y = −3"
+            },
+            {
+                  "no": 2,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−<span class=\"frac\"><span class=\"top\">√18</span><span class=\"bottom\">√2</span></span>",
+                  "y_expr": "16<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span></sup>",
+                  "ans": "(−3, 4)",
+                  "detail": "x = −√9 = −3 e y = 4"
+            },
+            {
+                  "no": 3,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "8<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span></sup>",
+                  "y_expr": "1² − 2²",
+                  "ans": "(2, −3)",
+                  "detail": "x = 2 e y = 1 − 4 = −3"
+            },
+            {
+                  "no": 4,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−√2 × √2",
+                  "y_expr": "−64<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span></sup>",
+                  "ans": "(−2, −4)",
+                  "detail": "x = −2 e y = −4"
+            },
+            {
+                  "no": 5,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "2² − 1²",
+                  "y_expr": "4 × sen 30°",
+                  "ans": "(3, 2)",
+                  "detail": "x = 3 e y = 4 × 0,5 = 2"
+            },
+            {
+                  "no": 6,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−27<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span></sup>",
+                  "y_expr": "tg 45°",
+                  "ans": "(−3, 1)",
+                  "detail": "x = −3 e y = 1"
+            },
+            {
+                  "no": 7,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "<span class=\"frac\"><span class=\"top\">√32</span><span class=\"bottom\">√2</span></span>",
+                  "y_expr": "√5 − √5",
+                  "ans": "(4, 0)",
+                  "detail": "x = √16 = 4 e y = 0"
+            },
+            {
+                  "no": 8,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "2 × sen 0°",
+                  "y_expr": "−(√2)²",
+                  "ans": "(0, −2)",
+                  "detail": "x = 0 e y = −2"
+            },
+            {
+                  "no": 9,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−<span class=\"frac\"><span class=\"top\">√48</span><span class=\"bottom\">√3</span></span>",
+                  "y_expr": "(√3)²",
+                  "ans": "(−4, 3)",
+                  "detail": "x = −√16 = −4 e y = 3"
+            },
+            {
+                  "no": 10,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "6 × sen 30°",
+                  "y_expr": "−4<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span></sup>",
+                  "ans": "(3, −2)",
+                  "detail": "x = 3 e y = −2"
+            },
+            {
+                  "no": 11,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "1² − 2²",
+                  "y_expr": "−√9",
+                  "ans": "(−3, −3)",
+                  "detail": "x = −3 e y = −3"
+            },
+            {
+                  "no": 12,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "<span class=\"frac\"><span class=\"top\">√12</span><span class=\"bottom\">√3</span></span>",
+                  "y_expr": "8<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span></sup> − 6",
+                  "ans": "(2, −4)",
+                  "detail": "x = √4 = 2 e y = 2 − 6 = −4"
+            },
+            {
+                  "no": 13,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−tg 45°",
+                  "y_expr": "√2 × √8",
+                  "ans": "(−1, 4)",
+                  "detail": "x = −1 e y = 4"
+            },
+            {
+                  "no": 14,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "8 × sen 30°",
+                  "y_expr": "27<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span></sup>",
+                  "ans": "(4, 3)",
+                  "detail": "x = 4 e y = 3"
+            },
+            {
+                  "no": 15,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "√9 − 7",
+                  "y_expr": "−2 × sen 30°",
+                  "ans": "(−4, −1)",
+                  "detail": "x = 3 − 7 = −4 e y = −1"
+            },
+            {
+                  "no": 16,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "<span class=\"frac\"><span class=\"top\">√7</span><span class=\"bottom\">√7</span></span>",
+                  "y_expr": "64<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">3</span></span></sup>",
+                  "ans": "(1, 4)",
+                  "detail": "x = 1 e y = 4"
+            },
+            {
+                  "no": 17,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−4 × sen 30°",
+                  "y_expr": "√3 × √3",
+                  "ans": "(−2, 3)",
+                  "detail": "x = −2 e y = 3"
+            },
+            {
+                  "no": 18,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "(√2)² − 4",
+                  "y_expr": "2² − 5",
+                  "ans": "(−2, −1)",
+                  "detail": "x = 2 − 4 = −2 e y = −1"
+            },
+            {
+                  "no": 19,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "<span class=\"frac\"><span class=\"top\">√27</span><span class=\"bottom\">√3</span></span>",
+                  "y_expr": "−8 × sen 30°",
+                  "ans": "(3, −4)",
+                  "detail": "x = √9 = 3 e y = −4"
+            },
+            {
+                  "no": 20,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−(√4)²",
+                  "y_expr": "2 × sen 30°",
+                  "ans": "(−4, 1)",
+                  "detail": "x = −4 e y = 1"
+            },
+            {
+                  "no": 21,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "√(3²+4²) − 3",
+                  "y_expr": "0",
+                  "ans": "(2, 0)",
+                  "detail": "x = 5 − 3 = 2 e y = 0"
+            },
+            {
+                  "no": 22,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "10⁰ − 2",
+                  "y_expr": "−(√3)²",
+                  "ans": "(−1, −3)",
+                  "detail": "x = 1 − 2 = −1 e y = −3"
+            },
+            {
+                  "no": 23,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "4² − 12",
+                  "y_expr": "tg 45°",
+                  "ans": "(4, 1)",
+                  "detail": "x = 16 − 12 = 4 e y = 1"
+            },
+            {
+                  "no": 24,
+                  "type": "torp",
+                  "title": "TORPEDO DE COORDENADA",
+                  "x_expr": "−√16",
+                  "y_expr": "−16<sup class=\"exp-frac\"><span class=\"frac\"><span class=\"top\">1</span><span class=\"bottom\">2</span></span></sup>",
+                  "ans": "(−4, −4)",
+                  "detail": "x = −4 e y = −4"
+            },
+            {
+                  "no": 25,
+                  "type": "spec",
+                  "title": "LASER NA FUNÇÃO y = 2x − 1",
+                  "q": "Para f(x) = 2x − 1, calcule f(2). Se acertar, dispare 3 torpedos sobre pontos da reta y = 2x − 1: ex. (−1,−3), (0,−1), (1,1), (2,3)!",
+                  "effect": "LASER AFIM: 3 disparos na reta y = 2x − 1",
+                  "ans": "f(2) = 3"
+            },
+            {
+                  "no": 26,
+                  "type": "spec",
+                  "title": "LASER NA FUNÇÃO y = x + 2",
+                  "q": "Qual é o zero (raiz) da função f(x) = x + 2? Se acertar, ataque 3 pontos da reta y = x + 2: ex. (−4,−2), (−2,0), (0,2), (2,4)!",
+                  "effect": "LASER AFIM: 3 disparos na reta y = x + 2",
+                  "ans": "x = −2"
+            },
+            {
+                  "no": 27,
+                  "type": "spec",
+                  "title": "TORPEDO DAS RAÍZES (2º GRAU)",
+                  "q": "Quais são as duas raízes de x² − x − 6 = 0 (soma 1 e produto −6)? Se acertar, ataque (−2, 3) e (3, −2) + 1 tiro livre!",
+                  "effect": "ATAQUE: Disparo nas raízes (−2, 3) e (3, −2) + 1 livre",
+                  "ans": "−2 e 3"
+            },
+            {
+                  "no": 28,
+                  "type": "spec",
+                  "title": "RADAR DE PITÁGORAS (d = 5)",
+                  "q": "Num triângulo retângulo de catetos 3 e 4, quanto mede a hipotenusa? Se acertar, ataque 3 pontos a distância 5 da origem: ex. (3,4), (−3,4), (4,−3), (−4,−3)!",
+                  "effect": "CÍRCULO r=5: 3 disparos onde x² + y² = 25",
+                  "ans": "5"
+            },
+            {
+                  "no": 29,
+                  "type": "spec",
+                  "title": "TORPEDO DE SOMA E PRODUTO",
+                  "q": "Na equação x² − 5x + 4 = 0, quais são as raízes? Se acertar, dispare em (1, 4) e (4, 1) + 1 tiro livre!",
+                  "effect": "ATAQUE: Disparo em (1, 4) e (4, 1) + 1 livre",
+                  "ans": "1 e 4"
+            },
+            {
+                  "no": 30,
+                  "type": "spec",
+                  "title": "LASER NA FUNÇÃO y = −x + 1",
+                  "q": "Se f(x) = −x + 1, quanto vale f(−3)? Se acertar, ataque 3 pontos da reta y = −x + 1: ex. (−3,4), (0,1), (1,0), (4,−3)!",
+                  "effect": "LASER AFIM: 3 disparos na reta y = −x + 1",
+                  "ans": "f(−3) = 4"
+            },
+            {
+                  "no": 31,
+                  "type": "spec",
+                  "title": "TORPEDO DA EQUAÇÃO INCOMPLETA",
+                  "q": "Quais são as duas raízes reais de x² − 9 = 0? Se acertar, ataque 3 pontos quaisquer com x = 3 ou x = −3!",
+                  "effect": "ATAQUE: 3 disparos nas retas x = 3 ou x = −3",
+                  "ans": "−3 e +3"
+            },
+            {
+                  "no": 32,
+                  "type": "spec",
+                  "title": "SONDA DE PONTO MÉDIO",
+                  "q": "Qual é o ponto médio entre A(−2, −4) e B(4, 2)? Se acertar, ataque esse ponto médio + 2 disparos livres!",
+                  "effect": "ATAQUE: Disparo em (1, −1) + 2 Tiros Livres",
+                  "ans": "(1, −1)"
+            },
+            {
+                  "no": 33,
+                  "type": "spec",
+                  "title": "RADAR DE TEOREMA DE TALES",
+                  "q": "Na proporção <span class=\"frac\"><span class=\"top\">x</span><span class=\"bottom\">2</span></span> = <span class=\"frac\"><span class=\"top\">6</span><span class=\"bottom\">3</span></span>, quanto vale x? Se acertar, o oponente revela quantos pontos de navio tem no 1º Quadrante!",
+                  "effect": "RADAR: Escaneia todo o 1º Quadrante",
+                  "ans": "x = 4"
+            },
+            {
+                  "no": 34,
+                  "type": "spec",
+                  "title": "LASER NA PARÁBOLA y = x² − 2",
+                  "q": "Para y = x² − 2, quanto vale y quando x = 2? Se acertar, ataque os 3 pontos da parábola: (−2, 2), (0, −2) e (2, 2)!",
+                  "effect": "PARÁBOLA: Ataca (−2, 2), (0, −2) e (2, 2)",
+                  "ans": "y = 2 (pois 4 − 2 = 2)"
+            },
+            {
+                  "no": 35,
+                  "type": "spec",
+                  "title": "SUPER TORPEDO DE DIFERENÇA DE QUADRADOS",
+                  "q": "Calcule mentalmente: 13² − 12². Se acertar, faça 2 disparos livres imediatos em qualquer quadrante!",
+                  "effect": "BÔNUS: 2 Disparos Livres no Radar",
+                  "ans": "25 (pois (13−12)×(13+12) = 1×25)"
+            },
+            {
+                  "no": 36,
+                  "type": "spec",
+                  "title": "RADAR DE RACIONALIZAÇÃO",
+                  "q": "Racionalizando <span class=\"frac\"><span class=\"top\">4</span><span class=\"bottom\">√2</span></span>, quanto encontramos? Se acertar, escolha um quadrante e o oponente revela quantos pontos de navio há nele!",
+                  "effect": "RADAR: Escaneia um quadrante à sua escolha",
+                  "ans": "2√2"
+            }
+      ]
+};
+
+    let currentGrade = '6ano';
+    let currentView = 'boards'; // 'boards' | 'cards' | 'key'
+
+    function formatSup(txt) {
+      return String(txt || '')
+        .replace(/⁰/g, '<sup>0</sup>')
+        .replace(/¹/g, '<sup>1</sup>')
+        .replace(/²/g, '<sup>2</sup>')
+        .replace(/³/g, '<sup>3</sup>')
+        .replace(/⁴/g, '<sup>4</sup>')
+        .replace(/⁵/g, '<sup>5</sup>')
+        .replace(/⁻¹/g, '<sup>−1</sup>')
+        .replace(/⁻²/g, '<sup>−2</sup>')
+        .replace(/⁻³/g, '<sup>−3</sup>');
+    }
+
+    // Gera o SVG vetorial nítido do Plano Cartesiano (1º Quadrante para 6º ano; 4 Quadrantes para 7º, 8º e 9º ano)
+    function makeCartesianSvg(grade) {
+      const isFirstQuad = (grade === '6ano');
+      const size = 300;
+      const padLeft = isFirstQuad ? 30 : 28;
+      const padBottom = isFirstQuad ? 28 : 24;
+      const padTop = 20;
+      const padRight = 12;
+      const plotW = size - padLeft - padRight;
+      const plotH = size - padTop - padBottom;
+      const steps = 8; // 9 linhas (0..8 ou -4..+4)
+      const stepX = plotW / steps;
+      const stepY = plotH / steps;
+
+      let svgParts = [];
+      svgParts.push(`<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">`);
+
+      // Marcas d'água sutis dos quadrantes para 7º, 8º e 9º ano
+      if (!isFirstQuad) {
+        const cx = padLeft + 4 * stepX;
+        const cy = padTop + 4 * stepY;
+        svgParts.push(`<text x="${cx + 2 * stepX}" y="${cy - 2.2 * stepY}" text-anchor="middle" font-family="Orbitron,sans-serif" font-size="8.5" font-weight="800" fill="#cbd5e1">1º Q (+,+)</text>`);
+        svgParts.push(`<text x="${cx - 2 * stepX}" y="${cy - 2.2 * stepY}" text-anchor="middle" font-family="Orbitron,sans-serif" font-size="8.5" font-weight="800" fill="#cbd5e1">2º Q (−,+)</text>`);
+        svgParts.push(`<text x="${cx - 2 * stepX}" y="${cy + 2.6 * stepY}" text-anchor="middle" font-family="Orbitron,sans-serif" font-size="8.5" font-weight="800" fill="#cbd5e1">3º Q (−,−)</text>`);
+        svgParts.push(`<text x="${cx + 2 * stepX}" y="${cy + 2.6 * stepY}" text-anchor="middle" font-family="Orbitron,sans-serif" font-size="8.5" font-weight="800" fill="#cbd5e1">4º Q (+,−)</text>`);
+      }
+
+      // Linhas da malha
+      for (let i = 0; i <= steps; i++) {
+        const x = padLeft + i * stepX;
+        const y = padTop + i * stepY;
+        svgParts.push(`<line x1="${x}" y1="${padTop}" x2="${x}" y2="${padTop + plotH}" stroke="#cbd5e1" stroke-width="0.9"/>`);
+        svgParts.push(`<line x1="${padLeft}" y1="${y}" x2="${padLeft + plotW}" y2="${y}" stroke="#cbd5e1" stroke-width="0.9"/>`);
+      }
+
+      // Reta bissetriz sutil (y = x)
+      svgParts.push(`<line x1="${padLeft}" y1="${padTop + plotH}" x2="${padLeft + plotW}" y2="${padTop}" stroke="#94a3b8" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.55"/>`);
+
+      // Eixos principais X e Y em destaque com setas
+      const axisX_Y = isFirstQuad ? (padTop + plotH) : (padTop + 4 * stepY);
+      const axisY_X = isFirstQuad ? padLeft : (padLeft + 4 * stepX);
+
+      // Eixo X
+      svgParts.push(`<line x1="${padLeft - 4}" y1="${axisX_Y}" x2="${padLeft + plotW + 9}" y2="${axisX_Y}" stroke="#0f172a" stroke-width="2"/>`);
+      svgParts.push(`<polygon points="${padLeft + plotW + 12},${axisX_Y} ${padLeft + plotW + 6},${axisX_Y - 3.2} ${padLeft + plotW + 6},${axisX_Y + 3.2}" fill="#0f172a"/>`);
+      svgParts.push(`<text x="${padLeft + plotW + 11}" y="${axisX_Y - 5}" text-anchor="end" font-family="Orbitron,sans-serif" font-size="8.5" font-weight="900" fill="#0f172a">x</text>`);
+
+      // Eixo Y
+      svgParts.push(`<line x1="${axisY_X}" y1="${padTop + plotH + 4}" x2="${axisY_X}" y2="${padTop - 9}" stroke="#0f172a" stroke-width="2"/>`);
+      svgParts.push(`<polygon points="${axisY_X},${padTop - 12} ${axisY_X - 3.2},${padTop - 6} ${axisY_X + 3.2},${padTop - 6}" fill="#0f172a"/>`);
+      svgParts.push(`<text x="${axisY_X + 5}" y="${padTop - 5}" text-anchor="start" font-family="Orbitron,sans-serif" font-size="8.5" font-weight="900" fill="#0f172a">y</text>`);
+
+      // Pontos de interseção (bolinhas onde os navios e tiros são marcados)
+      for (let ix = 0; ix <= steps; ix++) {
+        for (let iy = 0; iy <= steps; iy++) {
+          const px = padLeft + ix * stepX;
+          const py = padTop + (steps - iy) * stepY;
+          const isOrigin = (isFirstQuad && ix === 0 && iy === 0) || (!isFirstQuad && ix === 4 && iy === 4);
+          const r = isOrigin ? 3.4 : 2.9;
+          const sw = isOrigin ? 1.5 : 1.0;
+          svgParts.push(`<circle cx="${px}" cy="${py}" r="${r}" fill="#ffffff" stroke="#334155" stroke-width="${sw}"/>`);
+        }
+      }
+
+      // Rótulos numéricos dos eixos X e Y
+      for (let i = 0; i <= steps; i++) {
+        const valX = isFirstQuad ? i : (i - 4);
+        const valY = isFirstQuad ? i : (i - 4);
+        const labelX = valX < 0 ? ('−' + Math.abs(valX)) : String(valX);
+        const labelY = valY < 0 ? ('−' + Math.abs(valY)) : String(valY);
+
+        const px = padLeft + i * stepX;
+        const py = padTop + (steps - i) * stepY;
+
+        if (isFirstQuad) {
+          svgParts.push(`<text x="${px}" y="${padTop + plotH + 14}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="8.5" font-weight="800" fill="#0f172a">${labelX}</text>`);
+          svgParts.push(`<text x="${padLeft - 8}" y="${py + 3}" text-anchor="end" font-family="Outfit,sans-serif" font-size="8.5" font-weight="800" fill="#0f172a">${labelY}</text>`);
+        } else {
+          // Nos 4 quadrantes, coloca os números junto aos eixos centrais E também na borda externa para leitura 100% clara
+          if (valX !== 0) {
+            svgParts.push(`<text x="${px}" y="${axisX_Y + 11}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="7.5" font-weight="800" fill="#0f172a">${labelX}</text>`);
+          } else {
+            svgParts.push(`<text x="${px - 6}" y="${axisX_Y + 10}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="7.2" font-weight="800" fill="#0f172a">0</text>`);
+          }
+          if (valY !== 0) {
+            svgParts.push(`<text x="${axisY_X - 5}" y="${py + 2.8}" text-anchor="end" font-family="Outfit,sans-serif" font-size="7.5" font-weight="800" fill="#0f172a">${labelY}</text>`);
+          }
+          // Repetição sutil na moldura externa
+          svgParts.push(`<text x="${px}" y="${padTop + plotH + 13}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="6.8" font-weight="700" fill="#64748b">${labelX}</text>`);
+          svgParts.push(`<text x="${padLeft - 6}" y="${py + 2.5}" text-anchor="end" font-family="Outfit,sans-serif" font-size="6.8" font-weight="700" fill="#64748b">${labelY}</text>`);
+        }
+      }
+
+      svgParts.push(`</svg>`);
+      return svgParts.join('');
+    }
+
+    function makeSinglePlayerStationHtml(grade, playerLabel) {
+      const gradeLabel = GRADE_LABELS[grade] || '6º Ano';
+      const subLabel = GRADE_SUBTITLES[grade] || '';
+      const svgGrid = makeCartesianSvg(grade);
+
+      return `
+        <section class="player-station">
+          <div class="station-header">
+            <div class="st-title-block">
+              <div class="st-title">BATALHA NAVAL CARTESIANA — ${gradeLabel.toUpperCase()} · ${playerLabel}</div>
+              <div class="st-commander">${subLabel}</div>
+              <div class="station-meta"><span>Nome: __________________________________</span><span>Data: ____ / ____ / ______</span></div>
+            </div>
+            <div class="fleet-bar" aria-label="Legenda das embarcações">
+              <div class="fleet-item"><span>Porta-aviões (4)</span><span class="ship-dots">●—●—●—●</span><span class="chk-box"></span></div>
+              <div class="fleet-item"><span>Encouraçado (3)</span><span class="ship-dots">●—●—●</span><span class="chk-box"></span><span class="chk-box"></span></div>
+              <div class="fleet-item"><span>Submarino (2)</span><span class="ship-dots">●—●</span><span class="chk-box"></span><span class="chk-box"></span><span class="chk-box"></span></div>
+              <div class="fleet-item"><span>Patrulha (1)</span><span class="ship-dots">●</span><span class="chk-box"></span><span class="chk-box"></span></div>
+            </div>
+          </div>
+
+          <div class="grids-row">
+            <div class="cartesian-panel">
+              <div class="cp-header">
+                <span>MAPA 1 · MINHA FROTA (DEFESA)</span>
+                <span>Desenhe 8 embarcações · 18 pontos</span>
+              </div>
+              <div class="cp-svg-wrap">${svgGrid}</div>
+            </div>
+            <div class="cartesian-panel">
+              <div class="cp-header">
+                <span>MAPA 2 · FROTA DO OPONENTE (ATAQUE)</span>
+                <span>Registre os disparos em (x, y)</span>
+              </div>
+              <div class="cp-svg-wrap">${svgGrid}</div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderBoardsSheetHtml(grade) {
+      return `
+        <section id="parte-tabuleiros" class="print-area">
+          <div class="a4-boards-sheet">${makeSinglePlayerStationHtml(grade, 'JOGADOR A')}</div>
+          <div class="a4-boards-sheet">${makeSinglePlayerStationHtml(grade, 'JOGADOR B')}</div>
+        </section>
+      `;
+    }
+
+    function compactSpecQuestion(question) {
+      return formatSup(question)
+        .replace(/\s*Se acertar[\s\S]*$/i, '')
+        .replace(/\s*Se acertares[\s\S]*$/i, '')
+        .trim();
+    }
+
+    function compactSpecEffect(effect) {
+      return formatSup(effect)
+        .replace(/^([A-ZÀ-Ú]+):\s*/, '$1 · ')
+        .replace(/pontos de navio ele tem/g, 'pontos de navio')
+        .replace(/pontos de navio dele/g, 'pontos de navio')
+        .replace(/pontos de navio possui/g, 'pontos de navio')
+        .replace(/pontos quaisquer da linha/g, 'pontos da linha')
+        .replace(/pontos quaisquer da reta/g, 'pontos da reta')
+        .replace(/imediatamente no radar/g, 'no radar');
+    }
+
+    function renderCardsSheetsHtml(grade) {
+      const cards = CARDS_BY_GRADE[grade] || CARDS_BY_GRADE['6ano'];
+      const cardsHtml = cards.map(c => {
+        const numStr = '#' + String(c.no).padStart(2, '0');
+        const kind = c.type === 'torp' ? 'TORPEDO' : 'RADAR';
+        if (c.type === 'torp') {
+          return `
+            <article class="naval-card is-torp">
+              <div class="naval-card-inner">
+                <div class="nc-header">
+                  <span><span class="card-kind">${kind}</span> · COORDENADA</span>
+                  <span>${numStr}</span>
+                </div>
+                <div class="nc-body">
+                  <div class="torp-coords-box">
+                    <div class="coord-pill">
+                      <span class="coord-axis-lbl">X · abscissa</span>
+                      <span class="coord-math">${formatSup(c.x_expr)}</span>
+                    </div>
+                    <div class="coord-pill">
+                      <span class="coord-axis-lbl">Y · ordenada</span>
+                      <span class="coord-math">${formatSup(c.y_expr)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          `;
+        }
+        return `
+          <article class="naval-card is-spec">
+            <div class="naval-card-inner">
+              <div class="nc-header">
+                <span><span class="card-kind">${kind}</span> · ${c.title}</span>
+                <span>${numStr}</span>
+              </div>
+              <div class="nc-body">
+                <div class="spec-question">${compactSpecQuestion(c.q)}</div>
+                <div class="spec-effect-badge">EFEITO: ${compactSpecEffect(c.effect)}</div>
+              </div>
+            </div>
+          </article>
+        `;
+      });
+
+      const sheets = [];
+      for (let i = 0; i < cardsHtml.length; i += 18) {
+        sheets.push(`
+          <div class="a4-cards-sheet">
+            <div class="cards-cut-grid">${cardsHtml.slice(i, i + 18).join('')}</div>
+          </div>
+        `);
+      }
+      return `<section id="parte-cartas" class="print-area">${sheets.join('')}</section>`;
+    }
+
+    function renderKeyRows(cards) {
+      return cards.map(c => {
+        const numStr = '#' + String(c.no).padStart(2, '0');
+        const kind = c.type === 'torp' ? 'TORPEDO' : 'RADAR';
+        const calculation = c.type === 'torp'
+          ? `x = ${formatSup(c.x_expr)}; y = ${formatSup(c.y_expr)}`
+          : compactSpecQuestion(c.q);
+        return `
+          <tr>
+            <td class="col-no">${numStr}</td>
+            <td class="col-type">${kind}</td>
+            <td>${calculation}</td>
+            <td class="col-res">${formatSup(c.ans)}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderKeySheetHtml(grade) {
+      const cards = CARDS_BY_GRADE[grade] || CARDS_BY_GRADE['6ano'];
+      const gradeLabel = GRADE_LABELS[grade] || '6º Ano';
+      return `
+        <section id="parte-gabarito" class="print-area">
+          <div class="key-sheet">
+            <div class="key-sheet-header">
+              <h2>GABARITO DO PROFESSOR — BATALHA NAVAL CARTESIANA (${gradeLabel.toUpperCase()})</h2>
+              <p>36 cartas · tipo, cálculo/desafio e coordenada ou resposta</p>
+            </div>
+            <div class="key-columns">
+              <table class="key-table">
+                <thead><tr><th>Nº</th><th>Tipo</th><th>Cálculo / desafio</th><th>Resposta</th></tr></thead>
+                <tbody>${renderKeyRows(cards.slice(0, 18))}</tbody>
+              </table>
+              <table class="key-table">
+                <thead><tr><th>Nº</th><th>Tipo</th><th>Cálculo / desafio</th><th>Resposta</th></tr></thead>
+                <tbody>${renderKeyRows(cards.slice(18, 36))}</tbody>
+              </table>
+            </div>
+            <div class="key-sheet-footer">• Laboratório de Matemática · UFFS</div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderViewHtml(viewType) {
+      if (viewType === 'boards') return renderBoardsSheetHtml(currentGrade);
+      if (viewType === 'cards') return renderCardsSheetsHtml(currentGrade);
+      return renderKeySheetHtml(currentGrade);
+    }
+
+    function renderAllViewsHtml() {
+      return renderBoardsSheetHtml(currentGrade) + renderCardsSheetsHtml(currentGrade) + renderKeySheetHtml(currentGrade);
+    }
+
+    function updatePrintLabels() {
+      const gradeLabel = GRADE_LABELS[currentGrade] || '6º Ano';
+      const bBoards = document.getElementById('btnPrintBoards');
+      if (bBoards) bBoards.textContent = `🖨️ Tabuleiros (2 folhas · ${gradeLabel})`;
+      const bCards = document.getElementById('btnPrintCards');
+      if (bCards) bCards.textContent = `🖨️ Cartas (2 folhas · ${gradeLabel})`;
+      const bKey = document.getElementById('btnPrintKey');
+      if (bKey) bKey.textContent = `🖨️ Gabarito (1 folha · ${gradeLabel})`;
+    }
+
+    function renderCurrentView() {
+      const container = document.getElementById('navalMainContainer');
+      if (!container) return;
+      container.innerHTML = renderViewHtml(currentView);
+      updatePrintLabels();
+    }
+
+    function setGradeMode(grade) {
+      currentGrade = grade;
+      ['6', '7', '8', '9'].forEach(n => {
+        const btn = document.getElementById('btnGrade' + n);
+        if (btn) btn.classList.toggle('active', grade === (n + 'ano'));
+      });
+      renderCurrentView();
+    }
+
+    function setViewType(viewType) {
+      currentView = viewType;
+      document.getElementById('btnViewBoards')?.classList.toggle('active', viewType === 'boards');
+      document.getElementById('btnViewCards')?.classList.toggle('active', viewType === 'cards');
+      document.getElementById('btnViewKey')?.classList.toggle('active', viewType === 'key');
+      renderCurrentView();
+    }
+
+    function imprimirParte(alvo) {
+      const manual = document.getElementById('print-manual-container');
+      const container = document.getElementById('navalMainContainer');
+      if (alvo === 'manual' || alvo === 'all') {
+        manual.innerHTML = document.getElementById('manual-content').innerHTML;
+      }
+      if (alvo === 'manual') {
+        switchTab('regras');
+      } else {
+        switchTab('jogo');
+        container.innerHTML = alvo === 'all' ? renderAllViewsHtml() : renderViewHtml(alvo);
+        updatePrintLabels();
+      }
+      document.body.dataset.printTarget = alvo;
+      window.print();
+    }
+
+    function executePrint(viewType) { imprimirParte(viewType); }
+    function printManual() { imprimirParte('manual'); }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      const button = document.querySelector(`.tab-btn[onclick="switchTab('${tab}')"]`);
+      const content = document.getElementById(`tab-${tab}`);
+      if (button) button.classList.add('active');
+      if (content) content.classList.add('active');
+    }
+
+    function limparTemplateLocal() {
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      const nos = [];
+      let no;
+      while ((no = walker.nextNode())) nos.push(no);
+      const MARCA_INCLUDE = '{' + '% include analytics.html %' + '}';
+      nos.forEach(textNode => {
+        const texto = textNode.textContent || '';
+        if (texto.includes(MARCA_INCLUDE) || /^\s*---[\s\S]*?---\s*$/.test(texto)) textNode.remove();
+      });
+    }
+
+    window.addEventListener('afterprint', () => {
+      delete document.body.dataset.printTarget;
+      document.getElementById('print-manual-container').innerHTML = '';
+      renderCurrentView();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      limparTemplateLocal();
+      renderCurrentView();
+    });
+  </script>
+  <a id="btn-voltar" href="index.html">← Voltar ao portal de jogos</a>
+</body>
+</html>
