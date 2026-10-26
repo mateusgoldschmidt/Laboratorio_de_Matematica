@@ -501,15 +501,18 @@ habilidades:
     .fleet-set { width:65mm;height:48mm;border:.2mm solid #111;padding:.5mm 1mm;display:grid;grid-template-rows:4.6mm 10.5mm 10.5mm 10.5mm 10.5mm;align-content:start; }
     .fleet-set-label { font:bold 7pt Arial,sans-serif;color:#334155;padding-left:1mm; }
     .ship-row { display:flex;height:10.5mm;width:100%;gap:0; }
-    .ship-piece { height:10.5mm;flex:none;position:relative;box-sizing:border-box;overflow:hidden;border:.25mm solid var(--ship-border);background:var(--ship-fill);color:#111; }
-    .ship-piece.aircraft { width:43.2mm;--ship-fill:#dbeafe;--ship-border:#1d4ed8; }
-    .ship-piece.battleship { width:30.8mm;--ship-fill:#dcfce7;--ship-border:#15803d; }
-    .ship-piece.submarine { width:18.4mm;--ship-fill:#fef3c7;--ship-border:#b45309; }
-    .ship-piece.patrol { width:10.5mm;--ship-fill:#f3e8ff;--ship-border:#7e22ce; }
+    .ship-piece { height:10.5mm;flex:none;position:relative;box-sizing:border-box;overflow:hidden;border:.15mm solid #cbd5e1;background-repeat:no-repeat;background-position:center;background-size:100% 100%;color:#111; }
+    .ship-piece.aircraft { width:43.2mm;background-image:url('bn_img/porta-avioes.png'); }
+    .ship-piece.battleship { width:30.8mm;background-image:url('bn_img/encouracado.png'); }
+    .ship-piece.submarine { width:18.4mm;background-image:url('bn_img/submarino.png'); }
+    .ship-piece.patrol { width:10.5mm;background-image:url('bn_img/patrulha.png'); }
     .ship-piece svg { position:absolute;inset:-.25mm;width:calc(100% + .5mm);height:calc(100% + .5mm); }
-    .ship-name { position:absolute;left:1mm;top:.45mm;font:bold 5.5pt/1 Arial,sans-serif;white-space:nowrap; }
-    .ship-count { position:absolute;right:.6mm;bottom:.4mm;font:bold 5.5pt/1 Arial,sans-serif; }
+    .ship-name { position:absolute;left:.5mm;top:.5mm;font:bold 5pt/1.1 Arial,sans-serif;white-space:nowrap;background:rgba(255,255,255,.86);border-radius:.6mm;padding:.2mm .7mm; }
+    .ship-count { position:absolute;right:.5mm;bottom:.5mm;font:bold 5pt/1.1 Arial,sans-serif;background:rgba(255,255,255,.86);border-radius:.6mm;padding:.2mm .7mm; }
     .pieces-legend,.calibration { grid-column:1/-1;font:6.3pt/1.2 Arial,sans-serif;padding:1mm 3mm; }
+    .pieces-legend .leg-item { display:inline-flex;align-items:center;gap:1.2mm;margin:1mm 5mm .5mm 1mm;font-weight:bold; }
+    .pieces-legend .leg-item img { height:6mm;width:auto;max-width:34mm; }
+    .pieces-legend .leg-note { display:block;font-weight:normal;color:#334155;margin-top:.4mm; }
     .calibration svg { display:block;width:101.3mm;height:5mm;margin:1mm 0; }
     .shield-grid { height:100%;display:flex;flex-direction:column;padding:8mm 10mm;gap:8mm; }
     .shield-panel { height:132mm;border:.35mm solid #334155;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8mm;position:relative; }
@@ -2158,13 +2161,12 @@ habilidades:
 
     function shipPiece(type,name,count,points) {
       const width={aircraft:43.2,battleship:30.8,submarine:18.4,patrol:10.5}[type];
-      const dots=points.map(x=>`<circle cx="${x}" cy="5.25" r="1.05" fill="#fff" stroke="#111" stroke-width=".35"/>`).join('');
-      const icon={aircraft:'♧',battleship:'▣',submarine:'⌁',patrol:'◆'}[type];
-      return `<div class="ship-piece ${type}" aria-label="${name}, ${count} pontos"><svg viewBox="0 0 ${width} 10.5" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">${dots}</svg><span class="ship-name">${icon} ${name}</span><span class="ship-count">${count} pt${count>1?'s':''}</span></div>`;
+      const dots=points.map(x=>`<circle cx="${x}" cy="5.25" r=".8" fill="#fff" fill-opacity=".62" stroke="#0f172a" stroke-width=".22"/>`).join('');
+      return `<div class="ship-piece ${type}" aria-label="${name}, ${count} pontos"><svg viewBox="0 0 ${width} 10.5" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">${dots}</svg><span class="ship-name">${name}</span><span class="ship-count">${count} pt${count>1?'s':''}</span></div>`;
     }
     function renderPiecesSheetsHtml() {
       const oneSet=n=>`<div class="fleet-set"><div class="fleet-set-label">Conjunto ${n}</div><div class="ship-row">${shipPiece('aircraft','Porta-aviões',4,[3,15.4,27.8,40.2])}</div><div class="ship-row">${shipPiece('battleship','Encouraçado',3,[3,15.4,27.8])}${shipPiece('battleship','Encouraçado',3,[3,15.4,27.8])}</div><div class="ship-row">${shipPiece('submarine','Submarino',2,[3,15.4])}${shipPiece('submarine','Submarino',2,[3,15.4])}${shipPiece('submarine','Submarino',2,[3,15.4])}</div><div class="ship-row">${shipPiece('patrol','Patrulha',1,[5.25])}${shipPiece('patrol','Patrulha',1,[5.25])}</div></div>`;
-      const sheet=Array.from({length:15},(_,i)=>oneSet(i+1)).join('')+`<div class="pieces-legend"><b>Legenda:</b> Porta-aviões azul-claro (#dbeafe); encouraçado verde-claro (#dcfce7); submarino amarelo-claro (#fef3c7); patrulha lilás-claro (#f3e8ff). Nomes e bordas distinguem os tipos também em preto e branco.</div><div class="calibration"><b>RÉGUA DE CONFERÊNCIA</b><svg viewBox="-1.05 0 101.3 5" xmlns="http://www.w3.org/2000/svg">${Array.from({length:9},(_,i)=>`<circle cx="${i*12.4}" cy="2.5" r="1.05" fill="#fff" stroke="#111" stroke-width=".35"/>`).join('')}</svg>Se estas 9 bolinhas caírem exatamente sobre 9 pontos da malha do tabuleiro, sua impressão está em tamanho real (100%). Se não, imprima de novo escolhendo ‘Tamanho real’ e desligando ‘Ajustar à página’.</div>`;
+      const sheet=Array.from({length:15},(_,i)=>oneSet(i+1)).join('')+`<div class="pieces-legend"><b>As embarcações de cada jogador:</b><span class="leg-item"><img src="bn_img/porta-avioes.png" alt="">Porta-aviões · 4 pontos</span><span class="leg-item"><img src="bn_img/encouracado.png" alt="">Encouraçado · 3 pontos</span><span class="leg-item"><img src="bn_img/submarino.png" alt="">Submarino · 2 pontos</span><span class="leg-item"><img src="bn_img/patrulha.png" alt="">Patrulha · 1 ponto</span><span class="leg-note">As bolinhas de cada peça caem sobre as bolinhas do plano: encaixe e cole com fita dupla face.</span></div><div class="calibration"><b>RÉGUA DE CONFERÊNCIA</b><svg viewBox="-1.05 0 101.3 5" xmlns="http://www.w3.org/2000/svg">${Array.from({length:9},(_,i)=>`<circle cx="${i*12.4}" cy="2.5" r="1.05" fill="#fff" stroke="#111" stroke-width=".35"/>`).join('')}</svg>Se estas 9 bolinhas caírem exatamente sobre 9 pontos da malha do tabuleiro, sua impressão está em tamanho real (100%). Se não, imprima de novo escolhendo ‘Tamanho real’ e desligando ‘Ajustar à página’.</div>`;
       return `<section id="parte-pecas" class="print-area">${[1,2].map(()=>`<div class="a4-pieces-sheet">${sheet}</div>`).join('')}</section>`;
     }
     function renderShieldSheetHtml(){return `<section id="parte-escudo" class="print-area"><div class="a4-shields-sheet"><div class="shield-grid">${[1,2].map(n=>`<div class="shield-panel"><span class="shield-fold">Dobre ao meio</span><h2>BATALHA NAVAL CARTESIANA</h2><p>Esconda sua frota aqui enquanto posiciona as peças.</p><span class="shield-foot">Jogador ${n} · Nome: ______________________________ · dobre na linha do meio e dobre a aba de 12 mm para trás para firmar em pé.</span></div>`).join('')}</div></div></section>`;}
