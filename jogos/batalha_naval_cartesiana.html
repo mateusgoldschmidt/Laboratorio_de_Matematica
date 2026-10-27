@@ -578,6 +578,35 @@ habilidades:
       #btn-voltar { padding:8px 12px; font-size:.78rem; bottom:12px; left:12px; }
     }
     @page { size:A4 portrait; margin:0; }
+    
+    /* ==== ARTE DO JOGO: fundo ilustrado e faixa da frota ==== */
+    body { background-image: url('bn_img/fundo-mar-a4.jpg'); background-size: cover; background-position: center; background-attachment: fixed; }
+    .a4-boards-sheet, .a4-pieces-sheet, .key-sheet, .a4-shields-sheet {
+      background-image: url('bn_img/fundo-mar-a4.jpg');
+      background-size: cover; background-position: center center; background-repeat: no-repeat;
+    }
+    .a4-cards-sheet {
+      background-image: url('bn_img/faixa-frota.jpg'), url('bn_img/fundo-mar-a4.jpg');
+      background-repeat: no-repeat, no-repeat;
+      background-position: top center, center center;
+      background-size: 210mm auto, cover;
+    }
+    .a4-boards-sheet { flex-direction: column; align-items: stretch; }
+    .player-station { background-color: rgba(255,255,255,.72) !important; flex: 1 1 auto; }
+    .cards-sheet-header { background: rgba(255,255,255,.66) !important; }
+    .pieces-heading { width: 150mm; margin: 0 auto; border-radius: 1.2mm; }
+    .faixa-frota { height: 17mm; width: 100%; background: url('bn_img/faixa-frota.jpg') center 44% / cover no-repeat; border-radius: 1.5mm; box-shadow: inset 0 0 0 .3mm rgba(47,134,184,.5); margin-bottom: 2.4mm; }
+    .key-sheet > .faixa-frota { height: 15mm; margin-bottom: 2mm; }
+    .a4-shields-sheet > .faixa-frota { display: none; }
+    .a4-shields-sheet {
+      background-image: url('bn_img/faixa-frota.jpg'), url('bn_img/fundo-mar-a4.jpg');
+      background-repeat: no-repeat, no-repeat;
+      background-position: top center, center center;
+      background-size: 210mm auto, cover;
+    }
+    .manual-box > .faixa-frota { height: 14mm; margin-bottom: 3mm; }
+    .emblema-mini { width: 11mm; height: 11mm; vertical-align: middle; margin-right: 2.5mm; }
+
     @media print {
       html, body { width:210mm; min-width:0; background:#fff !important; color:#000 !important; margin:0 !important; padding:0 !important; }
       header.main-header, .tabs, .print-bar, .controls, .print-hidden, #btn-voltar { display:none !important; }
@@ -633,7 +662,7 @@ habilidades:
 <body>
 
   <header class="main-header">
-    <h1>BATALHA NAVAL CARTESIANA</h1>
+    <h1><img class="emblema-mini" src="bn_img/emblema.png" alt="" />BATALHA NAVAL CARTESIANA</h1>
     <p>Pares Ordenados, Simetria, Retas &amp; Funções • 6º ao 9º Ano</p>
     <p class="institution-line">Laboratório de Matemática · UFFS</p>
   </header>
@@ -668,6 +697,7 @@ habilidades:
         </div>
 
         <div class="manual-box" id="manual-content">
+          <div class="faixa-frota"></div>
           <h2>Batalha Naval Cartesiana &amp; Algébrica</h2>
           <div class="manual-banner" aria-hidden="true"><strong>Missão: leia os eixos, escolha as cartas e encontre o alvo.</strong><img src="bn_img/porta-avioes.png" alt=""><img src="bn_img/submarino.png" alt=""><img src="bn_img/patrulha.png" alt=""></div>
           <p><strong>2 jogadores (ou 2 duplas) · tabuleiros, peças de frota, escudos, 18 cartas reutilizáveis por jogador e gabarito</strong></p>
@@ -965,13 +995,13 @@ habilidades:
       const sheet = `<div class="pieces-heading">FROTA PARA RECORTE · 15 CONJUNTOS</div>${Array.from({length:15},(_,i)=>oneSet(i+1)).join('')}${legend}${calibration}`;
       return `<section id="parte-pecas" class="print-area">${[1,2].map(()=>`<div class="a4-pieces-sheet">${sheet}</div>`).join('')}</section>`;
     }
-    function renderShieldSheetHtml() { return `<section id="parte-escudo" class="print-area"><div class="a4-shields-sheet"><div class="shield-grid">${[1,2].map(n=>`<div class="shield-panel"><h2>BATALHA NAVAL CARTESIANA</h2><span class="shield-foot">Jogador ${n} · Nome: ______________________________</span></div>`).join('')}</div></div></section>`; }
+    function renderShieldSheetHtml() { return `<section id="parte-escudo" class="print-area"><div class="a4-shields-sheet"><div class="faixa-frota"></div><div class="shield-grid">${[1,2].map(n=>`<div class="shield-panel"><h2>BATALHA NAVAL CARTESIANA</h2><span class="shield-foot">Jogador ${n} · Nome: ______________________________</span></div>`).join('')}</div></div></section>`; }
 
     function renderBoardsSheetHtml(grade) {
       return `
         <section id="parte-tabuleiros" class="print-area">
-          <div class="a4-boards-sheet">${makeSinglePlayerStationHtml(grade, 'JOGADOR A')}</div>
-          <div class="a4-boards-sheet">${makeSinglePlayerStationHtml(grade, 'JOGADOR B')}</div>
+          <div class="a4-boards-sheet"><div class="faixa-frota"></div>${makeSinglePlayerStationHtml(grade, 'JOGADOR A')}</div>
+          <div class="a4-boards-sheet"><div class="faixa-frota"></div>${makeSinglePlayerStationHtml(grade, 'JOGADOR B')}</div>
         </section>
       `;
     }
@@ -1030,7 +1060,7 @@ habilidades:
       const gradeLabel = GRADE_LABELS[grade] || '6º Ano';
       const xCards = cards.filter(c => c.type === 'x');
       const yCards = cards.filter(c => c.type === 'y');
-      return `<section id="parte-gabarito" class="print-area"><div class="key-sheet"><div class="key-sheet-header"><h2>GABARITO DO PROFESSOR — BATALHA NAVAL CARTESIANA (${gradeLabel.toUpperCase()})</h2><p>18 cartas reutilizáveis por jogador · 9 valores de X e 9 valores de Y · eixos incluídos</p></div><div class="key-columns"><table class="key-table"><caption>9 CARTAS DE X · COLUNAS</caption><thead><tr><th>Nº</th><th>Tipo</th><th>Cálculo</th><th>Resposta</th></tr></thead><tbody>${renderKeyRows(xCards)}</tbody></table><table class="key-table"><caption>9 CARTAS DE Y · LINHAS</caption><thead><tr><th>Nº</th><th>Tipo</th><th>Cálculo</th><th>Resposta</th></tr></thead><tbody>${renderKeyRows(yCards)}</tbody></table></div></div></section>`;
+      return `<section id="parte-gabarito" class="print-area"><div class="key-sheet"><div class="faixa-frota"></div><div class="key-sheet-header"><h2>GABARITO DO PROFESSOR — BATALHA NAVAL CARTESIANA (${gradeLabel.toUpperCase()})</h2><p>18 cartas reutilizáveis por jogador · 9 valores de X e 9 valores de Y · eixos incluídos</p></div><div class="key-columns"><table class="key-table"><caption>9 CARTAS DE X · COLUNAS</caption><thead><tr><th>Nº</th><th>Tipo</th><th>Cálculo</th><th>Resposta</th></tr></thead><tbody>${renderKeyRows(xCards)}</tbody></table><table class="key-table"><caption>9 CARTAS DE Y · LINHAS</caption><thead><tr><th>Nº</th><th>Tipo</th><th>Cálculo</th><th>Resposta</th></tr></thead><tbody>${renderKeyRows(yCards)}</tbody></table></div></div></section>`;
     }
 
     function renderViewHtml(viewType) {
