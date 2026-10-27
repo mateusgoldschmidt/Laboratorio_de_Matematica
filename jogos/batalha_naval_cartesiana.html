@@ -538,7 +538,7 @@ habilidades:
     /* Escudo: apenas título, nome e linhas de dobra; instruções ficam no manual. */
     .a4-shields-sheet { padding:10mm 10mm 8mm; background-color:#eaf6fd; background-image:repeating-linear-gradient(168deg,transparent 0 18mm,rgba(219,238,250,.85) 18.3mm 18.55mm,transparent 18.9mm 37mm); }
     .shield-grid { height:100%; display:flex; flex-direction:column; padding:0; gap:8mm; box-sizing:border-box; }
-    .shield-panel { height:135mm; border:.35mm solid #2f86b8; background:#fdfefe; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:8mm; position:relative; box-sizing:border-box; }
+    .shield-panel { height:130mm; border:.35mm solid #2f86b8; background:#fdfefe; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:8mm; position:relative; box-sizing:border-box; }
     .shield-panel:after { content:''; position:absolute; left:0; right:0; bottom:12mm; border-top:.35mm dashed #2f86b8; }
     .shield-panel:before { content:''; position:absolute; top:0; bottom:12mm; left:50%; border-left:.35mm dashed #2f86b8; }
     .shield-panel h2 { font:bold 16pt Arial,sans-serif; margin-bottom:8mm; color:#fff; background:#2f86b8; width:100%; padding:3mm 2mm; }
@@ -579,31 +579,26 @@ habilidades:
     }
     @page { size:A4 portrait; margin:0; }
     
-    /* ==== ARTE DO JOGO: fundo ilustrado e faixa da frota ==== */
+    /* ==== ARTE DO JOGO: dentro das peças (folha de recorte fica branca) ==== */
     body { background-image: url('bn_img/fundo-mar-a4.jpg'); background-size: cover; background-position: center; background-attachment: fixed; }
-    .a4-boards-sheet, .a4-pieces-sheet, .key-sheet, .a4-shields-sheet {
-      background-image: url('bn_img/fundo-mar-a4.jpg');
-      background-size: cover; background-position: center center; background-repeat: no-repeat;
-    }
-    .a4-cards-sheet {
-      background-image: url('bn_img/faixa-frota.jpg'), url('bn_img/fundo-mar-a4.jpg');
-      background-repeat: no-repeat, no-repeat;
-      background-position: top center, center center;
-      background-size: 210mm auto, cover;
-    }
+    .a4-boards-sheet, .a4-pieces-sheet, .a4-cards-sheet, .a4-shields-sheet { background: #fff; }
     .a4-boards-sheet { flex-direction: column; align-items: stretch; }
-    .player-station { background-color: rgba(255,255,255,.72) !important; flex: 1 1 auto; }
-    .cards-sheet-header { background: rgba(255,255,255,.66) !important; }
-    .pieces-heading { width: 150mm; margin: 0 auto; border-radius: 1.2mm; }
-    .faixa-frota { height: 17mm; width: 100%; background: url('bn_img/faixa-frota.jpg') center 44% / cover no-repeat; border-radius: 1.5mm; box-shadow: inset 0 0 0 .3mm rgba(47,134,184,.5); margin-bottom: 2.4mm; }
-    .key-sheet > .faixa-frota { height: 15mm; margin-bottom: 2mm; }
-    .a4-shields-sheet > .faixa-frota { display: none; }
-    .a4-shields-sheet {
-      background-image: url('bn_img/faixa-frota.jpg'), url('bn_img/fundo-mar-a4.jpg');
-      background-repeat: no-repeat, no-repeat;
-      background-position: top center, center center;
-      background-size: 210mm auto, cover;
-    }
+    /* tabuleiro: arte dentro do painel do jogador */
+    .player-station { flex: 1 1 auto; background-color: #fff; background-image: linear-gradient(rgba(255,255,255,.74), rgba(255,255,255,.74)), url('bn_img/fundo-mar-a4.jpg'); background-size: cover; background-position: center; }
+    .station-header { background-image: linear-gradient(90deg, rgba(255,255,255,.95) 0 42%, rgba(255,255,255,.45) 66%, rgba(255,255,255,.3) 100%), url('bn_img/faixa-frota.jpg'); background-size: cover, cover; background-position: center, right center; background-repeat: no-repeat, no-repeat; }
+    /* cartas: arte dentro de cada carta */
+    .naval-card { background-image: linear-gradient(rgba(255,255,255,.74), rgba(255,255,255,.74)), url('bn_img/fundo-mar-a4.jpg'); background-size: cover; background-position: center 74%; }
+    .naval-card-inner { position: relative; }
+    .card-emblem { position: absolute; right: 1.3mm; bottom: 1.1mm; width: 6.5mm; height: 6.5mm; opacity: .8; }
+    /* peças da frota: faixa de mar dentro da peça, sem cobrir a arte do navio */
+    .ship-piece { position: relative; }
+    .ship-piece::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 32%; background: url('bn_img/fundo-mar-a4.jpg') center 88% / 340% auto no-repeat; opacity: .45; pointer-events: none; }
+    /* escudo: arte dentro do painel */
+    .shield-panel { background-image: linear-gradient(rgba(255,255,255,.7), rgba(255,255,255,.7)), url('bn_img/fundo-mar-a4.jpg'); background-size: cover; background-position: center; }
+    #parte-escudo .a4-shields-sheet { page-break-after: auto !important; break-after: auto !important; }
+    .shield-panel::before { content: ''; position: absolute; left: 50%; top: 50%; width: 78mm; height: 78mm; transform: translate(-50%, -50%); background: url('bn_img/emblema.png') center/contain no-repeat; opacity: .16; pointer-events: none; }
+    /* faixa ilustrada: só em folha que NÃO é recortada (manual e gabarito) */
+    .faixa-frota { height: 15mm; width: 100%; background: url('bn_img/faixa-frota.jpg') center 44% / cover no-repeat; border-radius: 1.5mm; box-shadow: inset 0 0 0 .3mm rgba(47,134,184,.5); margin-bottom: 2.4mm; }
     .manual-box > .faixa-frota { height: 14mm; margin-bottom: 3mm; }
     .emblema-mini { width: 11mm; height: 11mm; vertical-align: middle; margin-right: 2.5mm; }
 
@@ -995,13 +990,13 @@ habilidades:
       const sheet = `<div class="pieces-heading">FROTA PARA RECORTE · 15 CONJUNTOS</div>${Array.from({length:15},(_,i)=>oneSet(i+1)).join('')}${legend}${calibration}`;
       return `<section id="parte-pecas" class="print-area">${[1,2].map(()=>`<div class="a4-pieces-sheet">${sheet}</div>`).join('')}</section>`;
     }
-    function renderShieldSheetHtml() { return `<section id="parte-escudo" class="print-area"><div class="a4-shields-sheet"><div class="faixa-frota"></div><div class="shield-grid">${[1,2].map(n=>`<div class="shield-panel"><h2>BATALHA NAVAL CARTESIANA</h2><span class="shield-foot">Jogador ${n} · Nome: ______________________________</span></div>`).join('')}</div></div></section>`; }
+    function renderShieldSheetHtml() { return `<section id="parte-escudo" class="print-area"><div class="a4-shields-sheet"><div class="shield-grid">${[1,2].map(n=>`<div class="shield-panel"><h2>BATALHA NAVAL CARTESIANA</h2><span class="shield-foot">Jogador ${n} · Nome: ______________________________</span></div>`).join('')}</div></div></section>`; }
 
     function renderBoardsSheetHtml(grade) {
       return `
         <section id="parte-tabuleiros" class="print-area">
-          <div class="a4-boards-sheet"><div class="faixa-frota"></div>${makeSinglePlayerStationHtml(grade, 'JOGADOR A')}</div>
-          <div class="a4-boards-sheet"><div class="faixa-frota"></div>${makeSinglePlayerStationHtml(grade, 'JOGADOR B')}</div>
+          <div class="a4-boards-sheet">${makeSinglePlayerStationHtml(grade, 'JOGADOR A')}</div>
+          <div class="a4-boards-sheet">${makeSinglePlayerStationHtml(grade, 'JOGADOR B')}</div>
         </section>
       `;
     }
@@ -1036,7 +1031,7 @@ habilidades:
         if (c.type === 'x' || c.type === 'y') {
           const axisLabel = c.type === 'x' ? 'X · COLUNA' : 'Y · LINHA';
           const reminder = c.type === 'x' ? 'Anote aqui: coluna ____' : 'Anote aqui: linha ____';
-          return `<article class="naval-card is-${c.type}"><div class="naval-card-inner"><div class="nc-header"><span><span class="card-kind">${axisLabel}</span></span><span>${numStr}</span></div><div class="nc-body"><div class="axis-icon">${axisCardIcon(c.type)}</div><div class="axis-expression">${formatSup(c.expr)}</div><div class="axis-reminder">${reminder}</div></div></div></article>`;
+          return `<article class="naval-card is-${c.type}"><div class="naval-card-inner"><div class="nc-header"><span><span class="card-kind">${axisLabel}</span></span><span>${numStr}</span></div><div class="nc-body"><div class="axis-icon">${axisCardIcon(c.type)}</div><div class="axis-expression">${formatSup(c.expr)}</div><div class="axis-reminder">${reminder}</div><img class="card-emblem" src="bn_img/emblema.png" alt="" /></div></div></article>`;
         }
         return '';
       });
