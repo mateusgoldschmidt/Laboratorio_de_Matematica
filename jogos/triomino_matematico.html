@@ -2657,8 +2657,18 @@ habilidades:
         return renderTriominoSheet(pieces.slice(start, start + 9), sheetIndex + 1, grade);
       }).join('');
     }
-    /* Auditoria usada em mídia de impressão: só mede os preenchimentos dos
-       setores, não as cores internas das figuras matemáticas dos rótulos. */    function renderAll() {
+    function renderKeySheet(grade) {
+      const gData = TRIOMINO_DATA[grade] || TRIOMINO_DATA['6ano'], pieces = buildPiecesForGrade(grade);
+      const chips = gData.keys.map((k, i) => `<div class="key-chip" style="border-left-color:${KEY_COLORS[i]}"><strong>Chave ${formatSup(k.target)}</strong><br>${k.desc}</div>`).join('');
+      const row = p => `<div class="key-row body"><div>#${String(p.no).padStart(2,'0')}</div>${p.sides.map(s => `<div>${s.keyTxt}<span class="key-value">${formatSup(s.target)}</span></div>`).join('')}</div>`;
+      const cols = [pieces.slice(0,16), pieces.slice(16,32)].map(arr => `<div class="key-col"><div class="key-row head"><div>Peça</div><div>Lado 1</div><div>Lado 2</div><div>Lado 3</div></div>${arr.map(row).join('')}</div>`).join('');
+      return `<div class="key-sheet" data-grade="${grade}">
+        <div class="key-sheet-header"><div><h2>Gabarito do professor — Triominó Matemático (${GRADE_LABELS[grade]})</h2><p>${gData.subtitle} · 8 chaves e 32 peças, com três lados por peça.</p></div><div class="key-mark">32 peças</div></div>
+        <div class="key-summary-chips">${chips}</div>
+        <div class="key-columns-grid">${cols}</div>
+      </div>`;
+    }
+   function renderAll() {
       ['6ano','7ano','8ano','9ano'].forEach(grade => { document.getElementById('parte-pecas-' + grade).innerHTML = renderPieceArea(grade); });
       document.getElementById('parte-gabarito').innerHTML = renderKeySheet(currentGrade);
       updateScreenView();
