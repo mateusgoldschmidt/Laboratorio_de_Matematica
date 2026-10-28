@@ -33,14 +33,6 @@ habilidades:
       --panel: #f5fbfc;
       --line: #c6dce2;
       --accent: #e8a34a;
-      --key0: #dff2ff;
-      --key1: #e4f5e8;
-      --key2: #fff0cf;
-      --key3: #fbe4ed;
-      --key4: #eee6fb;
-      --key5: #dcf4f2;
-      --key6: #ffead9;
-      --key7: #eaf1d9;
     }
     * { box-sizing: border-box; }
     html { min-width: 320px; overflow-x: hidden; }
@@ -394,7 +386,24 @@ habilidades:
   <script>
     const GRADE_LABELS = { '6ano': '6º ano', '7ano': '7º ano', '8ano': '8º ano', '9ano': '9º ano' };
     const KEY_COLORS = ['#5b9fb0','#74ad81','#d79d45','#c46f91','#9276b9','#4e9d96','#ca8144','#7d9e59'];
-const TRIOMINO_DATA = {
+    /*
+     * A cor da peça é exclusivamente decorativa: não representa chave, valor
+     * nem combinação de valores. A paleta é deliberadamente distinta das
+     * cores dos chips do gabarito, e a ordem abaixo é uma permutação fixa
+     * embaralhada do número da peça (4 ocorrências de cada tint).
+     */
+    const PIECE_TINTS = [
+      { fill:'#e7f3fb', edge:'#78a9c0' },
+      { fill:'#edf7ef', edge:'#80ae88' },
+      { fill:'#fff4dc', edge:'#c9a15b' },
+      { fill:'#fae9f0', edge:'#c88aa1' },
+      { fill:'#f0ebfa', edge:'#9d8ac3' },
+      { fill:'#e5f5f2', edge:'#71aaa3' },
+      { fill:'#ffede2', edge:'#ce9774' },
+      { fill:'#eef3df', edge:'#9aab70' }
+    ];
+    const PIECE_TINT_ORDER = [6,4,1,5,3,2,5,6,5,0,7,2,7,3,2,2,4,7,6,1,0,5,7,0,4,1,3,0,6,4,1,3];
+	const TRIOMINO_DATA = {
       "6ano": {
             "subtitle": "Decimais, Frações Visuais de Quantidade e Instrumentos de Medida",
             "keys": [
@@ -2583,7 +2592,7 @@ const TRIOMINO_DATA = {
       return BASE_TRIPLES.map((triple, idx) => {
         const [kA, kB, kC] = triple;
         const itemA = pools[kA].shift(), itemB = pools[kB].shift(), itemC = pools[kC].shift();
-        return { no: idx + 1, sides: [
+        return { no: idx + 1, tintIndex: PIECE_TINT_ORDER[idx % PIECE_TINT_ORDER.length], sides: [
           { keyId:kA, target:targets[kA], html:formatSup(itemA.html), keyTxt:formatSup(itemA.key_txt), isFig:!!itemA.is_fig },
           { keyId:kB, target:targets[kB], html:formatSup(itemB.html), keyTxt:formatSup(itemB.key_txt), isFig:!!itemB.is_fig },
           { keyId:kC, target:targets[kC], html:formatSup(itemC.html), keyTxt:formatSup(itemC.key_txt), isFig:!!itemC.is_fig }
@@ -2595,6 +2604,7 @@ const TRIOMINO_DATA = {
       const S = PIECE_SIDE_MM, H = PIECE_HEIGHT_MM;
       const polygons = [], labels = [];
       pieces.forEach((piece, idx) => {
+        const tint = PIECE_TINTS[piece.tintIndex];
         const r = Math.floor(idx / 3), c = idx % 3, isUp = ((r + c) % 2 === 0);
         const yTop = r * H, yBot = (r + 1) * H, x0 = c * (S / 2), xMid = x0 + S / 2, x1 = x0 + S;
         let v0, v1, v2, edgeDefs;
@@ -2611,12 +2621,16 @@ const TRIOMINO_DATA = {
         }
         const cx = (v0[0] + v1[0] + v2[0]) / 3, cy = (v0[1] + v1[1] + v2[1]) / 3;
         const center = [cx,cy];
-        polygons.push(`<polygon points="${pointsText([v0,v1,v2])}" fill="#ffffff" stroke="#8194a1" stroke-width="0.22"/>`);
+        const inner = [v0,v1,v2].map(v => [cx + (v[0] - cx) * .90, cy + (v[1] - cy) * .90]);
+        polygons.push(`<g class="tri-piece" data-piece-no="${piece.no}" data-tint-index="${piece.tintIndex}" data-tint="${tint.fill}">`);
+        polygons.push(`<polygon class="tri-piece-base" points="${pointsText([v0,v1,v2])}" fill="${tint.fill}" stroke="${tint.edge}" stroke-width="0.34" stroke-linejoin="round"/>`);
         const sectorPoints = isUp ? [[center,v1,v2],[center,v0,v1],[center,v0,v2]] : [[center,v0,v1],[center,v0,v2],[center,v1,v2]];
-        sectorPoints.forEach((pts, sIdx) => polygons.push(`<polygon points="${pointsText(pts)}" fill="${['#dff2ff','#e4f5e8','#fff0cf','#fbe4ed','#eee6fb','#dcf4f2','#ffead9','#eaf1d9'][piece.sides[sIdx].keyId]}" fill-opacity="0.92"/>`));
-        edgeDefs.forEach((ed, sIdx) => polygons.push(`<line x1="${ed.a[0].toFixed(2)}" y1="${ed.a[1].toFixed(2)}" x2="${ed.b[0].toFixed(2)}" y2="${ed.b[1].toFixed(2)}" stroke="${KEY_COLORS[piece.sides[sIdx].keyId]}" stroke-width="0.6" stroke-linecap="round"/>`));
+        sectorPoints.forEach((pts, sIdx) => polygons.push(`<polygon class="tri-sector-fill" data-role="sector-fill" data-key-id="${piece.sides[sIdx].keyId}" data-fill-color="${tint.fill}" points="${pointsText(pts)}" fill="${tint.fill}"/>`));
+        edgeDefs.forEach(ed => polygons.push(`<line class="tri-piece-edge" x1="${ed.a[0].toFixed(2)}" y1="${ed.a[1].toFixed(2)}" x2="${ed.b[0].toFixed(2)}" y2="${ed.b[1].toFixed(2)}" stroke="${tint.edge}" stroke-width="0.34" stroke-linecap="round"/>`));
+        polygons.push(`<polygon class="tri-inner-frame" points="${pointsText(inner)}" fill="none" stroke="${tint.edge}" stroke-opacity=".55" stroke-width="0.24" stroke-linejoin="round"/>`);
         [v0,v1,v2].forEach(v => polygons.push(`<line x1="${cx.toFixed(2)}" y1="${cy.toFixed(2)}" x2="${v[0].toFixed(2)}" y2="${v[1].toFixed(2)}" stroke="#617783" stroke-opacity=".48" stroke-width="0.22"/>`));
-        polygons.push(`<circle cx="${cx.toFixed(2)}" cy="${cy.toFixed(2)}" r="3.65" fill="#ffffff" fill-opacity=".88" stroke="#617783" stroke-width=".25"/><text x="${cx.toFixed(2)}" y="${(cy+1.15).toFixed(2)}" text-anchor="middle" font-family="Arial" font-size="2.5" font-weight="700" fill="#345264">#${String(piece.no).padStart(2,'0')}</text>`);
+        polygons.push(`<circle class="tri-piece-number-disc" cx="${cx.toFixed(2)}" cy="${cy.toFixed(2)}" r="3.65" fill="${tint.fill}" stroke="${tint.edge}" stroke-width=".25"/><text x="${cx.toFixed(2)}" y="${(cy+1.15).toFixed(2)}" text-anchor="middle" font-family="Arial" font-size="2.5" font-weight="700" fill="#345264">#${String(piece.no).padStart(2,'0')}</text>`);
+        polygons.push(`</g>`);
         edgeDefs.forEach((ed, sIdx) => {
           const side = piece.sides[sIdx];
           const labelHeightMm = side.isFig ? 9.2 : (15 * 25.4 / 72);
@@ -2654,7 +2668,7 @@ const TRIOMINO_DATA = {
         <div class="key-columns-grid">${cols}</div>
       </div>`;
     }
-    function renderAll() {
+   function renderAll() {
       ['6ano','7ano','8ano','9ano'].forEach(grade => { document.getElementById('parte-pecas-' + grade).innerHTML = renderPieceArea(grade); });
       document.getElementById('parte-gabarito').innerHTML = renderKeySheet(currentGrade);
       updateScreenView();
