@@ -184,30 +184,31 @@ habilidades:
       color: #172033;
       box-sizing: border-box;
     }
-    .tri-lattice-box { position: relative; flex: 0 0 180mm; width: 180mm; height: 249.415mm; }
-    .tri-lattice-svg, .tri-labels-layer { position: absolute; inset: 0; width: 180mm; height: 249.415mm; }
+    .tri-lattice-box { position: relative; flex: 0 0 190mm; width: 190mm; height: 246.827mm; }
+    .tri-lattice-svg, .tri-labels-layer { position: absolute; inset: 0; width: 190mm; height: 246.827mm; }
     .tri-lattice-svg { z-index: 1; display: block; overflow: visible; }
     .tri-labels-layer { z-index: 2; pointer-events: none; }
     .tri-edge-label {
       position: absolute;
-      width: 42mm;
-      min-height: 5mm;
+      width: max-content;
+      min-height: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
       color: #182234;
       font-family: Arial, Helvetica, sans-serif;
-      font-size: 7.05pt;
+      font-size: 15pt;
       font-weight: 800;
       line-height: 1;
       white-space: nowrap;
       transform-origin: center center;
     }
+    .tri-edge-label.is-fig { font-size: 16pt; }
     .tri-edge-label sup { font-size: .7em; line-height: 0; position: relative; top: -.35em; }
     .tri-fig-wrap { display: inline-flex; align-items: center; justify-content: center; gap: .5mm; }
-    .tri-mini-svg { width: 16.5mm; height: 7mm; display: block; overflow: visible; }
-    .tri-mini-svg-wide { width: 21mm; height: 7mm; display: block; overflow: visible; }
+    .tri-mini-svg { width: 21.8mm; height: 9.2mm; display: block; overflow: visible; }
+    .tri-mini-svg-wide { width: 27.7mm; height: 9.2mm; display: block; overflow: visible; }
     .frac { display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; font-size:.82em; line-height:.9; padding:0 1px; margin:-1px 1px; font-weight:800; }
     .frac .top { border-bottom: .25mm solid currentColor; padding:0 1px .2mm; }
     .frac .bottom { padding:.2mm 1px 0; }
@@ -310,12 +311,12 @@ habilidades:
   </header>
 
   <nav class="print-bar screen-only" aria-label="Impressão do material">
-    <button type="button" data-print="tudo" onclick="imprimirParte('tudo')">🖨️ Imprimir tudo (9 folhas)</button>
+    <button type="button" data-print="tudo" onclick="imprimirParte('tudo')">🖨️ Imprimir tudo (18 folhas)</button>
     <button type="button" data-print="manual" onclick="imprimirParte('manual')">🖨️ Manual e regras (1 folha)</button>
-    <button type="button" data-print="pecas-6ano" onclick="imprimirParte('pecas-6ano')">🖨️ Peças 6º (2 folhas)</button>
-    <button type="button" data-print="pecas-7ano" onclick="imprimirParte('pecas-7ano')">🖨️ Peças 7º (2 folhas)</button>
-    <button type="button" data-print="pecas-8ano" onclick="imprimirParte('pecas-8ano')">🖨️ Peças 8º (2 folhas)</button>
-    <button type="button" data-print="pecas-9ano" onclick="imprimirParte('pecas-9ano')">🖨️ Peças 9º (2 folhas)</button>
+    <button type="button" data-print="pecas-6ano" onclick="imprimirParte('pecas-6ano')">🖨️ Peças 6º (4 folhas)</button>
+    <button type="button" data-print="pecas-7ano" onclick="imprimirParte('pecas-7ano')">🖨️ Peças 7º (4 folhas)</button>
+    <button type="button" data-print="pecas-8ano" onclick="imprimirParte('pecas-8ano')">🖨️ Peças 8º (4 folhas)</button>
+    <button type="button" data-print="pecas-9ano" onclick="imprimirParte('pecas-9ano')">🖨️ Peças 9º (4 folhas)</button>
     <button type="button" data-print="gabarito" onclick="imprimirParte('gabarito')">🖨️ Gabarito (1 folha)</button>
   </nav>
 
@@ -375,7 +376,7 @@ habilidades:
           <button type="button" class="control-btn" data-grade="9ano" onclick="setGradeMode('9ano')">9º ano</button>
         </div>
         <div class="controls-group" aria-label="Visualização">
-          <button type="button" class="control-btn active" id="viewPieces" onclick="setViewMode('pieces')">Peças (2 folhas)</button>
+          <button type="button" class="control-btn active" id="viewPieces" onclick="setViewMode('pieces')">Peças (4 folhas)</button>
           <button type="button" class="control-btn" id="viewKey" onclick="setViewMode('key')">Gabarito (1 folha)</button>
         </div>
       </div>
@@ -2563,10 +2564,10 @@ const TRIOMINO_DATA = {
 
     let currentGrade = '6ano';
     let viewMode = 'pieces';
-    const PIECE_SIDE_MM = 72;
+    const PIECE_SIDE_MM = 95;
     const PIECE_HEIGHT_MM = PIECE_SIDE_MM * Math.sqrt(3) / 2;
-    const PIECE_SHEET_WIDTH_MM = 180;
-    const PIECE_SHEET_HEIGHT_MM = 4 * PIECE_HEIGHT_MM;
+    const PIECE_SHEET_WIDTH_MM = 190;
+    const PIECE_SHEET_HEIGHT_MM = 3 * PIECE_HEIGHT_MM;
 
     function formatSup(txt) {
       return String(txt || '')
@@ -2594,7 +2595,7 @@ const TRIOMINO_DATA = {
       const S = PIECE_SIDE_MM, H = PIECE_HEIGHT_MM;
       const polygons = [], labels = [];
       pieces.forEach((piece, idx) => {
-        const r = Math.floor(idx / 4), c = idx % 4, isUp = ((r + c) % 2 === 0);
+        const r = Math.floor(idx / 3), c = idx % 3, isUp = ((r + c) % 2 === 0);
         const yTop = r * H, yBot = (r + 1) * H, x0 = c * (S / 2), xMid = x0 + S / 2, x1 = x0 + S;
         let v0, v1, v2, edgeDefs;
         if (isUp) {
@@ -2617,15 +2618,18 @@ const TRIOMINO_DATA = {
         [v0,v1,v2].forEach(v => polygons.push(`<line x1="${cx.toFixed(2)}" y1="${cy.toFixed(2)}" x2="${v[0].toFixed(2)}" y2="${v[1].toFixed(2)}" stroke="#617783" stroke-opacity=".48" stroke-width="0.22"/>`));
         polygons.push(`<circle cx="${cx.toFixed(2)}" cy="${cy.toFixed(2)}" r="3.65" fill="#ffffff" fill-opacity=".88" stroke="#617783" stroke-width=".25"/><text x="${cx.toFixed(2)}" y="${(cy+1.15).toFixed(2)}" text-anchor="middle" font-family="Arial" font-size="2.5" font-weight="700" fill="#345264">#${String(piece.no).padStart(2,'0')}</text>`);
         edgeDefs.forEach((ed, sIdx) => {
-          const side = piece.sides[sIdx], dText = side.isFig ? 8.8 : 8.1, scale = (H / 3 - dText) / (H / 3);
+          const side = piece.sides[sIdx];
+          const labelHeightMm = side.isFig ? 9.2 : (15 * 25.4 / 72);
+          const edgeInsetMm = Math.max(7.0, labelHeightMm * 0.92 + 1.8);
+          const scale = (H / 3 - edgeInsetMm) / (H / 3);
           const lx = cx + scale * ((ed.a[0]+ed.b[0])/2 - cx), ly = cy + scale * ((ed.a[1]+ed.b[1])/2 - cy);
-          labels.push(`<div class="tri-edge-label" style="left:${lx.toFixed(2)}mm;top:${ly.toFixed(2)}mm;transform:translate(-50%,-50%) rotate(${ed.angle}deg);">${side.html}</div>`);
+          labels.push(`<div class="tri-edge-label${side.isFig ? ' is-fig' : ''}" data-key-id="${side.keyId}" style="left:${lx.toFixed(2)}mm;top:${ly.toFixed(2)}mm;transform:translate(-50%,-50%) rotate(${ed.angle}deg);">${side.html}</div>`);
         });
       });
       return `<div class="piece-sheet" data-grade="${grade}" data-sheet="${sheetIndex}" data-side-mm="${S}">
-        <div class="sheet-tag">${GRADE_LABELS[grade]} · folha ${sheetIndex}/2</div>
+        <div class="sheet-tag">${GRADE_LABELS[grade]} · folha ${sheetIndex}/4</div>
         <div class="tri-lattice-box">
-          <svg class="tri-lattice-svg" viewBox="0 0 ${PIECE_SHEET_WIDTH_MM} ${PIECE_SHEET_HEIGHT_MM.toFixed(3)}" xmlns="http://www.w3.org/2000/svg" aria-label="16 triominós coloridos">
+          <svg class="tri-lattice-svg" viewBox="0 0 ${PIECE_SHEET_WIDTH_MM} ${PIECE_SHEET_HEIGHT_MM.toFixed(3)}" xmlns="http://www.w3.org/2000/svg" aria-label="9 triominós coloridos">
             ${polygons.join('')}
           </svg>
           <div class="tri-labels-layer">${labels.join('')}</div>
@@ -2634,7 +2638,10 @@ const TRIOMINO_DATA = {
     }
     function renderPieceArea(grade) {
       const pieces = buildPiecesForGrade(grade);
-      return renderTriominoSheet(pieces.slice(0,16), 1, grade) + renderTriominoSheet(pieces.slice(16,32), 2, grade);
+      return [0, 1, 2, 3].map(sheetIndex => {
+        const start = sheetIndex * 9;
+        return renderTriominoSheet(pieces.slice(start, start + 9), sheetIndex + 1, grade);
+      }).join('');
     }
     function renderKeySheet(grade) {
       const gData = TRIOMINO_DATA[grade] || TRIOMINO_DATA['6ano'], pieces = buildPiecesForGrade(grade);
