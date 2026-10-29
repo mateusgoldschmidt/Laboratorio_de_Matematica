@@ -8,6 +8,7 @@ Materiais didáticos de matemática para imprimir, projetar e usar no navegador:
 | --- | --- |
 | `geometria/` | Applets 3D (cilindros, cones, pirâmides), laboratório visual de geometria espacial, quiz gamificado e bingo geométrico |
 | `pibid/` | Jogos lúdicos do PIBID: dominós (álgebra e área/perímetro), Super Trunfo das Missões, Mercadinho Padre Traezel, Pizzaria das Frações e Trilha Sistema Solar |
+| `jogos/` | Portal dos jogos do laboratório (com portal próprio em `jogos/index.html`): Batalha Naval Cartesiana & Algébrica, Triominó Matemático, UNO Matemático e Mico Matemático |
 | `libras/` | Bingo de números e baralhos (pôquer e UNO) com numerais e alfabeto em Libras |
 | `obmep/` | Resoluções passo a passo de questões da OBMEP Nível 1 (6º e 7º ano) |
 | `outros_materiais/` | Oficinas, cadernos e atividades de apoio à formação docente |
@@ -33,6 +34,10 @@ As habilidades listadas são as que cada material efetivamente exercita. Elas ap
 | Quiz de Geometria Espacial (`geometria/quiz.html`) | digital (multiplayer) | EM13MAT309 |
 | Bingo Geométrico (`geometria/bingo.html`) | impresso + sorteador | EM13MAT309 |
 | Bingo & Baralhos em Libras (`libras/cartas.html`) | impresso + sorteador | EF01MA01 |
+| Batalha Naval Cartesiana & Algébrica (`jogos/batalha_naval_cartesiana.html`) | impresso + projeção | EF06MA16, EF06MA03, EF07MA04, EF07MA19, EF07MA20, EF08MA07, EF08MA08, EF09MA06, EF09MA09, EF09MA16 |
+| Triominó Matemático (`jogos/triomino_matematico.html`) | impresso (peças) | EF06MA03, EF06MA09, EF06MA24, EF07MA18, EF07MA23, EF08MA01, EF08MA06, EF08MA19, EF09MA03, EF09MA09, EF09MA13 |
+| UNO Matemático (`jogos/uno_matematico.html`) | impresso (cartas) | EF06MA03, EF06MA07, EF06MA09, EF06MA11, EF06MA13, EF07MA04, EF07MA12, EF08MA01, EF08MA02, EF08MA05, EF09MA03, EF09MA04, EF09MA09 |
+| Mico Matemático (`jogos/mico_matematico.html`) | impresso (43 cartas) | EF06MA03, EF06MA07, EF06MA08, EF06MA09, EF06MA11, EF06MA13, EF07MA03, EF07MA04, EF08MA01, EF08MA02, EF09MA03, EF09MA04 |
 | OBMEP 2016 — Questão 15 (`obmep/2016_q15_n1.html`) | digital/projetado | EF06MA24 |
 | OBMEP 2026 — Questão 20 (`obmep/2026_q20_n1.html`) | digital/projetado | EF06MA17, EF07MA21 |
 | Caderno da Oficina (`outros_materiais/material_oficina_completo.html`) | impresso (formação docente) | EF06MA07, EF06MA13, EF04CI01, EF04CI03, EF04CI04 |
