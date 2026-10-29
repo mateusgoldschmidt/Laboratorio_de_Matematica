@@ -29,8 +29,6 @@ habilidades:
       --papel: #f4f7fa;
       --linha: #c8d4de;
       --acento: #2f7f6f;
-      --tint1: #d9e9fb; --tint2: #ffe4c6; --tint3: #d8f2dd;
-      --tint4: #fbdfeb; --tint5: #e6e0fb; --tint6: #d3f0ee;
     }
     * { box-sizing: border-box; }
     body {
@@ -98,32 +96,22 @@ habilidades:
       position: relative; width: 70mm; height: 97mm; background: #fff;
       border: .4mm solid var(--linha); overflow: hidden;
     }
-    .carta .faixa {
-      position: absolute; left: 0; right: 0; top: 0; height: 11mm;
-      border-bottom: .3mm solid rgba(0,0,0,.12);
-      display: flex; align-items: center; justify-content: space-between; padding: 0 3mm;
+    /* arte dentro da peça: a moldura tropical preenche a carta inteira, com o cálculo por cima */
+    .carta::before {
+      content: ''; position: absolute; inset: 0;
+      background: url(mico_img/carta-fundo.png) center/100% 100% no-repeat;
+      opacity: .55;
     }
-    .carta .faixa img { height: 7mm; width: auto; }
-    .carta .pontos { display: flex; gap: 1.6mm; }
-    .carta .pontos span { width: 2.4mm; height: 2.4mm; border-radius: 50%; background: rgba(0,0,0,.14); }
+    .carta.vazia::before { content: none; }
     .carta .miolo {
-      position: absolute; inset: 11mm 1.5mm 1.5mm; display: flex; align-items: center; justify-content: center;
+      position: absolute; inset: 2mm; display: flex; align-items: center; justify-content: center;
       text-align: center;
     }
-    /* arte dentro da peça: moldura tropical suave, com o cálculo por cima */
-    .carta .miolo::before {
-      content: ''; position: absolute; inset: 0;
-      background: url(mico_img/carta-fundo.png) center/116% auto no-repeat;
-      opacity: .5;
-    }
-    .carta .miolo .motivo {
-      position: absolute; right: 2mm; bottom: 1.6mm; height: 11mm; width: auto;
-    }
     .conteudo { position: relative; z-index: 1; font-weight: 800; color: #10222f; line-height: 1.05; padding: 0 6mm; }
-    .conteudo.g  { font-size: 34pt; }
-    .conteudo.m  { font-size: 26pt; }
-    .conteudo.p  { font-size: 19pt; }
-    .conteudo.pp { font-size: 15pt; }
+    .conteudo.g  { font-size: 32pt; }
+    .conteudo.m  { font-size: 23pt; }
+    .conteudo.p  { font-size: 17pt; }
+    .conteudo.pp { font-size: 14pt; }
     .conteudo sup { font-size: .58em; }
     .frac {
       display: inline-flex; flex-direction: column; align-items: center;
@@ -131,7 +119,7 @@ habilidades:
     }
     .frac > span:first-child { border-bottom: .55mm solid currentColor; padding: 0 .18em .06em; }
     .frac > span:last-child { padding: .06em .18em 0; }
-    .carta.mico .miolo { inset: 11mm 6mm 2mm; }
+    .carta.mico .miolo { inset: 3mm 5mm; }
     .carta.mico img.macaco { position: relative; z-index: 1; max-width: 100%; max-height: 100%; }
 
     /* ---------- manual e gabarito ---------- */
@@ -269,7 +257,6 @@ habilidades:
 
 <script>
   var ANO_ATUAL = '6ano';
-  var TINTS = ['var(--tint1)', 'var(--tint2)', 'var(--tint3)', 'var(--tint4)', 'var(--tint5)', 'var(--tint6)'];
   var ROTULOS = { '6ano': '6º ano', '7ano': '7º ano', '8ano': '8º ano', '9ano': '9º ano' };
 
   /* Cada par: [carta A, carta B, valor (para o gabarito)].
@@ -417,21 +404,12 @@ habilidades:
   function htmlCarta(carta, indice) {
     if (carta.tipo === 'mico') {
       return '<div class="carta mico" style="background:#fff">' +
-        '<div class="faixa" style="background:' + TINTS[indice % TINTS.length] + '">' +
-          '<img src="mico_img/mico-cabeca.png" alt="">' +
-          '<div class="pontos"><span></span><span></span><span></span></div>' +
-        '</div>' +
         '<div class="miolo"><img class="macaco" src="mico_img/mico.png" alt=""></div>' +
       '</div>';
     }
     return '<div class="carta" style="background:#fff">' +
-      '<div class="faixa" style="background:' + TINTS[indice % TINTS.length] + '">' +
-        '<img src="mico_img/mico-cabeca.png" alt="">' +
-        '<div class="pontos"><span></span><span></span><span></span></div>' +
-      '</div>' +
       '<div class="miolo">' +
         '<div class="conteudo ' + classeTamanho(carta.texto) + '">' + mat(carta.texto) + '</div>' +
-        '<img class="motivo" src="mico_img/motivo-' + ((indice % 4) + 1) + '.png" alt="">' +
       '</div>' +
     '</div>';
   }
@@ -443,7 +421,7 @@ habilidades:
       var fatia = cartas.slice(f * 9, f * 9 + 9);
       html += '<div class="folha">';
       for (var i = 0; i < 9; i++) {
-        html += fatia[i] ? htmlCarta(fatia[i], f * 9 + i) : '<div class="carta" style="border-color:#e8eef3"></div>';
+        html += fatia[i] ? htmlCarta(fatia[i], f * 9 + i) : '<div class="carta vazia" style="border-color:#e8eef3"></div>';
       }
       html += '</div>';
     }
