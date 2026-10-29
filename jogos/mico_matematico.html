@@ -107,14 +107,19 @@ habilidades:
     .carta .pontos { display: flex; gap: 1.6mm; }
     .carta .pontos span { width: 2.4mm; height: 2.4mm; border-radius: 50%; background: rgba(0,0,0,.14); }
     .carta .miolo {
-      position: absolute; inset: 11mm 3mm 5mm; display: flex; align-items: center; justify-content: center;
+      position: absolute; inset: 11mm 1.5mm 1.5mm; display: flex; align-items: center; justify-content: center;
       text-align: center;
     }
-    .carta .rodape {
-      position: absolute; left: 0; right: 0; bottom: 0; height: 5mm;
-      border-top: .3mm solid rgba(0,0,0,.12);
+    /* arte dentro da peça: moldura tropical suave, com o cálculo por cima */
+    .carta .miolo::before {
+      content: ''; position: absolute; inset: 0;
+      background: url(mico_img/carta-fundo.png) center/116% auto no-repeat;
+      opacity: .5;
     }
-    .conteudo { font-weight: 800; color: #10222f; line-height: 1.05; }
+    .carta .miolo .motivo {
+      position: absolute; right: 2mm; bottom: 1.6mm; height: 11mm; width: auto;
+    }
+    .conteudo { position: relative; z-index: 1; font-weight: 800; color: #10222f; line-height: 1.05; padding: 0 6mm; }
     .conteudo.g  { font-size: 34pt; }
     .conteudo.m  { font-size: 26pt; }
     .conteudo.p  { font-size: 19pt; }
@@ -126,8 +131,8 @@ habilidades:
     }
     .frac > span:first-child { border-bottom: .55mm solid currentColor; padding: 0 .18em .06em; }
     .frac > span:last-child { padding: .06em .18em 0; }
-    .carta.mico .miolo { inset: 11mm 6mm 5mm; }
-    .carta.mico img.macaco { max-width: 100%; max-height: 100%; }
+    .carta.mico .miolo { inset: 11mm 6mm 2mm; }
+    .carta.mico img.macaco { position: relative; z-index: 1; max-width: 100%; max-height: 100%; }
 
     /* ---------- manual e gabarito ---------- */
     .papel {
@@ -244,8 +249,8 @@ habilidades:
 <div id="tab-sobre" class="tab-content">
   <div class="bloco">
     <h2>Sobre o jogo</h2>
-    <p>O <strong>Mico Matemático</strong> é o jogo do mico com pares de <strong>equivalências</strong>: cada par traz duas cartas que valem a mesma coisa escritas de formas diferentes — <span class="mono">1/2</span> e <span class="mono">50%</span>, <span class="mono">2³</span> e <span class="mono">8</span>, <span class="mono">3/4 de 20</span> e <span class="mono">15</span>. São <strong>21 pares + a carta do macaquinho</strong>, que não tem par: quem terminar com ela na mão paga o mico.</p>
-    <p>O baralho tem <strong>43 cartas</strong> impressas em <strong>5 folhas A4</strong> (9 cartas por folha, de 70 × 97 mm, encostadas para o corte reto). Cada par aparece duas vezes com formas diferentes e <strong>nenhum valor se repete</strong> entre pares — assim a equivalência é sempre única e o par não pode ser trocado.</p>
+    <p>O <strong>Mico Matemático</strong> é o jogo do mico com pares de <strong>equivalências</strong>: cada par traz duas cartas com <strong>cálculos diferentes que dão o mesmo resultado</strong> — <span class="mono">1/2 de 10</span> e <span class="mono">1/4 de 20</span>, <span class="mono">2^3</span> e <span class="mono">1/4 de 32</span>, <span class="mono">1/4 + 1</span> e <span class="mono">5 · 0,25</span>. Nenhuma carta é um número solto: em toda carta o aluno precisa fazer uma conta. São <strong>21 pares + a carta do macaquinho</strong>, que não tem par: quem terminar com ela na mão paga o mico.</p>
+    <p>O baralho tem <strong>43 cartas</strong> impressas em <strong>5 folhas A4</strong> (9 cartas por folha, de 70 × 97 mm, encostadas para o corte reto), com <strong>arte dentro de cada carta</strong>. Como <strong>nenhum resultado se repete</strong> entre os pares, a equivalência é sempre única e o par não pode ser trocado.</p>
     <h3>Conteúdo por ano</h3>
     <ul>
       <li><strong>6º ano:</strong> frações, decimais, porcentagens, potências e fração de uma quantidade.</li>
@@ -267,76 +272,77 @@ habilidades:
   var TINTS = ['var(--tint1)', 'var(--tint2)', 'var(--tint3)', 'var(--tint4)', 'var(--tint5)', 'var(--tint6)'];
   var ROTULOS = { '6ano': '6º ano', '7ano': '7º ano', '8ano': '8º ano', '9ano': '9º ano' };
 
-  /* Cada par: [carta A, carta B, valor (para o gabarito)] */
+  /* Cada par: [carta A, carta B, valor (para o gabarito)].
+     Toda carta traz um cálculo: nenhuma carta é um número solto. */
   var BARALHOS = {
     '6ano': [
-      ['1/2', '50%', '0,5'],
-      ['1/4', '25%', '0,25'],
-      ['3/4', '75%', '0,75'],
-      ['2/5', '0,4', '0,4'],
-      ['3/5', '0,6', '0,6'],
-      ['4/5', '80%', '0,8'],
-      ['1/8', '12,5%', '0,125'],
-      ['1/10', '10%', '0,1'],
-      ['3/2', '1,5', '1,5'],
-      ['5/2', '2,5', '2,5'],
-      ['7/4', '1,75', '1,75'],
-      ['1/20', '5%', '0,05'],
-      ['9/4', '2,25', '2,25'],
-      ['11/10', '1,1', '1,1'],
-      ['2^3', '8', '8'],
-      ['3^2', '9', '9'],
-      ['5^2', '25', '25'],
-      ['10^2', '100', '100'],
-      ['3/4 de 20', '15', '15'],
-      ['2/5 de 25', '10', '10'],
-      ['1/4 de 12', '3', '3']
+      ['1/2 de 10', '1/4 de 20', '5'],
+      ['1/3 de 18', '20% de 30', '6'],
+      ['2^3', '1/4 de 32', '8'],
+      ['1/4 de 36', '25% de 36', '9'],
+      ['2/5 de 25', '1/10 de 100', '10'],
+      ['3/4 de 16', '75% de 16', '12'],
+      ['1/2 de 30', '50% de 30', '15'],
+      ['2^4', '1/2 de 32', '16'],
+      ['2^2 · 5', '1/5 de 100', '20'],
+      ['5^2', '1/4 de 100', '25'],
+      ['5 · 10', '1/2 de 100', '50'],
+      ['10^2', '2 · 50', '100'],
+      ['1 - 1/2', '1/4 + 1/4', '0,5'],
+      ['1/2 · 1/2', '1 - 0,75', '0,25'],
+      ['1/4 + 1/2', '1 - 0,25', '0,75'],
+      ['1/2 + 1', '3 · 0,5', '1,5'],
+      ['1,5 + 1', '5 · 0,5', '2,5'],
+      ['1/4 + 1', '5 · 0,25', '1,25'],
+      ['1/2 · 0,4', '1 - 0,8', '0,2'],
+      ['1/2 · 1/4', '0,25 · 0,5', '0,125'],
+      ['1/2 · 0,2', '1 - 0,9', '0,1']
     ],
     '7ano': [
-      ['4 - 9', '-5', '-5'],
-      ['(-7) + 3', '-4', '-4'],
-      ['(-2) · 5', '-10', '-10'],
-      ['(-18) : 3', '-6', '-6'],
-      ['(-3) + 9', '6', '6'],
-      ['5 - 13', '-8', '-8'],
-      ['(-3)^2', '9', '9'],
-      ['(-12) + 3', '-9', '-9'],
-      ['(-5) + 3', '-2', '-2'],
-      ['(-3) · (-4)', '12', '12'],
-      ['20 - 5', '15', '15'],
-      ['(-5) · 3', '-15', '-15'],
-      ['(-4) · 5', '-20', '-20'],
-      ['(-6) · (-4)', '24', '24'],
-      ['(-8) · 3', '-24', '-24'],
-      ['(-9) · 4', '-36', '-36'],
-      ['(-3) : 2', '-1,5', '-1,5'],
-      ['(-1) : 2', '-0,5', '-0,5'],
-      ['5 : 2', '2,5', '2,5'],
-      ['(-4) + 4', '0', '0'],
-      ['(-50) · 2', '-100', '-100']
+      ['4 - 9', '(-3) + (-2)', '-5'],
+      ['(-7) + 3', '2 · (-2)', '-4'],
+      ['(-2) · 5', '5 - 15', '-10'],
+      ['(-18) : 3', '(-2) · 3', '-6'],
+      ['(-3) + 9', '(-2) · (-3)', '6'],
+      ['5 - 13', '(-4) · 2', '-8'],
+      ['(-3)^2', '(-2) + 11', '9'],
+      ['(-12) + 3', '(-3) · 3', '-9'],
+      ['(-5) + 3', '(-10) : 5', '-2'],
+      ['(-3) · (-4)', '20 - 8', '12'],
+      ['20 - 5', '(-3) · (-5)', '15'],
+      ['(-5) · 3', '5 - 20', '-15'],
+      ['(-4) · 5', '(-10) · 2', '-20'],
+      ['(-6) · (-4)', '30 - 6', '24'],
+      ['(-8) · 3', '(-6) · 4', '-24'],
+      ['(-9) · 4', '(-12) · 3', '-36'],
+      ['(-3) : 2', '(-1) - 0,5', '-1,5'],
+      ['(-1) : 2', '0,5 - 1', '-0,5'],
+      ['5 : 2', '3,5 - 1', '2,5'],
+      ['(-4) + 4', '(-7) + 7', '0'],
+      ['(-50) · 2', '(-25) · 4', '-100']
     ],
     '8ano': [
-      ['2^5', '32', '32'],
-      ['3^3', '27', '27'],
-      ['2^4', '16', '16'],
-      ['5^3', '125', '125'],
-      ['10^4', '10.000', '10.000'],
-      ['√49', '7', '7'],
-      ['√81', '9', '9'],
-      ['√144', '12', '12'],
-      ['√2,25', '1,5', '1,5'],
-      ['(2^2)^3', '64', '64'],
-      ['5^-1', '0,2', '0,2'],
-      ['2^-2', '0,25', '0,25'],
-      ['10^-2', '0,01', '0,01'],
-      ['2,5 · 10^3', '2.500', '2.500'],
-      ['4,2 · 10^2', '420', '420'],
-      ['√0,25', '0,5', '0,5'],
-      ['√1,44', '1,2', '1,2'],
-      ['0,3^2', '0,09', '0,09'],
-      ['(1/2)^3', '0,125', '0,125'],
-      ['2^0', '1', '1'],
-      ['2^7 : 2^4', '8', '8']
+      ['2^5', '2^3 · 2^2', '32'],
+      ['3^3', '3^2 · 3', '27'],
+      ['2^4', '2^5 : 2', '16'],
+      ['5^3', '5^2 · 5', '125'],
+      ['10^4', '10^2 · 10^2', '10.000'],
+      ['√49', '14 : 2', '7'],
+      ['√81', '3^2', '9'],
+      ['√144', '3 · 4', '12'],
+      ['√2,25', '3 : 2', '1,5'],
+      ['(2^2)^3', '2^6', '64'],
+      ['5^-1', '2 : 10', '0,2'],
+      ['2^-2', '1 : 4', '0,25'],
+      ['10^-2', '0,1 · 0,1', '0,01'],
+      ['2,5 · 10^3', '25 · 100', '2.500'],
+      ['4,2 · 10^2', '42 · 10', '420'],
+      ['√0,25', '1 : 2', '0,5'],
+      ['√1,44', '6 : 5', '1,2'],
+      ['0,3^2', '0,9 : 10', '0,09'],
+      ['(1/2)^3', '1 : 8', '0,125'],
+      ['2^0', '5 : 5', '1'],
+      ['2^7 : 2^4', '√64', '8']
     ],
     '9ano': [
       ['√8', '2√2', '2√2'],
@@ -348,18 +354,18 @@ habilidades:
       ['√20', '2√5', '2√5'],
       ['√45', '3√5', '3√5'],
       ['√125', '5√5', '5√5'],
-      ['25^(1/2)', '5', '5'],
-      ['100^(1/2)', '10', '10'],
-      ['8^(1/3)', '2', '2'],
-      ['27^(1/3)', '3', '3'],
-      ['64^(1/3)', '4', '4'],
-      ['216^(1/3)', '6', '6'],
-      ['343^(1/3)', '7', '7'],
+      ['25^(1/2)', '10 : 2', '5'],
+      ['100^(1/2)', '5 · 2', '10'],
+      ['8^(1/3)', '√4', '2'],
+      ['27^(1/3)', '√9', '3'],
+      ['64^(1/3)', '√16', '4'],
+      ['216^(1/3)', '√36', '6'],
+      ['343^(1/3)', '√49', '7'],
       ['2^(1/2)', '√2', '√2'],
-      ['9^(3/2)', '27', '27'],
-      ['3,2 · 10^3', '3.200', '3.200'],
-      ['4,5 · 10^-2', '0,045', '0,045'],
-      ['√0,09', '0,3', '0,3']
+      ['9^(3/2)', '3^3', '27'],
+      ['3,2 · 10^3', '32 · 100', '3.200'],
+      ['4,5 · 10^-2', '0,45 : 10', '0,045'],
+      ['√0,09', '9 : 30', '0,3']
     ]
   };
 
@@ -416,7 +422,6 @@ habilidades:
           '<div class="pontos"><span></span><span></span><span></span></div>' +
         '</div>' +
         '<div class="miolo"><img class="macaco" src="mico_img/mico.png" alt=""></div>' +
-        '<div class="rodape" style="background:' + TINTS[indice % TINTS.length] + '"></div>' +
       '</div>';
     }
     return '<div class="carta" style="background:#fff">' +
@@ -424,8 +429,10 @@ habilidades:
         '<img src="mico_img/mico-cabeca.png" alt="">' +
         '<div class="pontos"><span></span><span></span><span></span></div>' +
       '</div>' +
-      '<div class="miolo"><div class="conteudo ' + classeTamanho(carta.texto) + '">' + mat(carta.texto) + '</div></div>' +
-      '<div class="rodape" style="background:' + TINTS[indice % TINTS.length] + '"></div>' +
+      '<div class="miolo">' +
+        '<div class="conteudo ' + classeTamanho(carta.texto) + '">' + mat(carta.texto) + '</div>' +
+        '<img class="motivo" src="mico_img/motivo-' + ((indice % 4) + 1) + '.png" alt="">' +
+      '</div>' +
     '</div>';
   }
 
@@ -444,6 +451,8 @@ habilidades:
   }
 
   function renderManual(ano) {
+    var paresAno = BARALHOS[ano];
+    var p0a = paresAno[0][0], p0b = paresAno[0][1], p1a = paresAno[1][0];
     document.getElementById('manual').innerHTML =
       '<div class="papel">' +
         '<div class="faixa-topo"></div>' +
@@ -470,8 +479,8 @@ habilidades:
           '<h3>Conferência dos pares</h3>' +
           '<p>No gabarito estão os 21 pares do ano escolhido com o valor de cada um. Nenhum valor se repete entre pares, então a equivalência é sempre única.</p>' +
           '<h3>Exemplo de conferência</h3>' +
-          '<p><strong>Par certo:</strong> um jogador baixa <span class="mono">1/2</span> com <span class="mono">50%</span>. O grupo confere e o par fica na mesa.</p>' +
-          '<p><strong>Par errado:</strong> outro jogador baixa <span class="mono">1/2</span> com <span class="mono">25%</span>. O grupo mostra que um meio não é vinte e cinco por cento e as duas cartas voltam para a mão.</p>' +
+          '<p><strong>Par certo:</strong> um jogador baixa <span class="mono">' + p0a + '</span> com <span class="mono">' + p0b + '</span> — as duas contas dão o mesmo resultado. O grupo confere e o par fica na mesa.</p>' +
+          '<p><strong>Par errado:</strong> outro jogador baixa <span class="mono">' + p0a + '</span> com <span class="mono">' + p1a + '</span>. O grupo faz as duas contas, vê que os resultados são diferentes e as cartas voltam para a mão.</p>' +
           '<h3>Qual baralho usar</h3>' +
           '<p>O mesmo jogo tem um baralho por ano (6º ao 9º), escolhido na tela antes de imprimir. As regras e a quantidade de cartas não mudam: muda só o conteúdo dos pares.</p>' +
         '</div>' +
