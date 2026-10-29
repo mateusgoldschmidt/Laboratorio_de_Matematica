@@ -1,0 +1,551 @@
+---
+titulo: "Mico Matemático"
+icone: "🐒"
+descricao: "Jogo do mico com equivalências: 22 pares de cartas (fração, decimal, porcentagem, potência, raiz e expressão) e o macaquinho sem par. 6º ao 9º ano, 45 cartas em 5 folhas A4."
+habilidades:
+  - EF06MA03
+  - EF06MA07
+  - EF06MA08
+  - EF06MA09
+  - EF06MA11
+  - EF06MA13
+  - EF07MA03
+  - EF07MA04
+  - EF08MA01
+  - EF08MA02
+  - EF09MA03
+  - EF09MA04
+---
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mico Matemático — Laboratório de Matemática</title>
+  {% include analytics.html %}
+  <style>
+    :root {
+      --tinta: #12303f;
+      --papel: #f4f7fa;
+      --linha: #c8d4de;
+      --acento: #2f7f6f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--papel); color: var(--tinta);
+      font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    header.main-header {
+      background: linear-gradient(135deg, #1d4b5f, #2f7f6f);
+      color: #fff; padding: 22px 20px 18px;
+    }
+    header.main-header h1 { margin: 0 0 6px; font-size: 1.5rem; }
+    header.main-header p { margin: 0; font-size: .92rem; opacity: .92; max-width: 760px; }
+
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 16px 0; }
+    .tab-btn {
+      border: 1px solid var(--linha); background: #fff; color: var(--tinta);
+      padding: 9px 14px; border-radius: 999px; cursor: pointer; font-size: .88rem;
+    }
+    .tab-btn.active { background: var(--acento); border-color: var(--acento); color: #fff; }
+
+    .print-bar {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      margin: 14px 16px; padding: 12px; background: #fff; border: 1px solid var(--linha);
+      border-radius: 12px;
+    }
+    .print-bar button {
+      border: 1px solid var(--linha); background: #fff; color: var(--tinta);
+      padding: 9px 13px; border-radius: 10px; cursor: pointer; font-size: .85rem;
+    }
+    .print-bar button:first-child { border-color: var(--acento); color: var(--acento); font-weight: 600; }
+    .print-bar button:hover { background: #eef4f8; }
+    .print-bar label { font-size: .85rem; margin-left: auto; }
+    .print-bar select { padding: 7px 10px; border-radius: 8px; border: 1px solid var(--linha); font-size: .85rem; }
+
+    .tab-content { display: none; padding: 0 16px 60px; }
+    .tab-content.active { display: block; }
+
+    .bloco {
+      background: #fff; border: 1px solid var(--linha); border-radius: 12px;
+      padding: 16px 18px; margin: 0 0 14px; max-width: 900px;
+    }
+    .bloco h2 { margin: 0 0 10px; font-size: 1.05rem; }
+    .bloco h3 { margin: 14px 0 6px; font-size: .95rem; }
+    .bloco p, .bloco li { font-size: .9rem; }
+    .bloco ul, .bloco ol { padding-left: 20px; margin: 6px 0; }
+    .skills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .mono {
+      font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      background: #eef4f8; border: .3mm solid var(--linha); border-radius: 1mm;
+      padding: 0 .8mm; font-size: .95em; white-space: nowrap;
+    }
+    .skill {
+      font-size: .72rem; background: #eaf4ff; color: #1d4b5f;
+      border: 1px solid #cfe1f3; border-radius: 999px; padding: 3px 9px;
+    }
+
+    /* ---------- folhas e cartas ---------- */
+    .folhas { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+    .folha {
+      width: 210mm; height: 291mm; background: #fff;
+      display: grid; grid-template-columns: repeat(3, 70mm); grid-template-rows: repeat(3, 97mm);
+      transform-origin: top left; box-shadow: 0 2px 10px rgba(0,0,0,.12);
+    }
+    .carta {
+      position: relative; width: 70mm; height: 97mm; background: #fff;
+      border: .4mm solid var(--linha); overflow: hidden;
+    }
+    /* arte dentro da peça: a moldura tropical preenche a carta inteira, com o cálculo por cima */
+    .carta::before {
+      content: ''; position: absolute; inset: 0;
+      background: url(mico_img/carta-fundo.png) center/100% 100% no-repeat;
+      opacity: .55;
+    }
+    .carta.vazia::before { content: none; }
+    .carta .miolo {
+      position: absolute; inset: 2mm; display: flex; align-items: center; justify-content: center;
+      text-align: center;
+    }
+    .conteudo { position: relative; z-index: 1; font-weight: 800; color: #10222f; line-height: 1.05; padding: 0 6mm; }
+    .conteudo.g  { font-size: 32pt; }
+    .conteudo.m  { font-size: 23pt; }
+    .conteudo.p  { font-size: 17pt; }
+    .conteudo.pp { font-size: 14pt; }
+    .conteudo sup { font-size: .58em; }
+    .frac {
+      display: inline-flex; flex-direction: column; align-items: center;
+      vertical-align: middle; line-height: 1; margin: 0 .1em;
+    }
+    .frac > span:first-child { border-bottom: .55mm solid currentColor; padding: 0 .18em .06em; }
+    .frac > span:last-child { padding: .06em .18em 0; }
+    .carta.mico .miolo { inset: 3mm 5mm; }
+    .carta.mico img.macaco { position: relative; z-index: 1; max-width: 100%; max-height: 100%; }
+
+    /* ---------- manual e gabarito ---------- */
+    .papel {
+      width: 210mm; min-height: 297mm; background: #fff; padding: 12mm 12mm 10mm;
+      box-shadow: 0 2px 10px rgba(0,0,0,.12); color: #10222f;
+    }
+    .papel h2 { margin: 0 0 2mm; font-size: 15pt; }
+    .papel .sub { margin: 0 0 5mm; font-size: 9pt; color: #4c6070; }
+    .papel .colunas { column-count: 2; column-gap: 8mm; font-size: 8.6pt; line-height: 1.32; }
+    .papel h3 { font-size: 9.6pt; margin: 3mm 0 1.4mm; color: #1d4b5f; }
+    .papel p, .papel li { margin: 0 0 1.4mm; }
+    .papel ol, .papel ul { padding-left: 5mm; margin: 0 0 2mm; }
+    .faixa-topo { height: 6mm; border-radius: 2mm; margin-bottom: 4mm;
+      background: linear-gradient(90deg, var(--tint1), var(--tint6)); border: .3mm solid var(--linha); }
+    table.gab { width: 100%; border-collapse: collapse; font-size: 8.4pt; }
+    table.gab th, table.gab td { border: .3mm solid var(--linha); padding: 1.1mm 1.6mm; text-align: left; }
+    table.gab th { background: #eef4f8; font-size: 8pt; }
+    table.gab td.valor { font-weight: 700; }
+    .gab-nota { font-size: 8pt; color: #4c6070; margin-top: 3mm; }
+
+    #btn-voltar {
+      position: fixed; left: 14px; bottom: 14px; z-index: 40;
+      background: #1d4b5f; color: #fff; text-decoration: none;
+      padding: 10px 14px; border-radius: 999px; font-size: .82rem;
+      box-shadow: 0 3px 10px rgba(0,0,0,.25);
+    }
+    #btn-voltar:hover { background: #2f7f6f; }
+
+    @media screen and (max-width: 820px) {
+      .folhas { --zoom: .42; }
+      .folha { transform: scale(var(--zoom)); margin-bottom: calc(-291mm * (1 - var(--zoom))); }
+      .papel { width: 100%; min-height: 0; padding: 12px; }
+      .papel .colunas { column-count: 1; }
+      #btn-voltar { padding: 8px 12px; font-size: .76rem; bottom: 12px; left: 12px; }
+    }
+    @media screen and (max-width: 520px) {
+      .folhas { --zoom: .36; }
+    }
+
+    @page { size: A4 portrait; margin: 0; }
+    @media print {
+      html, body { background: #fff !important; }
+      header.main-header, .tabs, .print-bar, #btn-voltar, .screen-only { display: none !important; }
+      .tab-content { display: none !important; padding: 0 !important; }
+      /* nada de interface nem de outras partes no papel: cada alvo mostra
+         somente a aba e a parte pedidas */
+      #tab-jogo, #tab-manual, #tab-sobre,
+      #parte-cartas, #parte-manual, #parte-gabarito { display: none !important; }
+      body[data-print-target="cartas"] #tab-jogo,
+      body[data-print-target="cartas"] #parte-cartas,
+      body[data-print-target="manual"] #tab-manual,
+      body[data-print-target="manual"] #parte-manual,
+      body[data-print-target="gabarito"] #tab-jogo,
+      body[data-print-target="gabarito"] #parte-gabarito,
+      body[data-print-target="tudo"] #tab-jogo,
+      body[data-print-target="tudo"] #parte-cartas,
+      body[data-print-target="tudo"] #parte-gabarito,
+      body[data-print-target="tudo"] #tab-manual,
+      body[data-print-target="tudo"] #parte-manual { display: block !important; }
+      .folhas { display: block !important; }
+      .folha {
+        transform: none !important; margin: 0 !important; box-shadow: none !important;
+        break-after: page; page-break-after: always;
+      }
+      .folha:last-child { break-after: auto; page-break-after: auto; }
+      .papel { width: 210mm; min-height: 0; box-shadow: none; padding: 10mm 10mm 8mm; break-after: page; page-break-after: always; }
+      .carta { border: .4mm solid #b9c6d2; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="main-header">
+  <h1>🐒 Mico Matemático</h1>
+  <p>22 pares de equivalências e o macaquinho sem par. Quem terminar com o mico na mão paga o mico.</p>
+</header>
+
+<div class="tabs print-hidden">
+  <button class="tab-btn active" onclick="switchTab('jogo')">🐒 Cartas e Gabarito</button>
+  <button class="tab-btn" onclick="switchTab('manual')">Manual e Regras</button>
+  <button class="tab-btn" onclick="switchTab('sobre')">Sobre o jogo</button>
+</div>
+
+<nav class="print-bar print-hidden" aria-label="Impressão do material">
+  <button onclick="imprimirParte('tudo')">Imprimir tudo (7 páginas)</button>
+  <button onclick="imprimirParte('cartas')">Cartas (43 · 5 folhas)</button>
+  <button onclick="imprimirParte('manual')">Manual (1)</button>
+  <button onclick="imprimirParte('gabarito')">Gabarito (1)</button>
+  <label>Ano:
+    <select id="seletorAno" onchange="setAno(this.value)">
+      <option value="6ano">6º ano</option>
+      <option value="7ano">7º ano</option>
+      <option value="8ano">8º ano</option>
+      <option value="9ano">9º ano</option>
+    </select>
+  </label>
+</nav>
+
+<div id="tab-jogo" class="tab-content active">
+  <div id="parte-cartas">
+    <div class="folhas" id="folhas"></div>
+  </div>
+  <div id="parte-gabarito" style="margin-top:14px">
+    <div id="gabarito"></div>
+  </div>
+</div>
+
+<div id="tab-manual" class="tab-content">
+  <div id="parte-manual">
+    <div id="manual"></div>
+  </div>
+</div>
+
+<div id="tab-sobre" class="tab-content">
+  <div class="bloco">
+    <h2>Sobre o jogo</h2>
+    <p>O <strong>Mico Matemático</strong> é o jogo do mico com pares de <strong>equivalências</strong>: cada par traz duas cartas com <strong>cálculos diferentes que dão o mesmo resultado</strong> — <span class="mono">1/2 de 10</span> e <span class="mono">1/4 de 20</span>, <span class="mono">2^3</span> e <span class="mono">1/4 de 32</span>, <span class="mono">1/4 + 1</span> e <span class="mono">5 · 0,25</span>. Nenhuma carta é um número solto: em toda carta o aluno precisa fazer uma conta. São <strong>22 pares + a carta do macaquinho</strong>, que não tem par: quem terminar com ela na mão paga o mico.</p>
+    <p>O baralho tem <strong>45 cartas</strong> impressas em <strong>5 folhas A4</strong> cheias (9 cartas por folha, de 70 × 97 mm, encostadas para o corte reto), com <strong>arte dentro de cada carta</strong>. Como <strong>nenhum resultado se repete</strong> entre os pares, a equivalência é sempre única e o par não pode ser trocado.</p>
+    <h3>Conteúdo por ano</h3>
+    <ul>
+      <li><strong>6º ano:</strong> frações, decimais, porcentagens, potências e fração de uma quantidade.</li>
+      <li><strong>7º ano:</strong> operações com números inteiros (soma, subtração, multiplicação, divisão e potência).</li>
+      <li><strong>8º ano:</strong> potências e suas propriedades, expoentes negativos, raízes e notação científica.</li>
+      <li><strong>9º ano:</strong> radicais e sua simplificação, expoentes fracionários, notação científica e números reais.</li>
+    </ul>
+    <h3>Como imprimir</h3>
+    <p>Uma cópia por grupo de 2 a 6 jogadores: <strong>Imprimir tudo</strong> sai com 5 folhas de cartas + 1 manual + 1 gabarito. Papel A4, retrato, tamanho real (100%), sem margens e sem “ajustar à página”.</p>
+    <h3>Habilidades da BNCC</h3>
+    <div class="skills" id="skillsSobre"></div>
+  </div>
+</div>
+
+<a id="btn-voltar" href="index.html">← Jogos</a>
+
+<script>
+  var ANO_ATUAL = '6ano';
+  var ROTULOS = { '6ano': '6º ano', '7ano': '7º ano', '8ano': '8º ano', '9ano': '9º ano' };
+
+  /* Cada par: [carta A, carta B, valor (para o gabarito)].
+     Toda carta traz um cálculo: nenhuma carta é um número solto. */
+  var BARALHOS = {
+    '6ano': [
+      ['1/2 de 10', '1/4 de 20', '5'],
+      ['1/3 de 18', '20% de 30', '6'],
+      ['2^3', '1/4 de 32', '8'],
+      ['1/4 de 36', '25% de 36', '9'],
+      ['2/5 de 25', '1/10 de 100', '10'],
+      ['3/4 de 16', '75% de 16', '12'],
+      ['1/2 de 30', '50% de 30', '15'],
+      ['2^4', '1/2 de 32', '16'],
+      ['2^2 · 5', '1/5 de 100', '20'],
+      ['5^2', '1/4 de 100', '25'],
+      ['5 · 10', '1/2 de 100', '50'],
+      ['10^2', '2 · 50', '100'],
+      ['1 - 1/2', '1/4 + 1/4', '0,5'],
+      ['1/2 · 1/2', '1 - 0,75', '0,25'],
+      ['1/4 + 1/2', '1 - 0,25', '0,75'],
+      ['1/2 + 1', '3 · 0,5', '1,5'],
+      ['1,5 + 1', '5 · 0,5', '2,5'],
+      ['1/4 + 1', '5 · 0,25', '1,25'],
+      ['1/2 · 0,4', '1 - 0,8', '0,2'],
+      ['1/2 · 1/4', '0,25 · 0,5', '0,125'],
+      ['1/2 · 0,2', '1 - 0,9', '0,1'],
+      ['1/2 · 0,8', '1 - 0,6', '0,4']
+    ],
+    '7ano': [
+      ['4 - 9', '(-3) + (-2)', '-5'],
+      ['(-7) + 3', '2 · (-2)', '-4'],
+      ['(-2) · 5', '5 - 15', '-10'],
+      ['(-18) : 3', '(-2) · 3', '-6'],
+      ['(-3) + 9', '(-2) · (-3)', '6'],
+      ['5 - 13', '(-4) · 2', '-8'],
+      ['(-3)^2', '(-2) + 11', '9'],
+      ['(-12) + 3', '(-3) · 3', '-9'],
+      ['(-5) + 3', '(-10) : 5', '-2'],
+      ['(-3) · (-4)', '20 - 8', '12'],
+      ['20 - 5', '(-3) · (-5)', '15'],
+      ['(-5) · 3', '5 - 20', '-15'],
+      ['(-4) · 5', '(-10) · 2', '-20'],
+      ['(-6) · (-4)', '30 - 6', '24'],
+      ['(-8) · 3', '(-6) · 4', '-24'],
+      ['(-9) · 4', '(-12) · 3', '-36'],
+      ['(-3) : 2', '(-1) - 0,5', '-1,5'],
+      ['(-1) : 2', '0,5 - 1', '-0,5'],
+      ['5 : 2', '3,5 - 1', '2,5'],
+      ['(-4) + 4', '(-7) + 7', '0'],
+      ['(-50) · 2', '(-25) · 4', '-100'],
+      ['(-2) · 6', '4 - 16', '-12']
+    ],
+    '8ano': [
+      ['2^5', '2^3 · 2^2', '32'],
+      ['3^3', '3^2 · 3', '27'],
+      ['2^4', '2^5 : 2', '16'],
+      ['5^3', '5^2 · 5', '125'],
+      ['10^4', '10^2 · 10^2', '10.000'],
+      ['√49', '14 : 2', '7'],
+      ['√81', '3^2', '9'],
+      ['√144', '3 · 4', '12'],
+      ['√2,25', '3 : 2', '1,5'],
+      ['(2^2)^3', '2^6', '64'],
+      ['5^-1', '2 : 10', '0,2'],
+      ['2^-2', '1 : 4', '0,25'],
+      ['10^-2', '0,1 · 0,1', '0,01'],
+      ['2,5 · 10^3', '25 · 100', '2.500'],
+      ['4,2 · 10^2', '42 · 10', '420'],
+      ['√0,25', '1 : 2', '0,5'],
+      ['√1,44', '6 : 5', '1,2'],
+      ['0,3^2', '0,9 : 10', '0,09'],
+      ['(1/2)^3', '1 : 8', '0,125'],
+      ['2^0', '5 : 5', '1'],
+      ['2^7 : 2^4', '√64', '8'],
+      ['6^2', '2^2 · 3^2', '36']
+    ],
+    '9ano': [
+      ['√8', '2√2', '2√2'],
+      ['√18', '3√2', '3√2'],
+      ['√50', '5√2', '5√2'],
+      ['√12', '2√3', '2√3'],
+      ['√27', '3√3', '3√3'],
+      ['√75', '5√3', '5√3'],
+      ['√20', '2√5', '2√5'],
+      ['√45', '3√5', '3√5'],
+      ['√125', '5√5', '5√5'],
+      ['25^(1/2)', '10 : 2', '5'],
+      ['100^(1/2)', '5 · 2', '10'],
+      ['8^(1/3)', '√4', '2'],
+      ['27^(1/3)', '√9', '3'],
+      ['64^(1/3)', '√16', '4'],
+      ['216^(1/3)', '√36', '6'],
+      ['343^(1/3)', '√49', '7'],
+      ['2^(1/2)', '√2', '√2'],
+      ['9^(3/2)', '3^3', '27'],
+      ['3,2 · 10^3', '32 · 100', '3.200'],
+      ['4,5 · 10^-2', '0,45 : 10', '0,045'],
+      ['√0,09', '9 : 30', '0,3'],
+      ['81^(1/2)', '3^2', '9']
+    ]
+  };
+
+  /* transforma o texto da carta em notação matemática */
+  function mat(txt) {
+    var s = String(txt);
+    s = s.replace(/\^\(([^)]+)\)/g, function (m, p) { return '<sup>' + p.replace('/', '\u2044') + '</sup>'; });
+    s = s.replace(/\^(-?\d+)/g, function (m, p) { return '<sup>' + p + '</sup>'; });
+    s = s.replace(/(\d+)\/(\d+)/g, function (m, a, b) {
+      return '<span class="frac"><span>' + a + '</span><span>' + b + '</span></span>';
+    });
+    return s;
+  }
+
+  function classeTamanho(txt) {
+    var n = String(txt).length;
+    if (n <= 6) return 'g';
+    if (n <= 10) return 'm';
+    if (n <= 14) return 'p';
+    return 'pp';
+  }
+
+  function embaralhar(lista, semente) {
+    var arr = lista.slice(), s = semente;
+    for (var i = arr.length - 1; i > 0; i--) {
+      s = (s * 1103515245 + 12345) % 2147483648;
+      var j = Math.floor((s / 2147483648) * (i + 1));
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
+
+  function sementeDoAno(ano) {
+    var ordem = { '6ano': 17, '7ano': 31, '8ano': 43, '9ano': 57 };
+    return ordem[ano] || 17;
+  }
+
+  function montarCartas(ano) {
+    var pares = BARALHOS[ano];
+    var cartas = [];
+    pares.forEach(function (par) {
+      cartas.push({ tipo: 'valor', texto: par[0] });
+      cartas.push({ tipo: 'valor', texto: par[1] });
+    });
+    cartas.push({ tipo: 'mico', texto: '' });
+    return embaralhar(cartas, sementeDoAno(ano));
+  }
+
+  function htmlCarta(carta, indice) {
+    if (carta.tipo === 'mico') {
+      return '<div class="carta mico" style="background:#fff">' +
+        '<div class="miolo"><img class="macaco" src="mico_img/mico.png" alt=""></div>' +
+      '</div>';
+    }
+    return '<div class="carta" style="background:#fff">' +
+      '<div class="miolo">' +
+        '<div class="conteudo ' + classeTamanho(carta.texto) + '">' + mat(carta.texto) + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function renderCartas(ano) {
+    var cartas = montarCartas(ano);
+    var html = '';
+    for (var f = 0; f < Math.ceil(cartas.length / 9); f++) {
+      var fatia = cartas.slice(f * 9, f * 9 + 9);
+      html += '<div class="folha">';
+      for (var i = 0; i < 9; i++) {
+        html += fatia[i] ? htmlCarta(fatia[i], f * 9 + i) : '<div class="carta vazia" style="border-color:#e8eef3"></div>';
+      }
+      html += '</div>';
+    }
+    document.getElementById('folhas').innerHTML = html;
+  }
+
+  function renderManual(ano) {
+    var paresAno = BARALHOS[ano];
+    var p0a = paresAno[0][0], p0b = paresAno[0][1], p1a = paresAno[1][0];
+    document.getElementById('manual').innerHTML =
+      '<div class="papel">' +
+        '<div class="faixa-topo"></div>' +
+        '<h2>Manual do professor — Mico Matemático (' + ROTULOS[ano] + ')</h2>' +
+        '<p class="sub">' + paresAno.length + ' pares de equivalências + a carta do macaquinho · ' +
+            (paresAno.length * 2 + 1) + ' cartas · 2 a 6 jogadores</p>' +
+        '<div class="colunas">' +
+          '<h3>Como jogar</h3>' +
+          '<ol>' +
+            '<li>Embaralhe as ' + (paresAno.length * 2 + 1) + ' cartas e distribua todas entre os jogadores. Não importa se alguém fica com uma carta a mais.</li>' +
+            '<li>Cada jogador procura na própria mão os pares de cartas equivalentes e baixa os pares na mesa, à vista de todos.</li>' +
+            '<li>Na sua vez, puxe uma carta da mão do jogador à sua esquerda, sem ver as cartas.</li>' +
+            '<li>Formou par? Baixe o par na mesa, à vista de todos, e diga a equivalência em voz alta (“um meio é o mesmo que cinquenta por cento”). O grupo confere: se o par não for equivalente, ele volta para a mão.</li>' +
+            '<li>Não formou par? A carta fica na sua mão.</li>' +
+            '<li>O jogo termina quando todos os pares estiverem na mesa. Quem ficar com o mico na mão paga o mico.</li>' +
+          '</ol>' +
+          '<h3>O mico</h3>' +
+          '<p>A carta do macaquinho não tem par e não tem número nem valor. É só o mico.</p>' +
+          '<h3>Variante: memória</h3>' +
+          '<p>Separe a carta do mico e espalhe as 42 cartas viradas para baixo. Cada jogador vira duas cartas: se forem equivalentes, ganha o par e joga de novo; se não forem, vira as duas de volta. Ganha quem formar mais pares.</p>' +
+          '<h3>Pagar o mico (ideias)</h3>' +
+          '<p>Imitar um animal, cantar um trecho de música, fazer dez polichinelos, recitar a tabuada do 7, contar uma piada de matemática.</p>' +
+          '<h3>Quanto imprimir</h3>' +
+          '<p>Uma cópia por grupo de 2 a 6 jogadores: 5 folhas de cartas, este manual e o gabarito. O gabarito fica com o professor.</p>' +
+          '<h3>Conferência dos pares</h3>' +
+          '<p>No gabarito estão os ' + paresAno.length + ' pares do ano escolhido com o valor de cada um. Nenhum valor se repete entre pares, então a equivalência é sempre única.</p>' +
+          '<h3>Exemplo de conferência</h3>' +
+          '<p><strong>Par certo:</strong> um jogador baixa <span class="mono">' + p0a + '</span> com <span class="mono">' + p0b + '</span> — as duas contas dão o mesmo resultado. O grupo confere e o par fica na mesa.</p>' +
+          '<p><strong>Par errado:</strong> outro jogador baixa <span class="mono">' + p0a + '</span> com <span class="mono">' + p1a + '</span>. O grupo faz as duas contas, vê que os resultados são diferentes e as cartas voltam para a mão.</p>' +
+          '<h3>Qual baralho usar</h3>' +
+          '<p>O mesmo jogo tem um baralho por ano (6º ao 9º), escolhido na tela antes de imprimir. As regras e a quantidade de cartas não mudam: muda só o conteúdo dos pares.</p>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function renderGabarito(ano) {
+    var pares = BARALHOS[ano];
+    var linhas = pares.map(function (par, i) {
+      return '<tr><td>' + (i + 1) + '</td><td>' + mat(par[0]) + '</td><td>' + mat(par[1]) +
+             '</td><td class="valor">' + mat(par[2]) + '</td></tr>';
+    }).join('');
+    document.getElementById('gabarito').innerHTML =
+      '<div class="papel">' +
+        '<div class="faixa-topo"></div>' +
+        '<h2>Gabarito do professor — Mico Matemático (' + ROTULOS[ano] + ')</h2>' +
+        '<p class="sub">' + pares.length + ' pares + o mico = ' + (pares.length * 2 + 1) + ' cartas · as duas cartas de cada par valem o mesmo</p>' +
+        '<table class="gab"><thead><tr><th>Par</th><th>Carta A</th><th>Carta B</th><th>Valor</th></tr></thead><tbody>' +
+        linhas +
+        '</tbody></table>' +
+        '<p class="gab-nota">A carta do macaquinho não aparece nesta tabela: ela não tem par. Nenhum valor se repete entre os pares, então duas cartas só podem formar par de um jeito.</p>' +
+      '</div>';
+  }
+
+  function atualizarSkills() {
+    var el = document.getElementById('skillsSobre');
+    if (!el) return;
+    var codigos = ['EF06MA03','EF06MA07','EF06MA08','EF06MA09','EF06MA11','EF06MA13',
+                   'EF07MA03','EF07MA04','EF08MA01','EF08MA02','EF09MA03','EF09MA04'];
+    el.innerHTML = codigos.map(function (c) { return '<span class="skill">' + c + '</span>'; }).join('');
+  }
+
+  function setAno(ano) {
+    if (!BARALHOS[ano]) return;
+    ANO_ATUAL = ano;
+    renderCartas(ano);
+    renderManual(ano);
+    renderGabarito(ano);
+  }
+
+  function switchTab(nome) {
+    var mapa = { 'jogo': 'tab-jogo', 'manual': 'tab-manual', 'sobre': 'tab-sobre' };
+    ['tab-jogo', 'tab-manual', 'tab-sobre'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.classList.toggle('active', id === mapa[nome]);
+    });
+    var botoes = document.querySelectorAll('.tab-btn');
+    botoes.forEach(function (b, i) {
+      var alvos = ['jogo', 'manual', 'sobre'];
+      b.classList.toggle('active', alvos[i] === nome);
+    });
+  }
+
+  function imprimirParte(alvo) {
+    document.body.setAttribute('data-print-target', alvo);
+    window.print();
+  }
+
+  /* o alvo de impressão sai só depois que a janela de impressão fecha, para o
+     conteúdo não desaparecer durante a geração do PDF */
+  window.addEventListener('afterprint', function () {
+    document.body.removeAttribute('data-print-target');
+  });
+
+  /* limpeza para abrir o arquivo direto, sem passar pelo Jekyll */
+  function limparTemplateLocal() {
+    var primeiro = document.body.firstChild;
+    if (primeiro && primeiro.nodeType === 3 && primeiro.textContent.indexOf('---') === 0) primeiro.remove();
+    var nos = document.body.querySelectorAll('*');
+    nos.forEach(function (el) {
+      Array.prototype.slice.call(el.childNodes).forEach(function (n) {
+        if (n.nodeType === 3 && n.textContent.indexOf('include analytics.html') >= 0) n.remove();
+      });
+    });
+  }
+
+  limparTemplateLocal();
+  atualizarSkills();
+  setAno('6ano');
+
+  window.micoDeck = function (ano) { return BARALHOS[ano] || BARALHOS[ANO_ATUAL]; };
+  window.micoCartas = montarCartas;
+</script>
+</body>
+</html>
