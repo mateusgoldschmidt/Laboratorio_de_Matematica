@@ -162,6 +162,9 @@ habilidades:
     @page { size: A4 portrait; margin: 0; }
     @media print {
       html, body { background: #fff !important; }
+      /* mesma proteção dos outros materiais do laboratório: cor de fundo que
+         fizer falta no papel continua imprimindo com "gráficos de fundo" desmarcado */
+      html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       header.main-header, .tabs, .print-bar, #btn-voltar, .screen-only { display: none !important; }
       .tab-content { display: none !important; padding: 0 !important; }
       /* nada de interface nem de outras partes no papel: cada alvo mostra
