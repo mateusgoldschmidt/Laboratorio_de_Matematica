@@ -97,12 +97,10 @@ habilidades:
       border: .4mm solid var(--linha); overflow: hidden;
     }
     /* arte dentro da peça: a moldura tropical preenche a carta inteira, com o cálculo por cima */
-    .carta::before {
-      content: ''; position: absolute; inset: 0;
-      background: url(mico_img/carta-fundo.png) center/100% 100% no-repeat;
-      opacity: .55;
+    /* imagem de verdade, não fundo de CSS: o navegador não imprime fundo por padrão */
+    .carta .arte {
+      position: absolute; inset: 0; width: 100%; height: 100%; opacity: .85;
     }
-    .carta.vazia::before { content: none; }
     .carta .miolo {
       position: absolute; inset: 2mm; display: flex; align-items: center; justify-content: center;
       text-align: center;
@@ -133,11 +131,12 @@ habilidades:
     .papel h3 { font-size: 9.6pt; margin: 3mm 0 1.4mm; color: #1d4b5f; }
     .papel p, .papel li { margin: 0 0 1.4mm; }
     .papel ol, .papel ul { padding-left: 5mm; margin: 0 0 2mm; }
-    .faixa-topo { height: 6mm; border-radius: 2mm; margin-bottom: 4mm;
-      background: linear-gradient(90deg, var(--tint1), var(--tint6)); border: .3mm solid var(--linha); }
+    .faixa-topo { display: block; width: 100%; height: 6mm; object-fit: cover;
+      border-radius: 1.2mm; margin-bottom: 4mm; }
     table.gab { width: 100%; border-collapse: collapse; font-size: 8.4pt; }
     table.gab th, table.gab td { border: .3mm solid var(--linha); padding: 1.1mm 1.6mm; text-align: left; }
-    table.gab th { background: #eef4f8; font-size: 8pt; }
+    table.gab th { background: #eef4f8; font-size: 8pt;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     table.gab td.valor { font-weight: 700; }
     .gab-nota { font-size: 8pt; color: #4c6070; margin-top: 3mm; }
 
@@ -163,6 +162,9 @@ habilidades:
     @page { size: A4 portrait; margin: 0; }
     @media print {
       html, body { background: #fff !important; }
+      /* mesma proteção dos outros materiais do laboratório: cor de fundo que
+         fizer falta no papel continua imprimindo com "gráficos de fundo" desmarcado */
+      html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       header.main-header, .tabs, .print-bar, #btn-voltar, .screen-only { display: none !important; }
       .tab-content { display: none !important; padding: 0 !important; }
       /* nada de interface nem de outras partes no papel: cada alvo mostra
@@ -406,12 +408,15 @@ habilidades:
   }
 
   function htmlCarta(carta, indice) {
+    var arte = '<img class="arte" src="mico_img/carta-fundo.png" alt="">';
     if (carta.tipo === 'mico') {
       return '<div class="carta mico" style="background:#fff">' +
+        arte +
         '<div class="miolo"><img class="macaco" src="mico_img/mico.png" alt=""></div>' +
       '</div>';
     }
     return '<div class="carta" style="background:#fff">' +
+      arte +
       '<div class="miolo">' +
         '<div class="conteudo ' + classeTamanho(carta.texto) + '">' + mat(carta.texto) + '</div>' +
       '</div>' +
@@ -437,7 +442,7 @@ habilidades:
     var p0a = paresAno[0][0], p0b = paresAno[0][1], p1a = paresAno[1][0];
     document.getElementById('manual').innerHTML =
       '<div class="papel">' +
-        '<div class="faixa-topo"></div>' +
+        '<img class="faixa-topo" src="mico_img/faixa.png" alt="">' +
         '<h2>Manual do professor — Mico Matemático (' + ROTULOS[ano] + ')</h2>' +
         '<p class="sub">' + paresAno.length + ' pares de equivalências + a carta do macaquinho · ' +
             (paresAno.length * 2 + 1) + ' cartas · 2 a 6 jogadores</p>' +
@@ -454,7 +459,7 @@ habilidades:
           '<h3>O mico</h3>' +
           '<p>A carta do macaquinho não tem par e não tem número nem valor. É só o mico.</p>' +
           '<h3>Variante: memória</h3>' +
-          '<p>Separe a carta do mico e espalhe as 42 cartas viradas para baixo. Cada jogador vira duas cartas: se forem equivalentes, ganha o par e joga de novo; se não forem, vira as duas de volta. Ganha quem formar mais pares.</p>' +
+          '<p>Separe a carta do mico e espalhe as ' + (paresAno.length * 2) + ' cartas viradas para baixo. Cada jogador vira duas cartas: se forem equivalentes, ganha o par e joga de novo; se não forem, vira as duas de volta. Ganha quem formar mais pares.</p>' +
           '<h3>Pagar o mico (ideias)</h3>' +
           '<p>Imitar um animal, cantar um trecho de música, fazer dez polichinelos, recitar a tabuada do 7, contar uma piada de matemática.</p>' +
           '<h3>Quanto imprimir</h3>' +
@@ -478,7 +483,7 @@ habilidades:
     }).join('');
     document.getElementById('gabarito').innerHTML =
       '<div class="papel">' +
-        '<div class="faixa-topo"></div>' +
+        '<img class="faixa-topo" src="mico_img/faixa.png" alt="">' +
         '<h2>Gabarito do professor — Mico Matemático (' + ROTULOS[ano] + ')</h2>' +
         '<p class="sub">' + pares.length + ' pares + o mico = ' + (pares.length * 2 + 1) + ' cartas · as duas cartas de cada par valem o mesmo</p>' +
         '<table class="gab"><thead><tr><th>Par</th><th>Carta A</th><th>Carta B</th><th>Valor</th></tr></thead><tbody>' +
