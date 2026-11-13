@@ -11,7 +11,7 @@ habilidades:
     {% include analytics.html %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oficina de Porcentagem com Supermercado - PIBID</title>
+    <title>Oficina de Porcentagem com Supermercado</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
@@ -540,7 +540,6 @@ habilidades:
 <body>
 
     <header>
-        <img src="https://res.cloudinary.com/dmvxu7ioq/image/upload/v1781662337/dakz1wjsar6xpener1ur.png" alt="Logo PIBID">
         <h1>MERCADINHO DA PADRE TRAEZEL</h1>
         <p>Matemática, Porcentagem e Educação Financeira</p>
     </header>
@@ -1019,11 +1018,11 @@ habilidades:
 
         function saveRanking() {
             rankingData.sort((a,b) => a.total - b.total);
-            localStorage.setItem('pibid_supermercado_ranking', JSON.stringify(rankingData));
+            localStorage.setItem('supermercado_ranking', JSON.stringify(rankingData));
         }
 
         function loadRanking() {
-            const data = localStorage.getItem('pibid_supermercado_ranking');
+            const data = localStorage.getItem('supermercado_ranking');
             if(data) {
                 rankingData = JSON.parse(data);
                 renderRanking();
@@ -1317,7 +1316,7 @@ habilidades:
                             <div class="flyer-banner-left">
                                 <div>
                                     <div class="flyer-banner-title">🛒 MERCADINHO DA PADRE TRAEZEL</div>
-                                    <div class="flyer-banner-sub">Tabloide Oficial de Ofertas • Educação Financeira e Porcentagem (PIBID)</div>
+                                    <div class="flyer-banner-sub">Tabloide Oficial de Ofertas • Educação Financeira e Porcentagem</div>
                                 </div>
                             </div>
                             <div class="flyer-round-pill">
@@ -1516,6 +1515,6 @@ habilidades:
       #btn-voltar:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.45); }
       @media print { #btn-voltar { display: none !important; } }
     </style>
-    <a id="btn-voltar" href="index.html">← Voltar ao portal do PIBID</a>
+    <a id="btn-voltar" href="index.html">← Voltar ao portal de jogos</a>
 </body>
 </html>

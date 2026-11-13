@@ -7,8 +7,7 @@ Materiais didáticos de matemática para imprimir, projetar e usar no navegador:
 | Diretório | O que reúne |
 | --- | --- |
 | `geometria/` | Applets 3D (cilindros, cones, pirâmides), laboratório visual de geometria espacial, quiz gamificado e bingo geométrico |
-| `pibid/` | Jogos lúdicos do PIBID: dominós (álgebra e área/perímetro), Super Trunfo das Missões, Mercadinho Padre Traezel, Pizzaria das Frações e Trilha Sistema Solar |
-| `jogos/` | Portal dos jogos do laboratório (com portal próprio em `jogos/index.html`): Batalha Naval Cartesiana & Algébrica, Triominó Matemático, UNO Matemático e Mico Matemático |
+| `jogos/` | Portal dos jogos do laboratório (com portal próprio em `jogos/index.html`): Batalha Naval Cartesiana & Algébrica, Triominó Matemático, UNO Matemático, Mico Matemático, dominós, Super Trunfo, Mercadinho, Pizzaria das Frações e Trilha Sistema Solar |
 | `libras/` | Bingo de números e baralhos (pôquer e UNO) com numerais e alfabeto em Libras |
 | `obmep/` | Resoluções passo a passo de questões da OBMEP Nível 1 (6º e 7º ano) |
 | `outros_materiais/` | Oficinas, cadernos e atividades de apoio à formação docente |
@@ -21,12 +20,12 @@ As habilidades listadas são as que cada material efetivamente exercita. Elas ap
 
 | Material | Uso | Habilidades |
 | --- | --- | --- |
-| Pizzaria das Frações (`pibid/kit_fracoes.html`) | impresso + painel projetável | EF06MA07 |
-| Mercadinho Padre Traezel (`pibid/mercadinho.html`) | impresso + PDV projetável | EF06MA13 |
-| Trilha Sistema Solar (`pibid/trilha_matematica.html`) | impresso (4 folhas A4) | EF06MA03, EF06MA05, EF06MA07, EF06MA08, EF06MA09, EF06MA10, EF06MA11, EF06MA13, EF06MA17, EF06MA18, EF06MA24 |
-| Super Trunfo das Missões (`pibid/super_trunfo.html`) | impresso (cartas) | EF06MA09, EF06MA11, EF07MA04, EF07MA12 |
-| Dominó Algébrico (`pibid/domino_algebra.html`) | impresso (peças) | EF07MA18 |
-| Dominó Área e Perímetro (`pibid/domino_perimetro_area.html`) | impresso (peças) | EF07MA31, EF07MA32 |
+| Pizzaria das Frações (`jogos/kit_fracoes.html`) | impresso + painel projetável | EF06MA07 |
+| Mercadinho Padre Traezel (`jogos/mercadinho.html`) | impresso + PDV projetável | EF06MA13 |
+| Trilha Sistema Solar (`jogos/trilha_matematica.html`) | impresso (4 folhas A4) | EF06MA03, EF06MA05, EF06MA07, EF06MA08, EF06MA09, EF06MA10, EF06MA11, EF06MA13, EF06MA17, EF06MA18, EF06MA24 |
+| Super Trunfo das Missões (`jogos/super_trunfo.html`) | impresso (cartas) | EF06MA09, EF06MA11, EF07MA04, EF07MA12 |
+| Dominó Algébrico (`jogos/domino_algebra.html`) | impresso (peças) | EF07MA18 |
+| Dominó Área e Perímetro (`jogos/domino_perimetro_area.html`) | impresso (peças) | EF07MA31, EF07MA32 |
 | Applet: Cilindros (`geometria/applet_cilindros.html`) | digital/projetado | EM13MAT504, EM13MAT309 |
 | Applet: Cones (`geometria/applet_cones.html`) | digital/projetado | EM13MAT504, EM13MAT309, EM13MAT307 |
 | Applet: Pirâmides (`geometria/applet_piramides.html`) | digital/projetado | EF09MA13, EF04MA17 |
@@ -60,7 +59,7 @@ Cada material também pode ser aberto direto no navegador, sem build — as pág
 
 ## Criando um material novo
 
-1. Coloque o HTML na pasta do portal correspondente (`pibid/`, `geometria/`, `libras/`, `obmep/`, `outros_materiais/`).
+1. Coloque o HTML na pasta do portal correspondente (`jogos/`, `geometria/`, `libras/`, `obmep/`, `outros_materiais/`).
 2. Abra o arquivo com o front matter do Jekyll:
 
 ```yaml
@@ -83,7 +82,7 @@ habilidades:
 4. No fim da página, inclua o botão de volta ao portal — sempre com o texto dizendo para onde ele leva — e esconda-o na impressão:
 
 ```html
-<a id="btn-voltar" href="index.html">← Voltar ao portal do PIBID</a>
+<a id="btn-voltar" href="index.html">← Voltar ao portal de jogos</a>
 <style>@media print { #btn-voltar, .voltar, [id*="voltar"] { display: none !important; } }</style>
 ```
 
@@ -99,4 +98,4 @@ O portal lista os materiais automaticamente: basta que o arquivo esteja na pasta
 
 ## Créditos
 
-Materiais desenvolvidos como PIBIDiano e durante minha graduação em Matemática ne UFFS.
+Materiais desenvolvidos durante minha graduação em Matemática na UFFS.
