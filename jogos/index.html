@@ -191,7 +191,7 @@
 
     <h1>JOGOS DE MATEMÁTICA</h1>
     <p class="subtitulo">
-      Todos os jogos do laboratório num lugar só: os jogos criados para a pasta <strong>jogos</strong> e os jogos do <strong>PIBID</strong> — para imprimir, recortar e projetar no quadro, com manual do professor, gabarito e as habilidades da BNCC de cada um.
+      Todos os jogos do laboratório num lugar só — para imprimir, recortar e projetar no quadro, com manual do professor, gabarito e as habilidades da BNCC de cada um.
     </p>
 
     <h2 class="secao-titulo">Jogos do laboratório</h2>
@@ -218,32 +218,6 @@
       {% endfor %}
     </div>
 
-    <h2 class="secao-titulo">Jogos do PIBID</h2>
-    <p class="nota-secao">
-      Os mesmos jogos continuam publicados no <a href="../pibid/index.html">portal do PIBID</a>, com os materiais das oficinas do projeto.
-    </p>
-    <div class="cards">
-      {% for pagina in site.pages %}
-        <!-- O Jekyll puxa apenas os materiais da pasta pibid -->
-        {% if pagina.dir == '/pibid/' and pagina.titulo and pagina.name != 'index.html' %}
-        <a class="card" href="../pibid/{{ pagina.name }}">
-            {% if pagina.imagem %}
-              <img src="{{ pagina.imagem }}" alt="{{ pagina.titulo }}" style="width: 100%; height: 160px; object-fit: cover; border-radius: 16px; margin-bottom: 18px; border: 1px solid rgba(255,255,255,0.1);">
-            {% else %}
-              <div class="card-icon">{{ pagina.icone | default: '🎲' }}</div>
-            {% endif %}
-            <h2>{{ pagina.titulo }}</h2>
-            <p>{{ pagina.descricao }}</p>
-            {% if pagina.habilidades %}
-              <div class="skills">
-                {% for h in pagina.habilidades %}<span class="skill">{{ h }}</span>{% endfor %}
-              </div>
-            {% endif %}
-            <div class="btn">Acessar Material →</div>
-        </a>
-        {% endif %}
-      {% endfor %}
-    </div>
     <div class="rodape">
       Laboratório de Matemática · UFFS<br>
     </div>
